@@ -258,7 +258,9 @@ unsigned char game_check_maze(int f_index) __z88dk_fastcall {
   return  lvl_1[f_index] >= TILE_CEIL;
 }
 
-
+unsigned char game_check_maze_floor(int f_index) __z88dk_fastcall {
+  return  lvl_1[f_index] >= TILE_FLOOR;
+}
 
 
 unsigned char game_enemy_add_get_index( unsigned char f_search) __z88dk_fastcall {

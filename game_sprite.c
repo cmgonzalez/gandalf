@@ -53,6 +53,25 @@ unsigned int spr_check_map(unsigned char f_lin, unsigned char f_col) {
 	}
 }
 
+unsigned int spr_check_map_fall(unsigned char f_lin, unsigned char f_col) {
+	if ( (f_col & 1) == 0 ) {
+		index1 = spr_calc_index( f_lin, f_col);
+
+		return game_check_maze_floor( index1 );
+	} else {
+		index1 = spr_calc_index( f_lin, f_col-1);
+		g_hit_left = 0;
+		g_hit_right = 0;
+
+		if (game_check_maze_floor( index1 )) {
+			g_hit_left = 1;
+		}
+		if (game_check_maze_floor( index1 + 1 )) {
+			g_hit_right = 1;
+		}
+		return g_hit_left || g_hit_right;
+	}
+}
 
 unsigned char spr_chktime( unsigned char *sprite ) __z88dk_fastcall {
 	//if (FULL_SPEED) return 1;
@@ -94,7 +113,7 @@ unsigned char spr_move_down( void ){
 	//12
 	//43
 	tmp1 = lin[sprite] + (SPRITE_LIN_INC << sprite_lin_inc_mul);
-	if ( spr_check_map(tmp1+16, col[sprite]) ) {
+	if ( spr_check_map_fall(tmp1+16, col[sprite]) ) {
 		lin[sprite] = (tmp1 >> 3) << 3; // div 8 mul 8
 		return 1;
 	}
