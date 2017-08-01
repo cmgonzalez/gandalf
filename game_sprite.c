@@ -145,15 +145,16 @@ unsigned char spr_move_right( void ){
 		s_lin1 = lin[sprite];
 		if (col[sprite] < 30) {
 			s_col1 = col[sprite]+1;
-		} else {
-			s_col1 = 0;
-		}
+			if ( spr_check_map(s_lin1, s_col1) || spr_check_map(s_lin1+15, s_col1) ) {
+				--colint[sprite];
+				--colint[sprite];
+				return 1;
+			}
+		} //else {
+		//	s_col1 = 0;
+		//}
 
-    if ( spr_check_map(s_lin1, s_col1) || spr_check_map(s_lin1+15, s_col1) ) {
-			--colint[sprite];
-			--colint[sprite];
-			return 1;
-		}
+
 		++col[sprite];
 		colint[sprite] = 0;
 		if (col[sprite] > SCR_COLS_M) {
@@ -175,15 +176,16 @@ unsigned char spr_move_left( void ){
 		s_lin1 = lin[sprite];
 		if (col[sprite] > 0) {
 			s_col1 = col[sprite]-1;
-		} else {
-			s_col1 = 30;
-		}
+			if ( spr_check_map(s_lin1, s_col1) || spr_check_map(s_lin1+15, s_col1)) {
+					++colint[sprite];
+					++colint[sprite];
+					return 1;
+			}
+		} //else {
+			//s_col1 = 30;
+		//}
 
-		if ( spr_check_map(s_lin1, s_col1) || spr_check_map(s_lin1+15, s_col1)) {
-				++colint[sprite];
-				++colint[sprite];
-				return 1;
-		}
+
 
     --col[sprite];
 		colint[sprite] = SPR_COLINT - 1;
