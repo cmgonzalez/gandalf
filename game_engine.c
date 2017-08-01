@@ -103,7 +103,7 @@ void game_phase_init(void) {
   game_print_header();
 	game_print_footer();
 	/* Player(s) init */
-	if (game_lives[0]) player_init(SPR_P1,GAME_LIN_FLOOR-16,10,TILE_P1_STANR);
+	if (game_lives[0]) player_init(SPR_P1,GAME_LIN_FLOOR-16,2,TILE_P1_STANR);
 	game_osd = 1;
 	osd_update_time = zx_clock();
 	osd_show_time = osd_update_time;
