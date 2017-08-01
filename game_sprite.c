@@ -155,7 +155,12 @@ unsigned char spr_move_right( void ){
 		++col[sprite];
 		colint[sprite] = 0;
 		if (col[sprite] > SCR_COLS_M) {
-			col[sprite]= 0;
+
+			if ( spr_page_right() ) {
+				col[sprite]= 0;
+			} else {
+				col[sprite]= SCR_COLS_M;
+			}
 		}
 	}
 	return 0;
@@ -172,7 +177,6 @@ unsigned char spr_move_left( void ){
 			s_col1 = 30;
 		}
 
-
 		if ( spr_check_map(s_lin1, s_col1) || spr_check_map(s_lin1+15, s_col1)) {
 				++colint[sprite];
 				++colint[sprite];
@@ -182,10 +186,49 @@ unsigned char spr_move_left( void ){
     --col[sprite];
 		colint[sprite] = SPR_COLINT - 1;
 		if (col[sprite] == 255) {
-			col[sprite] = SCR_COLS_M;
+
+			if ( spr_page_left() ) {
+			  col[sprite] = SCR_COLS_M;
+			} else {
+				col[sprite] = 0;
+			}
 		}
 	}
 	return 0;
+}
+
+unsigned char spr_page_right(){
+
+	if (scr_curr < map_width) {
+		++scr_curr;
+		spr_page_map();
+		return 1;
+	}
+	return 0;
+}
+
+unsigned char spr_page_left(){
+
+  if (scr_curr > 0) {
+		--scr_curr;
+    spr_page_map();
+		return 1;
+	}
+	return 0;
+}
+
+void spr_page_map(void){
+	for (tmp = 0; tmp < 160 ; tmp++){
+		switch (scr_curr) {
+			case 0:
+				scr_map[tmp] = scr_1[tmp];
+				break;
+			case 1:
+				scr_map[tmp] = scr_2[tmp];
+				break;
+		}
+	}
+	spr_draw_background();
 }
 
 unsigned char spr_redraw( void ){
@@ -370,7 +413,7 @@ void spr_draw_background(void) {
 			s_lin1 = s_lin1 + 16;
 			s_col1 = 0;
 		}
-		NIRVANAP_drawT(lvl_1[index1], s_lin1, s_col1);
+		NIRVANAP_drawT(scr_map[index1], s_lin1, s_col1);
 		//NIRVANAP_drawT(TILE_BRICK, s_lin1, s_col1);
 
 		s_col1 = s_col1 + 2;
@@ -382,8 +425,8 @@ void spr_draw_background(void) {
 	//zx_print_paper(PAPER_RED);
 	//game_fill_row(19,35);//brick row
 	//game_fill_row(20,35);//brick row
-	zx_print_paper(PAPER_BLACK);
-	zx_print_ink(INK_BLACK);
+	//zx_print_paper(PAPER_BLACK);
+	//zx_print_ink(INK_BLACK);
 	//game_fill_row(12,32);//clear row
 	//game_print_footer();
 }
@@ -425,8 +468,8 @@ void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
   f_lin = hit_lin[index_player];
 
 	index1 = spr_calc_index(f_lin,f_col);
-	v0 = lvl_1[ index1-16];
-	v1 = lvl_1[ index1 ];
+	v0 = scr_map[ index1-16];
+	v1 = scr_map[ index1 ];
 
 	if (f_hit) {
 		tmp = f_lin-10;
@@ -454,8 +497,8 @@ void spr_draw_index(unsigned int f_index) {
 	s_col1 = f_index & 31; //OPTIMIZED % 32
 	s_lin1 = f_index >> 5; // div 32
 	s_lin1 = s_lin1 << 3;  // mod 32
-	//NIRVANAP_drawT_raw(spr_idx[lvl_1[f_index]], s_lin1, s_col1);
-	NIRVANAP_drawT_raw(lvl_1[f_index], s_lin1, s_col1);
+	//NIRVANAP_drawT_raw(spr_idx[scr_map[f_index]], s_lin1, s_col1);
+	NIRVANAP_drawT_raw(scr_map[f_index], s_lin1, s_col1);
 }
 
 void spr_draw_row(unsigned char f_row) {
@@ -507,31 +550,31 @@ void spr_back_clr( void ) {
 		if ((s_col0 & 1) == 0) { //Par
 			if ((s_lin0 & 15) == 0) {
 				//Paint single tile
-				spr_tile_paint(lvl_1[curr_index],s_lin0,s_col0);
+				spr_tile_paint(scr_map[curr_index],s_lin0,s_col0);
 			} else {
 				//Paint up n down tiles
 				s_row = s_lin0 >> 4;
 				s_row = s_row << 4;
-				spr_tile_paint(lvl_1[curr_index   ], s_row, s_col0);
+				spr_tile_paint(scr_map[curr_index   ], s_row, s_col0);
 				s_row = s_row + 16;
-				spr_tile_paint(lvl_1[curr_index+16], s_row, s_col0);
+				spr_tile_paint(scr_map[curr_index+16], s_row, s_col0);
 			}
 		} else { //Impar
 			if ((s_lin0 & 15) == 0) {
 				//Paint single tile
-				spr_tile_paint(lvl_1[curr_index  ], s_lin0, s_col0-1);
-				spr_tile_paint(lvl_1[curr_index+1], s_lin0, s_col0+1);
+				spr_tile_paint(scr_map[curr_index  ], s_lin0, s_col0-1);
+				spr_tile_paint(scr_map[curr_index+1], s_lin0, s_col0+1);
 			} else {
 				//Paint up n down tiles
 				s_row = s_lin0 >> 4;
 				s_row = s_row << 4;
 				//up
-				spr_tile_paint(lvl_1[curr_index   ],s_row, s_col0-1);
-				spr_tile_paint(lvl_1[curr_index+1 ],s_row, s_col0+1);
+				spr_tile_paint(scr_map[curr_index   ],s_row, s_col0-1);
+				spr_tile_paint(scr_map[curr_index+1 ],s_row, s_col0+1);
 				//down
 				s_row = s_row + 16;
-				spr_tile_paint(lvl_1[curr_index+16],s_row, s_col0-1);
-				spr_tile_paint(lvl_1[curr_index+17],s_row, s_col0+1);
+				spr_tile_paint(scr_map[curr_index+16],s_row, s_col0-1);
+				spr_tile_paint(scr_map[curr_index+17],s_row, s_col0+1);
 			}
 		}
 }

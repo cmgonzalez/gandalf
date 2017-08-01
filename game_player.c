@@ -464,12 +464,12 @@ void player_check_floor(void){
 	unsigned char v2;
 
 	index_d = spr_calc_index( lin[sprite] + 16 , col[sprite] );
-	v1 = lvl_1[index_d];
+	v1 = scr_map[index_d];
 
 	if ((col[sprite] & 1) == 0) {
 		v2 = 1;
 	} else {
-		v2 = lvl_1[index_d+1];
+		v2 = scr_map[index_d+1];
 	}
 
 

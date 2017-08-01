@@ -318,7 +318,7 @@ void enemy_slipice(void){
 
 				tmp_ui = rand();
 				index1 = spr_calc_index ( lin[sprite]+16, col[sprite]  );
-				if (lvl_1[index1] == TILE_BRICK && tmp_ui < 13106) {
+				if (scr_map[index1] == TILE_BRICK && tmp_ui < 13106) {
 					ay_fx_play(ay_effect_16);
 					BIT_SET(s_state, STAT_ANGRY);
 					spr_timer[sprite] = zx_clock();

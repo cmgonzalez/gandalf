@@ -111,6 +111,13 @@ void main(void) {
 	frame_time = zx_clock();
 	//GAME MENU
 	//game_menu();
+	for (tmp = 0; tmp < 160 ; tmp++){
+		scr_map[tmp] = scr_1[tmp];
+	}
+	scr_curr = 0;
+	map_width = 2 - 1; //OJO!
+	map_heigth = 1;
+
 	game_loop();
 }
 

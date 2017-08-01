@@ -98,7 +98,7 @@ void game_phase_init(void) {
 	/* Phase Draw Start */
 	spr_draw_clear();
 	/*Draw Platforms*/
-	zx_paper_fill(INK_BLACK | PAPER_BLACK);
+	//zx_paper_fill(INK_BLACK | PAPER_BLACK);
 	spr_draw_background();
   game_print_header();
 	game_print_footer();
@@ -123,17 +123,13 @@ void game_loop(void) {
 	ay_fx_play(ay_effect_10);
 	sound_coin();
 	z80_delay_ms(200);
-	game_fill_row(22,32);
 	ay_reset();
 
 	game_lives[0] = 4;
-	game_lives[1] = 0;
 
 
 	player_score[0] = 0;
-	player_score[1] = 0;
 	player_next_extra[0] = GAME_EXTRA_LIFE;
-	player_next_extra[1] = GAME_EXTRA_LIFE;
 
 	/* screen init */
 	game_over = 0;
@@ -219,7 +215,7 @@ void game_score_osd(unsigned char f_index_player) {
 		tmp = score_osd_lin[f_index_player] - 2;
 
 		index1 = spr_calc_index( tmp , score_osd_col[f_index_player]  );
-		if ( lvl_1[index1] == TILE_EMPTY && lvl_1[index1+1] == TILE_EMPTY   ) {
+		if ( scr_map[index1] == TILE_EMPTY && scr_map[index1+1] == TILE_EMPTY   ) {
 			NIRVANAP_halt(); // synchronize with interrupts
 			NIRVANAP_drawT( score_osd_tile[f_index_player], score_osd_lin[f_index_player], score_osd_col[f_index_player] );
 			score_osd_lin[f_index_player] = tmp;
@@ -255,11 +251,11 @@ void game_bonus_clock(void) {
 }
 
 unsigned char game_check_maze(int f_index) __z88dk_fastcall {
-  return  lvl_1[f_index] >= TILE_CEIL;
+  return  scr_map[f_index] >= TILE_CEIL;
 }
 
 unsigned char game_check_maze_floor(int f_index) __z88dk_fastcall {
-  return  lvl_1[f_index] >= TILE_FLOOR;
+  return  scr_map[f_index] >= TILE_FLOOR;
 }
 
 

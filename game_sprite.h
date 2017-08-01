@@ -42,4 +42,10 @@ extern unsigned char    spr_calc_hor(unsigned char f_sprite);
 extern unsigned char    spr_collision_check(unsigned char f_sprite1, unsigned char f_sprite2, unsigned char f_vert_diff);
 extern void			        spr_kill_all(void);
 extern void             spr_tile_paint( unsigned char f_tile, unsigned char f_lin, unsigned char f_col );
+unsigned char           spr_page_left();
+unsigned char           spr_page_right();
+extern void             spr_page_map(void);
+
+
+
 #endif

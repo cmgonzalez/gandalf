@@ -18,7 +18,7 @@
 #define GLOBALS_H
 #include <input.h>
 
-#define GAME_ROWS                     12
+#define GAME_ROWS                     11
 /* Enemies indexes */
 #define SHELLCREEPER_GREEN            1
 #define SHELLCREEPER_RED              2
@@ -290,7 +290,12 @@ extern unsigned char	game_menu_sel;
 extern unsigned char screen_paper, screen_ink;
 extern unsigned char sprite_speed[];
 extern unsigned char sprite_speed_alt[8];
-extern unsigned char lvl_1[];
+extern unsigned char scr_map[];
+extern unsigned char scr_1[];
+extern unsigned char scr_2[];
+extern unsigned char scr_curr;
+extern unsigned char map_width;
+extern unsigned char map_heigth;
 extern unsigned char phase_quota[3];
 extern unsigned char phase_left;
 extern unsigned char phase_tot;
