@@ -34,6 +34,7 @@ unsigned int spr_calc_index( unsigned char f_lin , unsigned char f_col ) {
 }
 
 unsigned int spr_check_map(unsigned char f_lin, unsigned char f_col) {
+	//TODO A SINGLE FUNCTION TO SAVE BYTES
 	if ( (f_col & 1) == 0 ) {
 		index1 = spr_calc_index( f_lin, f_col);
 
@@ -54,6 +55,7 @@ unsigned int spr_check_map(unsigned char f_lin, unsigned char f_col) {
 }
 
 unsigned int spr_check_map_fall(unsigned char f_lin, unsigned char f_col) {
+	//TODO A SINGLE FUNCTION TO SAVE BYTES
 	if ( (f_col & 1) == 0 ) {
 		index1 = spr_calc_index( f_lin, f_col);
 
@@ -198,37 +200,97 @@ unsigned char spr_move_left( void ){
 }
 
 unsigned char spr_page_right(){
+  if (class[sprite] != PLAYER) return 0;
 
 	if (scr_curr < map_width) {
 		++scr_curr;
 		spr_page_map();
+		spr_draw_background();
 		return 1;
 	}
 	return 0;
 }
 
 unsigned char spr_page_left(){
+  if (class[sprite] != PLAYER) return 0;
 
   if (scr_curr > 0) {
 		--scr_curr;
     spr_page_map();
+		spr_draw_background();
 		return 1;
 	}
 	return 0;
 }
 
 void spr_page_map(void){
-	for (tmp = 0; tmp < 160 ; tmp++){
+	unsigned char v0;
+	unsigned char v1;
+	unsigned char vr;
+	unsigned char i;
+	unsigned char j;
+	unsigned char k;
+
+
+  k = 16;
+	for (i = 0; i < GAME_SCR_MAX_INDEX ; ++i) {
+    //Decompress map TODO POINTERS!
 		switch (scr_curr) {
 			case 0:
-				scr_map[tmp] = scr_1[tmp];
-				break;
+				v0 = scr_0[i];
+				v1 = scr_0[i+1];
+			break;
 			case 1:
-				scr_map[tmp] = scr_2[tmp];
-				break;
+				v0 = scr_1[i];
+				v1 = scr_1[i+1];
+			break;
+			case 2:
+				v0 = scr_2[i];
+				v1 = scr_2[i+1];
+			break;
+			case 3:
+				v0 = scr_3[i];
+				v1 = scr_3[i+1];
+			break;
+			case 4:
+				v0 = scr_4[i];
+				v1 = scr_4[i+1];
+			break;
+			case 5:
+				v0 = scr_5[i];
+				v1 = scr_5[i+1];
+			break;
+			case 6:
+				v0 = scr_6[i];
+				v1 = scr_6[i+1];
+			break;
+			case 7:
+				v0 = scr_7[i];
+				v1 = scr_7[i+1];
+			break;
+		}
+
+		if (v0 < 128) {
+			scr_map[k] = v0;
+			++k;
+		} else {
+			vr = v0 - 128; //Repeat counter Should be < 128!!
+
+
+      for (j = 0; j < vr ; j++){
+        scr_map[k] = v1;
+				++k;
+				if ( k >= GAME_SCR_MAX_INDEX ) {
+							break;
+				}
+			}
+			++i;
+		}
+		if ( k >= GAME_SCR_MAX_INDEX ) {
+			break;
 		}
 	}
-	spr_draw_background();
+
 }
 
 unsigned char spr_redraw( void ){

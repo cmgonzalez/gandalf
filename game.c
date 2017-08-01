@@ -115,8 +115,9 @@ void main(void) {
 		scr_map[tmp] = scr_1[tmp];
 	}
 	scr_curr = 0;
-	map_width = 2 - 1; //OJO!
+	map_width = 8 - 1; //OJO!
 	map_heigth = 1;
+  spr_page_map(); //INIT FIRST SCREEN
 
 	game_loop();
 }

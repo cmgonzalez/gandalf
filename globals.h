@@ -19,6 +19,7 @@
 #include <input.h>
 
 #define GAME_ROWS                     11
+#define GAME_SCR_MAX_INDEX            160
 /* Enemies indexes */
 #define SHELLCREEPER_GREEN            1
 #define SHELLCREEPER_RED              2
@@ -291,8 +292,16 @@ extern unsigned char screen_paper, screen_ink;
 extern unsigned char sprite_speed[];
 extern unsigned char sprite_speed_alt[8];
 extern unsigned char scr_map[];
+extern unsigned char scr_0[];
 extern unsigned char scr_1[];
 extern unsigned char scr_2[];
+extern unsigned char scr_3[];
+extern unsigned char scr_4[];
+extern unsigned char scr_5[];
+extern unsigned char scr_6[];
+extern unsigned char scr_7[];
+
+
 extern unsigned char scr_curr;
 extern unsigned char map_width;
 extern unsigned char map_heigth;
