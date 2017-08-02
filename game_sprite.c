@@ -608,37 +608,46 @@ void spr_kill_all(void) {
 
 void spr_back_clr( void ) {
 
-	  unsigned int curr_index;
+
 		unsigned char s_row;
-	  curr_index = spr_calc_index(s_lin0,s_col0);
+	  sprite_curr_index = spr_calc_index(s_lin0,s_col0);
 		if ((s_col0 & 1) == 0) { //Par
 			if ((s_lin0 & 15) == 0) {
 				//Paint single tile
-				spr_tile_paint(scr_map[curr_index],s_lin0,s_col0);
+				spr_tile_paint(scr_map[sprite_curr_index],s_lin0,s_col0);
+				player_pick_item(sprite_curr_index);
 			} else {
 				//Paint up n down tiles
 				s_row = s_lin0 >> 4;
 				s_row = s_row << 4;
-				spr_tile_paint(scr_map[curr_index   ], s_row, s_col0);
+				spr_tile_paint(scr_map[sprite_curr_index   ], s_row, s_col0);
+				player_pick_item(sprite_curr_index);
 				s_row = s_row + 16;
-				spr_tile_paint(scr_map[curr_index+16], s_row, s_col0);
+				spr_tile_paint(scr_map[sprite_curr_index+16], s_row, s_col0);
+				player_pick_item(sprite_curr_index+16);
 			}
 		} else { //Impar
 			if ((s_lin0 & 15) == 0) {
 				//Paint single tile
-				spr_tile_paint(scr_map[curr_index  ], s_lin0, s_col0-1);
-				spr_tile_paint(scr_map[curr_index+1], s_lin0, s_col0+1);
+				spr_tile_paint(scr_map[sprite_curr_index  ], s_lin0, s_col0-1);
+				player_pick_item(sprite_curr_index);
+				spr_tile_paint(scr_map[sprite_curr_index+1], s_lin0, s_col0+1);
+				player_pick_item(sprite_curr_index+1);
 			} else {
 				//Paint up n down tiles
 				s_row = s_lin0 >> 4;
 				s_row = s_row << 4;
 				//up
-				spr_tile_paint(scr_map[curr_index   ],s_row, s_col0-1);
-				spr_tile_paint(scr_map[curr_index+1 ],s_row, s_col0+1);
+				spr_tile_paint(scr_map[sprite_curr_index   ],s_row, s_col0-1);
+				player_pick_item(sprite_curr_index);
+				spr_tile_paint(scr_map[sprite_curr_index+1 ],s_row, s_col0+1);
+				player_pick_item(sprite_curr_index+1);
 				//down
 				s_row = s_row + 16;
-				spr_tile_paint(scr_map[curr_index+16],s_row, s_col0-1);
-				spr_tile_paint(scr_map[curr_index+17],s_row, s_col0+1);
+				spr_tile_paint(scr_map[sprite_curr_index+16],s_row, s_col0-1);
+				player_pick_item(sprite_curr_index+16);
+				spr_tile_paint(scr_map[sprite_curr_index+17],s_row, s_col0+1);
+				player_pick_item(sprite_curr_index+17);
 			}
 		}
 }

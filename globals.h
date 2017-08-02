@@ -20,6 +20,14 @@
 
 #define GAME_ROWS                     11
 #define GAME_SCR_MAX_INDEX            160
+
+/* Map foreground tiles */
+#define TILE_EMPTY                    0
+#define TILE_FLOOR                    48 //START FLOOR TILES
+#define TILE_CEIL                     60 //START CEILS TILES
+#define TILE_END                      76 //END OF TILES
+#define TILE_ITEM_S                   24 //START OF ITEMS
+#define TILE_ITEM_E                   39 //END OF ITEMS
 /* Enemies indexes */
 #define SHELLCREEPER_GREEN            1
 #define SHELLCREEPER_RED              2
@@ -47,9 +55,9 @@
 
 /* Player 1 tiles */
 #define TILE_P1_STANR                 88
-#define TILE_P1_RIGHT                 72
-#define TILE_P1_SLIDR                 72
-#define TILE_P1_JUMPR                 76
+#define TILE_P1_RIGHT                 84
+#define TILE_P1_SLIDR                 84
+#define TILE_P1_JUMPR                 88
 #define TILE_P1_LEN                   8 //LEN OF PLAYER SPRITES FOR EACH DIRECTION
 
 #define TILE_P1_KILL                  64
@@ -69,13 +77,7 @@
 #define TILE_COIN1                    180
 #define TILE_COIN2                    183
 
-/* Map foreground tiles */
-#define TILE_EMPTY                    0
-//#define TILE_COL1                     204
 
-#define TILE_END                      72
-#define TILE_CEIL                     60
-#define TILE_FLOOR                    48
 
 /* Screen tiles */
 #define TILE_BRICK                    48
@@ -143,7 +145,7 @@
 /* Player */
 #define PLAYER_SLIDE_NORMAL           2
 #define PLAYER_SLIDE_ICE              12
-#define PLAYER_MAX_JUMP               10  /* Max Jump Time 10 frames */
+
 #define PLAYER_HIT_BRICK_TIME         4
 
 #define PLAYER_HCOL_MARGIN            2  //HORIZONTAL COLLISION MARGIN
@@ -153,7 +155,9 @@
 #define PLAYER_FALL_SPEED             2
 #define PLAYER_INERT_TIME             8  /* Time for Player Inertia */
 #define PLAYER_ANIM_HIT_TIME          40 /* Time for Player Hit Sprite display after kill */
-#define PLAYER_TOP_SUSPEND            6
+
+#define PLAYER_JUMP_MAX               4  /* Max Jump Time 10 frames */
+#define PLAYER_JUMP_SUSPEND           6
 
 
 /* Enemies */
@@ -265,7 +269,7 @@ extern unsigned int		frame_time;
 extern unsigned int  	osd_update_time;
 extern unsigned int  	osd_show_time;
 extern unsigned char	spr_count;
-
+extern unsigned int   sprite_curr_index;
 
 
 extern unsigned char 	game_brick_tile;

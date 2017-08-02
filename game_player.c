@@ -215,7 +215,7 @@ unsigned char player_move(void){
 
 		if ( BIT_CHK(s_state, STAT_JUMP) ) {
 			/* Jump Handling */
-			if ( player_jump_c[index_player] < PLAYER_MAX_JUMP ) {
+			if ( player_jump_c[index_player] < PLAYER_JUMP_MAX ) {
 				if ( !BIT_CHK(state_a[sprite], STAT_HITBRICK) ) {
 					spr_move_up();
 				}
@@ -238,20 +238,33 @@ unsigned char player_move(void){
 		spr_move_horizontal();
 		sprite_lin_inc_mul = 0;
 		++player_jump_c[index_player];
-
-	}
-
-	/* Restored hitted platforms */
-	if ( game_check_time( spr_timer[sprite], PLAYER_HIT_BRICK_TIME ) ) {
-		player_hit_brick_clear();
 	}
 	/* Draw Player sprite */
 	spr_redraw();
+
+	/* Anim Restored hitted platforms */
+	if ( game_check_time( spr_timer[sprite], PLAYER_HIT_BRICK_TIME ) ) {
+		player_hit_brick_clear();
+	}
+
+	/* Pick Items */
+  //player_pick_item();
+
 	/* Store State variable */
 	state[sprite] = s_state;
 	return 0;
 }
 
+void player_pick_item( unsigned int f_index){
+  unsigned char v0;
+
+	v0 = scr_map[f_index];
+	if ( v0 >= TILE_ITEM_S && v0 <= TILE_ITEM_E ) {
+		//PICK ITEM
+		scr_map[f_index] = TILE_EMPTY;
+		NIRVANAP_drawT(TILE_EMPTY, f_index / 16, f_index % 16);
+	}
+}
 
 unsigned char player_move_input(void) {
 
@@ -357,7 +370,7 @@ unsigned char player_hit_brick(void){
 		}
 
 		BIT_SET( state_a[sprite] , STAT_HITBRICK );
-		player_jump_c[index_player] = PLAYER_MAX_JUMP-PLAYER_TOP_SUSPEND;
+		player_jump_c[index_player] = PLAYER_JUMP_MAX-PLAYER_JUMP_SUSPEND;
 		spr_timer[sprite] = zx_clock();
 		hit_lin[index_player] = 8 + (( (lin[sprite]-8) >> 4) << 4 );
 

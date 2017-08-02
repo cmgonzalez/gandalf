@@ -33,5 +33,5 @@ extern void          player_score_add(unsigned int f_score) __z88dk_fastcall;
 extern unsigned char player_lost_life(void);
 extern void          player_hit_brick_clear(void);
 extern void          player_check_floor(void);
-
+extern void          player_pick_item(unsigned int f_index);
 #endif
