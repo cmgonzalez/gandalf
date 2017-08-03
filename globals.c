@@ -28,9 +28,8 @@ unsigned char spec128;
 
 const char *joynames[] = { "SJ1", "SJ2", "KB1", "KB2", "KEM", "CUR", "FUL" };
 uint16_t (*joyfunc1)(udk_t *);			// pointer to joystick function Player 1
-uint16_t (*joyfunc2)(udk_t *);			// pointer to joystick function Player 1
 udk_t k1;
-udk_t k2;
+
 unsigned char dirs;
 unsigned char tbuffer[7];			    // temporary buffer
 
@@ -44,13 +43,6 @@ const JOYFUNC control_method[7] = {
    (JOYFUNC)(in_stick_fuller)
 };
 
-struct Sprite {
-   unsigned char  class;
-   unsigned char  col;
-   unsigned char  colint;
-   unsigned char  lin;
-};
-struct Sprite sprites[8];
 
 //SPRITES GAME ARRAYS
 unsigned char class[8];					//CLASS OF SPRITE
@@ -65,17 +57,17 @@ unsigned int  last_time[8];				//LAST TIME OF MOVEMENT FOR ANIMATIONS / SPEED
 unsigned char jump_lin[8];				//START JUMP LINE
 
 // PLAYER ONLY
-unsigned char hit_lin[2];				//HIT BRICK LINE
-unsigned char hit_col[2];				//HIT BRICK COL
-unsigned char player_jump_c[2];			//JUMP CNT TIME y = a*t^2 + b*t + c https://www.wired.com/2016/12/lets-go-physics-jumping-super-mario-run/
-unsigned char sliding[2];				//SLIDING COUNTER
-unsigned int  player_score[2];			//SCORE ARRAYS
-unsigned int  player_next_extra[2];		//SCORE ARRAYS
-unsigned int  player_joy[2];			//JOYSTICK ARRAYS
+unsigned char player_hit_lin;				//HIT BRICK LINE
+unsigned char player_hit_col;				//HIT BRICK COL
+unsigned char player_jump_c;			//JUMP CNT TIME y = a*t^2 + b*t + c https://www.wired.com/2016/12/lets-go-physics-jumping-super-mario-run/
+unsigned char player_slide;				  //SLIDING COUNTER
+unsigned int  player_score;	     		//SCORE
+unsigned int  player_joy;			      //JOYSTICK
+unsigned char	player_lives;
 
-unsigned char	index_player;
+
 unsigned char	sprite;
-unsigned char	hit_count;
+unsigned char	player_hit_count;
 
 unsigned char	s_tile0;
 unsigned char	s_tile1;
@@ -98,8 +90,8 @@ unsigned char	attrib[4];
 unsigned char	attrib_hl[4];
 unsigned char	s_state;
 
-unsigned char g_hit_left;
-unsigned char g_hit_right;
+unsigned char g_player_hit_left;
+unsigned char g_player_hit_right;
 
 unsigned int	curr_time;
 unsigned int	entry_time;
@@ -108,8 +100,6 @@ unsigned int	osd_update_time;
 unsigned int	osd_show_time;
 unsigned char	spr_count;
 unsigned int  sprite_curr_index;
-
-
 
 
 //###############################################################################################
@@ -126,12 +116,6 @@ unsigned char game_inmune;
 
 unsigned char	game_sound;
 unsigned char	game_over;
-unsigned char	game_lives[2];
-unsigned int	game_time_flipped;
-unsigned int	game_time_fireball_start;
-unsigned char	spr_water_clear;
-unsigned int	spr_water_time;
-unsigned char	game_bonus;
 unsigned char	game_osd;
 unsigned char	game_type;
 unsigned char	game_menu_sel;
@@ -139,22 +123,20 @@ unsigned char	game_menu_sel;
 
 unsigned int	game_score_top;
 //PHASE RELATED VARIABLES
-unsigned char phase_quota[3];
-unsigned char phase_left;
 unsigned char phase_tot;
 unsigned char phase_pop;
 unsigned char phase_coins;
 unsigned char phase_end;
 unsigned char phase_curr;
 unsigned char phase_angry;
-unsigned char phase_bonus_total[2];
 unsigned char screen_paper;
 unsigned char screen_ink;
+
 //SCORES OSD
-unsigned char score_osd_lin[2];		//TO CLEAR POINTS ON SCREEN
-unsigned char score_osd_col[2];		//TO CLEAR POINTS ON SCREEN
-unsigned int  score_osd_update_time[2];	//TO CLEAR POINTS ON SCREEN
-unsigned int  score_osd_tile[2];	//TO CLEAR POINTS ON SCREEN
+unsigned char score_osd_lin;		//TO CLEAR POINTS ON SCREEN
+unsigned char score_osd_col;		//TO CLEAR POINTS ON SCREEN
+unsigned int  score_osd_update_time;	//TO CLEAR POINTS ON SCREEN
+unsigned int  score_osd_tile;	//TO CLEAR POINTS ON SCREEN
 
 //###############################################################################################
 //#                                                                                             #
@@ -173,17 +155,14 @@ unsigned char scr_map[GAME_SCR_MAX_INDEX];
 unsigned char scr_curr;
 unsigned char map_width;
 unsigned char map_heigth;
-
-unsigned char scr_0[] = 	{141,0,7,8,131,0,32,0,32,131,0,24,25,26,27,0,9,10,146,0,32,0,32,0,32,130,0,32,33,34,35,36,0,11,12,135,0,65,66,67,68,69,70,71,56,68,0,72,131,73,74,136,0,56,139,0,5,6,130,0,56,130,0,32,130,0,32,132,0,1,2,3,4,0,56,0,72,131,73,74,131,42,72,134,73,74}	;
-unsigned char scr_1[] = 	{141,0,7,8,135,0,24,0,25,0,26,0,27,9,10,151,0,11,12,133,0,131,68,138,70,132,0,58,131,0,131,68,131,44,134,0,58,131,0,131,68,32,132,0,5,6,130,0,58,131,0,131,68,132,0,1,2,3,4,0,58,0,72,131,73,74,70,130,42,72,134,73,74}	;
-unsigned char scr_2[] = 	{132,0,131,37,134,0,7,8,133,0,131,37,132,0,70,0,9,10,133,0,131,37,163,0,68,70,68,131,0,65,66,67,56,65,67,141,0,56,134,0,5,6,133,0,11,12,56,133,0,1,2,3,4,131,0,72,131,73,74,131,42,72,134,73,74}	;
-unsigned char scr_3[] = 	{130,0,7,8,131,0,137,69,130,0,9,10,131,0,133,69,130,0,27,136,0,133,69,146,0,47,135,0,57,137,69,134,0,57,137,69,134,0,57,137,69,134,0,57,137,69,72,130,73,74,131,42,72,135,73,74}	;
-unsigned char scr_4[] = 	{138,69,131,0,7,8,131,0,26,0,69,130,0,27,0,69,131,0,9,10,133,0,59,132,0,69,138,0,59,139,0,69,130,44,69,59,69,130,44,130,69,68,70,130,68,57,0,132,69,59,133,69,132,0,57,0,69,0,130,37,59,130,37,130,0,69,5,6,130,0,57,0,69,0,130,37,59,130,37,130,0,1,2,3,4,0,57,0,72,142,73,74}	;
-unsigned char scr_5[] = 	{0,7,8,135,0,37,0,37,0,37,130,0,9,10,134,0,53,133,54,55,140,0,23,135,0,37,0,37,0,37,131,0,22,135,0,53,131,54,55,131,0,22,132,0,37,132,0,23,133,0,22,131,0,53,54,55,131,0,22,133,0,22,132,0,23,132,0,22,133,0,22,131,0,72,131,73,74,131,42,72,134,73,74}	;
-unsigned char scr_6[] = 	{130,0,135,37,130,0,7,8,142,0,9,10,133,0,48,62,131,42,62,48,138,0,62,131,43,62,139,0,133,68,138,0,48,133,46,48,145,0,5,6,133,0,11,12,134,0,1,2,3,4,131,0,72,131,73,74,131,42,72,134,73,74}	;
-unsigned char scr_7[] = 	{136,0,21,132,0,7,8,137,0,20,131,0,21,9,10,137,0,20,131,0,20,136,0,67,130,0,20,130,0,131,19,134,0,130,67,130,0,20,130,0,17,13,18,133,0,131,67,130,0,20,0,19,131,16,19,131,0,132,67,130,0,20,0,17,13,14,13,18,130,0,133,67,130,0,20,0,17,13,15,13,18,0,72,142,73,74}	;
-
-//###############################################################################################
+unsigned char scr_0[] = 	{141,0,7,8,131,0,32,0,32,131,0,24,25,26,27,0,9,10,132,0,73,141,0,32,0,32,0,32,130,0,32,33,34,35,36,0,11,12,135,0,65,66,67,68,69,70,71,56,68,0,72,131,73,74,136,0,56,139,0,5,6,130,0,56,138,0,1,2,3,4,0,56,0,72,131,73,74,131,42,72,134,73,74}	;
+unsigned char scr_1[] = 	{141,0,7,8,135,0,24,0,25,0,26,0,27,9,10,151,0,11,12,136,0,138,70,131,0,70,58,70,130,0,131,68,131,44,134,0,58,131,0,68,130,0,32,132,0,5,6,130,0,58,133,0,68,132,0,1,2,3,4,0,58,0,134,70,130,42,136,70}	;
+unsigned char scr_2[] = 	{132,0,131,32,134,0,7,8,133,0,131,32,132,0,70,0,9,10,133,0,131,32,163,0,68,70,68,131,0,65,66,67,56,65,67,141,0,56,134,0,5,6,133,0,11,12,56,133,0,1,2,3,4,131,0,72,131,73,74,131,42,72,134,73,74}	;
+unsigned char scr_3[] = 	{130,0,7,8,131,0,137,71,130,0,9,10,131,0,133,71,130,0,27,136,0,133,71,146,0,42,135,0,57,137,71,134,0,57,137,71,134,0,57,137,71,134,0,57,137,71,72,131,73,74,130,42,72,135,73,74}	;
+unsigned char scr_4[] = 	{138,71,131,0,7,8,131,0,26,0,71,130,0,27,0,71,131,0,9,10,133,0,59,132,0,71,138,0,59,139,0,71,44,45,71,59,71,130,45,134,71,57,0,132,71,59,133,71,131,0,71,57,0,71,0,130,32,59,130,32,130,0,71,5,6,0,71,57,0,71,0,130,32,59,130,32,130,0,1,2,3,4,0,57,0,72,142,73,74}	;
+unsigned char scr_5[] = 	{0,7,8,135,0,32,0,32,0,32,130,0,9,10,134,0,53,133,54,55,140,0,23,135,0,32,0,32,0,32,131,0,22,135,0,53,131,54,55,131,0,22,132,0,32,132,0,23,133,0,22,131,0,53,54,55,131,0,22,133,0,22,132,0,23,132,0,22,133,0,22,131,0,72,142,73,74}	;
+unsigned char scr_6[] = 	{130,0,135,37,130,0,7,8,142,0,9,10,133,0,48,62,131,42,62,48,138,0,62,131,43,62,139,0,133,68,138,0,48,133,44,48,145,0,5,6,133,0,11,12,134,0,1,2,3,4,131,0,72,131,73,74,131,42,72,134,73,74}	;
+unsigned char scr_7[] = 	{136,0,21,132,0,7,8,137,0,20,131,0,21,9,10,137,0,20,131,0,20,136,0,67,58,0,20,130,0,131,19,134,0,130,67,58,0,20,130,0,17,13,18,133,0,131,67,58,0,20,0,19,131,16,19,131,0,132,67,58,0,20,0,17,13,14,13,18,130,0,133,67,58,0,20,0,17,13,15,13,18,0,72,142,73,74}	;//###############################################################################################
 //#                                                                                             #
 //# ENEMIES ANIMATION SPEEDS - INTERRUPTS VALUES 50HZ                                           #
 //#                                                                                             #

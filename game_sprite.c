@@ -41,16 +41,16 @@ unsigned int spr_check_map(unsigned char f_lin, unsigned char f_col) {
 		return game_check_maze( index1 );
 	} else {
 		index1 = spr_calc_index( f_lin, f_col-1);
-		g_hit_left = 0;
-		g_hit_right = 0;
+		g_player_hit_left = 0;
+		g_player_hit_right = 0;
 
 		if (game_check_maze( index1 )) {
-			g_hit_left = 1;
+			g_player_hit_left = 1;
 		}
 		if (game_check_maze( index1 + 1 )) {
-			g_hit_right = 1;
+			g_player_hit_right = 1;
 		}
-		return g_hit_left || g_hit_right;
+		return g_player_hit_left || g_player_hit_right;
 	}
 }
 
@@ -62,16 +62,16 @@ unsigned int spr_check_map_fall(unsigned char f_lin, unsigned char f_col) {
 		return game_check_maze_floor( index1 );
 	} else {
 		index1 = spr_calc_index( f_lin, f_col-1);
-		g_hit_left = 0;
-		g_hit_right = 0;
+		g_player_hit_left = 0;
+		g_player_hit_right = 0;
 
 		if (game_check_maze_floor( index1 )) {
-			g_hit_left = 1;
+			g_player_hit_left = 1;
 		}
 		if (game_check_maze_floor( index1 + 1 )) {
-			g_hit_right = 1;
+			g_player_hit_right = 1;
 		}
-		return g_hit_left || g_hit_right;
+		return g_player_hit_left || g_player_hit_right;
 	}
 }
 
@@ -97,7 +97,7 @@ unsigned char spr_move_up( void ){
 			if ( spr_check_map(tmp1, col[sprite]) ) {
 				/* Only Players can hit objects */
 				if (sprite == SPR_P1 && !BIT_CHK( state_a[SPR_P1] , STAT_HITBRICK ) ) {
-				  player_hit_brick();
+				  player_player_hit_brick();
 				}
 				return 1;
 			}
@@ -528,8 +528,8 @@ void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
 	unsigned char f_col;
 	/*f_hit should be even*/
 
-	f_col = hit_col[index_player];
-  f_lin = hit_lin[index_player];
+	f_col = player_hit_col;
+  f_lin = player_hit_lin;
 
 	index1 = spr_calc_index(f_lin,f_col);
 	v0 = scr_map[ index1-16];
@@ -615,39 +615,44 @@ void spr_back_clr( void ) {
 			if ((s_lin0 & 15) == 0) {
 				//Paint single tile
 				spr_tile_paint(scr_map[sprite_curr_index],s_lin0,s_col0);
-				player_pick_item(sprite_curr_index);
+				player_pick_item();
 			} else {
 				//Paint up n down tiles
 				s_row = s_lin0 >> 4;
 				s_row = s_row << 4;
 				spr_tile_paint(scr_map[sprite_curr_index   ], s_row, s_col0);
-				player_pick_item(sprite_curr_index);
+				player_pick_item();
 				s_row = s_row + 16;
-				spr_tile_paint(scr_map[sprite_curr_index+16], s_row, s_col0);
-				player_pick_item(sprite_curr_index+16);
+				sprite_curr_index = sprite_curr_index+16;
+				spr_tile_paint(scr_map[sprite_curr_index], s_row, s_col0);
+				player_pick_item();
 			}
 		} else { //Impar
 			if ((s_lin0 & 15) == 0) {
 				//Paint single tile
 				spr_tile_paint(scr_map[sprite_curr_index  ], s_lin0, s_col0-1);
-				player_pick_item(sprite_curr_index);
-				spr_tile_paint(scr_map[sprite_curr_index+1], s_lin0, s_col0+1);
-				player_pick_item(sprite_curr_index+1);
+				player_pick_item();
+				sprite_curr_index = sprite_curr_index+1;
+				spr_tile_paint(scr_map[sprite_curr_index], s_lin0, s_col0+1);
+				player_pick_item();
 			} else {
 				//Paint up n down tiles
 				s_row = s_lin0 >> 4;
 				s_row = s_row << 4;
 				//up
 				spr_tile_paint(scr_map[sprite_curr_index   ],s_row, s_col0-1);
-				player_pick_item(sprite_curr_index);
-				spr_tile_paint(scr_map[sprite_curr_index+1 ],s_row, s_col0+1);
-				player_pick_item(sprite_curr_index+1);
+				player_pick_item();
+				sprite_curr_index = sprite_curr_index+1;
+				spr_tile_paint(scr_map[sprite_curr_index],s_row, s_col0+1);
+				player_pick_item();
 				//down
 				s_row = s_row + 16;
-				spr_tile_paint(scr_map[sprite_curr_index+16],s_row, s_col0-1);
-				player_pick_item(sprite_curr_index+16);
-				spr_tile_paint(scr_map[sprite_curr_index+17],s_row, s_col0+1);
-				player_pick_item(sprite_curr_index+17);
+				sprite_curr_index = sprite_curr_index+15;
+				spr_tile_paint(scr_map[sprite_curr_index],s_row, s_col0-1);
+				player_pick_item();
+				sprite_curr_index = sprite_curr_index+1;
+				spr_tile_paint(scr_map[sprite_curr_index],s_row, s_col0+1);
+				player_pick_item();
 			}
 		}
 }

@@ -66,8 +66,7 @@ void main(void) {
 
 	game_type = 0;
 
-	player_joy[0] = 0; /* SJ1 */
-	player_joy[1] = 1; /* SJ2 */
+	player_joy = 0; /* SJ1 */
 
 	//Keyboard Handling
 
@@ -76,12 +75,6 @@ void main(void) {
 	k1.right = IN_KEY_SCANCODE_p;
 	k1.up    = IN_KEY_SCANCODE_DISABLE;   // must be defined otherwise up is always true
 	k1.down  = IN_KEY_SCANCODE_DISABLE;   // must be defined otherwise down is always true
-
-	k2.fire	= IN_KEY_SCANCODE_z;
-	k2.left	= IN_KEY_SCANCODE_q;
-	k2.right = IN_KEY_SCANCODE_w;
-	k2.up    = IN_KEY_SCANCODE_DISABLE;   // must be defined otherwise up is always true
-	k2.down  = IN_KEY_SCANCODE_DISABLE;   // must be defined otherwise down is always true
 
 	game_joystick_set_menu();
 

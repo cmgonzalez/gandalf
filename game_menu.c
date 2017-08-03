@@ -42,7 +42,6 @@ void menu_config(void) {
     zx_print_str(14,10,spec128 ? "SOUND AY  " : "SOUND 48  ");
 		zx_print_str(15,10,"GAME      ");
 		zx_print_str(16,10,"P1 CTRL   ");
-		zx_print_str(17,10,"P2 CTRL   ");
 		zx_print_str(18,10,"BACK      ");
 
 		/*Sound 48/AY*/
@@ -61,9 +60,7 @@ void menu_config(void) {
 			break;
 		}
 		/*P1 Control*/
-		zx_print_str(16,20,joynames[player_joy[0]]);
-		/*P2 Control*/
-		zx_print_str(17,20,joynames[player_joy[1]]);
+		zx_print_str(16,20,joynames[player_joy]);
 
 		menu_sel = menu_handle(10, 1, 14, 18, 0);
 		ay_fx_play(ay_effect_10);
@@ -78,12 +75,9 @@ void menu_config(void) {
 			if (game_type > GAME_RANDOM_TYPE) game_type = 0;
 			break;
 		case 2: //P1 Controls
-			game_joystick_change(0);
+			game_joystick_change;
 			break;
-		case 3: //P2 Controls
-			game_joystick_change(1);
-			break;
-		case 4: //Back
+		case 3:  //Back
 			menu_sel = 0;
 			menu_paint();
 			cont = 0;
@@ -93,33 +87,7 @@ void menu_config(void) {
 	}
 }
 
-void game_joystick_change(unsigned char f_player_index) __z88dk_fastcall {
-		++player_joy[f_player_index];
-		if (player_joy[f_player_index] == 7) player_joy[f_player_index] = 0; /* Rotate Joystick*/
 
-		if (f_player_index == 0 && player_joy[f_player_index] == 1) ++player_joy[0];  /* player 1 cant have SJ2*/
-		if (f_player_index == 1 && player_joy[f_player_index] == 0) ++player_joy[1];  /* player 2 cant have SJ1*/
-
-
-		if (player_joy[0] == player_joy[1]) {
-			if (f_player_index == 0) {
-				player_joy[1] = 1; /* default */
-			} else {
-				player_joy[0] = 0; /* default */
-			}
-		}
-}
-
-void game_joystick_set_menu(void){
-	/* Default Values for menu */
-	joyfunc1 = (uint16_t (*)(udk_t *))(in_stick_sinclair1);
-	joyfunc2 = (uint16_t (*)(udk_t *))(in_stick_sinclair2);
-}
-
-void game_joystick_set(void){
-	joyfunc1 = control_method[ player_joy[0] ];
-	joyfunc2 = control_method[ player_joy[1] ];
-}
 
 
 void menu(void) {

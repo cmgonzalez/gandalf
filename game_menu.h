@@ -18,7 +18,6 @@
 #define GAME_GAME_H
 
 #include "globals.h"
-
 extern void			     menu_back(unsigned char f_start) __z88dk_fastcall;
 extern void			     menu_e(unsigned char f_col, unsigned char e_c0,unsigned char e_c1,unsigned char e_start,unsigned char f_sign);
 extern unsigned char menu_handle( unsigned char f_col, unsigned char f_inc, unsigned char f_start, unsigned char f_end, unsigned int timeout);
@@ -26,11 +25,4 @@ extern void          menu_top_paint(void);
 extern void 		     menu_paint(void);
 extern void			     menu(void);
 extern void			     menu_config(void);
-
-extern void          game_joystick_change(unsigned char f_player_index) __z88dk_fastcall;
-extern void          game_joystick_set(void);
-extern void          game_joystick_set_menu(void);
-
-
-
 #endif

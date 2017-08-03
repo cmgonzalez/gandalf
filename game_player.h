@@ -26,12 +26,11 @@ extern void          player_restart(unsigned char f_sprite) __z88dk_fastcall;
 extern unsigned char player_move(void);
 extern void          player_turn(void);
 extern unsigned char player_move_input(void);
-extern unsigned char player_hit_brick(void);
-extern unsigned char player_hit_pow(void);
-extern void          player_coin(unsigned char f_enemies,unsigned char f_score);
+extern unsigned char player_player_hit_brick(void);
+extern unsigned char player_player_hit_pow(void);
 extern void          player_score_add(unsigned int f_score) __z88dk_fastcall;
 extern unsigned char player_lost_life(void);
-extern void          player_hit_brick_clear(void);
+extern void          player_player_hit_brick_clear(void);
 extern void          player_check_floor(void);
-extern void          player_pick_item(unsigned int f_index);
+extern void          player_pick_item(void);
 #endif

@@ -30,8 +30,6 @@ extern void          enemy_slipice(void);
 extern void          enemy_fireball_red(void);
 extern void          enemy_fireball_green(void);
 extern void          enemy_fighterfly(void);
-extern void          enemy_trip(void);
-extern void          enemy_trip_move(unsigned char f_slin, unsigned char f_scol, unsigned char f_dir, unsigned char f_dir_alt);
 extern void          enemy_standard_hit(void);
 extern void          enemy_evolve(unsigned char f_enemy) __z88dk_fastcall;
 extern void          enemy_upgrade(unsigned char f_enemy, unsigned char f_class, unsigned char f_tile);

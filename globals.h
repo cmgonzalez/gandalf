@@ -54,7 +54,7 @@
 // 56..63   SPECIAL BRICKS (FLORR AND CEIL CAN BE HITTED)
 
 /* Player 1 tiles */
-#define TILE_P1_STANR                 88
+#define TILE_P1_STANR                 100
 #define TILE_P1_RIGHT                 84
 #define TILE_P1_SLIDR                 84
 #define TILE_P1_JUMPR                 88
@@ -89,9 +89,6 @@
 #define TILE_800                      188
 #define TILE_NICE                     215
 #define TILE_EXTRA                    203
-#define TILE_PRINCESS                 202
-#define TILE_CASTLE                   214
-#define TILE_GRASS                    143
 #define TILE_RAY											189
 
 /* Player indexes */
@@ -178,7 +175,6 @@
 #define ENEMY_SLIN_L                  16
 
 /* Game times */
-#define TIME_WATER_SPLASH             15
 #define TIME_EVENT                    100
 #define TIME_BONUS                    2000 //15 SECONDS IN HUNDREDTHS (ORIG IS 30, TO EASY 4 GAME)
 #define TIME_FIREBALL_RED             1500 //30 SECONDS (50HZ)
@@ -186,7 +182,6 @@
 #define TIME_FIREBALL_B               500  //15 - ORIG 60 SECONDS (50HZ)
 #define TIME_FLIPPED_A                500  //15 - ORIG 20 SECONDS (50HZ)
 #define TIME_FLIPPED_B                250  //7  - ORIG 15 SECONDS (50HZ)
-#define GAME_EXTRA_LIFE               2000
 #define GAME_RANDOM_TYPE              2
 #define GAME_OSD_UPDATE_TIME          5
 #define GAME_OSD_SHOW_TIME            150
@@ -213,11 +208,8 @@ typedef uint16_t (*JOYFUNC)(udk_t *);
 extern unsigned char spec128;
 extern unsigned char btiles[];
 extern uint16_t (*joyfunc1)(udk_t *);
-extern uint16_t (*joyfunc2)(udk_t *);
 extern udk_t k1;
-extern udk_t k2;
 
-extern struct Sprite sprites[8];
 
 extern unsigned char dirs;
 extern unsigned char tbuffer[7];
@@ -228,21 +220,19 @@ extern unsigned char tile[8];
 extern unsigned char lin[8];
 extern unsigned char col[8];
 extern unsigned char colint[8];
-extern unsigned char hit_lin[2];
-extern unsigned char hit_col[2];
-extern unsigned char player_jump_c[2];
+extern unsigned char player_hit_lin;
+extern unsigned char player_hit_col;
+extern unsigned char player_jump_c;
 extern unsigned char jump_lin[8];
 extern unsigned int  spr_timer[8];
 //extern unsigned int  spr_timer_c[8];
-extern unsigned char sliding[2];
+extern unsigned char player_slide;
 extern unsigned int  last_time[8];
-extern unsigned int  player_score[2];
-extern unsigned int  player_next_extra[2];
-extern unsigned int  player_joy[2];
+extern unsigned int  player_score;
+extern unsigned int  player_joy;
 
 extern unsigned char	sprite;
-extern unsigned char	index_player;
-extern unsigned char	hit_count;
+extern unsigned char	player_hit_count;
 extern unsigned char	s_tile0;
 extern unsigned char	s_tile1;
 extern unsigned char	s_lin0;
@@ -280,13 +270,8 @@ extern unsigned char  game_inmune;
 extern unsigned char	game_sound;
 
 extern unsigned char	game_over;
-extern unsigned char	game_lives[2];
+extern unsigned char	player_lives;
 extern unsigned int		game_score_top;
-extern unsigned int		game_time_flipped;
-extern unsigned int		game_time_fireball_start;
-extern unsigned char	spr_water_clear;
-extern unsigned int		spr_water_time;
-extern unsigned char	game_bonus;
 extern unsigned char	game_osd;
 extern unsigned char	game_type;
 extern unsigned char	game_menu_sel;
@@ -309,24 +294,21 @@ extern unsigned char scr_7[];
 extern unsigned char scr_curr;
 extern unsigned char map_width;
 extern unsigned char map_heigth;
-extern unsigned char phase_quota[3];
-extern unsigned char phase_left;
 extern unsigned char phase_tot;
 extern unsigned char phase_pop;
 extern unsigned char phase_coins;
 extern unsigned char phase_end;
 extern unsigned char phase_curr;
 extern unsigned char phase_angry;
-extern unsigned char phase_bonus_total[2];
-extern unsigned char score_osd_lin[2];
-extern unsigned char score_osd_col[2];
-extern unsigned int  score_osd_update_time[2];
-extern unsigned int  score_osd_tile[2];
+extern unsigned char score_osd_lin;
+extern unsigned char score_osd_col;
+extern unsigned int  score_osd_update_time;
+extern unsigned int  score_osd_tile;
 
 
 extern const JOYFUNC control_method[7];
 extern unsigned char initials[8];
 extern const char *joynames[];
 
-extern unsigned char g_hit_left;
-extern unsigned char g_hit_right;
+extern unsigned char g_player_hit_left;
+extern unsigned char g_player_hit_right;
