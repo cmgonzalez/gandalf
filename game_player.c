@@ -72,17 +72,7 @@ unsigned char player_collision(void) {
 
   // UPDATE SCORE OSD
   if (player_hit_count > 0 && lin[sprite] > 24) {
-    if (score_osd_col != 0xFF) {
-      NIRVANAP_drawT(TILE_EMPTY, score_osd_lin, score_osd_col);
-    }
-    score_osd_col = col[sprite];
-    score_osd_lin = lin[sprite] - 6;
-    score_osd_update_time = zx_clock();
-    score_osd_tile = TILE_800;
-    if (player_hit_count > 1)
-      score_osd_tile = TILE_NICE;
-    if (player_hit_count > 6)
-      score_osd_tile = TILE_EXTRA;
+//TODO ADD ANIMATIONS 
   }
   return 0;
 }
@@ -161,8 +151,8 @@ unsigned char player_move(void) {
 
   if (BIT_CHK(s_state, STAT_JUMP) || BIT_CHK(s_state, STAT_FALL)) {
     /* Jump Handling */
-    if ( spr_move_jump() ) {
-      //Jump Ends
+    if (spr_move_jump()) {
+      // Jump Ends
       tile[sprite] = spr_tile_dir(TILE_P1_RIGHT, sprite, TILE_P1_LEN);
     }
   } else {
@@ -178,7 +168,11 @@ unsigned char player_move(void) {
   }
 
   /* Draw Player sprite */
-  spr_redraw();
+  if ( spr_redraw() ) {
+    // The player have moved so we need to check to pick
+    player_check_map();
+  }
+
   /* Anim Restored hitted platforms */
   if (game_check_time(spr_timer[sprite], PLAYER_HIT_BRICK_TIME)) {
     player_hit_platform_clear();
@@ -187,8 +181,6 @@ unsigned char player_move(void) {
   state[sprite] = s_state;
   return 0;
 }
-
-
 
 unsigned char player_move_input(void) {
 
@@ -239,7 +231,38 @@ unsigned char player_move_input(void) {
   }
   return 0;
 }
+void player_check_map() {
 
+  sprite_curr_index = spr_calc_index(lin[sprite], col[sprite]);
+  if ((s_col0 & 1) == 0) { // Par
+    if ((s_lin0 & 15) == 0) {
+      // Pick single tile
+      player_pick_item();
+    } else {
+      // Pick up n down tiles
+      player_pick_item();
+      sprite_curr_index = sprite_curr_index + 16;
+      player_pick_item();
+    }
+  } else
+     { // Impar
+      if ((s_lin0 & 15) == 0) {
+        // Pick single tile
+        player_pick_item();
+        sprite_curr_index = sprite_curr_index + 1;
+        player_pick_item();
+      } else {
+        // Pick up n down tiles
+        player_pick_item();
+        sprite_curr_index = sprite_curr_index + 1;
+        player_pick_item();
+        sprite_curr_index = sprite_curr_index + 15;
+        player_pick_item();
+        sprite_curr_index = sprite_curr_index + 1;
+        player_pick_item();
+      }
+    }
+}
 
 void player_pick_item(void) {
   unsigned char v0;
@@ -252,10 +275,9 @@ void player_pick_item(void) {
     scr_map[sprite_curr_index] = TILE_EMPTY;
     s_lin1 = (sprite_curr_index >> 4) << 4;
     s_col1 = (sprite_curr_index & 15) * 2;
-
-    NIRVANAP_drawT(TILE_EMPTY, s_lin1, s_col1);
+    spr_add_anim(s_lin1, s_col1, TILE_ANIM_EXPO, 3);
+    //NIRVANAP_drawT(TILE_EMPTY, s_lin1, s_col1);
   }
-
 }
 
 unsigned char player_hit_platform(void) {

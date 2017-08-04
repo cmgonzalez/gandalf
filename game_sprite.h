@@ -47,7 +47,7 @@ extern void             spr_tile_paint( unsigned char f_tile, unsigned char f_li
 unsigned char           spr_page_left();
 unsigned char           spr_page_right();
 extern void             spr_page_map(void);
-
-
+extern void             spr_add_anim( unsigned char f_lin, unsigned char f_col, unsigned char f_tile, unsigned char f_end );
+extern void             spr_play_anim(void);
 
 #endif

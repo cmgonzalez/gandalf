@@ -41,7 +41,6 @@ extern void			     game_colour_message( unsigned char f_row, unsigned char f_col
 extern void			     game_rotate_attrib(void);
 extern unsigned char game_check_time(unsigned int start, unsigned int lapse);
 extern void          game_phase_print_score_back(void);
-extern void          game_score_osd(void);
 extern void          game_end(void);
 extern void          game_print_header(void);
 extern void          game_joystick_change(void);

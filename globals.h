@@ -59,7 +59,7 @@
 #define TILE_P1_SLIDR                 84
 #define TILE_P1_JUMPR                 88
 #define TILE_P1_LEN                   8 //LEN OF PLAYER SPRITES FOR EACH DIRECTION
-
+#define TILE_ANIM_EXPO                108
 #define TILE_P1_KILL                  64
 #define TILE_P1_HITR                  64
 
@@ -304,11 +304,13 @@ extern unsigned char phase_coins;
 extern unsigned char phase_end;
 extern unsigned char phase_curr;
 extern unsigned char phase_angry;
-extern unsigned char score_osd_lin;
-extern unsigned char score_osd_col;
-extern unsigned int  score_osd_update_time;
-extern unsigned int  score_osd_tile;
 
+
+extern unsigned char anim_lin[8];
+extern unsigned char anim_col[8];
+extern unsigned char anim_tile[8];
+extern unsigned char anim_int[8];
+extern unsigned char anim_end[8];
 
 extern const JOYFUNC control_method[7];
 extern unsigned char initials[8];

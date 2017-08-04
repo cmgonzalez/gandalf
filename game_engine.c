@@ -87,8 +87,6 @@ void game_phase_init(void) {
 	entry_time = 0;
 	zx_set_clock(0);
 	frame_time = 0;
-	score_osd_col = 0xFF;
-	score_osd_col = 0xFF;
 	spr_count = 0;
 
 	/* Phase Tune */
@@ -139,8 +137,9 @@ void game_loop(void) {
 	game_joystick_set();
 	while (!game_over) {
 
-		if ((loop_count & 3) == 0) {
-			game_score_osd();
+
+		if ((loop_count & 47) == 0) {
+			spr_play_anim();
 		}
 
 		/*player 1 turn*/
@@ -182,24 +181,6 @@ void game_print_phase() {
 	zx_print_chr(23, 18, phase_curr+1);
 }
 
-void game_score_osd() {
-
-	if (score_osd_col != 0xFF ) {
-		tmp = score_osd_lin - 2;
-
-		index1 = spr_calc_index( tmp , score_osd_col  );
-		if ( scr_map[index1] == TILE_EMPTY && scr_map[index1+1] == TILE_EMPTY   ) {
-			NIRVANAP_halt(); // synchronize with interrupts
-			NIRVANAP_drawT( score_osd_tile, score_osd_lin, score_osd_col );
-			score_osd_lin = tmp;
-		}
-
-		if ( game_check_time( score_osd_update_time , 60 ) ) {
-			NIRVANAP_fillT( PAPER, score_osd_lin, score_osd_col );
-			score_osd_col = 255;
-		}
-	}
-}
 
 
 unsigned char game_check_maze(int f_index) __z88dk_fastcall {
