@@ -88,39 +88,47 @@ unsigned char spr_chktime(unsigned char *sprite) __z88dk_fastcall {
   return 0;
 }
 
-void spr_move_jump(void) {
+unsigned char spr_move_jump(void) {
   signed char val_yc;
 
   player_vel_y = player_vel_y + game_gravity;
+
+  if (player_vel_y >  120) player_vel_y = 120;
+  if (player_vel_y < -120) player_vel_y = -120;
+
+zx_print_chr(20,0,player_vel_y);
+
   val_yc = player_vel_y / 10;
 
   if ((val_yc & 1) != 0)
     val_yc++;
-  lin[sprite] += val_yc;
-
+  lin[sprite] += (unsigned char)val_yc;
   if (val_yc < 0) {
     // Asending
     if (spr_check_map(lin[sprite], col[sprite])) {
+      // Start Falling
       lin[sprite] -= val_yc;
-      player_hit_brck();
+      player_hit_platform();
       player_vel_y = 0;
+      BIT_CLR(s_state, STAT_JUMP);
+      BIT_SET(s_state, STAT_FALL);
     }
   } else {
     // Falling
     if (spr_check_map_fall(lin[sprite] + 16, col[sprite]) ||
-        (lin[sprite] > GAME_LIN_FLOOR)) {
-      // lin[sprite] -= val_yc;
+        (lin[sprite] >= GAME_LIN_FLOOR)) {
+      // Jump end
       lin[sprite] = (lin[sprite] >> 4) << 4;
       player_vel_y = 0;
       BIT_CLR(s_state, STAT_FALL);
       BIT_CLR(s_state, STAT_JUMP);
       colint[sprite] = 0;
-      tile[sprite] = spr_tile_dir(TILE_P1_STANR, sprite, 1);
-      // TODO SLIDE
+      return 1;
     }
   }
 
   spr_move_horizontal();
+  return 0;
 }
 
 unsigned char spr_move_up(void) {
@@ -131,7 +139,7 @@ unsigned char spr_move_up(void) {
     if (spr_check_map(tmp1, col[sprite])) {
       /* Only Players can hit objects */
       if (sprite == SPR_P1 && !BIT_CHK(state_a[SPR_P1], STAT_HITBRICK)) {
-        player_hit_brck();
+        player_hit_platform();
       }
       return 1;
     }
@@ -467,13 +475,6 @@ unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
 
 unsigned char spr_tile_dir(unsigned char f_tile, unsigned char f_sprite,
                            unsigned char f_inc) {
-  if (BIT_CHK(state[f_sprite], STAT_HIT)) {
-    return f_tile + 6;
-  }
-
-  if (BIT_CHK(state_a[f_sprite], STAT_TURN)) {
-    return f_tile + 9;
-  }
 
   if (BIT_CHK(state[f_sprite], STAT_DIRR)) {
     return f_tile;

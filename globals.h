@@ -263,7 +263,7 @@ extern unsigned int		frame_time;
 extern unsigned int  	osd_update_time;
 extern unsigned int  	osd_show_time;
 extern unsigned char	spr_count;
-extern unsigned int   sprite_curr_index;
+extern unsigned char   sprite_curr_index;
 
 
 extern unsigned char 	game_brick_tile;

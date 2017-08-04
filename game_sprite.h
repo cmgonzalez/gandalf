@@ -21,7 +21,7 @@ extern unsigned int	    spr_calc_index(unsigned char l, unsigned char c);
 extern unsigned int     spr_check_map(unsigned char f_lin, unsigned char f_col);
 extern unsigned int     spr_check_map_fall(unsigned char f_lin, unsigned char f_col);
 extern unsigned char    spr_move_up(void);
-extern void             spr_move_jump(void);
+extern unsigned char    spr_move_jump(void);
 extern unsigned char    spr_move_down(void);
 extern unsigned char    spr_move_horizontal(void);
 extern unsigned char    spr_move_right(void);
