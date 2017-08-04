@@ -141,7 +141,7 @@
 
 /* Player */
 #define PLAYER_SLIDE_NORMAL           2
-#define PLAYER_SLIDE_ICE              12
+#define PLAYER_SLIDE_ICE              1
 
 #define PLAYER_HIT_BRICK_TIME         4
 
@@ -153,7 +153,7 @@
 #define PLAYER_INERT_TIME             8  /* Time for Player Inertia */
 #define PLAYER_ANIM_HIT_TIME          40 /* Time for Player Hit Sprite display after kill */
 
-#define PLAYER_JUMP_MAX               4  /* Max Jump Time 10 frames */
+#define PLAYER_JUMP_MAX               5  /* Max Jump Time 10 frames */
 #define PLAYER_JUMP_SUSPEND           6
 
 
@@ -222,7 +222,6 @@ extern unsigned char col[8];
 extern unsigned char colint[8];
 extern unsigned char player_hit_lin;
 extern unsigned char player_hit_col;
-extern unsigned char player_jump_c;
 extern unsigned char jump_lin[8];
 extern unsigned int  spr_timer[8];
 //extern unsigned int  spr_timer_c[8];
@@ -230,6 +229,11 @@ extern unsigned char player_slide;
 extern unsigned int  last_time[8];
 extern unsigned int  player_score;
 extern unsigned int  player_joy;
+
+extern signed char player_vel_x;
+extern signed char player_vel_y;
+extern signed char player_vel_y0;
+extern signed char game_gravity;
 
 extern unsigned char	sprite;
 extern unsigned char	player_hit_count;

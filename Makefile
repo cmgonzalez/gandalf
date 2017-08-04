@@ -25,7 +25,7 @@ zx7: loader.tap game_scr.bin game.font $(OUTC)
 	grep code_compiler_size game_bros.map
 
 loader.tap: src_tap/loader.bas
-	src_tap/bas2tap -sPietro -a10 src_tap/loader.bas loader.tap > /dev/null
+	src_tap/bas2tap -sGandalf -a10 src_tap/loader.bas loader.tap > /dev/null
 
 game_scr.bin: src_tap/game_scr.bin
 	cp src_tap/game_scr.bin game_scr.bin
@@ -35,7 +35,7 @@ game.font: src_font/game.font
 
 $(OUT): $(OBJS) $(ASRC) mmap.inc
 	-rm -f $(OUT)
-	zcc +zx -vn -m -zorg=$(ORG) -startup=31 -clib=sdcc_iy $(OBJS) $(ASRC) game_loader.asm -o game_bros -pragma-include:zpragma.inc
+	zcc +zx -vn -lm -zorg=$(ORG) -startup=31 -clib=sdcc_iy $(OBJS) $(ASRC) game_loader.asm -o game_bros -pragma-include:zpragma.inc
 	appmake +inject -b game_bros_NIRVANAP.bin -o nirvanap_final.bin -i game_bros_NIRVANA_HOLE.bin --offset 6627
 	appmake +zx -b game_bros_MCLOAD.bin -o mcload.tap --blockname mcload --org 16384 --noloader
 	appmake +zx -b game_bros_LOADER.bin -o mcloader.tap --org 23296 --noloader --noheader
