@@ -39,38 +39,29 @@ void enemy_turn(void){
 			s_tile0 = tile[sprite] + colint[sprite];
 			s_state = state[sprite];
 			last_time[sprite] = zx_clock();
-			enemy_standard();
-			spr_redraw();
-			state[sprite] = s_state;
+			enemy_move();
+			if (class[sprite] != 0) {
+				 //The enemy can be out of screen or dead
+				spr_redraw();
+				state[sprite] = s_state;
+			}
 		}
 	}
 }
 
-void enemy_standard(void){
-	//SHELLCREEPERS || SIDESTEPPERS
-		if ( BIT_CHK(s_state, STAT_JUMP) ) {
-			//JUMPING
-			sprite_speed_alt[sprite] = ENEMY_JUMP_SPEED;
-			spr_move_horizontal();
-			spr_move_up();
-			//MAX HIT JUMP
-			if ( jump_lin[sprite] - lin[sprite] >= ENEMIES_MAXJUMP ) {
-				spr_set_fall();
-			}
-		} else {
-			//WALKING OR FALLING
-			enemy_walk();
-	 		//JUMP BEFORE ENTER PIPES
-			if ( lin[sprite] == GAME_LIN_FLOOR && ( col[sprite] < 5 || col[sprite] > 25) ) {
-				BIT_SET(s_state, STAT_JUMP);
-			}
-		}
+void enemy_move(void){
+	switch ( class[sprite]) {
+		case SKELETON:
+		enemy_walk();
+		break;
+	}
 }
 
 void enemy_walk(void){
-	if (BIT_CHK(s_state, STAT_JUMP) == 0 && BIT_CHK(s_state, STAT_FALL) == 0) {
+	spr_move_horizontal();
+	/*
+	if (!BIT_CHK(s_state, STAT_JUMP) && !BIT_CHK(s_state, STAT_FALL)) {
 		if ( (col[sprite] & 1) && !BIT_CHK(s_state, STAT_HIT) ) {
-			//index_d = 0;
 			tmp = 0;
 		} else {
 			tmp = game_check_maze(spr_calc_index(lin[sprite] + 16,col[sprite]));
@@ -117,29 +108,33 @@ void enemy_walk(void){
 			}
 		}
 	}
+	*/
 }
 
 void enemy_init(unsigned char f_sprite,unsigned  char f_lin,unsigned  char f_col,unsigned  char f_class,unsigned  char f_dir) {
 	++spr_count;
-	class[f_sprite] = f_class;
-	lin[f_sprite]  = f_lin;
-	col[f_sprite]  = f_col;
-	tmp = 0;
-	state[f_sprite] = 0;
-	state_a[f_sprite] = 0;
-	jump_lin[f_sprite] = 0;
+	if (spr_count < SPR_P1) {
+		class[f_sprite] = f_class;
+		lin[f_sprite]  = f_lin;
+		col[f_sprite]  = f_col;
+		tmp = 0;
+		state[f_sprite] = 0;
+		state_a[f_sprite] = 0;
+		jump_lin[f_sprite] = 0;
 
-	if (f_dir == DIR_RIGHT){
-		BIT_SET(state[f_sprite], STAT_DIRR);
+		if (f_dir == DIR_RIGHT){
+			BIT_SET(state[f_sprite], STAT_DIRR);
+		}
+		if (f_dir == DIR_LEFT){
+			BIT_SET(state[f_sprite], STAT_DIRL);
+		}
+		colint[f_sprite] = 0;
+		tile[f_sprite] = spr_tile(f_sprite);
+		last_time[f_sprite] = 0;
+		spr_timer[f_sprite] = zx_clock();
+		sprite_speed_alt[f_sprite] = 0;
+		
 	}
-	if (f_dir == DIR_LEFT){
-		BIT_SET(state[f_sprite], STAT_DIRL);
-	}
-	colint[f_sprite] = 0;
-	tile[f_sprite] = spr_tile(f_sprite);
-	last_time[f_sprite] = 0;
-	spr_timer[f_sprite] = zx_clock();
-	sprite_speed_alt[f_sprite] = 0;
 }
 
 void enemy_kill(unsigned char f_sprite) __z88dk_fastcall {

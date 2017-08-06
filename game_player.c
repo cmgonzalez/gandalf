@@ -178,7 +178,7 @@ unsigned char player_move(void) {
 }
 
 unsigned char player_move_input(void) {
-
+//TODO CLEAN THIS!
   /* User have pressed valid input */
   if (player_check_input()) {
     /* New jump */

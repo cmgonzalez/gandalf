@@ -93,8 +93,10 @@ unsigned char spr_move_jump(void) {
 
   player_vel_y = player_vel_y + game_gravity;
 
-  if (player_vel_y >  120) player_vel_y = 120;
-  if (player_vel_y < -120) player_vel_y = -120;
+  if (player_vel_y > 120)
+    player_vel_y = 120;
+  if (player_vel_y < -120)
+    player_vel_y = -120;
   val_yc = player_vel_y / 10;
 
   if ((val_yc & 1) != 0)
@@ -196,11 +198,15 @@ unsigned char spr_move_right(void) {
     ++col[sprite];
     colint[sprite] = 0;
     if (col[sprite] > SCR_COLS_M) {
-
-      if (spr_page_right()) {
-        col[sprite] = 0;
+      if (sprite == SPR_P1) {
+        if (spr_page_right()) {
+          col[sprite] = 0;
+        } else {
+          col[sprite] = SCR_COLS_M;
+        }
       } else {
         col[sprite] = SCR_COLS_M;
+        spr_destroy(sprite);
       }
     }
   }
@@ -225,11 +231,15 @@ unsigned char spr_move_left(void) {
     --col[sprite];
     colint[sprite] = sprite_frames[class[sprite]] - 1;
     if (col[sprite] == 255) {
-
-      if (spr_page_left()) {
-        col[sprite] = SCR_COLS_M;
+      if (sprite == SPR_P1) {
+        if (spr_page_left()) {
+          col[sprite] = SCR_COLS_M;
+        } else {
+          col[sprite] = 0;
+        }
       } else {
         col[sprite] = 0;
+        spr_destroy(sprite);
       }
     }
   }
@@ -237,8 +247,6 @@ unsigned char spr_move_left(void) {
 }
 
 unsigned char spr_page_right() {
-  if (class[sprite] != PLAYER)
-    return 0;
 
   if (scr_curr < map_width) {
     ++scr_curr;
@@ -327,6 +335,11 @@ void spr_page_map(void) {
       break;
     }
   }
+  //Remove all enemies fast
+  for (i = 0; i < SPR_P1; ++i) {
+    class[i]=0;
+    NIRVANAP_spriteT(i,TILE_EMPTY,0,0);
+  }
   spr_init_anim();
 }
 
@@ -352,72 +365,32 @@ unsigned char spr_redraw(void) {
     return 0;
   }
   return 0;
-
-}
-
-unsigned char spr_killed(unsigned char f_sprite) __z88dk_fastcall {
-  switch (class[f_sprite]) {
-  case SKELETON:
-    spr_anim_kill(f_sprite, TILE_ENEMY_SKELETON + 6);
-    break;
-  default:
-    spr_anim_kill(f_sprite, TILE_ENEMY_SKELETON);
-    break;
-  }
-  return 0;
-}
-
-void spr_anim_kill(unsigned char f_sprite, unsigned char f_tile) {
-
-  last_time[f_sprite] = zx_clock();
-  tmp0 = zx_clock() - spr_timer[f_sprite];
-  tmp = 2;
-  if (tmp0 <= 40) {
-    tmp = 1;
-  }
-  if (tmp0 <= 20) {
-    tmp = 0;
-  }
-  if (tmp0 <= 60) {
-    NIRVANAP_spriteT(f_sprite, f_tile + tmp, lin[f_sprite], col[f_sprite]);
-  } else {
-    spr_destroy(f_sprite);
-  }
 }
 
 void spr_destroy(unsigned char f_sprite) __z88dk_fastcall {
   spr_count--;
   s_lin0 = lin[f_sprite];
   s_col0 = col[f_sprite];
+  NIRVANAP_spriteT(f_sprite, TILE_EMPTY, 0, 0);
+  spr_back_clr();
+
   tile[f_sprite] = TILE_EMPTY;
   col[f_sprite] = 0;
   lin[f_sprite] = 0;
   class[f_sprite] = 0;
   state[f_sprite] = 0;
   state_a[f_sprite] = 0;
-  NIRVANAP_spriteT(f_sprite, TILE_EMPTY, 0, 0);
-  NIRVANAP_halt();
-  NIRVANAP_fillT(PAPER, s_lin0, s_col0);
+
 }
 
-void spr_set_fall(void) {
-  BIT_CLR(s_state, STAT_JUMP);
-  BIT_SET(s_state, STAT_FALL);
-  if (sprite >= SPR_P2) {
-    sprite_speed_alt[sprite] = PLAYER_FALL_SPEED;
-  } else {
-    if (class[sprite] <= COIN_1)
-      sprite_speed_alt[sprite] = ENEMY_FALL_SPEED;
-  }
-}
 
 unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
   unsigned char f_inc;
   f_inc = 0;
   switch (class[f_sprite]) {
-    case SKELETON:
-      return spr_tile_dir(TILE_ENEMY_SKELETON, f_sprite, 0);
-      break;
+  case SKELETON:
+    return spr_tile_dir(TILE_ENEMY_SKELETON, f_sprite, 0);
+    break;
   }
   return 0;
 }
@@ -448,7 +421,7 @@ void spr_draw_background(void) {
   s_lin1 = 0;
   s_col1 = 2;
   // intrinsic_ei();
-
+  spr_count = 0;
   while (index1 < ((GAME_ROWS - 1) * 16)) {
 
     if (index1 % 16 == 0) {
@@ -457,13 +430,13 @@ void spr_draw_background(void) {
     }
 
     if (scr_map[index1] < TILE_END) {
-      //TILES
+      // TILES
       NIRVANAP_drawT(scr_map[index1], s_lin1, s_col1);
     } else {
-      //ENEMIES
+      // ENEMIES
       switch (scr_map[index1]) {
-        case INDEX_SKELETON_LEFT:
-        enemy_init(0,s_lin1,s_col1,SKELETON,DIR_LEFT);
+      case INDEX_SKELETON_LEFT:
+        enemy_init(spr_count, s_lin1, s_col1, SKELETON, DIR_LEFT);
         break;
       }
       scr_map[index1] = TILE_EMPTY;
@@ -593,7 +566,6 @@ void spr_back_clr(void) {
     if ((s_lin0 & 15) == 0) {
       // Paint single tile
       spr_tile_paint(scr_map[sprite_curr_index], s_lin0, s_col0);
-      player_pick_item();
     } else {
       // Paint up n down tiles
       s_row = s_lin0 >> 4;
@@ -640,16 +612,17 @@ void spr_tile_paint(unsigned char f_tile, unsigned char f_lin,
   }
 }
 
-void spr_init_anim( void ) {
+void spr_init_anim(void) {
   unsigned char f_anim;
-  for (f_anim = 0; f_anim < 8; f_anim++){
+  for (f_anim = 0; f_anim < 8; f_anim++) {
     anim_lin[f_anim] = 0XFF;
   }
 }
 
-void spr_add_anim( unsigned char f_lin, unsigned char f_col, unsigned char f_tile, unsigned char f_end ) {
+void spr_add_anim(unsigned char f_lin, unsigned char f_col,
+                  unsigned char f_tile, unsigned char f_end) {
   unsigned char f_anim;
-  for (f_anim = 0; f_anim < 8; f_anim++){
+  for (f_anim = 0; f_anim < 8; f_anim++) {
     if (anim_lin[f_anim] == 0XFF) {
       anim_lin[f_anim] = f_lin;
       anim_col[f_anim] = f_col;
@@ -666,18 +639,19 @@ void spr_play_anim(void) {
   unsigned char f_anim;
   unsigned char f_clear;
   f_clear = 1;
-  for (f_anim = 0; f_anim < 8; f_anim++){
+  for (f_anim = 0; f_anim < 8; f_anim++) {
     if (anim_lin[f_anim] != 0XFF) {
       if (f_clear) {
         NIRVANAP_halt();
         f_clear = 0;
       }
 
-      if (anim_int[f_anim] <  anim_end[f_anim]) {
-        NIRVANAP_drawT(  anim_tile[f_anim] + anim_int[f_anim] , anim_lin[f_anim], anim_col[f_anim] );
+      if (anim_int[f_anim] < anim_end[f_anim]) {
+        NIRVANAP_drawT(anim_tile[f_anim] + anim_int[f_anim], anim_lin[f_anim],
+                       anim_col[f_anim]);
         ++anim_int[f_anim];
       } else {
-        NIRVANAP_drawT(  TILE_EMPTY, anim_lin[f_anim], anim_col[f_anim] );
+        NIRVANAP_drawT(TILE_EMPTY, anim_lin[f_anim], anim_col[f_anim]);
         anim_lin[f_anim] = 0XFF;
       }
     }
