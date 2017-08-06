@@ -25,11 +25,20 @@
 #define TILE_EMPTY                    0
 #define TILE_FLOOR                    48 //START FLOOR TILES
 #define TILE_CEIL                     60 //START CEILS TILES
-#define TILE_END                      76 //END OF TILES
+#define TILE_END                      84 //END OF TILES
 #define TILE_ITEM_S                   24 //START OF ITEMS
 #define TILE_ITEM_E                   39 //END OF ITEMS
+
+
+#define TILE_ENEMY_SKELETON           132
+#define FRAMES_ENEMY_SKELETON         4
+#define INDEX_SKELETON_LEFT           84
+#define INDEX_SKELETON_RIGHT          85
+
+
+
 /* Enemies indexes */
-#define SHELLCREEPER_GREEN            1
+#define SKELETON                      1
 #define SHELLCREEPER_RED              2
 #define SHELLCREEPER_BLUE             3
 #define SIDESTEPPER_RED               4
@@ -63,19 +72,7 @@
 #define TILE_P1_KILL                  64
 #define TILE_P1_HITR                  64
 
-/* Enemies tiles */
-#define TILE_SHELLCREEPER_GREEN       48
-#define TILE_SHELLCREEPER_RED         60
-#define TILE_SHELLCREEPER_BLUE        72
-#define TILE_SIDESTEPPER_RED          84
-#define TILE_SIDESTEPPER_GREEN        96
-#define TILE_SIDESTEPPER_MAGENTA      108
-#define TILE_SLIPICE                  123
-#define TILE_FIGHTERFLY               120
-#define TILE_FIREBALL_RED             144
-#define TILE_FIREBALL_GREEN           150
-#define TILE_COIN1                    180
-#define TILE_COIN2                    183
+
 
 
 
@@ -163,32 +160,11 @@
 #define ENEMY_JUMP_SPEED              1
 #define ENEMY_FALL_SPEED              1
 #define ENEMY_KILLED_SPEED            8
-#define ENEMY_FIREBALL_START_COL_L    3
-#define ENEMY_FIREBALL_START_COL_R    28
-#define ENEMY_FIREBALL_START_TOP      16
-#define ENEMY_FIREBALL_START_MID      56
-#define ENEMY_FIREBALL_START_BOT      132
-#define ENEMY_FIGHTERFLY_STAND_TIME   40
-#define ENEMY_SCOL_R                  26
-#define ENEMY_SLIN_R                  16
-#define ENEMY_SCOL_L                  4
-#define ENEMY_SLIN_L                  16
+
 
 /* Game times */
 #define TIME_EVENT                    100
-#define TIME_BONUS                    2000 //15 SECONDS IN HUNDREDTHS (ORIG IS 30, TO EASY 4 GAME)
-#define TIME_FIREBALL_RED             1500 //30 SECONDS (50HZ)
-#define TIME_FIREBALL_A               2000 //40 - ORIG 80 SECONDS (50HZ)
-#define TIME_FIREBALL_B               500  //15 - ORIG 60 SECONDS (50HZ)
-#define TIME_FLIPPED_A                500  //15 - ORIG 20 SECONDS (50HZ)
-#define TIME_FLIPPED_B                250  //7  - ORIG 15 SECONDS (50HZ)
 #define GAME_RANDOM_TYPE              2
-#define GAME_OSD_UPDATE_TIME          5
-#define GAME_OSD_SHOW_TIME            150
-
-
-
-#define GAME_MAP_TOTAL_POS            672
 
 /* Sound Mode Variables */
 #define GAME_SOUND_48_FX_ON          0x01
@@ -283,6 +259,7 @@ extern unsigned char	game_menu_sel;
 
 extern unsigned char screen_paper, screen_ink;
 extern unsigned char sprite_speed[];
+extern unsigned char sprite_frames[];
 extern unsigned char sprite_speed_alt[8];
 extern unsigned char scr_map[];
 extern unsigned char scr_0[];

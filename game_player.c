@@ -70,10 +70,10 @@ unsigned char player_collision(void) {
     }
   }
 
-  // UPDATE SCORE OSD
-  if (player_hit_count > 0 && lin[sprite] > 24) {
-//TODO ADD ANIMATIONS 
-  }
+
+  //if (player_hit_count > 0 && lin[sprite] > 24) {
+  //TODO ADD ANIMATIONS
+  //}
   return 0;
 }
 
@@ -101,12 +101,7 @@ void player_kill(void) {
 }
 
 void player_restart(unsigned char f_sprite) __z88dk_fastcall {
-  if (col[f_sprite] < 4) {
-    spr_back_paint(0 + 15 * 32);
-  }
-  if (col[f_sprite] > 26) {
-    spr_back_paint(26 + 15 * 32);
-  }
+
 
   ay_fx_play(ay_effect_15);
   player_init(SPR_P1, 0, 14, TILE_P1_STANR);
@@ -359,8 +354,8 @@ void player_check_floor(void) {
     v1 = TILE_CEIL;
   }
 
-  if ((v1 < TILE_FLOOR || v1 > TILE_END) &&
-      (v2 < TILE_FLOOR || v2 > TILE_END)) {
+  if ((v1 < TILE_FLOOR || v1 >= TILE_END) &&
+      (v2 < TILE_FLOOR || v2 >= TILE_END)) {
     sprite_speed_alt[sprite] = PLAYER_FALL_SPEED;
     BIT_SET(s_state, STAT_FALL);
   }

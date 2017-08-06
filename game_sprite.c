@@ -180,7 +180,7 @@ unsigned char spr_move_horizontal(void) {
 
 unsigned char spr_move_right(void) {
   ++colint[sprite];
-  if (colint[sprite] == SPR_COLINT) {
+  if (colint[sprite] == sprite_frames[class[sprite]]) {
     s_lin1 = lin[sprite];
     if (col[sprite] < 30) {
       s_col1 = col[sprite] + 1;
@@ -223,7 +223,7 @@ unsigned char spr_move_left(void) {
     //}
 
     --col[sprite];
-    colint[sprite] = SPR_COLINT - 1;
+    colint[sprite] = sprite_frames[class[sprite]] - 1;
     if (col[sprite] == 255) {
 
       if (spr_page_left()) {
@@ -357,23 +357,11 @@ unsigned char spr_redraw(void) {
 
 unsigned char spr_killed(unsigned char f_sprite) __z88dk_fastcall {
   switch (class[f_sprite]) {
-  case SLIPICE:
-    spr_anim_kill(f_sprite, TILE_SLIPICE + 6);
-    break;
-  case COIN_2:
-    spr_anim_kill(f_sprite, TILE_800_COIN);
-    break;
-  case COIN_1:
-    spr_anim_kill(f_sprite, TILE_800_COIN);
-    break;
-  case FIREBALL_RED:
-    spr_anim_kill(f_sprite, spr_tile(f_sprite) + 3);
-    break;
-  case FIREBALL_GREEN:
-    spr_anim_kill(f_sprite, spr_tile(f_sprite) + 3);
+  case SKELETON:
+    spr_anim_kill(f_sprite, TILE_ENEMY_SKELETON + 6);
     break;
   default:
-    spr_anim_kill(f_sprite, TILE_800_COIN);
+    spr_anim_kill(f_sprite, TILE_ENEMY_SKELETON);
     break;
   }
   return 0;
@@ -426,50 +414,10 @@ void spr_set_fall(void) {
 unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
   unsigned char f_inc;
   f_inc = 0;
-  if (BIT_CHK(state[f_sprite], STAT_ANGRY)) {
-    f_inc = 3;
-  }
-  if (BIT_CHK(state[f_sprite], STAT_HIT)) {
-    f_inc = 6;
-  }
-
   switch (class[f_sprite]) {
-  case SHELLCREEPER_GREEN:
-    return spr_tile_dir(TILE_SHELLCREEPER_GREEN, f_sprite, 3);
-    break;
-  case SHELLCREEPER_RED:
-    return spr_tile_dir(TILE_SHELLCREEPER_RED, f_sprite, 3);
-    break;
-  case SHELLCREEPER_BLUE:
-    return spr_tile_dir(TILE_SHELLCREEPER_BLUE, f_sprite, 3);
-    break;
-  case SIDESTEPPER_RED:
-    return (TILE_SIDESTEPPER_RED + f_inc);
-    break;
-  case SIDESTEPPER_GREEN:
-    return (TILE_SIDESTEPPER_GREEN + f_inc);
-    break;
-  case SIDESTEPPER_MAGENTA:
-    return (TILE_SIDESTEPPER_MAGENTA + f_inc);
-    break;
-  case SLIPICE:
-    return TILE_SLIPICE;
-    break;
-  case COIN_1:
-    return TILE_COIN1;
-    break;
-  case COIN_2:
-    return TILE_COIN2;
-    break;
-  case FIGHTERFLY:
-    return TILE_FIGHTERFLY;
-    break;
-  case FIREBALL_RED:
-    return TILE_FIREBALL_RED;
-    break;
-  case FIREBALL_GREEN:
-    return TILE_FIREBALL_GREEN;
-    break;
+    case SKELETON:
+      return spr_tile_dir(TILE_ENEMY_SKELETON, f_sprite, 0);
+      break;
   }
   return 0;
 }
@@ -507,7 +455,20 @@ void spr_draw_background(void) {
       s_lin1 = s_lin1 + 16;
       s_col1 = 0;
     }
-    NIRVANAP_drawT(scr_map[index1], s_lin1, s_col1);
+
+    if (scr_map[index1] < TILE_END) {
+      //TILES
+      NIRVANAP_drawT(scr_map[index1], s_lin1, s_col1);
+    } else {
+      //ENEMIES
+      switch (scr_map[index1]) {
+        case INDEX_SKELETON_LEFT:
+        enemy_init(0,s_lin1,s_col1,SKELETON,DIR_LEFT);
+        break;
+      }
+      scr_map[index1] = TILE_EMPTY;
+    }
+
     // NIRVANAP_drawT(TILE_BRICK, s_lin1, s_col1);
 
     s_col1 = s_col1 + 2;
@@ -535,20 +496,6 @@ void spr_draw_clear(void) {
     }
   }
   intrinsic_ei();
-}
-
-void spr_back_paint(unsigned int f_inc) {
-  NIRVANAP_halt();
-  intrinsic_di();
-  spr_draw_index(64 + f_inc);
-  spr_draw_index(66 + f_inc);
-  spr_draw_index(68 + f_inc);
-
-  spr_draw_index(128 + f_inc);
-  spr_draw_index(130 + f_inc);
-  spr_draw_index(132 + f_inc);
-  intrinsic_ei();
-  // NIRVANAP_halt();
 }
 
 void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
@@ -683,7 +630,7 @@ void spr_back_clr(void) {
 
 void spr_tile_paint(unsigned char f_tile, unsigned char f_lin,
                     unsigned char f_col) {
-  if (f_tile == TILE_EMPTY) {
+  if (f_tile == TILE_EMPTY) { // PERF || f_tile >= TILE_END) {
     NIRVANAP_fillC(PAPER, f_lin, f_col);
     NIRVANAP_fillC(PAPER, f_lin + 8, f_col);
     NIRVANAP_fillC(PAPER, f_lin, f_col + 1);

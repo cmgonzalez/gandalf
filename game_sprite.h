@@ -34,7 +34,6 @@ extern void             spr_destroy(unsigned char f_sprite) __z88dk_fastcall;
 extern void             spr_set_fall(void);
 extern unsigned char    spr_tile(unsigned char f_sprite) __z88dk_fastcall;
 extern void             spr_back_clr(void);
-extern void             spr_back_paint(unsigned int f_inc);
 extern void             spr_brick_anim(unsigned char f_hit) __z88dk_fastcall;
 extern void             spr_draw_background(void);
 extern void             spr_draw_clear(void);

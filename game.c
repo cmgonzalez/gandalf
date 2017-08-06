@@ -117,7 +117,7 @@ void main(void) {
 
 
   spr_page_map(); // INIT FIRST SCREEN
-  
+
   game_loop();
 }
 

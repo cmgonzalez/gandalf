@@ -100,6 +100,8 @@ void game_phase_init(void) {
 	game_print_footer();
 	/* Player(s) init */
 	if (player_lives) player_init(SPR_P1,GAME_LIN_FLOOR-16,2,TILE_P1_STANR);
+
+
 	game_osd = 1;
 	osd_update_time = zx_clock();
 	osd_show_time = osd_update_time;
@@ -184,11 +186,11 @@ void game_print_phase() {
 
 
 unsigned char game_check_maze(int f_index) __z88dk_fastcall {
-  return  scr_map[f_index] >= TILE_CEIL;
+  return  scr_map[f_index] >= TILE_CEIL; // PERF && scr_map[f_index] < TILE_END;
 }
 
 unsigned char game_check_maze_floor(int f_index) __z88dk_fastcall {
-  return  scr_map[f_index] >= TILE_FLOOR;
+  return  scr_map[f_index] >= TILE_FLOOR; //PERF  && scr_map[f_index] < TILE_END;
 }
 
 

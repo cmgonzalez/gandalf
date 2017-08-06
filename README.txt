@@ -40,7 +40,7 @@ Open a shell and go to directory "z88dk/libsrc/_DEVELOPMENT"
 Run "Winmake zx" (windows) or "make TARGET=zx" (anything else)
 
 * Build
-Open a shell in the game_bros home directory
+Open a shell in the game home directory
 Run "make"
 
 To build zx7 compresed run "make zx7" (twice)
