@@ -162,7 +162,6 @@ unsigned char spr_move_down(void) {
   }
   lin[sprite] = tmp1;
   if (lin[sprite] > GAME_LIN_FLOOR) {
-    BIT_CLR(s_state, STAT_FALL);
     lin[sprite] = GAME_LIN_FLOOR;
     return 1;
   }
