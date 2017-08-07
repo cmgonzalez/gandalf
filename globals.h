@@ -36,20 +36,23 @@
 #define INDEX_SKELETON_RIGHT          85
 
 
+#define TILE_ENEMY_ORC                136
+#define FRAMES_ENEMY_ORC              4
+#define INDEX_ORC_LEFT                86
+#define INDEX_ORC_RIGHT               87
+
+#define TILE_ENEMY_WARG               140
+#define FRAMES_ENEMY_WARG             2
+#define INDEX_WARG_LEFT               88
+#define INDEX_WARG_RIGHT              89
+
+
 
 /* Enemies indexes */
 #define SKELETON                      1
-#define SHELLCREEPER_RED              2
-#define SHELLCREEPER_BLUE             3
-#define SIDESTEPPER_RED               4
-#define SIDESTEPPER_GREEN             5
-#define SIDESTEPPER_MAGENTA           6
-#define SLIPICE                       7
-#define COIN_1                        8
-#define FIGHTERFLY                    9
-#define FIREBALL_RED                  10
-#define FIREBALL_GREEN                11
-#define COIN_2                        12
+#define ORC                           2
+#define WARG                          3
+
 #define PLAYER                        16
 
 
