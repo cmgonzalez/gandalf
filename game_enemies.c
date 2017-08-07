@@ -58,7 +58,7 @@ void enemy_move(void) {
 }
 
 void enemy_walk(void) {
-  zx_print_chr(20,0,BIT_CHK(s_state, STAT_DIRR));
+
   if (!BIT_CHK(s_state, STAT_FALL)) {
     if( spr_move_horizontal() ) {
       if (BIT_CHK(s_state, STAT_DIRR)) {

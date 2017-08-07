@@ -23,4 +23,5 @@
 #endif
 
 #include "globals.h"
-void  test_func();
+void  test_proc();
+unsigned char  test_func();

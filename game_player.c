@@ -144,6 +144,7 @@ unsigned char player_move(void) {
   s_tile0 = tile[sprite] + colint[sprite];
   s_state = state[sprite];
 
+
   if (BIT_CHK(s_state, STAT_JUMP) || BIT_CHK(s_state, STAT_FALL)) {
     /* Jump Handling */
     if (spr_move_jump()) {

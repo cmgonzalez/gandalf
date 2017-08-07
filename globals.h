@@ -207,9 +207,9 @@ extern unsigned int  player_score;
 extern unsigned int  player_joy;
 
 extern signed char player_vel_x;
-extern signed char player_vel_y;
-extern signed char player_vel_y0;
-extern signed char game_gravity;
+extern signed int player_vel_y;
+extern signed int player_vel_y0;
+extern signed int game_gravity;
 
 extern unsigned char	sprite;
 extern unsigned char	player_hit_count;

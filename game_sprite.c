@@ -89,45 +89,73 @@ unsigned char spr_chktime(unsigned char *sprite) __z88dk_fastcall {
 }
 
 unsigned char spr_move_jump(void) {
-  signed char val_yc;
+  return test_func();
+  /*
+  signed int val_yc;
 
   player_vel_y = player_vel_y + game_gravity;
 
-  if (player_vel_y > 120)
+  if (player_vel_y > 120) {
     player_vel_y = 120;
-  if (player_vel_y < -120)
+  }
+
+  if (player_vel_y < -120) {
     player_vel_y = -120;
+  }
+
   val_yc = player_vel_y / 10;
 
-  if ((val_yc & 1) != 0)
-    val_yc++;
-  lin[sprite] += (unsigned char)val_yc;
+
+  s_lin1 = (unsigned char) val_yc;
+
+  if ((s_lin1 & 1) != 0) {
+    // Nirvana don't support odd lin's
+      s_lin1++;
+  }
+  s_lin1 = lin[sprite] + s_lin1;
+
+  zx_print_int(20,0,val_yc);
+  zx_print_chr(20,16,s_lin1);
+
+
+
+
+  if (s_lin1 > GAME_LIN_FLOOR) {
+    s_lin1 = GAME_LIN_FLOOR;
+  }
+
   if (val_yc < 0) {
     // Asending
-    if (spr_check_map(lin[sprite], col[sprite])) {
+    if (spr_check_map(s_lin1, col[sprite])) {
       // Start Falling
       lin[sprite] -= val_yc;
       player_hit_platform();
       player_vel_y = 0;
       BIT_CLR(s_state, STAT_JUMP);
       BIT_SET(s_state, STAT_FALL);
+    } else {
+      lin[sprite] = s_lin1;
     }
   } else {
     // Falling
-    if (spr_check_map_fall(lin[sprite] + 16, col[sprite]) ||
-        (lin[sprite] >= GAME_LIN_FLOOR)) {
+    if (spr_check_map_fall(s_lin1 + 16, col[sprite]) ||
+        (s_lin1 >= GAME_LIN_FLOOR)) {
       // Jump end
-      lin[sprite] = (lin[sprite] >> 4) << 4;
+      lin[sprite] = (s_lin1 >> 4) << 4;
       player_vel_y = 0;
       BIT_CLR(s_state, STAT_FALL);
       BIT_CLR(s_state, STAT_JUMP);
       colint[sprite] = 0;
+
       return 1;
+    } else {
+      lin[sprite] = s_lin1;
     }
   }
 
   spr_move_horizontal();
   return 0;
+  */
 }
 
 unsigned char spr_move_up(void) {
@@ -334,10 +362,10 @@ void spr_page_map(void) {
       break;
     }
   }
-  //Remove all enemies fast
+  // Remove all enemies fast
   for (i = 0; i < SPR_P1; ++i) {
-    class[i]=0;
-    NIRVANAP_spriteT(i,TILE_EMPTY,0,0);
+    class[i] = 0;
+    NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
   }
   spr_init_anim();
 }
@@ -379,9 +407,7 @@ void spr_destroy(unsigned char f_sprite) __z88dk_fastcall {
   class[f_sprite] = 0;
   state[f_sprite] = 0;
   state_a[f_sprite] = 0;
-
 }
-
 
 unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
   unsigned char f_inc;
