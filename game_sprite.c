@@ -119,7 +119,9 @@ unsigned char spr_move_jump(void) {
     // Asending
     if (spr_check_map(s_lin1, col[sprite])) {
       // Start Falling
-      player_hit_platform();
+      if ( player_hit_platform() ) {
+        lin[sprite] = (lin[sprite] >> 4) << 4;
+      }
       player_vel_y = 0;
       BIT_CLR(s_state, STAT_JUMP);
       BIT_SET(s_state, STAT_FALL);
@@ -710,4 +712,6 @@ void spr_turn_horizontal(void) {
     BIT_CLR(s_state, STAT_DIRL);
     BIT_SET(s_state, STAT_DIRR);
   }
+  state[sprite] = s_state;
+  tile[sprite] = spr_tile(sprite);
 }

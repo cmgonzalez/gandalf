@@ -69,7 +69,7 @@ void main(void) {
 
   player_joy = 0; /* SJ1 */
   game_gravity = 8;
-  player_vel_y0 = -80;
+  player_vel_y0 = -84;
 
   // Keyboard Handling
 
