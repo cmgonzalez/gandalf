@@ -45,8 +45,6 @@ void game_print_footer(void) {
   zx_print_str(23, 1, "\\"); //live p1 face
 	/* phase osd bottom*/
 	game_print_lives();
-
-
 }
 
 void game_phase_print_score_back(void) {
@@ -100,11 +98,6 @@ void game_phase_init(void) {
 	game_print_footer();
 	/* Player(s) init */
 	if (player_lives) player_init(SPR_P1,GAME_LIN_FLOOR-16,2,TILE_P1_STANR);
-
-
-	game_osd = 1;
-	osd_update_time = zx_clock();
-	osd_show_time = osd_update_time;
 }
 
 void game_print_header(void) {
@@ -140,7 +133,8 @@ void game_loop(void) {
 	while (!game_over) {
 
 
-		if ((loop_count & 47) == 0) {
+		if (game_check_time(anim_time, TIME_ANIM)) {
+			anim_time = zx_clock();
 			spr_play_anim();
 		}
 

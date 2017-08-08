@@ -60,6 +60,12 @@ void enemy_move(void) {
   case WARG:
     enemy_walk();
     break;
+  case DEMON:
+    enemy_walk();
+    break;
+    case ELF:
+      enemy_walk();
+      break;
   }
 }
 
@@ -76,7 +82,7 @@ void enemy_walk(void) {
         BIT_SET(s_state, STAT_FALL);
       }
 
-      if (class[sprite] == ORC) {
+      if (class[sprite] == ORC || class[sprite] == ELF) {
         enemy_avoid_edge();
       }
     }
@@ -97,7 +103,6 @@ void enemy_avoid_edge() {
   if (!game_check_maze_floor(index1)) {
     spr_turn_horizontal();
   }
-
 }
 
 void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,

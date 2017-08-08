@@ -119,7 +119,7 @@ unsigned char spr_move_jump(void) {
     // Asending
     if (spr_check_map(s_lin1, col[sprite])) {
       // Start Falling
-      if ( player_hit_platform() ) {
+      if (player_hit_platform()) {
         lin[sprite] = (lin[sprite] >> 4) << 4;
       }
       player_vel_y = 0;
@@ -405,13 +405,19 @@ unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
   f_inc = 0;
   switch (class[f_sprite]) {
   case SKELETON:
-    return spr_tile_dir(TILE_ENEMY_SKELETON, f_sprite, 0);
+    return spr_tile_dir(TILE_ENEMY_SKELETON, f_sprite, DIRINC_ENEMY_SKELETON);
     break;
   case ORC:
-    return spr_tile_dir(TILE_ENEMY_ORC, f_sprite, 0);
+    return spr_tile_dir(TILE_ENEMY_ORC, f_sprite, DIRINC_ENEMY_ORC);
     break;
   case WARG:
-    return spr_tile_dir(TILE_ENEMY_WARG, f_sprite, 2);
+    return spr_tile_dir(TILE_ENEMY_WARG, f_sprite, DIRINC_ENEMY_WARG);
+    break;
+  case DEMON:
+    return spr_tile_dir(TILE_ENEMY_DEMON, f_sprite, DIRINC_ENEMY_DEMON);
+    break;
+  case ELF:
+    return spr_tile_dir(TILE_ENEMY_ELF, f_sprite, DIRINC_ENEMY_ELF);
     break;
   }
   return 0;
@@ -426,7 +432,6 @@ unsigned char spr_tile_dir(unsigned char f_tile, unsigned char f_sprite,
   if (BIT_CHK(state[f_sprite], STAT_DIRL)) {
     return f_tile + f_inc;
   }
-
   if (BIT_CHK(state_a[f_sprite], STAT_LDIRR)) {
     return f_tile;
   }
@@ -460,25 +465,32 @@ void spr_draw_background(void) {
       case INDEX_SKELETON_RIGHT:
         enemy_init(s_lin1, s_col1, SKELETON, DIR_RIGHT);
         break;
-
       case INDEX_SKELETON_LEFT:
         enemy_init(s_lin1, s_col1, SKELETON, DIR_LEFT);
         break;
-
       case INDEX_ORC_RIGHT:
         enemy_init(s_lin1, s_col1, ORC, DIR_RIGHT);
         break;
-
       case INDEX_ORC_LEFT:
         enemy_init(s_lin1, s_col1, ORC, DIR_LEFT);
         break;
-
       case INDEX_WARG_RIGHT:
         enemy_init(s_lin1, s_col1, WARG, DIR_RIGHT);
         break;
-
       case INDEX_WARG_LEFT:
         enemy_init(s_lin1, s_col1, WARG, DIR_LEFT);
+        break;
+      case INDEX_DEMON_RIGHT:
+        enemy_init(s_lin1, s_col1, DEMON, DIR_RIGHT);
+        break;
+      case INDEX_DEMON_LEFT:
+        enemy_init(s_lin1, s_col1, DEMON, DIR_LEFT);
+        break;
+      case INDEX_ELF_RIGHT:
+        enemy_init(s_lin1, s_col1, ELF, DIR_RIGHT);
+        break;
+      case INDEX_ELF_LEFT:
+        enemy_init(s_lin1, s_col1, ELF, DIR_LEFT);
         break;
       }
 
@@ -490,16 +502,6 @@ void spr_draw_background(void) {
     s_col1 = s_col1 + 2;
     ++index1;
   }
-
-  // intrinsic_di();
-  // zx_print_ink(INK_YELLOW);
-  // zx_print_paper(PAPER_RED);
-  // game_fill_row(19,35);//brick row
-  // game_fill_row(20,35);//brick row
-  // zx_print_paper(PAPER_BLACK);
-  // zx_print_ink(INK_BLACK);
-  // game_fill_row(12,32);//clear row
-  // game_print_footer();
 }
 
 void spr_draw_clear(void) {

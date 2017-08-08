@@ -32,26 +32,46 @@
 
 #define TILE_ENEMY_SKELETON           132
 #define FRAMES_ENEMY_SKELETON         4
+#define SPEED_ENEMY_SKELETON          4
+#define DIRINC_ENEMY_SKELETON         0
 #define INDEX_SKELETON_LEFT           84
 #define INDEX_SKELETON_RIGHT          85
 
 
 #define TILE_ENEMY_ORC                136
 #define FRAMES_ENEMY_ORC              4
+#define SPEED_ENEMY_ORC               3
+#define DIRINC_ENEMY_ORC              0
 #define INDEX_ORC_LEFT                86
 #define INDEX_ORC_RIGHT               87
 
 #define TILE_ENEMY_WARG               140
 #define FRAMES_ENEMY_WARG             2
+#define SPEED_ENEMY_WARG              1
+#define DIRINC_ENEMY_WARG             2
 #define INDEX_WARG_LEFT               88
 #define INDEX_WARG_RIGHT              89
 
+#define TILE_ENEMY_DEMON              144
+#define FRAMES_ENEMY_DEMON            4
+#define SPEED_ENEMY_DEMON             4
+#define DIRINC_ENEMY_DEMON            0
+#define INDEX_DEMON_LEFT              90
+#define INDEX_DEMON_RIGHT             91
 
+#define TILE_ENEMY_ELF                148
+#define FRAMES_ENEMY_ELF              4
+#define SPEED_ENEMY_ELF               6
+#define DIRINC_ENEMY_ELF              4
+#define INDEX_ELF_LEFT                92
+#define INDEX_ELF_RIGHT               93
 
 /* Enemies indexes */
 #define SKELETON                      1
 #define ORC                           2
 #define WARG                          3
+#define DEMON                         4
+#define ELF                           5
 
 #define PLAYER                        16
 
@@ -74,9 +94,6 @@
 #define TILE_ANIM_EXPO                108
 #define TILE_P1_KILL                  64
 #define TILE_P1_HITR                  64
-
-
-
 
 
 /* Screen tiles */
@@ -167,6 +184,7 @@
 
 /* Game times */
 #define TIME_EVENT                    100
+#define TIME_ANIM                     10
 #define GAME_RANDOM_TYPE              2
 
 /* Sound Mode Variables */
@@ -239,8 +257,7 @@ extern unsigned char	s_state;
 extern unsigned int		curr_time;
 extern unsigned int		entry_time;
 extern unsigned int		frame_time;
-extern unsigned int  	osd_update_time;
-extern unsigned int  	osd_show_time;
+extern unsigned int  	anim_time;
 extern unsigned char	spr_count;
 extern unsigned char   sprite_curr_index;
 
@@ -255,7 +272,6 @@ extern unsigned char	game_sound;
 extern unsigned char	game_over;
 extern unsigned char	player_lives;
 extern unsigned int		game_score_top;
-extern unsigned char	game_osd;
 extern unsigned char	game_type;
 extern unsigned char	game_menu_sel;
 
