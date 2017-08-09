@@ -93,7 +93,7 @@ void game_phase_init(void) {
 	spr_draw_clear();
 	/*Draw Platforms*/
 	//zx_paper_fill(INK_BLACK | PAPER_BLACK);
-	spr_draw_background();
+	spr_draw_map_background();
   game_print_header();
 	game_print_footer();
 	/* Player(s) init */

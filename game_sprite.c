@@ -269,7 +269,7 @@ unsigned char spr_page_right() {
   if (scr_curr < map_width) {
     ++scr_curr;
     spr_page_map();
-    spr_draw_background();
+    spr_draw_map_background();
     return 1;
   }
   return 0;
@@ -282,7 +282,7 @@ unsigned char spr_page_left() {
   if (scr_curr > 0) {
     --scr_curr;
     spr_page_map();
-    spr_draw_background();
+    spr_draw_map_background();
     return 1;
   }
   return 0;
@@ -443,7 +443,7 @@ unsigned char spr_tile_dir(unsigned char f_tile, unsigned char f_sprite,
   return f_tile;
 }
 
-void spr_draw_background(void) {
+void spr_draw_map_background(void) {
 
   NIRVANAP_halt();
   index1 = 16;
@@ -637,12 +637,15 @@ void spr_back_clr(void) {
         s_row = s_lin0 >> 4;
         s_row = s_row << 4;
         // up
+        NIRVANAP_halt();
         spr_tile_paint(scr_map[sprite_curr_index], s_row, s_col0 - 1);
         sprite_curr_index = sprite_curr_index + 1;
         spr_tile_paint(scr_map[sprite_curr_index], s_row, s_col0 + 1);
         // down
         s_row = s_row + 16;
         sprite_curr_index = sprite_curr_index + 15;
+
+        NIRVANAP_halt();
         spr_tile_paint(scr_map[sprite_curr_index], s_row, s_col0 - 1);
         sprite_curr_index = sprite_curr_index + 1;
         spr_tile_paint(scr_map[sprite_curr_index], s_row, s_col0 + 1);
