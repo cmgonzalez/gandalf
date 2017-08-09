@@ -184,7 +184,14 @@ unsigned char game_check_maze(int f_index) __z88dk_fastcall {
 }
 
 unsigned char game_check_maze_floor(int f_index) __z88dk_fastcall {
-  return  scr_map[f_index] >= TILE_FLOOR; //PERF  && scr_map[f_index] < TILE_END;
+
+	//TODO MEJORAR CREANDO FUNCION NUEVA, REVISAR LLAMADAS HACIA ARRIBA TB...
+	if (sprite == SPR_P1 && player_over_stair) {
+    return  scr_map[f_index] >= TILE_STAIR_E;
+	} else {
+	  return  scr_map[f_index] >= TILE_FLOOR; //PERF  && scr_map[f_index] < TILE_END;
+	}
+
 }
 
 

@@ -28,6 +28,8 @@
 #define TILE_END                      84 //END OF TILES
 #define TILE_ITEM_S                   24 //START OF ITEMS
 #define TILE_ITEM_E                   39 //END OF ITEMS
+#define TILE_STAIR_S                  56 //START OF STAIRS
+#define TILE_STAIR_E                  59 //START OF STAIRS
 
 
 #define TILE_ENEMY_SKELETON           132
@@ -88,25 +90,18 @@
 /* Player 1 tiles */
 #define TILE_P1_STANR                 100
 #define TILE_P1_RIGHT                 84
-#define TILE_P1_SLIDR                 84
+#define TILE_P1_STAIR                 102
 #define TILE_P1_JUMPR                 88
 #define TILE_P1_LEN                   8 //LEN OF PLAYER SPRITES FOR EACH DIRECTION
-#define TILE_ANIM_EXPO                108
+#define TILE_ANIM_EXPO                120
 #define TILE_P1_KILL                  64
 #define TILE_P1_HITR                  64
-
+#define FRAMES_PLAYER                 4
+#define FRAMES_PLAYER_STAIR           4
 
 /* Screen tiles */
 #define TILE_BRICK                    48
 
-
-/* Misc tiles */
-#define TILE_800_COIN                 186
-#define TILE_DOLLAR                   187
-#define TILE_800                      188
-#define TILE_NICE                     215
-#define TILE_EXTRA                    203
-#define TILE_RAY											189
 
 /* Player indexes */
 #define SPR_P1                        7
@@ -274,6 +269,7 @@ extern unsigned char	player_lives;
 extern unsigned int		game_score_top;
 extern unsigned char	game_type;
 extern unsigned char	game_menu_sel;
+extern unsigned char  player_over_stair;
 
 
 extern unsigned char screen_paper, screen_ink;

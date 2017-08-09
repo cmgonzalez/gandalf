@@ -373,7 +373,9 @@ unsigned char spr_redraw(void) {
       NIRVANAP_fillT_raw(PAPER, 8, s_col0);
       intrinsic_ei();
     }
-
+    if (sprite == SPR_P1 && player_over_stair && ((lin[sprite] & 3) == 0) ) {
+      s_tile1 = s_tile1 + 4;
+    }
     NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
     spr_back_clr();
     return 1;

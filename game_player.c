@@ -52,7 +52,7 @@ void player_init(unsigned char f_sprite, unsigned char f_lin,
 }
 
 unsigned char player_check_input(void) {
-  return dirs & IN_STICK_FIRE || dirs & IN_STICK_LEFT || dirs & IN_STICK_RIGHT;
+  return dirs & IN_STICK_FIRE || dirs & IN_STICK_LEFT || dirs & IN_STICK_RIGHT || dirs & IN_STICK_UP || dirs & IN_STICK_DOWN;
 }
 
 unsigned char player_collision(void) {
@@ -144,24 +144,26 @@ unsigned char player_move(void) {
   s_tile0 = tile[sprite] + colint[sprite];
   s_state = state[sprite];
 
-
   if (BIT_CHK(s_state, STAT_JUMP) || BIT_CHK(s_state, STAT_FALL)) {
     /* Jump Handling */
     if (spr_move_jump()) {
       // Jump Ends
-      tile[sprite] = spr_tile_dir(TILE_P1_RIGHT, sprite, TILE_P1_LEN);
+      player_check_stairs(0);
+      if (!player_over_stair) player_check_stairs(1);
+      player_tile(TILE_P1_RIGHT);
     }
   } else {
     /* Read player input */
     if (!player_move_input()) {
       colint[sprite] = 0;
-      tile[sprite] = spr_tile_dir(TILE_P1_STANR, sprite, 1);
+      player_tile(TILE_P1_STANR);
       BIT_CLR(s_state, STAT_DIRL);
       BIT_CLR(s_state, STAT_DIRR);
     }
     /* Check if the player have floor, and set fall if not */
     player_check_floor();
   }
+  //player_check_stairs(0);
 
   /* Draw Player sprite */
   if ( spr_redraw() ) {
@@ -178,6 +180,43 @@ unsigned char player_move(void) {
   return 0;
 }
 
+void player_check_stairs(unsigned char f_inc) __z88dk_fastcall {
+  unsigned char v0;
+  unsigned char v1;
+
+  sprite_curr_index = spr_calc_index(lin[sprite], col[sprite] + f_inc);
+  v0 = scr_map[sprite_curr_index];
+
+  sprite_curr_index = spr_calc_index(lin[sprite]+16, col[sprite] + f_inc);
+  v1 = scr_map[sprite_curr_index];
+
+  if ( (v0 >= TILE_STAIR_S && v0 <= TILE_STAIR_E) || (v1 >= TILE_STAIR_S && v1 <= TILE_STAIR_E)) {
+    //OVER STAIR
+    if (!player_over_stair) {
+      player_over_stair = 1;
+      player_tile(TILE_P1_STAIR);
+    }
+  } else {
+    if (player_over_stair) {
+      player_over_stair = 0;
+      player_tile(TILE_P1_RIGHT);
+    }
+  }
+}
+
+void player_tile( unsigned char f_tile ) __z88dk_fastcall {
+  if (player_over_stair) {
+    tile[sprite] = TILE_P1_STAIR;
+  } else {
+    if (f_tile == TILE_P1_STANR) {
+      tile[sprite] = spr_tile_dir(f_tile, sprite, 1);
+    } else {
+      tile[sprite] = spr_tile_dir(f_tile, sprite, TILE_P1_LEN);
+    }
+
+  }
+}
+
 unsigned char player_move_input(void) {
 //TODO CLEAN THIS!
   /* User have pressed valid input */
@@ -187,6 +226,7 @@ unsigned char player_move_input(void) {
       if (ay_is_playing() != AY_PLAYING_MUSIC) {
         ay_fx_play(ay_effect_03);
       }
+      player_over_stair = 0;
       sound_jump();
       if (BIT_CHK(state[sprite], STAT_DIRR)) {
         colint[sprite] = 0;
@@ -197,7 +237,7 @@ unsigned char player_move_input(void) {
       BIT_CLR(s_state, STAT_FALL);
       jump_lin[sprite] = lin[sprite];
       state[sprite] = s_state; /*TODO FIXME!*/
-      tile[sprite] = spr_tile_dir(TILE_P1_JUMPR, sprite, TILE_P1_LEN);
+      player_tile(TILE_P1_JUMPR);
       sprite_speed_alt[sprite] = PLAYER_JUMP_SPEED;
       player_slide = 0;
       player_vel_y = player_vel_y0; // -negative up / positive down
@@ -210,6 +250,7 @@ unsigned char player_move_input(void) {
       BIT_CLR(s_state, STAT_DIRL);
       BIT_SET(state_a[sprite], STAT_LDIRR);
       BIT_CLR(state_a[sprite], STAT_LDIRL);
+      spr_move_horizontal();
     }
 
     /* Move Left */
@@ -218,15 +259,31 @@ unsigned char player_move_input(void) {
       BIT_CLR(s_state, STAT_DIRR);
       BIT_SET(state_a[sprite], STAT_LDIRL);
       BIT_CLR(state_a[sprite], STAT_LDIRR);
+      spr_move_horizontal();
     }
+
+    if (dirs & IN_STICK_UP) {
+      player_check_stairs(0);
+      if (player_over_stair) spr_move_up();
+    }
+
+    if (dirs & IN_STICK_DOWN) {
+      player_check_stairs(0);
+      if (player_over_stair) {
+        if (spr_move_down()) {
+          player_over_stair = 0;
+        }
+      }
+    }
+
     /* Set Tile according to current direction */
     state[sprite] = s_state;
-    tile[sprite] = spr_tile_dir(TILE_P1_RIGHT, sprite, TILE_P1_LEN);
-    spr_move_horizontal();
+    player_tile(TILE_P1_RIGHT);
     return 1;
   }
   return 0;
 }
+
 void player_check_map() {
 
   sprite_curr_index = spr_calc_index(lin[sprite], col[sprite]);
@@ -359,5 +416,6 @@ void player_check_floor(void) {
       (v2 < TILE_FLOOR || v2 >= TILE_END)) {
     sprite_speed_alt[sprite] = PLAYER_FALL_SPEED;
     BIT_SET(s_state, STAT_FALL);
+    player_check_stairs(0);
   }
 }
