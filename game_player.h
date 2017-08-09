@@ -34,4 +34,5 @@ extern void          player_check_floor(void);
 extern void          player_pick_item(void);
 extern void          player_tile( unsigned char f_tile )__z88dk_fastcall;
 extern void          player_check_stairs(unsigned char f_inc) __z88dk_fastcall;
+extern void          player_check_stairs_down(void);
 #endif

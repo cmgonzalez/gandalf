@@ -29,7 +29,7 @@
 #define TILE_ITEM_S                   24 //START OF ITEMS
 #define TILE_ITEM_E                   39 //END OF ITEMS
 #define TILE_STAIR_S                  56 //START OF STAIRS
-#define TILE_STAIR_E                  59 //START OF STAIRS
+#define TILE_STAIR_E                  60 //END OF STAIRS
 
 
 #define TILE_ENEMY_SKELETON           132

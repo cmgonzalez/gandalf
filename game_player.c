@@ -102,7 +102,6 @@ void player_kill(void) {
 
 void player_restart(unsigned char f_sprite) __z88dk_fastcall {
 
-
   ay_fx_play(ay_effect_15);
   player_init(SPR_P1, 0, 14, TILE_P1_STANR);
   BIT_SET(state[f_sprite], STAT_HIT);
@@ -180,17 +179,28 @@ unsigned char player_move(void) {
   return 0;
 }
 
+void player_check_stairs_down(void) {
+  unsigned char v0;
+  sprite_curr_index = spr_calc_index(lin[sprite]+16, col[sprite]);
+  v0 = scr_map[sprite_curr_index];
+  v0 = (v0 >= TILE_STAIR_S && v0 <= TILE_STAIR_E);
+  if (v0) player_over_stair = 1;
+}
+
 void player_check_stairs(unsigned char f_inc) __z88dk_fastcall {
   unsigned char v0;
   unsigned char v1;
 
   sprite_curr_index = spr_calc_index(lin[sprite], col[sprite] + f_inc);
   v0 = scr_map[sprite_curr_index];
+  v0 = (v0 >= TILE_STAIR_S && v0 <= TILE_STAIR_E);
 
-  sprite_curr_index = spr_calc_index(lin[sprite]+16, col[sprite] + f_inc);
+
+  sprite_curr_index = spr_calc_index(lin[sprite]+15, col[sprite] + f_inc);
   v1 = scr_map[sprite_curr_index];
+  v1 = (v1 >= TILE_STAIR_S && v1 <= TILE_STAIR_E);
 
-  if ( (v0 >= TILE_STAIR_S && v0 <= TILE_STAIR_E) || (v1 >= TILE_STAIR_S && v1 <= TILE_STAIR_E)) {
+  if ( v0 || v1 ) {
     //OVER STAIR
     if (!player_over_stair) {
       player_over_stair = 1;
@@ -250,6 +260,9 @@ unsigned char player_move_input(void) {
       BIT_CLR(s_state, STAT_DIRL);
       BIT_SET(state_a[sprite], STAT_LDIRR);
       BIT_CLR(state_a[sprite], STAT_LDIRL);
+      if (player_over_stair) {
+        player_check_stairs(0);
+      }
       spr_move_horizontal();
     }
 
@@ -259,20 +272,31 @@ unsigned char player_move_input(void) {
       BIT_CLR(s_state, STAT_DIRR);
       BIT_SET(state_a[sprite], STAT_LDIRL);
       BIT_CLR(state_a[sprite], STAT_LDIRR);
+      if (player_over_stair) {
+        player_check_stairs(0);
+      }
       spr_move_horizontal();
     }
 
     if (dirs & IN_STICK_UP) {
       player_check_stairs(0);
-      if (player_over_stair) spr_move_up();
+      if (player_over_stair)  {
+        if (spr_move_up()) {
+          player_over_stair = 0;
+        }
+      } else {
+        if ( !( (dirs & IN_STICK_RIGHT) || (dirs & IN_STICK_LEFT) ) )   return 0;
+      }
     }
 
     if (dirs & IN_STICK_DOWN) {
-      player_check_stairs(0);
+      player_check_stairs_down();
       if (player_over_stair) {
         if (spr_move_down()) {
           player_over_stair = 0;
         }
+      } else {
+        if ( !( (dirs & IN_STICK_RIGHT) || (dirs & IN_STICK_LEFT) ) )   return 0;
       }
     }
 
