@@ -511,7 +511,7 @@
 511   0000              	GLOBAL _spr_draw_row
 512   0000              	GLOBAL _spr_draw_index
 513   0000              	GLOBAL _spr_draw_clear
-514   0000              	GLOBAL _spr_draw_background
+514   0000              	GLOBAL _spr_draw_map_background
 515   0000              	GLOBAL _spr_brick_anim
 516   0000              	GLOBAL _spr_back_clr
 517   0000              	GLOBAL _spr_tile
@@ -834,82 +834,82 @@
 834   005A  22 04 00    	ld	(_k1 + 0x0004),hl
 835   005D  26 01       	ld	h,0x01
 836   005F  22 02 00    	ld	(_k1 + 0x0002),hl
-837   0062  21 FF FF    	ld	hl,0xffff
-838   0065  22 08 00    	ld	(_k1 + 0x0008),hl
-839   0068  2E FF       	ld	l,0xff
-840   006A  22 06 00    	ld	(_k1 + 0x0006),hl
-841   006D  CD 00 00    	call	_game_joystick_set_menu
-842   0070  2E 00       	ld	l,0x00
-843   0072  CD 00 00    	call	_zx_border_fastcall
-844   0075  CD 00 00    	call	_in_wait_nokey
-845   0078  01 B8 7A    	ld	bc,0x7ab8
-846   007B              l_main_00104:
-847   007B  CD 00 00    	call	_in_test_key
-848   007E  7C          	ld	a, h
-849   007F  B5          	or	a,l
-850   0080  20 08       	jr	NZ,l_main_00101
-851   0082  21 4D 27    	ld	hl,0x274d
-852   0085  09          	add	hl,bc
-853   0086  4D          	ld	c, l
-854   0087  44          	ld	b, h
-855   0088  18 F1       	jr	l_main_00104
-856   008A              l_main_00101:
-857   008A  69          	ld	l, c
-858   008B  60          	ld	h, b
-859   008C  CD 00 00    	call	_srand_fastcall
-860   008F  2E 00       	ld	l,0x00
-861   0091  CD 00 00    	call	_zx_cls_fastcall
-862   0094  21 00 00    	ld	hl,_screen_paper
-863   0097  36 00       	ld	(hl),0x00
-864   0099  2E 00       	ld	l,0x00
-865   009B  CD 00 00    	call	_zx_border_fastcall
-866   009E  CD 00 00    	call	_game_start_timer
-867   00A1  21 00 00    	ld	hl,_btiles
-868   00A4  22 00 00    	ld	(_NIRVANAP_TILE_IMAGES),hl
-869   00A7  CD 00 00    	call	_NIRVANAP_start
-870   00AA  2E 00       	ld	l,0x00
-871   00AC  CD 00 00    	call	_zx_cls_fastcall
-872   00AF  21 00 00    	ld	hl,_screen_paper
-873   00B2  36 00       	ld	(hl),0x00
-874   00B4  2E 00       	ld	l,0x00
-875   00B6  CD 00 00    	call	_zx_border_fastcall
-876   00B9  2A 00 00    	ld	hl,(_curr_time)
-877   00BC  22 00 00    	ld	(_frame_time),hl
-878   00BF  21 00 00    	ld	hl,_tmp
-879   00C2  36 00       	ld	(hl),0x00
-880   00C4              l_main_00106:
-881   00C4  2A 00 00    	ld	hl,(_tmp)
-882   00C7  26 00       	ld	h,0x00
-883   00C9  01 00 00    	ld	bc,_scr_map
-884   00CC  09          	add	hl,bc
-885   00CD  AF          	xor	a,a
-886   00CE  77          	ld	(hl),a
-887   00CF  21 00 00    	ld	hl,_tmp
-888   00D2  7E          	ld	a,(hl)
-889   00D3  3C          	inc	a
-890   00D4  77          	ld	(hl),a
-891   00D5  D6 A0       	sub	a,0xa0
-892   00D7  38 EB       	jr	C,l_main_00106
-893   00D9  21 00 00    	ld	hl,_scr_curr
-894   00DC  36 00       	ld	(hl),0x00
-895   00DE  21 00 00    	ld	hl,_map_width
-896   00E1  36 07       	ld	(hl),0x07
-897   00E3  21 00 00    	ld	hl,_map_heigth
-898   00E6  36 01       	ld	(hl),0x01
-899   00E8  CD 00 00    	call	_spr_page_map
-900   00EB  C3 00 00    	jp  _game_loop
-901   00EE              	SECTION code_compiler
-902   00EE              ;	---------------------------------
-903   00EE              ; Function test_proc is a stub
-904   00EE              ; ---------------------------------
-905   00EE              EXTERN l_ret
-906   00EE              defc _test_proc = l_ret
-907   00EE              	SECTION code_compiler
-908   00EE              ;	---------------------------------
-909   00EE              ; Function test_func
-910   00EE              ; ---------------------------------
-911   00EE              _test_func:
-912   00EE  2E 00       	ld	l,0x00
-913   00F0  C9          	ret
-914   00F1              	SECTION IGNORE
+837   0062  2E FB       	ld	l,0xfb
+838   0064  22 08 00    	ld	(_k1 + 0x0008),hl
+839   0067  2E FD       	ld	l,0xfd
+840   0069  22 06 00    	ld	(_k1 + 0x0006),hl
+841   006C  CD 00 00    	call	_game_joystick_set_menu
+842   006F  2E 00       	ld	l,0x00
+843   0071  CD 00 00    	call	_zx_border_fastcall
+844   0074  CD 00 00    	call	_in_wait_nokey
+845   0077  01 B8 7A    	ld	bc,0x7ab8
+846   007A              l_main_00104:
+847   007A  CD 00 00    	call	_in_test_key
+848   007D  7C          	ld	a, h
+849   007E  B5          	or	a,l
+850   007F  20 08       	jr	NZ,l_main_00101
+851   0081  21 4D 27    	ld	hl,0x274d
+852   0084  09          	add	hl,bc
+853   0085  4D          	ld	c, l
+854   0086  44          	ld	b, h
+855   0087  18 F1       	jr	l_main_00104
+856   0089              l_main_00101:
+857   0089  69          	ld	l, c
+858   008A  60          	ld	h, b
+859   008B  CD 00 00    	call	_srand_fastcall
+860   008E  2E 00       	ld	l,0x00
+861   0090  CD 00 00    	call	_zx_cls_fastcall
+862   0093  21 00 00    	ld	hl,_screen_paper
+863   0096  36 00       	ld	(hl),0x00
+864   0098  2E 00       	ld	l,0x00
+865   009A  CD 00 00    	call	_zx_border_fastcall
+866   009D  CD 00 00    	call	_game_start_timer
+867   00A0  21 00 00    	ld	hl,_btiles
+868   00A3  22 00 00    	ld	(_NIRVANAP_TILE_IMAGES),hl
+869   00A6  CD 00 00    	call	_NIRVANAP_start
+870   00A9  2E 00       	ld	l,0x00
+871   00AB  CD 00 00    	call	_zx_cls_fastcall
+872   00AE  21 00 00    	ld	hl,_screen_paper
+873   00B1  36 00       	ld	(hl),0x00
+874   00B3  2E 00       	ld	l,0x00
+875   00B5  CD 00 00    	call	_zx_border_fastcall
+876   00B8  2A 00 00    	ld	hl,(_curr_time)
+877   00BB  22 00 00    	ld	(_frame_time),hl
+878   00BE  21 00 00    	ld	hl,_tmp
+879   00C1  36 00       	ld	(hl),0x00
+880   00C3              l_main_00106:
+881   00C3  2A 00 00    	ld	hl,(_tmp)
+882   00C6  26 00       	ld	h,0x00
+883   00C8  01 00 00    	ld	bc,_scr_map
+884   00CB  09          	add	hl,bc
+885   00CC  AF          	xor	a,a
+886   00CD  77          	ld	(hl),a
+887   00CE  21 00 00    	ld	hl,_tmp
+888   00D1  7E          	ld	a,(hl)
+889   00D2  3C          	inc	a
+890   00D3  77          	ld	(hl),a
+891   00D4  D6 A0       	sub	a,0xa0
+892   00D6  38 EB       	jr	C,l_main_00106
+893   00D8  21 00 00    	ld	hl,_scr_curr
+894   00DB  36 00       	ld	(hl),0x00
+895   00DD  21 00 00    	ld	hl,_map_width
+896   00E0  36 07       	ld	(hl),0x07
+897   00E2  21 00 00    	ld	hl,_map_heigth
+898   00E5  36 01       	ld	(hl),0x01
+899   00E7  CD 00 00    	call	_spr_page_map
+900   00EA  C3 00 00    	jp  _game_loop
+901   00ED              	SECTION code_compiler
+902   00ED              ;	---------------------------------
+903   00ED              ; Function test_proc is a stub
+904   00ED              ; ---------------------------------
+905   00ED              EXTERN l_ret
+906   00ED              defc _test_proc = l_ret
+907   00ED              	SECTION code_compiler
+908   00ED              ;	---------------------------------
+909   00ED              ; Function test_func
+910   00ED              ; ---------------------------------
+911   00ED              _test_func:
+912   00ED  2E 00       	ld	l,0x00
+913   00EF  C9          	ret
+914   00F0              	SECTION IGNORE
 915   0000              

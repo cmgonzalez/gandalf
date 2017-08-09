@@ -54,12 +54,12 @@
 #define INDEX_WARG_LEFT               88
 #define INDEX_WARG_RIGHT              89
 
-#define TILE_ENEMY_DEMON              144
-#define FRAMES_ENEMY_DEMON            4
-#define SPEED_ENEMY_DEMON             4
-#define DIRINC_ENEMY_DEMON            0
-#define INDEX_DEMON_LEFT              90
-#define INDEX_DEMON_RIGHT             91
+#define TILE_ENEMY_DWARF              144
+#define FRAMES_ENEMY_DWARF            4
+#define SPEED_ENEMY_DWARF             4
+#define DIRINC_ENEMY_DWARF            0
+#define INDEX_DWARF_LEFT              90
+#define INDEX_DWARF_RIGHT             91
 
 #define TILE_ENEMY_ELF                148
 #define FRAMES_ENEMY_ELF              4
@@ -72,7 +72,7 @@
 #define SKELETON                      1
 #define ORC                           2
 #define WARG                          3
-#define DEMON                         4
+#define DWARF                         4
 #define ELF                           5
 
 #define PLAYER                        16

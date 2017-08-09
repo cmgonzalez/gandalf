@@ -238,7 +238,7 @@ void game_joystick_change(void) {
 
 void game_joystick_set_menu(void){
 	/* Default Values for menu */
-	joyfunc1 = (uint16_t (*)(udk_t *))(in_stick_sinclair1);
+	joyfunc1 = (uint16_t (*)(udk_t *))(in_stick_keyboard);
 }
 
 void game_joystick_set(void){

@@ -415,8 +415,8 @@ unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
   case WARG:
     return spr_tile_dir(TILE_ENEMY_WARG, f_sprite, DIRINC_ENEMY_WARG);
     break;
-  case DEMON:
-    return spr_tile_dir(TILE_ENEMY_DEMON, f_sprite, DIRINC_ENEMY_DEMON);
+  case DWARF:
+    return spr_tile_dir(TILE_ENEMY_DWARF, f_sprite, DIRINC_ENEMY_DWARF);
     break;
   case ELF:
     return spr_tile_dir(TILE_ENEMY_ELF, f_sprite, DIRINC_ENEMY_ELF);
@@ -482,11 +482,11 @@ void spr_draw_map_background(void) {
       case INDEX_WARG_LEFT:
         enemy_init(s_lin1, s_col1, WARG, DIR_LEFT);
         break;
-      case INDEX_DEMON_RIGHT:
-        enemy_init(s_lin1, s_col1, DEMON, DIR_RIGHT);
+      case INDEX_DWARF_RIGHT:
+        enemy_init(s_lin1, s_col1, DWARF, DIR_RIGHT);
         break;
-      case INDEX_DEMON_LEFT:
-        enemy_init(s_lin1, s_col1, DEMON, DIR_LEFT);
+      case INDEX_DWARF_LEFT:
+        enemy_init(s_lin1, s_col1, DWARF, DIR_LEFT);
         break;
       case INDEX_ELF_RIGHT:
         enemy_init(s_lin1, s_col1, ELF, DIR_RIGHT);

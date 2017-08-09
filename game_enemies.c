@@ -60,7 +60,7 @@ void enemy_move(void) {
   case WARG:
     enemy_walk();
     break;
-  case DEMON:
+  case DWARF:
     enemy_walk();
     break;
     case ELF:

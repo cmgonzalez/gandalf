@@ -163,7 +163,6 @@ unsigned char scr_5[] = 	{0,7,8,142,0,9,10,167,0,32,0,32,88,32,133,0,32,0,32,88,
 unsigned char scr_6[] = 	{134,0,32,42,130,0,32,42,130,0,32,146,0,142,48,134,0,87,136,0,32,130,0,130,48,0,137,48,0,48,146,0,138,48,130,0,130,48,145,0,144,70}	;
 unsigned char scr_7[] = 	{136,0,21,132,0,7,8,137,0,20,131,0,21,9,10,137,0,20,131,0,20,136,0,67,58,0,20,130,0,131,19,134,0,130,67,58,0,20,130,0,17,13,18,133,0,131,67,58,0,20,0,19,131,16,19,131,0,132,67,58,0,20,0,17,13,14,13,18,130,0,133,67,58,0,20,0,17,13,15,13,18,0,72,142,73,74}	;
 
-
 //###############################################################################################
 //# # # ENEMIES ANIMATION SPEEDS - INTERRUPTS VALUES 50HZ
 //# #
@@ -174,7 +173,7 @@ unsigned char sprite_speed[] = {
     SPEED_ENEMY_SKELETON,
     SPEED_ENEMY_ORC,
     SPEED_ENEMY_WARG,
-    SPEED_ENEMY_DEMON,
+    SPEED_ENEMY_DWARF,
     SPEED_ENEMY_ELF,
     1,            // 06 ???
     4,            // 07 ???
@@ -194,7 +193,7 @@ unsigned char sprite_frames[] = {
     FRAMES_ENEMY_SKELETON,
     FRAMES_ENEMY_ORC,
     FRAMES_ENEMY_WARG,
-    FRAMES_ENEMY_DEMON,
+    FRAMES_ENEMY_DWARF,
     FRAMES_ENEMY_ELF,
     0,            // 06 ???
     0,            // 07 ???
