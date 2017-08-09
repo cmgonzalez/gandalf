@@ -73,11 +73,11 @@ void main(void) {
 
   // Keyboard Handling
 
-  k1.fire  = IN_KEY_SCANCODE_m;
-  k1.left  = IN_KEY_SCANCODE_o;
+  k1.fire = IN_KEY_SCANCODE_m;
+  k1.left = IN_KEY_SCANCODE_o;
   k1.right = IN_KEY_SCANCODE_p;
-  k1.up    = IN_KEY_SCANCODE_q; // must be defined otherwise up is always true
-  k1.down  = IN_KEY_SCANCODE_a; // must be defined otherwise down is always true
+  k1.up = IN_KEY_SCANCODE_q;   // must be defined otherwise up is always true
+  k1.down = IN_KEY_SCANCODE_a; // must be defined otherwise down is always true
 
   game_joystick_set_menu();
 
@@ -113,16 +113,11 @@ void main(void) {
   map_width = 8 - 1; // OJO!
   map_heigth = 1;
 
-
   spr_page_map(); // INIT FIRST SCREEN
 
   game_loop();
 }
 
-void test_proc() {
+void test_proc() {}
 
-}
-
-unsigned char test_func() {
- return 0;
-}
+unsigned char test_func() { return 0; }

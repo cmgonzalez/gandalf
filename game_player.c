@@ -231,6 +231,35 @@ unsigned char player_move_input(void) {
 //TODO CLEAN THIS!
   /* User have pressed valid input */
   if (player_check_input()) {
+
+    if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_DOWN)) {
+
+      /*Fireball*/
+      if (bullet_col[SPR_P1] == 0xFF) {
+        bullet_dir[SPR_P1] = 0;
+        bullet_lin[SPR_P1] = lin[SPR_P1];
+        bullet_frames[SPR_P1] = 2;
+
+        if ( BIT_CHK(state_a[SPR_P1], STAT_LDIRL) ) {
+          //Left
+          bullet_col[SPR_P1] = col[SPR_P1] - 1;
+          bullet_tile[SPR_P1] = TILE_FIREBALL_L;
+          bullet_dir[SPR_P1] = 0x01;
+          bullet_colint[SPR_P1] = 2;
+        } else {
+          //Right n default
+          //if ( BIT_CHK(state_a[SPR_P1], STAT_LDIRR) ) {
+          bullet_col[SPR_P1] = col[SPR_P1] + 1;
+          bullet_tile[SPR_P1] = TILE_FIREBALL_R;
+          bullet_dir[SPR_P1] = 0xFF;
+          bullet_colint[SPR_P1] = 0xFF;
+        }
+
+
+
+      }
+      return 0;
+    }
     /* New jump */
     if (dirs & IN_STICK_FIRE) {
       if (ay_is_playing() != AY_PLAYING_MUSIC) {

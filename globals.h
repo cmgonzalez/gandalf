@@ -96,6 +96,10 @@
 #define TILE_ANIM_EXPO                120
 #define TILE_P1_KILL                  64
 #define TILE_P1_HITR                  64
+
+#define TILE_FIREBALL_R               112
+#define TILE_FIREBALL_L               114
+
 #define FRAMES_PLAYER                 4
 #define FRAMES_PLAYER_STAIR           4
 
@@ -180,6 +184,7 @@
 /* Game times */
 #define TIME_EVENT                    100
 #define TIME_ANIM                     10
+#define TIME_BULLETS                  2
 #define GAME_RANDOM_TYPE              2
 
 /* Sound Mode Variables */
@@ -253,6 +258,7 @@ extern unsigned int		curr_time;
 extern unsigned int		entry_time;
 extern unsigned int		frame_time;
 extern unsigned int  	anim_time;
+extern unsigned int  	bullet_time;
 extern unsigned char	spr_count;
 extern unsigned char   sprite_curr_index;
 
@@ -303,6 +309,17 @@ extern unsigned char anim_col[8];
 extern unsigned char anim_tile[8];
 extern unsigned char anim_int[8];
 extern unsigned char anim_end[8];
+
+
+//BULLETS
+//BULLETS
+extern unsigned char bullet_lin[8];
+extern unsigned char bullet_col[8];
+extern unsigned char bullet_tile[8];
+extern unsigned char bullet_dir[8];
+extern unsigned char bullet_colint[8];
+extern unsigned char bullet_frames[8];
+
 
 extern const JOYFUNC control_method[7];
 extern unsigned char initials[8];

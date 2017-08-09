@@ -359,6 +359,7 @@ void spr_page_map(void) {
     NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
   }
   spr_init_anim();
+  spr_init_bullet();
 }
 
 unsigned char spr_redraw(void) {
@@ -370,10 +371,12 @@ unsigned char spr_redraw(void) {
     /* Column Movement */
     if (s_lin0 <= 16) {
       intrinsic_di();
-      NIRVANAP_fillT_raw(PAPER, 8, s_col0);
+      NIRVANAP_fillT_raw(
+          PAPER, 8,
+          s_col0); // TODO REVIEW ESTO HACE EL CUADRO EN LA PRIMERA LINEA
       intrinsic_ei();
     }
-    if (sprite == SPR_P1 && player_over_stair && ((lin[sprite] & 3) == 0) ) {
+    if (sprite == SPR_P1 && player_over_stair && ((lin[sprite] & 3) == 0)) {
       s_tile1 = s_tile1 + 4;
     }
     NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
@@ -672,6 +675,13 @@ void spr_init_anim(void) {
   }
 }
 
+void spr_init_bullet(void) {
+  unsigned char f_bullet;
+  for (f_bullet = 0; f_bullet < 8; f_bullet++) {
+    bullet_col[f_bullet] = 0XFF;
+  }
+}
+
 void spr_add_anim(unsigned char f_lin, unsigned char f_col,
                   unsigned char f_tile, unsigned char f_end) {
   unsigned char f_anim;
@@ -706,6 +716,46 @@ void spr_play_anim(void) {
       } else {
         NIRVANAP_drawT(TILE_EMPTY, anim_lin[f_anim], anim_col[f_anim]);
         anim_lin[f_anim] = 0XFF;
+      }
+    }
+  }
+}
+
+void spr_play_bullets(void) {
+  unsigned char f_bullet;
+
+  for (f_bullet = 0; f_bullet < 8; f_bullet++) {
+
+    if (bullet_col[f_bullet] != 0XFF) {
+      s_lin0 = bullet_lin[f_bullet];
+      s_col0 = bullet_col[f_bullet];
+
+      spr_back_clr();
+
+      if (bullet_dir[f_bullet] == 0xFF) {
+        // Right
+        ++bullet_colint[f_bullet];
+
+        if (bullet_colint[f_bullet] >= bullet_frames[f_bullet]) {
+          ++bullet_col[f_bullet];
+          bullet_colint[f_bullet] = 0;
+        }
+      } else {
+        // Left
+        --bullet_colint[f_bullet];
+
+        if (bullet_colint[f_bullet] == 0xFF) {
+          --bullet_col[f_bullet];
+          bullet_colint[f_bullet] = bullet_frames[f_bullet] - 1;
+        }
+      }
+
+      if (bullet_col[f_bullet] > 0 && bullet_col[f_bullet] < 30) {
+        zx_print_chr(20, 16, bullet_tile[f_bullet] + bullet_colint[f_bullet]);
+        NIRVANAP_drawT(bullet_tile[f_bullet] + bullet_colint[f_bullet],
+                       bullet_lin[f_bullet], bullet_col[f_bullet]);
+      } else {
+        bullet_col[f_bullet] = 0XFF;
       }
     }
   }

@@ -138,6 +138,11 @@ void game_loop(void) {
 			spr_play_anim();
 		}
 
+		if (game_check_time(bullet_time, TIME_BULLETS)) {
+			bullet_time = zx_clock();
+			spr_play_bullets();
+		}
+
 		/*player 1 turn*/
 		sprite = SPR_P1;
 		player_turn();
