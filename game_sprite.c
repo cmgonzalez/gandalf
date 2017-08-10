@@ -380,7 +380,7 @@ unsigned char spr_redraw(void) {
       s_tile1 = s_tile1 + 4;
     }
     NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
-    spr_back_clr();
+    spr_back_repaint();
     return 1;
   } else if (s_tile1 != s_tile0) {
     /* Internal Movement, no clean needed */
@@ -395,7 +395,7 @@ void spr_destroy(unsigned char f_sprite) __z88dk_fastcall {
   s_lin0 = lin[f_sprite];
   s_col0 = col[f_sprite];
   NIRVANAP_spriteT(f_sprite, TILE_EMPTY, 0, 0);
-  spr_back_clr();
+  spr_back_repaint();
 
   tile[f_sprite] = TILE_EMPTY;
   col[f_sprite] = 0;
@@ -611,7 +611,7 @@ void spr_kill_all(void) {
   }
 }
 
-void spr_back_clr(void) {
+void spr_back_repaint(void) {
 
   unsigned char s_row;
   sprite_curr_index = spr_calc_index(s_lin0, s_col0);
@@ -692,7 +692,7 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
       anim_tile[f_anim] = f_tile;
       anim_int[f_anim] = 0;
       anim_end[f_anim] = f_end;
-
+      NIRVANAP_drawT(anim_tile[f_anim], anim_lin[f_anim], anim_col[f_anim]);
       break;
     }
   }
@@ -714,7 +714,10 @@ void spr_play_anim(void) {
                        anim_col[f_anim]);
         ++anim_int[f_anim];
       } else {
-        NIRVANAP_drawT(TILE_EMPTY, anim_lin[f_anim], anim_col[f_anim]);
+        s_col0 = anim_col[f_anim];
+        s_lin0 = anim_lin[f_anim];
+        spr_back_repaint();
+        // NIRVANAP_drawT(TILE_EMPTY, anim_lin[f_anim], anim_col[f_anim]);
         anim_lin[f_anim] = 0XFF;
       }
     }
@@ -724,13 +727,14 @@ void spr_play_anim(void) {
 void spr_play_bullets(void) {
   unsigned char f_bullet;
 
-  for (f_bullet = 0; f_bullet < 8; f_bullet++) {
+  for (f_bullet = 0; f_bullet < 8; ++f_bullet) {
 
     if (bullet_col[f_bullet] != 0XFF) {
       s_lin0 = bullet_lin[f_bullet];
       s_col0 = bullet_col[f_bullet];
+      s_col1 = s_col0;
 
-      spr_back_clr();
+      spr_back_repaint();
 
       if (bullet_dir[f_bullet] == 0xFF) {
         // Right
@@ -740,6 +744,10 @@ void spr_play_bullets(void) {
           ++bullet_col[f_bullet];
           bullet_colint[f_bullet] = 0;
         }
+        if ((bullet_col[f_bullet] & 1) != 0) {
+          s_col1 = bullet_col[f_bullet] + 1;
+          tmp = bullet_col[f_bullet] - 1;
+        }
       } else {
         // Left
         --bullet_colint[f_bullet];
@@ -748,12 +756,38 @@ void spr_play_bullets(void) {
           --bullet_col[f_bullet];
           bullet_colint[f_bullet] = bullet_frames[f_bullet] - 1;
         }
+        if ((bullet_col[f_bullet] & 1) != 0) {
+          s_col1 = bullet_col[f_bullet] - 1;
+          tmp = bullet_col[f_bullet] + 1;
+        }
       }
 
       if (bullet_col[f_bullet] > 0 && bullet_col[f_bullet] < 30) {
-        zx_print_chr(20, 16, bullet_tile[f_bullet] + bullet_colint[f_bullet]);
-        NIRVANAP_drawT(bullet_tile[f_bullet] + bullet_colint[f_bullet],
-                       bullet_lin[f_bullet], bullet_col[f_bullet]);
+
+        index0 = spr_calc_index(s_lin0, s_col1);
+        for (tmp0 = 0; tmp0 < 7; ++tmp0) {
+
+          if (class[tmp0] != 0) {
+            index1 = spr_calc_index(lin[tmp0], col[tmp0]);
+            if (index0 == index1) {
+              s_lin0 = lin[tmp0];
+              s_col0 = col[tmp0];
+              spr_destroy(tmp0);
+              bullet_col[f_bullet] = 0XFF;
+              spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3);
+              break;
+            }
+          }
+        }
+        if (bullet_col[f_bullet] != 0XFF) {
+          if ((scr_map[index0] < TILE_CEIL)) {
+            NIRVANAP_drawT(bullet_tile[f_bullet] + bullet_colint[f_bullet],
+                           s_lin0, bullet_col[f_bullet]);
+          } else {
+            spr_add_anim(s_lin0, tmp, TILE_ANIM_FIRE, 3);
+            bullet_col[f_bullet] = 0XFF;
+          }
+        }
       } else {
         bullet_col[f_bullet] = 0XFF;
       }

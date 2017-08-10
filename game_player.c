@@ -381,7 +381,7 @@ void player_pick_item(void) {
     scr_map[sprite_curr_index] = TILE_EMPTY;
     s_lin1 = (sprite_curr_index >> 4) << 4;
     s_col1 = (sprite_curr_index & 15) * 2;
-    spr_add_anim(s_lin1, s_col1, TILE_ANIM_EXPO, 3);
+    spr_add_anim(s_lin1, s_col1, TILE_ANIM_PICK, 3);
     //NIRVANAP_drawT(TILE_EMPTY, s_lin1, s_col1);
   }
 }

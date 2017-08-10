@@ -93,7 +93,8 @@
 #define TILE_P1_STAIR                 102
 #define TILE_P1_JUMPR                 88
 #define TILE_P1_LEN                   8 //LEN OF PLAYER SPRITES FOR EACH DIRECTION
-#define TILE_ANIM_EXPO                120
+#define TILE_ANIM_PICK                120
+#define TILE_ANIM_FIRE                123
 #define TILE_P1_KILL                  64
 #define TILE_P1_HITR                  64
 
@@ -242,6 +243,7 @@ extern unsigned char	s_col0;
 extern unsigned char	s_col1;
 extern unsigned char	sprite_lin_inc_mul;
 extern unsigned int		loop_count;
+extern unsigned int		index0;
 extern unsigned int		index1;
 extern unsigned char	tmp;
 extern unsigned char	tmp0;
