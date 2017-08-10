@@ -184,7 +184,7 @@
 
 /* Game times */
 #define TIME_EVENT                    100
-#define TIME_ANIM                     10
+#define TIME_ANIM                     6
 #define TIME_BULLETS                  2
 #define GAME_RANDOM_TYPE              2
 

@@ -269,7 +269,7 @@ unsigned char spr_page_right() {
   if (scr_curr < map_width) {
     ++scr_curr;
     spr_page_map();
-    spr_draw_map_background();
+    spr_draw_map();
     return 1;
   }
   return 0;
@@ -282,7 +282,7 @@ unsigned char spr_page_left() {
   if (scr_curr > 0) {
     --scr_curr;
     spr_page_map();
-    spr_draw_map_background();
+    spr_draw_map();
     return 1;
   }
   return 0;
@@ -446,7 +446,7 @@ unsigned char spr_tile_dir(unsigned char f_tile, unsigned char f_sprite,
   return f_tile;
 }
 
-void spr_draw_map_background(void) {
+void spr_draw_map(void) {
 
   NIRVANAP_halt();
   index1 = 16;
@@ -454,6 +454,7 @@ void spr_draw_map_background(void) {
   s_col1 = 2;
   // intrinsic_ei();
   spr_count = 0;
+  intrinsic_di();
   while (index1 < ((GAME_ROWS - 1) * 16)) {
 
     if (index1 % 16 == 0) {
@@ -463,7 +464,7 @@ void spr_draw_map_background(void) {
 
     if (scr_map[index1] < TILE_END) {
       // TILES
-      NIRVANAP_drawT(scr_map[index1], s_lin1, s_col1);
+      NIRVANAP_drawT_raw(scr_map[index1], s_lin1, s_col1);
     } else {
       // ENEMIES
       switch (scr_map[index1]) {
@@ -507,6 +508,7 @@ void spr_draw_map_background(void) {
     s_col1 = s_col1 + 2;
     ++index1;
   }
+  intrinsic_ei();
 }
 
 void spr_draw_clear(void) {
@@ -542,16 +544,20 @@ void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
   }
 
   /* Draw Brick */
+  intrinsic_di();
   if (f_hit) {
-    NIRVANAP_fillC(PAPER, f_lin, f_col);
-    NIRVANAP_fillC(PAPER, f_lin, f_col + 1);
-    NIRVANAP_drawT(v1, tmp, f_col);
+    // NIRVANAP_fillC(PAPER, f_lin, f_col);
+    // NIRVANAP_fillC(PAPER, f_lin, f_col + 1);
+    NIRVANAP_fillT_raw(PAPER, f_lin, f_col); // TODO BORRA SI HAY BRICK
+                                             // ARRIBA!!!
+    NIRVANAP_drawT_raw(v1, tmp, f_col);
   } else {
     // NIRVANAP_fillC( PAPER, f_lin-16, f_col  );
     // NIRVANAP_fillC( PAPER, f_lin-16, f_col+1);
-    NIRVANAP_drawT(v0, tmp - 16, f_col);
-    NIRVANAP_drawT(v1, tmp, f_col);
+    NIRVANAP_drawT_raw(v0, tmp - 16, f_col);
+    NIRVANAP_drawT_raw(v1, tmp, f_col);
   }
+  intrinsic_ei();
 }
 
 void spr_draw_index(unsigned int f_index) {
@@ -612,8 +618,9 @@ void spr_kill_all(void) {
 }
 
 void spr_back_repaint(void) {
-
   unsigned char s_row;
+
+  intrinsic_di();
   sprite_curr_index = spr_calc_index(s_lin0, s_col0);
   if ((s_col0 & 1) == 0) { // Par
     if ((s_lin0 & 15) == 0) {
@@ -632,6 +639,9 @@ void spr_back_repaint(void) {
      { // Impar
       if ((s_lin0 & 15) == 0) {
         // Paint single tile
+        intrinsic_ei();
+        NIRVANAP_halt();
+        intrinsic_di();
         spr_tile_paint(scr_map[sprite_curr_index], s_lin0, s_col0 - 1);
         sprite_curr_index = sprite_curr_index + 1;
         spr_tile_paint(scr_map[sprite_curr_index], s_lin0, s_col0 + 1);
@@ -640,24 +650,48 @@ void spr_back_repaint(void) {
         s_row = s_lin0 >> 4;
         s_row = s_row << 4;
         // up
+        intrinsic_ei();
         NIRVANAP_halt();
+        intrinsic_di();
         spr_tile_paint(scr_map[sprite_curr_index], s_row, s_col0 - 1);
         sprite_curr_index = sprite_curr_index + 1;
         spr_tile_paint(scr_map[sprite_curr_index], s_row, s_col0 + 1);
         // down
         s_row = s_row + 16;
         sprite_curr_index = sprite_curr_index + 15;
-
+        intrinsic_ei();
         NIRVANAP_halt();
+        intrinsic_di();
+        // NIRVANAP_halt();
         spr_tile_paint(scr_map[sprite_curr_index], s_row, s_col0 - 1);
         sprite_curr_index = sprite_curr_index + 1;
         spr_tile_paint(scr_map[sprite_curr_index], s_row, s_col0 + 1);
       }
     }
+  intrinsic_ei();
 }
 
 void spr_tile_paint(unsigned char f_tile, unsigned char f_lin,
                     unsigned char f_col) {
+
+  switch (f_tile) {
+  case TILE_EMPTY:
+    // NIRVANAP_fillC(PAPER, f_lin, f_col);
+    // NIRVANAP_fillC(PAPER, f_lin + 8, f_col);
+    // NIRVANAP_fillC(PAPER, f_lin, f_col + 1);
+    // NIRVANAP_fillC(PAPER, f_lin + 8, f_col + 1);
+    NIRVANAP_fillT_raw(PAPER, f_lin, f_col);
+    break;
+  case 0XFF:
+    // ANIM PLAYING
+    break;
+  default:
+
+    NIRVANAP_drawT_raw(f_tile, f_lin, f_col);
+
+    // NIRVANAP_drawT(f_tile, f_lin, f_col);
+  }
+  /*
   if (f_tile == TILE_EMPTY) { // PERF || f_tile >= TILE_END) {
     NIRVANAP_fillC(PAPER, f_lin, f_col);
     NIRVANAP_fillC(PAPER, f_lin + 8, f_col);
@@ -666,6 +700,7 @@ void spr_tile_paint(unsigned char f_tile, unsigned char f_lin,
   } else {
     NIRVANAP_drawT(f_tile, f_lin, f_col);
   }
+  */
 }
 
 void spr_init_anim(void) {
@@ -692,7 +727,11 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
       anim_tile[f_anim] = f_tile;
       anim_int[f_anim] = 0;
       anim_end[f_anim] = f_end;
-      NIRVANAP_drawT(anim_tile[f_anim], anim_lin[f_anim], anim_col[f_anim]);
+      intrinsic_di();
+      NIRVANAP_drawT_raw(anim_tile[f_anim], anim_lin[f_anim], anim_col[f_anim]);
+      intrinsic_ei();
+      index0 = spr_calc_index(f_lin, f_col);
+      if (scr_map[index0] == TILE_EMPTY) scr_map[index0] = 0xFF;
       break;
     }
   }
@@ -700,25 +739,35 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
 
 void spr_play_anim(void) {
   unsigned char f_anim;
+  unsigned int f_index;
+
   unsigned char f_clear;
   f_clear = 1;
+
   for (f_anim = 0; f_anim < 8; f_anim++) {
-    if (anim_lin[f_anim] != 0XFF) {
+    if (anim_lin[f_anim] != 0xFF) {
+
       if (f_clear) {
         NIRVANAP_halt();
         f_clear = 0;
       }
 
       if (anim_int[f_anim] < anim_end[f_anim]) {
+        // intrinsic_di();
         NIRVANAP_drawT(anim_tile[f_anim] + anim_int[f_anim], anim_lin[f_anim],
                        anim_col[f_anim]);
+        // intrinsic_ei();
         ++anim_int[f_anim];
       } else {
         s_col0 = anim_col[f_anim];
         s_lin0 = anim_lin[f_anim];
+        f_index = spr_calc_index(s_lin0, s_col0);
+        if (scr_map[spr_calc_index(s_lin0, s_col0)] == 0xFF) {
+          scr_map[spr_calc_index(s_lin0, s_col0)] = TILE_EMPTY;
+        }
         spr_back_repaint();
-        // NIRVANAP_drawT(TILE_EMPTY, anim_lin[f_anim], anim_col[f_anim]);
-        anim_lin[f_anim] = 0XFF;
+        anim_lin[f_anim] = 0xFF;
+        // scr_map[spr_calc_index(s_lin0, s_col0)] = TILE_EMPTY;
       }
     }
   }
@@ -729,7 +778,7 @@ void spr_play_bullets(void) {
 
   for (f_bullet = 0; f_bullet < 8; ++f_bullet) {
 
-    if (bullet_col[f_bullet] != 0XFF) {
+    if (bullet_col[f_bullet] != 0xFF) {
       s_lin0 = bullet_lin[f_bullet];
       s_col0 = bullet_col[f_bullet];
       s_col1 = s_col0;
@@ -781,8 +830,10 @@ void spr_play_bullets(void) {
         }
         if (bullet_col[f_bullet] != 0XFF) {
           if ((scr_map[index0] < TILE_CEIL)) {
+            // intrinsic_di();
             NIRVANAP_drawT(bullet_tile[f_bullet] + bullet_colint[f_bullet],
                            s_lin0, bullet_col[f_bullet]);
+            // intrinsic_ei();
           } else {
             spr_add_anim(s_lin0, tmp, TILE_ANIM_FIRE, 3);
             bullet_col[f_bullet] = 0XFF;
