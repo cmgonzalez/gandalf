@@ -126,6 +126,7 @@ void game_loop(void) {
   game_joystick_set();
   fps = 0;
   while (!game_over) {
+    zx_print_chr(20,0,col[SPR_P1]);
     // Vsync!
     NIRVANAP_halt();
 

@@ -92,10 +92,11 @@ unsigned char spr_move_jump(void) {
   signed int val_yc;
 
   player_vel_y = player_vel_y + game_gravity;
-  //JUMP INC
-  if ( (player_vel_inc) && !(dirs & IN_STICK_FIRE)  && (player_vel_y > player_vel_y1) ) {
-      player_vel_y = 0;
-      player_vel_inc = 0;
+  // JUMP INC
+  if ((player_vel_inc) && !(dirs & IN_STICK_FIRE) &&
+      (player_vel_y > player_vel_y1)) {
+    player_vel_y = 0;
+    player_vel_inc = 0;
   }
 
   if (player_vel_y > 120) {
@@ -181,7 +182,13 @@ unsigned char spr_move_down(void) {
   // 43
   tmp1 = lin[sprite] + (SPRITE_LIN_INC << sprite_lin_inc_mul);
   if (spr_check_map_fall(tmp1 + 16, col[sprite])) {
-    lin[sprite] = (tmp1 >> 3) << 3; // div 8 mul 8
+    if (sprite == SPR_P1) {
+      if (!player_over_stair)
+        lin[sprite] = (tmp1 >> 3) << 3; // div 8 mul 8
+    } else {
+      lin[sprite] = (tmp1 >> 3) << 3; // div 8 mul 8
+    }
+
     return 1;
   }
   lin[sprite] = tmp1;
@@ -211,7 +218,9 @@ unsigned char spr_move_right(void) {
       s_col1 = col[sprite] + 1;
       if (spr_check_map(s_lin1, s_col1) || spr_check_map(s_lin1 + 15, s_col1)) {
         --colint[sprite];
-        if (!BIT_CHK(state[sprite], STAT_JUMP) && !BIT_CHK(state[sprite], STAT_FALL) ) --colint[sprite];
+        if (!BIT_CHK(state[sprite], STAT_JUMP) &&
+            !BIT_CHK(state[sprite], STAT_FALL))
+          --colint[sprite];
         return 1;
       }
     } // else {
@@ -244,7 +253,9 @@ unsigned char spr_move_left(void) {
       s_col1 = col[sprite] - 1;
       if (spr_check_map(s_lin1, s_col1) || spr_check_map(s_lin1 + 15, s_col1)) {
         ++colint[sprite];
-        if (!BIT_CHK(state[sprite], STAT_JUMP) && !BIT_CHK(state[sprite], STAT_FALL) ) ++colint[sprite];
+        if (!BIT_CHK(state[sprite], STAT_JUMP) &&
+            !BIT_CHK(state[sprite], STAT_FALL))
+          ++colint[sprite];
         return 1;
       }
     } // else {
