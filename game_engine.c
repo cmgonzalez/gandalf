@@ -126,8 +126,9 @@ void game_loop(void) {
   game_joystick_set();
   fps = 0;
   while (!game_over) {
-//Vsync!
-NIRVANAP_halt();
+    // Vsync!
+    NIRVANAP_halt();
+
 
     if (game_check_time(anim_time, TIME_ANIM)) {
       anim_time = zx_clock();
@@ -146,7 +147,7 @@ NIRVANAP_halt();
 
     /*each second aprox - update fps/score/phase left/phase advance*/
     if (game_check_time(frame_time, 100)) {
-      zx_print_int(20, 0, fps);
+      zx_print_int(23, 27, fps);
       fps = 0;
       frame_time = zx_clock();
 

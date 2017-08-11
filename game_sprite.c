@@ -92,6 +92,11 @@ unsigned char spr_move_jump(void) {
   signed int val_yc;
 
   player_vel_y = player_vel_y + game_gravity;
+  //JUMP INC
+  if ( (player_vel_inc) && !(dirs & IN_STICK_FIRE)  && (player_vel_y > player_vel_y1) ) {
+      player_vel_y = 0;
+      player_vel_inc = 0;
+  }
 
   if (player_vel_y > 120) {
     player_vel_y = 120;
@@ -206,7 +211,7 @@ unsigned char spr_move_right(void) {
       s_col1 = col[sprite] + 1;
       if (spr_check_map(s_lin1, s_col1) || spr_check_map(s_lin1 + 15, s_col1)) {
         --colint[sprite];
-        --colint[sprite];
+        if (!BIT_CHK(state[sprite], STAT_JUMP) && !BIT_CHK(state[sprite], STAT_FALL) ) --colint[sprite];
         return 1;
       }
     } // else {
@@ -239,7 +244,7 @@ unsigned char spr_move_left(void) {
       s_col1 = col[sprite] - 1;
       if (spr_check_map(s_lin1, s_col1) || spr_check_map(s_lin1 + 15, s_col1)) {
         ++colint[sprite];
-        ++colint[sprite];
+        if (!BIT_CHK(state[sprite], STAT_JUMP) && !BIT_CHK(state[sprite], STAT_FALL) ) ++colint[sprite];
         return 1;
       }
     } // else {
@@ -731,7 +736,8 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
       NIRVANAP_drawT_raw(anim_tile[f_anim], anim_lin[f_anim], anim_col[f_anim]);
       intrinsic_ei();
       index0 = spr_calc_index(f_lin, f_col);
-      if (scr_map[index0] == TILE_EMPTY) scr_map[index0] = 0xFF;
+      if (scr_map[index0] == TILE_EMPTY)
+        scr_map[index0] = 0xFF;
       break;
     }
   }

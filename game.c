@@ -69,7 +69,9 @@ void main(void) {
 
   player_joy = 0; /* SJ1 */
   game_gravity = 8;
-  player_vel_y0 = -84;
+  //vel_y0 + vel_y1 = -84
+  player_vel_y0 = -88; //Volocity
+  player_vel_y1 = -72; //Min Velocity
 
   // Keyboard Handling
 
@@ -120,4 +122,13 @@ void main(void) {
 
 void test_proc() {}
 
-unsigned char test_func() { return 0; }
+unsigned char test_func() {
+  /*
+  if ( (player_vel_inc) && (dirs & IN_STICK_FIRE) && (player_vel_y > -16) ) {
+      player_vel_y = player_vel_y + player_vel_y1;
+      player_vel_inc = 0;
+  }
+*/
+
+   return 0;
+  }
