@@ -127,7 +127,7 @@ void game_loop(void) {
   while (!game_over) {
 
     // Vsync!
-    //NIRVANAP_halt();
+    // NIRVANAP_halt();
 
     if (game_check_time(anim_time, TIME_ANIM)) {
       anim_time = zx_clock();
@@ -202,10 +202,6 @@ unsigned int game_check_map(unsigned char f_lin, unsigned char f_col) {
 
 unsigned char game_check_cell(int f_index) __z88dk_fastcall {
   unsigned char f_tile;
-  unsigned char f_hor_check;
-
-  f_hor_check = sprite_horizontal_check;
-  sprite_horizontal_check = 0;
   // OUT OFF SCREEN
   if (f_index > GAME_SCR_MAX_INDEX) {
     return 1;
@@ -227,100 +223,67 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
 
   // TILE_STAIR_S -> TILE_CEIL
   if (f_tile < TILE_CEIL) {
-    if (BIT_CHK(s_state, STAT_FALL)) {
-      return 1;
-    } else {
+    if (sprite_horizontal_check) {
       return 0;
+    } else {
+      if (BIT_CHK(s_state, STAT_FALL)) {
+        return 1;
+      } else {
+        return 0;
+      }
     }
   }
 
   // TILE_CEIL -> TILE_END
   if (f_tile < TILE_END) {
-      return 1;
+    return 1;
   }
 
   // NOT A TILE f_tile > TILE_END
   return 0;
+}
 
-  /*
-    if (sprite_on_air) {
-      /*
-      if (BIT_CHK(s_state, STAT_JUMP)) {
-        if (f_hor_check) {
-          return f_tile > TILE_CEIL;
-        } else {
-          return f_tile >= TILE_CEIL;
-        }
-      }
-      if (BIT_CHK(s_state, STAT_FALL)) {
-        if (f_hor_check) {
-          return f_tile > TILE_CEIL;
-        } else {
-          return f_tile >= TILE_CEIL;
-        }
-      }
-
-      if (f_hor_check ) {
-        return f_tile >= TILE_CEIL;
-      } else {
-        if (BIT_CHK(s_state, STAT_JUMP)) {
-          return f_tile >= TILE_STAIR_S;
-        } else {
-          return f_tile > TILE_FLOOR ;
-        }
-      }
-
-
-    } else {
-      if (sprite == SPR_P1 && player_over_stair) {
-        return f_tile >= TILE_STAIR_E;
-      }
-      return f_tile >= TILE_CEIL;
-    }
-    */
-  }
-
-  unsigned char
-  game_enemy_add_get_index(unsigned char f_search) __z88dk_fastcall {
-    for (enemies = 0; enemies <= 5; ++enemies) {
-      if (class[enemies] == (unsigned char)f_search) {
-        return enemies;
-      }
-    }
-    return 255;
-  }
-
-  void game_print_score(void) {
-    zx_print_ink(INK_WHITE);
-    zx_print_paper(PAPER_BLACK);
-    zx_print_int(0, 3, player_score);
-    zx_print_int(0, 14, game_score_top); // SCORE TOP
-  }
-
-  void game_paint_attrib(unsigned char e_r1) __z88dk_fastcall {
-    for (tmp0 = e_r1; tmp0 <= 19; ++tmp0) {
-      game_paint_attrib_lin(1, 31, (tmp0 << 3) + 8);
+unsigned char
+game_enemy_add_get_index(unsigned char f_search) __z88dk_fastcall {
+  for (enemies = 0; enemies <= 5; ++enemies) {
+    if (class[enemies] == (unsigned char)f_search) {
+      return enemies;
     }
   }
+  return 255;
+}
 
-  void game_paint_attrib_lin(unsigned char f_start, unsigned char f_end,
+void game_print_score(void) {
+  zx_print_ink(INK_WHITE);
+  zx_print_paper(PAPER_BLACK);
+  // zx_print_int(0, 3, player_score);
+  zx_print_int(0, 14, game_score_top); // SCORE TOP
+}
+
+void game_paint_attrib(unsigned char e_r1) __z88dk_fastcall {
+  for (tmp0 = e_r1; tmp0 <= 19; ++tmp0) {
+    game_paint_attrib_lin(1, 31, (tmp0 << 3) + 8);
+  }
+}
+
+void game_paint_attrib_lin(unsigned char f_start, unsigned char f_end,
+                           unsigned char f_lin) {
+  for (tmp_uc = f_start; tmp_uc < f_end; ++tmp_uc) {
+    NIRVANAP_paintC(attrib, f_lin, tmp_uc);
+  }
+}
+
+void game_paint_attrib_lin_h(unsigned char f_start, unsigned char f_end,
                              unsigned char f_lin) {
-    for (tmp_uc = f_start; tmp_uc < f_end; ++tmp_uc) {
-      NIRVANAP_paintC(attrib, f_lin, tmp_uc);
-    }
+  for (tmp_uc = f_start; tmp_uc < f_end; ++tmp_uc) {
+    NIRVANAP_paintC(attrib_hl, f_lin, tmp_uc);
   }
+}
 
-  void game_paint_attrib_lin_h(unsigned char f_start, unsigned char f_end,
-                               unsigned char f_lin) {
-    for (tmp_uc = f_start; tmp_uc < f_end; ++tmp_uc) {
-      NIRVANAP_paintC(attrib_hl, f_lin, tmp_uc);
-    }
-  }
-
-  void game_joystick_change(void) {
-    ++player_joy;
-    if (player_joy == 7)
-      player_joy = 0; /* Rotate Joystick*/
+void game_joystick_change(void) {
+  ++player_joy;
+  if (player_joy == 7)
+    player_joy = 0; /* Rotate Joystick*/
 }
 
 void game_joystick_set_menu(void) {

@@ -94,14 +94,11 @@ unsigned char spr_move_horizontal(void) {
 }
 
 unsigned char spr_move_right(void) {
-  sprite_horizontal_check = 1;
   ++colint[sprite];
   if (colint[sprite] == sprite_frames[class[sprite]]) {
     s_lin1 = lin[sprite];
     if (col[sprite] < 30) {
       s_col1 = col[sprite] + 1;
-      sprite_on_air = BIT_CHK(state[sprite], STAT_JUMP) ||
-                      BIT_CHK(state[sprite], STAT_FALL);
       if (game_check_map(s_lin1, s_col1) ||
           game_check_map(s_lin1 + 15, s_col1)) {
         --colint[sprite];
@@ -130,14 +127,11 @@ unsigned char spr_move_right(void) {
 }
 
 unsigned char spr_move_left(void) {
-  sprite_horizontal_check = 1;
   --colint[sprite];
   if (colint[sprite] == 255) {
     s_lin1 = lin[sprite];
     if (col[sprite] > 0) {
       s_col1 = col[sprite] - 1;
-      sprite_on_air = BIT_CHK(state[sprite], STAT_JUMP) ||
-                      BIT_CHK(state[sprite], STAT_FALL);
       if (game_check_map(s_lin1, s_col1) ||
           game_check_map(s_lin1 + 15, s_col1)) {
         ++colint[sprite];
