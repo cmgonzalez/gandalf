@@ -69,9 +69,9 @@ void main(void) {
 
   player_joy = 0; /* SJ1 */
   game_gravity = 8;
-  //vel_y0 + vel_y1 = -84
-  player_vel_y0 = -88; //Volocity
-  player_vel_y1 = -72; //Min Velocity
+  // vel_y0 + vel_y1 = -84
+  player_vel_y0 = -88; // Volocity
+  player_vel_y1 = -72; // Min Velocity
 
   // Keyboard Handling
 
@@ -123,12 +123,81 @@ void main(void) {
 void test_proc() {}
 
 unsigned char test_func() {
-  /*
-  if ( (player_vel_inc) && (dirs & IN_STICK_FIRE) && (player_vel_y > -16) ) {
-      player_vel_y = player_vel_y + player_vel_y1;
-      player_vel_inc = 0;
-  }
-*/
 
-   return 0;
+  signed int val_yc;
+
+  player_vel_y = player_vel_y + game_gravity;
+  sprite_on_air = 1;
+  // JUMP BOOST
+  if ((player_vel_inc) && !(dirs & IN_STICK_FIRE) &&
+      (player_vel_y > player_vel_y1)) {
+    player_vel_y = 0; // TODO FIX WHEN FALLING!
+    player_vel_inc = 0;
   }
+  // MAX SPEEDS
+  if (player_vel_y > 120) {
+    player_vel_y = 120;
+  }
+
+  if (player_vel_y < -120) {
+    player_vel_y = -120;
+  }
+  // CONVER TO PIXEL'S
+  val_yc = player_vel_y / 10;
+
+  s_lin1 = (unsigned char)val_yc;
+  // Nirvana don't support odd lin's
+  if ((s_lin1 & 1) != 0) {
+    s_lin1++;
+  }
+  s_lin1 = lin[sprite] + s_lin1;
+
+  if (s_lin1 > GAME_LIN_FLOOR) {
+    s_lin1 = GAME_LIN_FLOOR;
+  }
+
+  if (val_yc < 0) {
+    BIT_SET(s_state, STAT_JUMP);
+    BIT_CLR(s_state, STAT_FALL);
+    // Asending
+
+    if (game_check_map(s_lin1, col[sprite])) {
+      // Hit Platforms
+      if (player_hit_platform()) {
+        lin[sprite] = (lin[sprite] >> 4) << 4;
+      }
+      player_vel_y = 0;
+    } else {
+      lin[sprite] = s_lin1;
+    }
+  } else {
+    // Falling
+    BIT_SET(s_state, STAT_FALL);
+    BIT_CLR(s_state, STAT_JUMP);
+
+    // index1 = spr_calc_index(s_lin1 + 16, col[sprite]);
+    if (game_check_map(s_lin1 + 16, col[sprite])) {
+      // Jump end
+      if (player_over_stair) {
+        lin[sprite] = s_lin1;
+      } else {
+        lin[sprite] = (s_lin1 >> 4) << 4;
+      }
+
+      player_vel_y = 0;
+      BIT_CLR(s_state, STAT_FALL);
+      BIT_CLR(s_state, STAT_JUMP);
+      colint[sprite] = 0;
+      return 1;
+
+    } else {
+      lin[sprite] = s_lin1;
+    }
+  }
+
+  if (spr_move_horizontal()) {
+    BIT_CLR(s_state, STAT_DIRL);
+    BIT_CLR(s_state, STAT_DIRR);
+  }
+  return 0;
+}

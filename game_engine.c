@@ -121,15 +121,13 @@ void game_loop(void) {
   phase_curr = game_start_phase;
   game_phase_init();
   /* game loop start */
-  sprite_lin_inc_mul = 0;
   dirs = 0x00;
   game_joystick_set();
   fps = 0;
   while (!game_over) {
-    zx_print_chr(20,0,col[SPR_P1]);
-    // Vsync!
-    NIRVANAP_halt();
 
+    // Vsync!
+    //NIRVANAP_halt();
 
     if (game_check_time(anim_time, TIME_ANIM)) {
       anim_time = zx_clock();
@@ -180,64 +178,149 @@ void game_print_phase() {
   zx_print_chr(23, 18, phase_curr + 1);
 }
 
-unsigned char game_check_maze(int f_index) __z88dk_fastcall {
-  return scr_map[f_index] >= TILE_CEIL &&
-         scr_map[f_index] <= TILE_END; // PERF && scr_map[f_index] < TILE_END;
-}
+unsigned int game_check_map(unsigned char f_lin, unsigned char f_col) {
+  // TODO A SINGLE FUNCTION TO SAVE BYTES
+  if ((f_col & 1) == 0) {
+    index1 = spr_calc_index(f_lin, f_col);
 
-unsigned char game_check_maze_floor(int f_index) __z88dk_fastcall {
-
-  // TODO MEJORAR CREANDO FUNCION NUEVA, REVISAR LLAMADAS HACIA ARRIBA TB...
-  if (sprite == SPR_P1 && player_over_stair) {
-    return scr_map[f_index] >= TILE_STAIR_E && scr_map[f_index] <= TILE_END;
+    return game_check_cell(index1);
   } else {
-    return scr_map[f_index] >= TILE_FLOOR &&
-           scr_map[f_index] <=
-               TILE_END; // PERF  && scr_map[f_index] < TILE_END;
+
+    g_player_hit_left = 0;
+    g_player_hit_right = 0;
+
+    index1 = spr_calc_index(f_lin, f_col - 1);
+    if (game_check_cell(index1)) {
+      g_player_hit_left = 1;
+    }
+    if (game_check_cell(index1 + 1)) {
+      g_player_hit_right = 1;
+    }
+    return g_player_hit_left || g_player_hit_right;
   }
 }
 
-unsigned char
-game_enemy_add_get_index(unsigned char f_search) __z88dk_fastcall {
-  for (enemies = 0; enemies <= 5; ++enemies) {
-    if (class[enemies] == (unsigned char)f_search) {
-      return enemies;
+unsigned char game_check_cell(int f_index) __z88dk_fastcall {
+  unsigned char f_tile;
+  unsigned char f_hor_check;
+
+  f_hor_check = sprite_horizontal_check;
+  sprite_horizontal_check = 0;
+  // OUT OFF SCREEN
+  if (f_index > GAME_SCR_MAX_INDEX) {
+    return 1;
+  }
+
+  f_tile = scr_map[f_index];
+  // TILE_EMPTY -> TILE_FLOOR
+  if (f_tile < TILE_FLOOR) {
+    return 0;
+  }
+  // TILE_FLOOR -> TILE_STAIR_S
+  if (f_tile < TILE_STAIR_S) {
+    if (BIT_CHK(s_state, STAT_FALL)) {
+      return 1;
+    } else {
+      return 0;
     }
   }
-  return 255;
-}
 
-void game_print_score(void) {
-  zx_print_ink(INK_WHITE);
-  zx_print_paper(PAPER_BLACK);
-  zx_print_int(0, 3, player_score);
-  zx_print_int(0, 14, game_score_top); // SCORE TOP
-}
-
-void game_paint_attrib(unsigned char e_r1) __z88dk_fastcall {
-  for (tmp0 = e_r1; tmp0 <= 19; ++tmp0) {
-    game_paint_attrib_lin(1, 31, (tmp0 << 3) + 8);
+  // TILE_STAIR_S -> TILE_CEIL
+  if (f_tile < TILE_CEIL) {
+    if (BIT_CHK(s_state, STAT_FALL)) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
-}
 
-void game_paint_attrib_lin(unsigned char f_start, unsigned char f_end,
-                           unsigned char f_lin) {
-  for (tmp_uc = f_start; tmp_uc < f_end; ++tmp_uc) {
-    NIRVANAP_paintC(attrib, f_lin, tmp_uc);
+  // TILE_CEIL -> TILE_END
+  if (f_tile < TILE_END) {
+      return 1;
   }
-}
 
-void game_paint_attrib_lin_h(unsigned char f_start, unsigned char f_end,
+  // NOT A TILE f_tile > TILE_END
+  return 0;
+
+  /*
+    if (sprite_on_air) {
+      /*
+      if (BIT_CHK(s_state, STAT_JUMP)) {
+        if (f_hor_check) {
+          return f_tile > TILE_CEIL;
+        } else {
+          return f_tile >= TILE_CEIL;
+        }
+      }
+      if (BIT_CHK(s_state, STAT_FALL)) {
+        if (f_hor_check) {
+          return f_tile > TILE_CEIL;
+        } else {
+          return f_tile >= TILE_CEIL;
+        }
+      }
+
+      if (f_hor_check ) {
+        return f_tile >= TILE_CEIL;
+      } else {
+        if (BIT_CHK(s_state, STAT_JUMP)) {
+          return f_tile >= TILE_STAIR_S;
+        } else {
+          return f_tile > TILE_FLOOR ;
+        }
+      }
+
+
+    } else {
+      if (sprite == SPR_P1 && player_over_stair) {
+        return f_tile >= TILE_STAIR_E;
+      }
+      return f_tile >= TILE_CEIL;
+    }
+    */
+  }
+
+  unsigned char
+  game_enemy_add_get_index(unsigned char f_search) __z88dk_fastcall {
+    for (enemies = 0; enemies <= 5; ++enemies) {
+      if (class[enemies] == (unsigned char)f_search) {
+        return enemies;
+      }
+    }
+    return 255;
+  }
+
+  void game_print_score(void) {
+    zx_print_ink(INK_WHITE);
+    zx_print_paper(PAPER_BLACK);
+    zx_print_int(0, 3, player_score);
+    zx_print_int(0, 14, game_score_top); // SCORE TOP
+  }
+
+  void game_paint_attrib(unsigned char e_r1) __z88dk_fastcall {
+    for (tmp0 = e_r1; tmp0 <= 19; ++tmp0) {
+      game_paint_attrib_lin(1, 31, (tmp0 << 3) + 8);
+    }
+  }
+
+  void game_paint_attrib_lin(unsigned char f_start, unsigned char f_end,
                              unsigned char f_lin) {
-  for (tmp_uc = f_start; tmp_uc < f_end; ++tmp_uc) {
-    NIRVANAP_paintC(attrib_hl, f_lin, tmp_uc);
+    for (tmp_uc = f_start; tmp_uc < f_end; ++tmp_uc) {
+      NIRVANAP_paintC(attrib, f_lin, tmp_uc);
+    }
   }
-}
 
-void game_joystick_change(void) {
-  ++player_joy;
-  if (player_joy == 7)
-    player_joy = 0; /* Rotate Joystick*/
+  void game_paint_attrib_lin_h(unsigned char f_start, unsigned char f_end,
+                               unsigned char f_lin) {
+    for (tmp_uc = f_start; tmp_uc < f_end; ++tmp_uc) {
+      NIRVANAP_paintC(attrib_hl, f_lin, tmp_uc);
+    }
+  }
+
+  void game_joystick_change(void) {
+    ++player_joy;
+    if (player_joy == 7)
+      player_joy = 0; /* Rotate Joystick*/
 }
 
 void game_joystick_set_menu(void) {

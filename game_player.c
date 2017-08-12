@@ -52,6 +52,7 @@ void player_init(unsigned char f_sprite, unsigned char f_lin,
 }
 
 unsigned char player_check_input(void) {
+  if ( dirs & IN_STICK_LEFT && dirs & IN_STICK_RIGHT ) dirs = 0;
   return dirs & IN_STICK_FIRE || dirs & IN_STICK_LEFT ||
          dirs & IN_STICK_RIGHT || dirs & IN_STICK_UP || dirs & IN_STICK_DOWN;
 }

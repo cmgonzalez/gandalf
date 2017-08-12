@@ -18,8 +18,6 @@
 #define GAME_SPRITE_H
 extern unsigned char    spr_chktime(unsigned char *sprite) __z88dk_fastcall;
 extern unsigned int	    spr_calc_index(unsigned char l, unsigned char c);
-extern unsigned int     spr_check_map(unsigned char f_lin, unsigned char f_col);
-extern unsigned int     spr_check_map_fall(unsigned char f_lin, unsigned char f_col);
 extern unsigned char    spr_move_up(void);
 extern unsigned char    spr_move_jump(void);
 extern unsigned char    spr_move_down(void);

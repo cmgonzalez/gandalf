@@ -236,6 +236,9 @@ extern signed char player_vel_inc;
 extern signed int game_gravity;
 
 extern unsigned char	sprite;
+extern unsigned char sprite_on_air;
+extern unsigned char sprite_horizontal_check;
+
 extern unsigned char	player_hit_count;
 extern unsigned char	s_tile0;
 extern unsigned char	s_tile1;
@@ -243,7 +246,6 @@ extern unsigned char	s_lin0;
 extern unsigned char	s_lin1;
 extern unsigned char	s_col0;
 extern unsigned char	s_col1;
-extern unsigned char	sprite_lin_inc_mul;
 extern unsigned int		loop_count;
 extern unsigned int		index0;
 extern unsigned int		index1;

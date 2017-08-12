@@ -78,7 +78,7 @@ void enemy_walk(void) {
     if ((col[sprite] & 1) == 0) {
       // Check Floor
       index1 = spr_calc_index(lin[sprite] + 16, col[sprite]);
-      if (!game_check_maze(index1)) {
+      if (!game_check_cell(index1)) {
         BIT_SET(s_state, STAT_FALL);
       }
 
@@ -100,7 +100,7 @@ void enemy_avoid_edge() {
   } else {
     index1 = spr_calc_index(lin[sprite] + 16, col[sprite] - 2);
   }
-  if (!game_check_maze_floor(index1)) {
+  if (!game_check_cell(index1)) {
     spr_turn_horizontal();
   }
 }
