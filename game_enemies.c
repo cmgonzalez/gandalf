@@ -82,6 +82,11 @@ void enemy_walk(void) {
         BIT_SET(s_state, STAT_FALL);
       }
 
+      if (col[sprite] == 0 || col[sprite] == 30) {
+        spr_turn_horizontal();
+      }
+
+
       if (class[sprite] == ORC || class[sprite] == ELF) {
         enemy_avoid_edge();
       }

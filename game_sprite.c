@@ -72,13 +72,20 @@ unsigned char spr_move_jump(void) {
 
   s_lin1 = (unsigned char)val_yc;
   // Nirvana don't support odd lin's
+
   if ((s_lin1 & 1) != 0) {
     s_lin1++;
   }
+
   s_lin1 = lin[sprite] + s_lin1;
 
   if (s_lin1 > GAME_LIN_FLOOR) {
-    s_lin1 = GAME_LIN_FLOOR;
+    if (s_lin1 > GAME_LIN_FLOOR + 56) {
+      s_lin1 = 0;
+    } else {
+      s_lin1 = GAME_LIN_FLOOR;
+    }
+
   }
 
   if (val_yc < 0) {
@@ -104,13 +111,19 @@ unsigned char spr_move_jump(void) {
     // index1 = spr_calc_index(s_lin1 + 16, col[sprite]);
     if (game_check_map(s_lin1 + 16, col[sprite])) {
       // Jump end
+      player_check_stairs(0);
+      if (!player_over_stair) {
+        player_check_stairs(1);
+      }
 
-      s_lin1 = (s_lin1 >> 4) << 4;
-      if (lin[sprite] > s_lin1) {
-        lin[sprite] = s_lin1 + 16;
-        return 0;
-      } else {
-        lin[sprite] = s_lin1;
+      if (!player_over_stair) {
+        s_lin1 = (s_lin1 >> 4) << 4;
+        if (lin[sprite] > s_lin1) {
+          lin[sprite] = s_lin1 + 16;
+          return 0;
+        } else {
+          lin[sprite] = s_lin1;
+        }
       }
       player_vel_y = 0;
       BIT_CLR(s_state, STAT_FALL);
@@ -279,6 +292,7 @@ void spr_page_map(void) {
     // Decompress map TODO POINTERS!
     switch (scr_curr) {
     case 0:
+    /* TODO 128k LEVEL DATA SHOULD BE READED HERE!*/
       v0 = scr_0[i];
       v1 = scr_0[i + 1];
       break;
@@ -347,15 +361,11 @@ unsigned char spr_redraw(void) {
 
   if ((s_lin1 != s_lin0) || (s_col1 != s_col0)) {
     /* Column Movement */
-    if (s_lin0 <= 16) {
-      intrinsic_di();
-      NIRVANAP_fillT_raw(
-          PAPER, 8,
-          s_col0); // TODO REVIEW ESTO HACE EL CUADRO EN LA PRIMERA LINEA
-      intrinsic_ei();
-    }
-    if (sprite == SPR_P1 && player_over_stair && ((lin[sprite] & 3) == 0)) {
-      s_tile1 = s_tile1 + 4;
+    if (sprite == SPR_P1) {
+      /*Stair Anim*/
+      if ( player_over_stair && ((lin[sprite] & 3) == 0)) {
+        s_tile1 = s_tile1 + 4;
+      }
     }
     NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
     spr_back_repaint();

@@ -162,10 +162,7 @@ unsigned char player_move(void) {
     /* Jump Handling */
     if (spr_move_jump()) {
       // Jump Ends
-      player_check_stairs(0);
-      if (!player_over_stair)
-        player_check_stairs(1);
-      player_tile(TILE_P1_RIGHT);
+      if (!player_over_stair) player_tile(TILE_P1_RIGHT);
     }
   } else {
     /* Read player input */
@@ -260,11 +257,8 @@ unsigned char player_move_input(void) {
       }
       player_over_stair = 0;
       sound_jump();
-      if (BIT_CHK(state[sprite], STAT_DIRR)) {
-        colint[sprite] = 0;
-      } else {
-        colint[sprite] = 2;
-      }
+
+      //colint[sprite] = FRAMES_PLAYER / 2;
       BIT_SET(s_state, STAT_JUMP);
       BIT_CLR(s_state, STAT_FALL);
       jump_lin[sprite] = lin[sprite];
