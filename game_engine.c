@@ -126,6 +126,7 @@ void game_loop(void) {
   fps = 0;
   while (!game_over) {
 
+
     // Vsync!
     // NIRVANAP_halt();
 

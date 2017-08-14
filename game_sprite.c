@@ -46,7 +46,90 @@ unsigned char spr_chktime(unsigned char *sprite) __z88dk_fastcall {
   return 0;
 }
 
-unsigned char spr_move_jump(void) { return test_func(); }
+unsigned char spr_move_jump(void) {
+
+  signed int val_yc;
+  player_vel_y = player_vel_y + game_gravity;
+  sprite_on_air = 1;
+  // JUMP BOOST
+  if ((player_vel_inc)) {
+    if (!(dirs & IN_STICK_FIRE) && (player_vel_y > player_vel_y1) &&
+        (player_vel_y < 0)) {
+      player_vel_y = 0; // TODO FIX WHEN FALLING!
+      player_vel_inc = 0;
+    }
+  }
+  // MAX SPEEDS
+  if (player_vel_y > 120) {
+    player_vel_y = 120;
+  }
+
+  if (player_vel_y < -120) {
+    player_vel_y = -120;
+  }
+  // CONVER TO PIXEL'S
+  val_yc = player_vel_y / 10;
+
+  s_lin1 = (unsigned char)val_yc;
+  // Nirvana don't support odd lin's
+  if ((s_lin1 & 1) != 0) {
+    s_lin1++;
+  }
+  s_lin1 = lin[sprite] + s_lin1;
+
+  if (s_lin1 > GAME_LIN_FLOOR) {
+    s_lin1 = GAME_LIN_FLOOR;
+  }
+
+  if (val_yc < 0) {
+    BIT_SET(s_state, STAT_JUMP);
+    BIT_CLR(s_state, STAT_FALL);
+    // Asending
+
+    if (game_check_map(s_lin1, col[sprite])) {
+      // Hit Platforms
+      if (player_hit_platform()) {
+
+        lin[sprite] = (lin[sprite] >> 4) << 4;
+      }
+      player_vel_y = 0;
+    } else {
+      lin[sprite] = s_lin1;
+    }
+  } else {
+    // Falling
+    BIT_SET(s_state, STAT_FALL);
+    BIT_CLR(s_state, STAT_JUMP);
+
+    // index1 = spr_calc_index(s_lin1 + 16, col[sprite]);
+    if (game_check_map(s_lin1 + 16, col[sprite])) {
+      // Jump end
+
+      s_lin1 = (s_lin1 >> 4) << 4;
+      if (lin[sprite] > s_lin1) {
+        lin[sprite] = s_lin1 + 16;
+        return 0;
+      } else {
+        lin[sprite] = s_lin1;
+      }
+      player_vel_y = 0;
+      BIT_CLR(s_state, STAT_FALL);
+      BIT_CLR(s_state, STAT_JUMP);
+      colint[sprite] = 0;
+      return 1;
+
+    } else {
+      lin[sprite] = s_lin1;
+    }
+  }
+  sprite_horizontal_check = 1;
+  if (spr_move_horizontal()) {
+    BIT_CLR(s_state, STAT_DIRL);
+    BIT_CLR(s_state, STAT_DIRR);
+  }
+  sprite_horizontal_check = 0;
+  return 0;
+}
 
 unsigned char spr_move_up(void) {
   tmp1 = lin[sprite] - SPRITE_LIN_INC;
@@ -70,7 +153,7 @@ unsigned char spr_move_up(void) {
 
 unsigned char spr_move_down(void) {
   tmp1 = lin[sprite] + SPRITE_LIN_INC;
-  if (game_check_map(tmp1 + 16, col[sprite])) {
+  if (game_check_map(tmp1 + 14, col[sprite])) {
     return 1;
   }
   lin[sprite] = tmp1;
@@ -514,7 +597,7 @@ void spr_kill_all(void) {
 
 void spr_back_repaint(void) {
   unsigned char s_row;
-
+  NIRVANAP_halt();
   intrinsic_di();
   sprite_curr_index = spr_calc_index(s_lin0, s_col0);
   if ((s_col0 & 1) == 0) { // Par
@@ -534,9 +617,6 @@ void spr_back_repaint(void) {
      { // Impar
       if ((s_lin0 & 15) == 0) {
         // Paint single tile
-        intrinsic_ei();
-        NIRVANAP_halt();
-        intrinsic_di();
         spr_tile_paint(scr_map[sprite_curr_index], s_lin0, s_col0 - 1);
         sprite_curr_index = sprite_curr_index + 1;
         spr_tile_paint(scr_map[sprite_curr_index], s_lin0, s_col0 + 1);
@@ -545,9 +625,6 @@ void spr_back_repaint(void) {
         s_row = s_lin0 >> 4;
         s_row = s_row << 4;
         // up
-        intrinsic_ei();
-        NIRVANAP_halt();
-        intrinsic_di();
         spr_tile_paint(scr_map[sprite_curr_index], s_row, s_col0 - 1);
         sprite_curr_index = sprite_curr_index + 1;
         spr_tile_paint(scr_map[sprite_curr_index], s_row, s_col0 + 1);
