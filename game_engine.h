@@ -19,7 +19,7 @@
 
 #include "globals.h"
 
-
+extern void          game_draw_screen(void);
 extern void          game_fill_row(unsigned char f_row, unsigned char f_asc) __z88dk_callee;
 extern void          game_print_footer(void);
 extern void			     game_print_lives(void);

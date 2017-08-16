@@ -63,9 +63,30 @@ void enemy_move(void) {
   case DWARF:
     enemy_walk();
     break;
-    case ELF:
-      enemy_walk();
-      break;
+  case ELF:
+    enemy_walk();
+    break;
+  case DRAGON:
+    enemy_vertical();
+    break;
+  }
+}
+
+void enemy_vertical() {
+  if (BIT_CHK(s_state, STAT_JUMP)) {
+    if (spr_move_up()) {
+      BIT_CLR(s_state, STAT_JUMP);
+      BIT_SET(s_state, STAT_FALL);
+    }
+  } else {
+    if (spr_move_down()) {
+      BIT_CLR(s_state, STAT_FALL);
+      BIT_SET(s_state, STAT_JUMP);
+    }
+  }
+  ++colint[sprite];
+  if (colint[sprite] == sprite_frames[class[sprite]]) {
+    colint[sprite] = 0;
   }
 }
 
@@ -85,7 +106,6 @@ void enemy_walk(void) {
       if (col[sprite] == 0 || col[sprite] == 30) {
         spr_turn_horizontal();
       }
-
 
       if (class[sprite] == ORC || class[sprite] == ELF) {
         enemy_avoid_edge();

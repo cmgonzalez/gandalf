@@ -85,7 +85,6 @@ unsigned char spr_move_jump(void) {
     } else {
       s_lin1 = GAME_LIN_FLOOR;
     }
-
   }
 
   if (val_yc < 0) {
@@ -146,15 +145,15 @@ unsigned char spr_move_jump(void) {
 
 unsigned char spr_move_up(void) {
   tmp1 = lin[sprite] - SPRITE_LIN_INC;
-  if (class[sprite] == PLAYER) {
-    if (game_check_map(tmp1, col[sprite])) {
-      /* Only Players can hit objects */
-      if (sprite == SPR_P1 && !BIT_CHK(state_a[SPR_P1], STAT_HITBRICK)) {
-        player_hit_platform();
-      }
-      return 1;
+
+  if (game_check_map(tmp1, col[sprite])) {
+    /* Only Players can hit objects */
+    if (sprite == SPR_P1 && !BIT_CHK(state_a[SPR_P1], STAT_HITBRICK)) {
+      player_hit_platform();
     }
+    return 1;
   }
+
   lin[sprite] = tmp1;
   if (lin[sprite] > GAME_LIN_FLOOR) {
     lin[sprite] = 0;
@@ -260,7 +259,7 @@ unsigned char spr_page_right() {
   if (scr_curr < map_width) {
     ++scr_curr;
     spr_page_map();
-    spr_draw_map();
+    game_draw_screen();
     return 1;
   }
   return 0;
@@ -273,7 +272,7 @@ unsigned char spr_page_left() {
   if (scr_curr > 0) {
     --scr_curr;
     spr_page_map();
-    spr_draw_map();
+    game_draw_screen();
     return 1;
   }
   return 0;
@@ -292,7 +291,7 @@ void spr_page_map(void) {
     // Decompress map TODO POINTERS!
     switch (scr_curr) {
     case 0:
-    /* TODO 128k LEVEL DATA SHOULD BE READED HERE!*/
+      /* TODO 128k LEVEL DATA SHOULD BE READED HERE!*/
       v0 = scr_0[i];
       v1 = scr_0[i + 1];
       break;
@@ -363,7 +362,7 @@ unsigned char spr_redraw(void) {
     /* Column Movement */
     if (sprite == SPR_P1) {
       /*Stair Anim*/
-      if ( player_over_stair && ((lin[sprite] & 3) == 0)) {
+      if (player_over_stair && ((lin[sprite] & 3) == 0)) {
         s_tile1 = s_tile1 + 4;
       }
     }
@@ -412,6 +411,9 @@ unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
   case ELF:
     return spr_tile_dir(TILE_ENEMY_ELF, f_sprite, DIRINC_ENEMY_ELF);
     break;
+  case DRAGON:
+    return spr_tile_dir(TILE_ENEMY_DRAGON, f_sprite, DIRINC_ENEMY_DRAGON);
+    break;
   }
   return 0;
 }
@@ -432,71 +434,6 @@ unsigned char spr_tile_dir(unsigned char f_tile, unsigned char f_sprite,
     return f_tile + f_inc;
   }
   return f_tile;
-}
-
-void spr_draw_map(void) {
-
-  NIRVANAP_halt();
-  index1 = 16;
-  s_lin1 = 0;
-  s_col1 = 2;
-  // intrinsic_ei();
-  spr_count = 0;
-  intrinsic_di();
-  while (index1 < ((GAME_ROWS - 1) * 16)) {
-
-    if (index1 % 16 == 0) {
-      s_lin1 = s_lin1 + 16;
-      s_col1 = 0;
-    }
-
-    if (scr_map[index1] < TILE_END) {
-      // TILES
-      NIRVANAP_drawT_raw(scr_map[index1], s_lin1, s_col1);
-    } else {
-      // ENEMIES
-      switch (scr_map[index1]) {
-      case INDEX_SKELETON_RIGHT:
-        enemy_init(s_lin1, s_col1, SKELETON, DIR_RIGHT);
-        break;
-      case INDEX_SKELETON_LEFT:
-        enemy_init(s_lin1, s_col1, SKELETON, DIR_LEFT);
-        break;
-      case INDEX_ORC_RIGHT:
-        enemy_init(s_lin1, s_col1, ORC, DIR_RIGHT);
-        break;
-      case INDEX_ORC_LEFT:
-        enemy_init(s_lin1, s_col1, ORC, DIR_LEFT);
-        break;
-      case INDEX_WARG_RIGHT:
-        enemy_init(s_lin1, s_col1, WARG, DIR_RIGHT);
-        break;
-      case INDEX_WARG_LEFT:
-        enemy_init(s_lin1, s_col1, WARG, DIR_LEFT);
-        break;
-      case INDEX_DWARF_RIGHT:
-        enemy_init(s_lin1, s_col1, DWARF, DIR_RIGHT);
-        break;
-      case INDEX_DWARF_LEFT:
-        enemy_init(s_lin1, s_col1, DWARF, DIR_LEFT);
-        break;
-      case INDEX_ELF_RIGHT:
-        enemy_init(s_lin1, s_col1, ELF, DIR_RIGHT);
-        break;
-      case INDEX_ELF_LEFT:
-        enemy_init(s_lin1, s_col1, ELF, DIR_LEFT);
-        break;
-      }
-
-      scr_map[index1] = TILE_EMPTY;
-    }
-
-    // NIRVANAP_drawT(TILE_BRICK, s_lin1, s_col1);
-
-    s_col1 = s_col1 + 2;
-    ++index1;
-  }
-  intrinsic_ei();
 }
 
 void spr_draw_clear(void) {

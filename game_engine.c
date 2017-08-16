@@ -31,6 +31,77 @@
 #include <string.h>
 #include <z80.h>
 
+void game_draw_screen(void) {
+
+  NIRVANAP_halt();
+  index1 = 16;
+  s_lin1 = 0;
+  s_col1 = 2;
+  // intrinsic_ei();
+  spr_count = 0;
+  intrinsic_di();
+  while (index1 < ((GAME_ROWS - 1) * 16)) {
+
+    if (index1 % 16 == 0) {
+      s_lin1 = s_lin1 + 16;
+      s_col1 = 0;
+    }
+
+    if (scr_map[index1] < TILE_END) {
+      // TILES
+      NIRVANAP_drawT_raw(scr_map[index1], s_lin1, s_col1);
+    } else {
+      // ENEMIES
+      switch (scr_map[index1]) {
+      case INDEX_SKELETON_RIGHT:
+        enemy_init(s_lin1, s_col1, SKELETON, DIR_RIGHT);
+        break;
+      case INDEX_SKELETON_LEFT:
+        enemy_init(s_lin1, s_col1, SKELETON, DIR_LEFT);
+        break;
+      case INDEX_ORC_RIGHT:
+        enemy_init(s_lin1, s_col1, ORC, DIR_RIGHT);
+        break;
+      case INDEX_ORC_LEFT:
+        enemy_init(s_lin1, s_col1, ORC, DIR_LEFT);
+        break;
+      case INDEX_WARG_RIGHT:
+        enemy_init(s_lin1, s_col1, WARG, DIR_RIGHT);
+        break;
+      case INDEX_WARG_LEFT:
+        enemy_init(s_lin1, s_col1, WARG, DIR_LEFT);
+        break;
+      case INDEX_DWARF_RIGHT:
+        enemy_init(s_lin1, s_col1, DWARF, DIR_RIGHT);
+        break;
+      case INDEX_DWARF_LEFT:
+        enemy_init(s_lin1, s_col1, DWARF, DIR_LEFT);
+        break;
+      case INDEX_ELF_RIGHT:
+        enemy_init(s_lin1, s_col1, ELF, DIR_RIGHT);
+        break;
+      case INDEX_ELF_LEFT:
+        enemy_init(s_lin1, s_col1, ELF, DIR_LEFT);
+        break;
+      case INDEX_DRAGON_RIGHT:
+        enemy_init(s_lin1, s_col1, DRAGON, DIR_RIGHT);
+        break;
+      case INDEX_DRAGON_LEFT:
+        enemy_init(s_lin1, s_col1, DRAGON, DIR_LEFT);
+        break;
+      }
+
+      scr_map[index1] = TILE_EMPTY;
+    }
+
+    // NIRVANAP_drawT(TILE_BRICK, s_lin1, s_col1);
+
+    s_col1 = s_col1 + 2;
+    ++index1;
+  }
+  intrinsic_ei();
+}
+
 void game_print_footer(void) {
   zx_print_str(22, 1, " ");
   zx_print_str(22, 30, " ");
@@ -88,7 +159,7 @@ void game_phase_init(void) {
   spr_draw_clear();
   /*Draw Platforms*/
   // zx_paper_fill(INK_BLACK | PAPER_BLACK);
-  spr_draw_map();
+  game_draw_screen();
   game_print_header();
   game_print_footer();
   /* Player(s) init */
@@ -125,7 +196,6 @@ void game_loop(void) {
   game_joystick_set();
   fps = 0;
   while (!game_over) {
-
 
     // Vsync!
     // NIRVANAP_halt();
@@ -209,10 +279,22 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
   }
 
   f_tile = scr_map[f_index];
+
+
+
+  if (class[sprite] == DRAGON) {
+    if (f_tile <= TILE_ITEM_E) {
+      return 0;
+    } else {
+      return 1;
+    }
+  }
+
   // TILE_EMPTY -> TILE_FLOOR
   if (f_tile < TILE_FLOOR) {
     return 0;
   }
+
   // TILE_FLOOR -> TILE_STAIR_S
   if (f_tile < TILE_STAIR_S) {
     if (BIT_CHK(s_state, STAT_FALL)) {

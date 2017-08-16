@@ -68,12 +68,20 @@
 #define INDEX_ELF_LEFT                92
 #define INDEX_ELF_RIGHT               93
 
-/* Enemies indexes */
+#define TILE_ENEMY_DRAGON             156
+#define FRAMES_ENEMY_DRAGON           2
+#define SPEED_ENEMY_DRAGON            3
+#define DIRINC_ENEMY_DRAGON           2
+#define INDEX_DRAGON_LEFT             94
+#define INDEX_DRAGON_RIGHT            95
+
+/* Enemies Class indexes */
 #define SKELETON                      1
 #define ORC                           2
 #define WARG                          3
 #define DWARF                         4
 #define ELF                           5
+#define DRAGON                        6
 
 #define PLAYER                        16
 
