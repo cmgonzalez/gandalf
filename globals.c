@@ -88,9 +88,14 @@ unsigned char player_lives;
 unsigned char player_over_stair;
 
 signed char player_vel_x;
-signed int player_vel_y;
-signed int player_vel_y0;
-signed int player_vel_y1;
+//signed int player_vel_y;
+//signed int player_vel_y0;
+//signed int player_vel_y1;
+
+signed char player_vel_y;
+signed char player_vel_y0;
+signed char player_vel_y1;
+
 signed char player_vel_inc;
 
 signed int game_gravity;

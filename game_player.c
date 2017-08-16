@@ -501,13 +501,15 @@ unsigned char player_move_jump(void) {
     player_vel_y = -120;
   }
   // CONVER TO PIXEL'S
-  val_yc = player_vel_y / 10;
+  //zx_print_int(0,0,player_vel_y);
+  //val_yc = player_vel_y / 10;
+  val_yc = player_vel_y;
 
   s_lin1 = (unsigned char)val_yc;
   // Nirvana don't support odd lin's
 
   if ((s_lin1 & 1) != 0) {
-    s_lin1++;
+    s_lin1--;
   }
 
   s_lin1 = lin[sprite] + s_lin1;

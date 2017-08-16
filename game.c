@@ -62,10 +62,10 @@ void main(void) {
   game_sound = spec128 ? (GAME_SOUND_AY_FX_ON | GAME_SOUND_AY_MUS_ON)
                        : (GAME_SOUND_48_FX_ON | GAME_SOUND_48_MUS_ON);
   player_joy = 0; /*KB1*/
-  game_gravity = 8;
+  game_gravity = 1;//8;
   // vel_y0 + vel_y1 = -84
-  player_vel_y0 = -88; // Volocity
-  player_vel_y1 = -72; // Min Velocity
+  player_vel_y0 = -8;//-88; // Velocity
+  player_vel_y1 = -4;//-72; // Min Velocity
 
   // Keyboard Handling
 

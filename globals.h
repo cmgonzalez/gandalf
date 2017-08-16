@@ -258,9 +258,16 @@ extern unsigned int  player_score;
 extern unsigned int  player_joy;
 
 extern signed char player_vel_x;
+
+/*
 extern signed int player_vel_y;
 extern signed int player_vel_y0;
 extern signed int player_vel_y1;
+*/
+extern signed char player_vel_y;
+extern signed char player_vel_y0;
+extern signed char player_vel_y1;
+
 extern signed char player_vel_inc;
 extern signed int game_gravity;
 
