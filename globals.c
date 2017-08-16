@@ -136,6 +136,11 @@ unsigned int frame_time;
 unsigned int anim_time;
 unsigned int bullet_time;
 
+unsigned char anim_count;
+unsigned char bullet_count;
+
+
+
 unsigned char spr_count;
 unsigned char sprite_curr_index;
 //ANIMATIONS
@@ -184,15 +189,17 @@ unsigned char screen_ink;
 //###############################################################################################
 unsigned char sprite_speed[] = {
     0,
+    SPEED_ENEMY_DRAGON,
+    SPEED_ENEMY_BAT,
+    SPEED_ENEMY_WYVERN,
+    SPEED_ENEMY_SPIDER,
+
     SPEED_ENEMY_SKELETON,
     SPEED_ENEMY_ORC,
     SPEED_ENEMY_WARG,
     SPEED_ENEMY_DWARF,
     SPEED_ENEMY_ELF,
-    SPEED_ENEMY_DRAGON,
-    SPEED_ENEMY_BAT,
-    SPEED_ENEMY_WYVERN,
-    SPEED_ENEMY_SPIDER,
+
     2,            // 10 ???
     1,            // 11 ???
     3,            // 12 ???
@@ -204,15 +211,17 @@ unsigned char sprite_speed[] = {
 
 unsigned char sprite_frames[] = {
     0,
+    FRAMES_ENEMY_DRAGON,
+    FRAMES_ENEMY_BAT,
+    FRAMES_ENEMY_WYVERN,
+    FRAMES_ENEMY_SPIDER,
+
     FRAMES_ENEMY_SKELETON,
     FRAMES_ENEMY_ORC,
     FRAMES_ENEMY_WARG,
     FRAMES_ENEMY_DWARF,
     FRAMES_ENEMY_ELF,
-    FRAMES_ENEMY_DRAGON,
-    FRAMES_ENEMY_BAT,
-    FRAMES_ENEMY_WYVERN,
-    FRAMES_ENEMY_SPIDER,
+
     0,            // 10 ???
     0,            // 11 ???
     0,            // 12 ???

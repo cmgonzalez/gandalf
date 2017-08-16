@@ -498,6 +498,8 @@ void spr_init_anim_bullets(void) {
     anim_lin[f_anim] = 0XFF;
     bullet_col[f_anim] = 0XFF;
   }
+  bullet_count = 0;
+  anim_count = 0;
 }
 
 
@@ -506,6 +508,7 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
   unsigned char f_anim;
   for (f_anim = 0; f_anim < 8; f_anim++) {
     if (anim_lin[f_anim] == 0XFF) {
+      ++anim_count;
       anim_lin[f_anim] = f_lin;
       anim_col[f_anim] = f_col;
       anim_tile[f_anim] = f_tile;
@@ -535,6 +538,7 @@ void spr_play_anim(void) {
         intrinsic_ei();
         ++anim_int[f_anim];
       } else {
+        --anim_count;
         s_col0 = anim_col[f_anim];
         s_lin0 = anim_lin[f_anim];
         f_index = spr_calc_index(s_lin0, s_col0);
@@ -611,10 +615,12 @@ void spr_play_bullets(void) {
             // intrinsic_ei();
           } else {
             spr_add_anim(s_lin0, tmp, TILE_ANIM_FIRE, 3);
+            --bullet_count;
             bullet_col[f_bullet] = 0XFF;
           }
         }
       } else {
+        --bullet_count;
         bullet_col[f_bullet] = 0XFF;
       }
     }

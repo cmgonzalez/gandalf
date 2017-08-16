@@ -202,12 +202,12 @@ void game_loop(void) {
 
     if (game_check_time(anim_time, TIME_ANIM)) {
       anim_time = zx_clock();
-      spr_play_anim();
+      if (anim_count) spr_play_anim();
     }
 
     if (game_check_time(bullet_time, TIME_BULLETS)) {
       bullet_time = zx_clock();
-      spr_play_bullets();
+      if (bullet_count) spr_play_bullets();
     }
 
     /*player 1 turn*/
@@ -262,7 +262,7 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
 
   f_tile = scr_map[f_index];
 
-  if (class[sprite] >= DRAGON && class[sprite] <= SPIDER) {
+  if (class[sprite] <= SPIDER) {
     if (f_tile <= TILE_ITEM_E) {
       return 0;
     } else {

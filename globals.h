@@ -32,6 +32,22 @@
 #define TILE_STAIR_E                  60 //END OF STAIRS
 
 
+/* Enemies Class indexes */
+
+#define DRAGON                        1
+#define BAT                           2
+#define WYVERN                        3
+#define SPIDER                        4
+
+#define SKELETON                      5
+#define ORC                           6
+#define WARG                          7
+#define DWARF                         8
+#define ELF                           9
+
+#define PLAYER                        16
+
+/* Enemies Variables */
 #define TILE_ENEMY_SKELETON           132
 #define FRAMES_ENEMY_SKELETON         4
 #define SPEED_ENEMY_SKELETON          4
@@ -93,18 +109,7 @@
 #define DIRINC_ENEMY_SPIDER           0
 #define INDEX_SPIDER                  98
 
-/* Enemies Class indexes */
-#define SKELETON                      1
-#define ORC                           2
-#define WARG                          3
-#define DWARF                         4
-#define ELF                           5
-#define DRAGON                        6
-#define BAT                           7
-#define WYVERN                        8
-#define SPIDER                        9
 
-#define PLAYER                        16
 
 
 //TILE MAP'S
@@ -343,6 +348,7 @@ extern unsigned char anim_col[8];
 extern unsigned char anim_tile[8];
 extern unsigned char anim_int[8];
 extern unsigned char anim_end[8];
+extern unsigned char anim_count;
 
 
 //BULLETS
@@ -353,7 +359,7 @@ extern unsigned char bullet_tile[8];
 extern unsigned char bullet_dir[8];
 extern unsigned char bullet_colint[8];
 extern unsigned char bullet_frames[8];
-
+extern unsigned char bullet_count;
 
 extern const JOYFUNC control_method[7];
 extern unsigned char initials[8];

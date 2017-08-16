@@ -315,6 +315,7 @@ unsigned char player_fire() {
 
     /*Fireball*/
     if (bullet_col[SPR_P1] == 0xFF) {
+      ++bullet_count;
       bullet_dir[SPR_P1] = 0;
       bullet_lin[SPR_P1] = lin[SPR_P1];
       bullet_frames[SPR_P1] = 2;

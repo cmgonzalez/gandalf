@@ -32,7 +32,9 @@ void enemy_hit(void) {
 }
 
 void enemy_turn(void) {
-  for (sprite = 0; sprite < 6; ++sprite) {
+
+  sprite = 0;
+  while ( sprite < SPR_P1) {
     if (class[sprite] > 0) {
       if (spr_chktime(&sprite)) {
         s_lin0 = lin[sprite];
@@ -45,39 +47,18 @@ void enemy_turn(void) {
         last_time[sprite] = zx_clock();
       }
     }
+    ++sprite;
   }
 }
 
 void enemy_move(void) {
-  switch (class[sprite]) {
-  case SKELETON:
-    enemy_walk();
-    break;
-  case ORC:
-    enemy_walk();
-    break;
-  case WARG:
-    enemy_walk();
-    break;
-  case DWARF:
-    enemy_walk();
-    break;
-  case ELF:
-    enemy_walk();
-    break;
-  case DRAGON:
+
+  if ( class[sprite] <= SPIDER ) {
     enemy_vertical();
-    break;
-  case BAT:
-    enemy_vertical();
-    break;
-  case WYVERN:
-    enemy_vertical();
-    break;
-  case SPIDER:
-    enemy_vertical();
-    break;
+  } else {
+    enemy_walk();
   }
+
 }
 
 void enemy_vertical() {
