@@ -34,6 +34,7 @@ void enemy_hit(void) {
 void enemy_turn(void) {
 
   sprite = 0;
+
   while ( sprite < SPR_P1) {
     if (class[sprite] > 0) {
       if (spr_chktime(&sprite)) {
@@ -43,12 +44,15 @@ void enemy_turn(void) {
         s_state = state[sprite];
         enemy_move();
         spr_redraw();
+
         state[sprite] = s_state;
         last_time[sprite] = zx_clock();
+
       }
     }
     ++sprite;
   }
+
 }
 
 void enemy_move(void) {
@@ -56,7 +60,20 @@ void enemy_move(void) {
   if ( class[sprite] <= SPIDER ) {
     enemy_vertical();
   } else {
-    enemy_walk();
+    if ( class[sprite] < PLANT ) {
+      enemy_walk();
+    } else {
+      enemy_static();
+    }
+  }
+
+}
+
+void enemy_static() {
+
+  ++colint[sprite];
+  if (colint[sprite] == sprite_frames[class[sprite]]) {
+    colint[sprite] = 0;
   }
 
 }

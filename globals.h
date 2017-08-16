@@ -45,6 +45,9 @@
 #define DWARF                         8
 #define ELF                           9
 
+#define PLANT                         10
+#define SNAKE                         11
+
 #define PLAYER                        16
 
 /* Enemies Variables */
@@ -109,7 +112,17 @@
 #define DIRINC_ENEMY_SPIDER           0
 #define INDEX_SPIDER                  98
 
+#define TILE_ENEMY_PLANT             166
+#define FRAMES_ENEMY_PLANT           2
+#define SPEED_ENEMY_PLANT            6
+#define DIRINC_ENEMY_PLANT           0
+#define INDEX_PLANT                  99
 
+#define TILE_ENEMY_SNAKE             168
+#define FRAMES_ENEMY_SNAKE           2
+#define SPEED_ENEMY_SNAKE            6
+#define DIRINC_ENEMY_SNAKE           0
+#define INDEX_SNAKE                  100
 
 
 //TILE MAP'S
@@ -367,3 +380,4 @@ extern const char *joynames[];
 
 extern unsigned char g_player_hit_left;
 extern unsigned char g_player_hit_right;
+extern unsigned char draw_count;

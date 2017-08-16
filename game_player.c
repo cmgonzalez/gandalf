@@ -121,7 +121,6 @@ void player_turn(void) {
 }
 
 unsigned char player_move(void) {
-
   /* Player initial Values */
   s_lin0 = lin[sprite];
   s_col0 = col[sprite];
@@ -163,14 +162,16 @@ unsigned char player_move(void) {
 
   /* Draw Player sprite */
   if (spr_redraw()) {
+
     // The player have moved so we need to check to pick
     player_check_map();
+
   }
 
   /* Anim Restored hitted platforms */
-  if (game_check_time(spr_timer[sprite], PLAYER_HIT_BRICK_TIME)) {
-    player_hit_platform_clear();
-  }
+  player_hit_platform_clear();
+
+
   /* Store State variable */
   state[sprite] = s_state;
   return 0;
@@ -436,10 +437,12 @@ unsigned char player_hit_platform(void) {
 void player_hit_platform_clear(void) {
   // CLEAR HITTED BRICKS N MAKES THE PLAYER FALL
   if (player_hit_lin > 0) {
-    index1 = spr_calc_index(player_hit_lin, player_hit_col);
-    spr_brick_anim(0);
-    player_hit_lin = 0;
-    player_hit_col = 0;
+    if (game_check_time(spr_timer[sprite], PLAYER_HIT_BRICK_TIME)) {
+      index1 = spr_calc_index(player_hit_lin, player_hit_col);
+      spr_brick_anim(0);
+      player_hit_lin = 0;
+      player_hit_col = 0;
+   }
   }
 }
 

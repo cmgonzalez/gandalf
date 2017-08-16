@@ -98,6 +98,12 @@ void game_draw_screen(void) {
       case INDEX_SPIDER:
         enemy_init(s_lin1, s_col1, SPIDER, DIR_RIGHT);
         break;
+      case INDEX_PLANT:
+        enemy_init(s_lin1, s_col1, PLANT, DIR_RIGHT);
+        break;
+      case INDEX_SNAKE:
+        enemy_init(s_lin1, s_col1, SNAKE, DIR_RIGHT);
+        break;
       }
 
       scr_map[index1] = TILE_EMPTY;
@@ -214,7 +220,6 @@ void game_loop(void) {
     sprite = SPR_P1;
     player_turn();
     enemy_turn();
-
     /*each second aprox - update fps/score/phase left/phase advance*/
     if (game_check_time(frame_time, 100)) {
       zx_print_int(23, 27, fps);

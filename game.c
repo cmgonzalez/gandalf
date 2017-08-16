@@ -114,7 +114,10 @@ void main(void) {
   game_loop();
 }
 
-void test_proc() {}
+void test_proc() {
+
+  
+}
 
 unsigned char test_func() {
 return 0;
