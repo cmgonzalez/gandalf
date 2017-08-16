@@ -414,6 +414,9 @@ unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
   case DRAGON:
     return spr_tile_dir(TILE_ENEMY_DRAGON, f_sprite, DIRINC_ENEMY_DRAGON);
     break;
+  case BAT:
+    return spr_tile_dir(TILE_ENEMY_BAT, f_sprite, DIRINC_ENEMY_BAT);
+    break;
   }
   return 0;
 }

@@ -89,6 +89,9 @@ void game_draw_screen(void) {
       case INDEX_DRAGON_LEFT:
         enemy_init(s_lin1, s_col1, DRAGON, DIR_LEFT);
         break;
+      case INDEX_BAT:
+        enemy_init(s_lin1, s_col1, BAT, DIR_RIGHT);
+        break;
       }
 
       scr_map[index1] = TILE_EMPTY;
@@ -144,14 +147,9 @@ void game_phase_init(void) {
 
   /*PHASE INIT*/
   loop_count = 0;
-  phase_end = 0;
-  phase_angry = 0;
-  phase_coins = 0;
-  phase_pop = 0;
   entry_time = 0;
   zx_set_clock(0);
   frame_time = 0;
-  spr_count = 0;
 
   /* Phase Tune */
   ay_reset();
@@ -189,14 +187,13 @@ void game_loop(void) {
   /* screen init */
   game_over = 0;
   /* phase init */
-  phase_curr = game_start_phase;
   game_phase_init();
   /* game loop start */
   dirs = 0x00;
   game_joystick_set();
   fps = 0;
   while (!game_over) {
-
+zx_print_chr(20,0,spr_count);
     // Vsync!
     // NIRVANAP_halt();
 
@@ -220,24 +217,6 @@ void game_loop(void) {
       zx_print_int(23, 27, fps);
       fps = 0;
       frame_time = zx_clock();
-
-      /* end of phase */
-      if (phase_end == 1) {
-        /*silence background sound*/
-        if (ay_is_playing() < AY_PLAYING_FOREGROUND)
-          ay_reset();
-        /*increment phase*/
-        ++phase_curr;
-        if (phase_curr > 31) {
-          /*game end*/
-          game_end();
-          game_over = 1;
-        } else {
-          /*next phase*/
-          z80_delay_ms(400);
-          game_phase_init();
-        }
-      }
     }
     ++loop_count;
     ++fps;
@@ -280,9 +259,7 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
 
   f_tile = scr_map[f_index];
 
-
-
-  if (class[sprite] == DRAGON) {
+  if (class[sprite] == DRAGON || class[sprite] == BAT) {
     if (f_tile <= TILE_ITEM_E) {
       return 0;
     } else {

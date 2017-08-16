@@ -35,7 +35,6 @@
 void main(void) {
   unsigned int counter;
 
-  game_start_phase = 0;
   game_god_mode = 0;
   game_inmune = 0;
   // INTERRUPTS ARE DISABLED
@@ -62,10 +61,6 @@ void main(void) {
 
   game_sound = spec128 ? (GAME_SOUND_AY_FX_ON | GAME_SOUND_AY_MUS_ON)
                        : (GAME_SOUND_48_FX_ON | GAME_SOUND_48_MUS_ON);
-
-  // GAME TYPE A
-
-  game_type = 0;
 
   player_joy = 0; /* SJ1 */
   game_gravity = 8;

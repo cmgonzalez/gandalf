@@ -47,18 +47,7 @@ void menu_config(void) {
 		/*Sound 48/AY*/
         zx_print_str(14,20,(game_sound & (GAME_SOUND_48_FX_ON | GAME_SOUND_AY_FX_ON)) ? "ON " : "OFF");
 
-		/*Game Type*/
-		switch ( game_type ) {	//0->3
-		case 0:
-			zx_print_str(15,20,"A  ");
-			break;
-		case 1:
-			zx_print_str(15,20,"B  ");
-			break;
-		case 2:
-			zx_print_str(15,20,"RND");
-			break;
-		}
+
 		/*P1 Control*/
 		zx_print_str(16,20,joynames[player_joy]);
 
@@ -70,10 +59,7 @@ void menu_config(void) {
 		case 0: //Sound 48/AY
             game_sound ^= spec128 ? GAME_SOUND_AY_FX_ON : GAME_SOUND_48_FX_ON;
 			break;
-		case 1: //Game type
-			++game_type;
-			if (game_type > GAME_RANDOM_TYPE) game_type = 0;
-			break;
+
 		case 2: //P1 Controls
 			game_joystick_change;
 			break;

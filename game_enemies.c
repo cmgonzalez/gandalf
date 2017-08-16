@@ -69,6 +69,9 @@ void enemy_move(void) {
   case DRAGON:
     enemy_vertical();
     break;
+  case BAT:
+    enemy_vertical();
+    break;
   }
 }
 
@@ -132,7 +135,7 @@ void enemy_avoid_edge() {
 
 void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,
                 unsigned char f_dir) {
-  ++spr_count;
+
   if (spr_count < SPR_P1) {
     class[spr_count] = f_class;
     lin[spr_count] = f_lin;
@@ -153,6 +156,7 @@ void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,
     last_time[spr_count] = 0;
     spr_timer[spr_count] = zx_clock();
     sprite_speed_alt[spr_count] = 0;
+    ++spr_count;
   }
 }
 

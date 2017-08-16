@@ -75,6 +75,12 @@
 #define INDEX_DRAGON_LEFT             94
 #define INDEX_DRAGON_RIGHT            95
 
+#define TILE_ENEMY_BAT                160
+#define FRAMES_ENEMY_BAT              2
+#define SPEED_ENEMY_BAT               1
+#define DIRINC_ENEMY_BAT              0
+#define INDEX_BAT                     96
+
 /* Enemies Class indexes */
 #define SKELETON                      1
 #define ORC                           2
@@ -82,6 +88,7 @@
 #define DWARF                         4
 #define ELF                           5
 #define DRAGON                        6
+#define BAT                           7
 
 #define PLAYER                        16
 
@@ -279,7 +286,6 @@ extern unsigned char   sprite_curr_index;
 
 extern unsigned char 	game_brick_tile;
 extern unsigned char 	game_two_player;
-extern unsigned char  game_start_phase;
 extern unsigned char  game_god_mode;
 extern unsigned char  game_inmune;
 extern unsigned char	game_sound;
@@ -287,7 +293,6 @@ extern unsigned char	game_sound;
 extern unsigned char	game_over;
 extern unsigned char	player_lives;
 extern unsigned int		game_score_top;
-extern unsigned char	game_type;
 extern unsigned char	game_menu_sel;
 extern unsigned char  player_over_stair;
 
@@ -310,13 +315,7 @@ extern unsigned char scr_7[];
 extern unsigned char scr_curr;
 extern unsigned char map_width;
 extern unsigned char map_heigth;
-extern unsigned char phase_tot;
-extern unsigned char phase_pop;
-extern unsigned char phase_coins;
-extern unsigned char phase_end;
 extern unsigned char phase_curr;
-extern unsigned char phase_angry;
-
 
 extern unsigned char anim_lin[8];
 extern unsigned char anim_col[8];
