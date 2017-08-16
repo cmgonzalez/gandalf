@@ -92,6 +92,12 @@ void game_draw_screen(void) {
       case INDEX_BAT:
         enemy_init(s_lin1, s_col1, BAT, DIR_RIGHT);
         break;
+      case INDEX_WYVERN:
+        enemy_init(s_lin1, s_col1, WYVERN, DIR_RIGHT);
+        break;
+      case INDEX_SPIDER:
+        enemy_init(s_lin1, s_col1, SPIDER, DIR_RIGHT);
+        break;
       }
 
       scr_map[index1] = TILE_EMPTY;
@@ -193,9 +199,6 @@ void game_loop(void) {
   game_joystick_set();
   fps = 0;
   while (!game_over) {
-zx_print_chr(20,0,spr_count);
-    // Vsync!
-    // NIRVANAP_halt();
 
     if (game_check_time(anim_time, TIME_ANIM)) {
       anim_time = zx_clock();
@@ -259,7 +262,7 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
 
   f_tile = scr_map[f_index];
 
-  if (class[sprite] == DRAGON || class[sprite] == BAT) {
+  if (class[sprite] >= DRAGON && class[sprite] <= SPIDER) {
     if (f_tile <= TILE_ITEM_E) {
       return 0;
     } else {

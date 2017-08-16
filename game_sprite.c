@@ -46,103 +46,6 @@ unsigned char spr_chktime(unsigned char *sprite) __z88dk_fastcall {
   return 0;
 }
 
-unsigned char spr_move_jump(void) {
-
-  signed int val_yc;
-  player_vel_y = player_vel_y + game_gravity;
-  sprite_on_air = 1;
-  // JUMP BOOST
-  if ((player_vel_inc)) {
-    if (!(dirs & IN_STICK_FIRE) && (player_vel_y > player_vel_y1) &&
-        (player_vel_y < 0)) {
-      player_vel_y = 0; // TODO FIX WHEN FALLING!
-      player_vel_inc = 0;
-    }
-  }
-  // MAX SPEEDS
-  if (player_vel_y > 120) {
-    player_vel_y = 120;
-  }
-
-  if (player_vel_y < -120) {
-    player_vel_y = -120;
-  }
-  // CONVER TO PIXEL'S
-  val_yc = player_vel_y / 10;
-
-  s_lin1 = (unsigned char)val_yc;
-  // Nirvana don't support odd lin's
-
-  if ((s_lin1 & 1) != 0) {
-    s_lin1++;
-  }
-
-  s_lin1 = lin[sprite] + s_lin1;
-
-  if (s_lin1 > GAME_LIN_FLOOR) {
-    if (s_lin1 > GAME_LIN_FLOOR + 56) {
-      s_lin1 = 0;
-    } else {
-      s_lin1 = GAME_LIN_FLOOR;
-    }
-  }
-
-  if (val_yc < 0) {
-    BIT_SET(s_state, STAT_JUMP);
-    BIT_CLR(s_state, STAT_FALL);
-    // Asending
-
-    if (game_check_map(s_lin1, col[sprite])) {
-      // Hit Platforms
-      if (player_hit_platform()) {
-
-        lin[sprite] = (lin[sprite] >> 4) << 4;
-      }
-      player_vel_y = 0;
-    } else {
-      lin[sprite] = s_lin1;
-    }
-  } else {
-    // Falling
-    BIT_SET(s_state, STAT_FALL);
-    BIT_CLR(s_state, STAT_JUMP);
-
-    // index1 = spr_calc_index(s_lin1 + 16, col[sprite]);
-    if (game_check_map(s_lin1 + 16, col[sprite])) {
-      // Jump end
-      player_check_stairs(0);
-      if (!player_over_stair) {
-        player_check_stairs(1);
-      }
-
-      if (!player_over_stair) {
-        s_lin1 = (s_lin1 >> 4) << 4;
-        if (lin[sprite] > s_lin1) {
-          lin[sprite] = s_lin1 + 16;
-          return 0;
-        } else {
-          lin[sprite] = s_lin1;
-        }
-      }
-      player_vel_y = 0;
-      BIT_CLR(s_state, STAT_FALL);
-      BIT_CLR(s_state, STAT_JUMP);
-      colint[sprite] = 0;
-      return 1;
-
-    } else {
-      lin[sprite] = s_lin1;
-    }
-  }
-  sprite_horizontal_check = 1;
-  if (spr_move_horizontal()) {
-    BIT_CLR(s_state, STAT_DIRL);
-    BIT_CLR(s_state, STAT_DIRR);
-  }
-  sprite_horizontal_check = 0;
-  return 0;
-}
-
 unsigned char spr_move_up(void) {
   tmp1 = lin[sprite] - SPRITE_LIN_INC;
 
@@ -349,8 +252,7 @@ void spr_page_map(void) {
     class[i] = 0;
     NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
   }
-  spr_init_anim();
-  spr_init_bullet();
+  spr_init_anim_bullets();
 }
 
 unsigned char spr_redraw(void) {
@@ -416,6 +318,12 @@ unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
     break;
   case BAT:
     return spr_tile_dir(TILE_ENEMY_BAT, f_sprite, DIRINC_ENEMY_BAT);
+    break;
+  case WYVERN:
+    return spr_tile_dir(TILE_ENEMY_WYVERN, f_sprite, DIRINC_ENEMY_WYVERN);
+    break;
+  case SPIDER:
+    return spr_tile_dir(TILE_ENEMY_SPIDER, f_sprite, DIRINC_ENEMY_SPIDER);
     break;
   }
   return 0;
@@ -519,31 +427,7 @@ unsigned char spr_calc_hor(unsigned char f_sprite) {
   return col[f_sprite] * sprite_frames[f_sprite];
 }
 
-unsigned char spr_collision_check(unsigned char f_sprite1,
-                                  unsigned char f_sprite2,
-                                  unsigned char f_vert_diff) {
-  unsigned char v1;
-  unsigned char v2;
-  if (class[f_sprite2] == 0 || BIT_CHK(state[f_sprite2], STAT_KILL))
-    return 0;
-  tmp_ui = abs(lin[f_sprite2] - lin[f_sprite1]);
-  if (tmp_ui > f_vert_diff)
-    return 0;
-  v1 = spr_calc_hor(f_sprite1);
-  v2 = spr_calc_hor(f_sprite2);
-  tmp_ui = abs(v1 - v2);
-  if (tmp_ui > 3) {
-    return 0;
-  } else {
-    return 1;
-  }
-}
-
-void spr_kill_all(void) {
-  for (sprite = 0; sprite < 8; ++sprite) {
-    spr_destroy(sprite);
-  }
-}
+∫
 
 void spr_back_repaint(void) {
   unsigned char s_row;
@@ -608,19 +492,14 @@ void spr_tile_paint(unsigned char f_tile, unsigned char f_lin,
   }
 }
 
-void spr_init_anim(void) {
+void spr_init_anim_bullets(void) {
   unsigned char f_anim;
   for (f_anim = 0; f_anim < 8; f_anim++) {
     anim_lin[f_anim] = 0XFF;
+    bullet_col[f_anim] = 0XFF;
   }
 }
 
-void spr_init_bullet(void) {
-  unsigned char f_bullet;
-  for (f_bullet = 0; f_bullet < 8; f_bullet++) {
-    bullet_col[f_bullet] = 0XFF;
-  }
-}
 
 void spr_add_anim(unsigned char f_lin, unsigned char f_col,
                   unsigned char f_tile, unsigned char f_end) {
@@ -647,22 +526,13 @@ void spr_play_anim(void) {
   unsigned char f_anim;
   unsigned int f_index;
 
-  unsigned char f_clear;
-  f_clear = 1;
-
   for (f_anim = 0; f_anim < 8; f_anim++) {
     if (anim_lin[f_anim] != 0xFF) {
 
-      if (f_clear) {
-        NIRVANAP_halt();
-        f_clear = 0;
-      }
-
       if (anim_int[f_anim] < anim_end[f_anim]) {
-        // intrinsic_di();
-        NIRVANAP_drawT(anim_tile[f_anim] + anim_int[f_anim], anim_lin[f_anim],
-                       anim_col[f_anim]);
-        // intrinsic_ei();
+        intrinsic_di();
+        NIRVANAP_drawT_raw(anim_tile[f_anim] + anim_int[f_anim], anim_lin[f_anim], anim_col[f_anim]);
+        intrinsic_ei();
         ++anim_int[f_anim];
       } else {
         s_col0 = anim_col[f_anim];
@@ -673,7 +543,6 @@ void spr_play_anim(void) {
         }
         spr_back_repaint();
         anim_lin[f_anim] = 0xFF;
-        // scr_map[spr_calc_index(s_lin0, s_col0)] = TILE_EMPTY;
       }
     }
   }

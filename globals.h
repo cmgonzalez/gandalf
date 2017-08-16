@@ -81,6 +81,18 @@
 #define DIRINC_ENEMY_BAT              0
 #define INDEX_BAT                     96
 
+#define TILE_ENEMY_WYVERN             162
+#define FRAMES_ENEMY_WYVERN           2
+#define SPEED_ENEMY_WYVERN            2
+#define DIRINC_ENEMY_WYVERN           0
+#define INDEX_WYVERN                  97
+
+#define TILE_ENEMY_SPIDER             164
+#define FRAMES_ENEMY_SPIDER           2
+#define SPEED_ENEMY_SPIDER            2
+#define DIRINC_ENEMY_SPIDER           0
+#define INDEX_SPIDER                  98
+
 /* Enemies Class indexes */
 #define SKELETON                      1
 #define ORC                           2
@@ -89,6 +101,8 @@
 #define ELF                           5
 #define DRAGON                        6
 #define BAT                           7
+#define WYVERN                        8
+#define SPIDER                        9
 
 #define PLAYER                        16
 

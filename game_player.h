@@ -36,4 +36,5 @@ extern void          player_tile( unsigned char f_tile )__z88dk_fastcall;
 extern void          player_check_stairs(unsigned char f_inc) __z88dk_fastcall;
 extern void          player_check_stairs_down(void);
 extern unsigned char player_fire(void);
+extern unsigned char player_move_jump(void);
 #endif

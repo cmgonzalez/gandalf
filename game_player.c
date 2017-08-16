@@ -58,23 +58,7 @@ unsigned char player_check_input(void) {
 }
 
 unsigned char player_collision(void) {
-  if (class[sprite] == 0)
-    return 0;
-  if (BIT_CHK(state[sprite], STAT_HIT))
-    return 0;
-  if (BIT_CHK(state[sprite], STAT_KILL))
-    return 0;
-  player_hit_count = 0;
-  for (enemies = 0; enemies < SPR_P2; ++enemies) {
-    if (spr_collision_check(sprite, enemies, SPRITE_VCOL_MARGIN)) {
-      // TODO
-      ++player_hit_count;
-    }
-  }
 
-  // if (player_hit_count > 0 && lin[sprite] > 24) {
-  // TODO ADD ANIMATIONS
-  //}
   return 0;
 }
 
@@ -160,7 +144,7 @@ unsigned char player_move(void) {
     }
 
     /* Jump Handling */
-    if (spr_move_jump()) {
+    if (player_move_jump()) {
       // Jump Ends
       if (!player_over_stair) player_tile(TILE_P1_RIGHT);
     }
@@ -492,4 +476,102 @@ void player_check_floor(void) {
     BIT_SET(s_state, STAT_FALL);
     player_check_stairs(0);
   }
+}
+
+
+unsigned char player_move_jump(void) {
+
+  signed int val_yc;
+  player_vel_y = player_vel_y + game_gravity;
+  sprite_on_air = 1;
+  // JUMP BOOST
+  if ((player_vel_inc)) {
+    if (!(dirs & IN_STICK_FIRE) && (player_vel_y > player_vel_y1) &&
+        (player_vel_y < 0)) {
+      player_vel_y = 0; // TODO FIX WHEN FALLING!
+      player_vel_inc = 0;
+    }
+  }
+  // MAX SPEEDS
+  if (player_vel_y > 120) {
+    player_vel_y = 120;
+  }
+
+  if (player_vel_y < -120) {
+    player_vel_y = -120;
+  }
+  // CONVER TO PIXEL'S
+  val_yc = player_vel_y / 10;
+
+  s_lin1 = (unsigned char)val_yc;
+  // Nirvana don't support odd lin's
+
+  if ((s_lin1 & 1) != 0) {
+    s_lin1++;
+  }
+
+  s_lin1 = lin[sprite] + s_lin1;
+
+  if (s_lin1 > GAME_LIN_FLOOR) {
+    if (s_lin1 > GAME_LIN_FLOOR + 56) {
+      s_lin1 = 0;
+    } else {
+      s_lin1 = GAME_LIN_FLOOR;
+    }
+  }
+
+  if (val_yc < 0) {
+    BIT_SET(s_state, STAT_JUMP);
+    BIT_CLR(s_state, STAT_FALL);
+    // Asending
+
+    if (game_check_map(s_lin1, col[sprite])) {
+      // Hit Platforms
+      if (player_hit_platform()) {
+
+        lin[sprite] = (lin[sprite] >> 4) << 4;
+      }
+      player_vel_y = 0;
+    } else {
+      lin[sprite] = s_lin1;
+    }
+  } else {
+    // Falling
+    BIT_SET(s_state, STAT_FALL);
+    BIT_CLR(s_state, STAT_JUMP);
+
+    // index1 = spr_calc_index(s_lin1 + 16, col[sprite]);
+    if (game_check_map(s_lin1 + 16, col[sprite])) {
+      // Jump end
+      player_check_stairs(0);
+      if (!player_over_stair) {
+        player_check_stairs(1);
+      }
+
+      if (!player_over_stair) {
+        s_lin1 = (s_lin1 >> 4) << 4;
+        if (lin[sprite] > s_lin1) {
+          lin[sprite] = s_lin1 + 16;
+          return 0;
+        } else {
+          lin[sprite] = s_lin1;
+        }
+      }
+      player_vel_y = 0;
+      BIT_CLR(s_state, STAT_FALL);
+      BIT_CLR(s_state, STAT_JUMP);
+      colint[sprite] = 0;
+      return 1;
+
+    } else {
+      lin[sprite] = s_lin1;
+    }
+  }
+  sprite_horizontal_check = 1;
+  if (spr_move_horizontal()) {
+    BIT_CLR(s_state, STAT_DIRL);
+    BIT_CLR(s_state, STAT_DIRR);
+  }
+  sprite_horizontal_check = 0;
+  return 0;
 }

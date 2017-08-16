@@ -19,13 +19,11 @@
 extern unsigned char    spr_chktime(unsigned char *sprite) __z88dk_fastcall;
 extern unsigned int	    spr_calc_index(unsigned char l, unsigned char c);
 extern unsigned char    spr_move_up(void);
-extern unsigned char    spr_move_jump(void);
 extern unsigned char    spr_move_down(void);
 extern unsigned char    spr_move_horizontal(void);
 extern unsigned char    spr_move_right(void);
 extern unsigned char    spr_move_left(void);
 extern unsigned char    spr_redraw(void);
-extern void             spr_anim_kill(unsigned char f_sprite, unsigned char f_tile);
 extern unsigned char    spr_tile_dir(unsigned char f_tile, unsigned char f_sprite, unsigned char f_inc);
 extern void             spr_destroy(unsigned char f_sprite) __z88dk_fastcall;
 extern unsigned char    spr_tile(unsigned char f_sprite) __z88dk_fastcall;
@@ -35,8 +33,6 @@ extern void             spr_draw_clear(void);
 extern void             spr_draw_index(unsigned int f_index);
 extern void             spr_draw_row(unsigned char f_row);
 extern unsigned char    spr_calc_hor(unsigned char f_sprite);
-extern unsigned char    spr_collision_check(unsigned char f_sprite1, unsigned char f_sprite2, unsigned char f_vert_diff);
-extern void			        spr_kill_all(void);
 extern void             spr_tile_paint( unsigned char f_tile, unsigned char f_lin, unsigned char f_col );
 unsigned char           spr_page_left();
 unsigned char           spr_page_right();
@@ -45,7 +41,7 @@ extern void             spr_add_anim( unsigned char f_lin, unsigned char f_col, 
 extern void             spr_play_anim(void);
 extern void             spr_play_bullets(void);
 extern void             spr_turn_horizontal(void);
-extern void             spr_init_anim(void);
-extern void             spr_init_bullet(void);
+extern void             spr_init_anim_bullets(void);
+
 
 #endif

@@ -33,17 +33,16 @@ void enemy_hit(void) {
 
 void enemy_turn(void) {
   for (sprite = 0; sprite < 6; ++sprite) {
-    if (class[sprite] > 0 && spr_chktime(&sprite)) {
-      s_lin0 = lin[sprite];
-      s_col0 = col[sprite];
-      s_tile0 = tile[sprite] + colint[sprite];
-      s_state = state[sprite];
-      last_time[sprite] = zx_clock();
-      enemy_move();
-      if (class[sprite] != 0) {
-        // The enemy can be out of screen or dead
+    if (class[sprite] > 0) {
+      if (spr_chktime(&sprite)) {
+        s_lin0 = lin[sprite];
+        s_col0 = col[sprite];
+        s_tile0 = tile[sprite] + colint[sprite];
+        s_state = state[sprite];
+        enemy_move();
         spr_redraw();
         state[sprite] = s_state;
+        last_time[sprite] = zx_clock();
       }
     }
   }
@@ -72,10 +71,17 @@ void enemy_move(void) {
   case BAT:
     enemy_vertical();
     break;
+  case WYVERN:
+    enemy_vertical();
+    break;
+  case SPIDER:
+    enemy_vertical();
+    break;
   }
 }
 
 void enemy_vertical() {
+
   if (BIT_CHK(s_state, STAT_JUMP)) {
     if (spr_move_up()) {
       BIT_CLR(s_state, STAT_JUMP);
@@ -91,6 +97,7 @@ void enemy_vertical() {
   if (colint[sprite] == sprite_frames[class[sprite]]) {
     colint[sprite] = 0;
   }
+
 }
 
 void enemy_walk(void) {
