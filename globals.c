@@ -40,7 +40,7 @@ unsigned char map_width;
 unsigned char map_heigth;
 //Compressed MAP
 
-unsigned char scr_0[] = 	{165,0,139,70,202,0,96,133,0,144,70}	;
+unsigned char scr_0[] = 	{165,0,139,70,166,0,96,94,95,97,96,94,95,163,0,144,70}	;
 unsigned char scr_1[] = 	{141,0,7,8,142,0,9,10,130,0,32,0,32,0,32,0,32,149,0,84,134,0,87,0,11,12,132,0,130,70,58,139,70,132,0,58,130,0,68,131,32,44,130,0,44,0,5,6,130,0,58,130,0,130,32,68,32,132,0,1,2,3,4,87,58,0,134,70,130,42,136,70}	;
 unsigned char scr_2[] = 	{135,32,134,0,7,8,0,135,32,132,0,32,0,9,10,0,135,32,0,48,130,0,70,133,0,93,130,0,92,133,0,131,32,131,0,131,70,56,130,70,132,0,131,70,134,0,56,143,0,56,134,0,5,6,133,0,11,12,56,133,0,1,2,3,4,0,88,0,72,142,73,74}	;
 unsigned char scr_3[] = 	{130,0,7,8,131,0,137,71,130,0,9,10,131,0,133,71,0,130,32,136,0,133,71,142,0,92,139,0,57,134,71,130,42,71,134,0,57,137,71,134,0,57,137,71,0,130,32,132,0,137,71,72,131,73,74,130,42,72,135,73,74}	;
@@ -74,6 +74,10 @@ unsigned char state[8];    // SPRITE STATES SEE DEFINES UPPER BIT VALUES
 unsigned char state_a[8];  // SPRITE STATES ALT SEE DEFINES UPPER BIT VALUES
 unsigned char tile[8];     // TILE
 unsigned char lin[8];      // LINE
+
+//unsigned char lin_max[7];      // MAX LINE FOR VERTICAL ENEMIES
+//unsigned char lin_min[7];      // MIN LINE FOR VERTICAL ENEMIES
+
 unsigned char col[8];      // COLUMN
 unsigned char colint[8];   // INTERNAL COLUMN/TILE INCREMENT
 unsigned int spr_timer[8]; // SPRITE GENERAL TIMER MILISECONDS

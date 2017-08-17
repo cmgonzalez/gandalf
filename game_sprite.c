@@ -45,15 +45,40 @@ unsigned char spr_chktime(unsigned char *sprite) __z88dk_fastcall {
   }
   return 0;
 }
+/*
+unsigned char spr_move_up_fast(void) {
+  s_lin1 = lin[sprite] - SPRITE_LIN_INC;
+  if (s_lin1 > lin_min[sprite]) {
+    lin[sprite] = s_lin1;
+    return 0;
+  } else {
+    lin[sprite] = lin_min[sprite];
+    return 1;
+  }
+}
+*/
+
+/*
+unsigned char spr_move_down_fast(void) {
+  s_lin1 = lin[sprite] + SPRITE_LIN_INC;
+  if (s_lin1 < lin_max[sprite]) {
+    lin[sprite] = s_lin1;
+    return 0;
+  } else {
+    lin[sprite] = lin_max[sprite];
+    return 1;
+  }
+}
+*/
 
 unsigned char spr_move_up(void) {
   unsigned char f_check;
-  s_lin1 = lin[sprite];
-  tmp1 = s_lin1 - SPRITE_LIN_INC;
+
+  s_lin1 = lin[sprite] - SPRITE_LIN_INC;
   f_check = (s_lin1 >> 4) != (tmp1 >> 4);
 
   if (f_check) {
-    if (game_check_map(tmp1, col[sprite])) {
+    if (game_check_map(s_lin1, col[sprite])) {
       /* Only Players can hit objects */
       if (sprite == SPR_P1) {
         if (!BIT_CHK(state_a[SPR_P1], STAT_HITBRICK)) {
@@ -64,23 +89,23 @@ unsigned char spr_move_up(void) {
     }
   }
 
-  if (tmp1 > GAME_LIN_FLOOR) {
+  if (s_lin1 > GAME_LIN_FLOOR) {
     lin[sprite] = 0;
     // NIRVANAP_fillT(18, s_lin0, s_col0);
     return 1;
   } else {
-    lin[sprite] = tmp1;
+    lin[sprite] = s_lin1;
     return 0;
   }
 }
 
 unsigned char spr_move_down(void) {
   unsigned char f_check;
-  s_lin1 = lin[sprite];
-  tmp1 = s_lin1 + SPRITE_LIN_INC + 14;
+
+  s_lin1 = lin[sprite] + SPRITE_LIN_INC + 14;
   f_check = (s_lin1 >> 4) != (tmp1 >> 4);
   if (f_check) {
-    if (game_check_map(tmp1, col[sprite])) {
+    if (game_check_map(s_lin1, col[sprite])) {
       return 1;
     }
   }
@@ -89,7 +114,7 @@ unsigned char spr_move_down(void) {
     lin[sprite] = GAME_LIN_FLOOR;
     return 1;
   } else {
-    lin[sprite] = tmp1 - 14;
+    lin[sprite] = s_lin1 - 14;
     return 0;
   }
 }
@@ -271,6 +296,8 @@ void spr_page_map(void) {
 }
 
 unsigned char spr_redraw(void) {
+  unsigned char f_lin8;
+
   s_tile1 = tile[sprite] + colint[sprite];
   s_col1 = col[sprite];
   s_lin1 = lin[sprite];
@@ -283,7 +310,24 @@ unsigned char spr_redraw(void) {
         s_tile1 = s_tile1 + 4;
       }
     }
-    spr_back_repaint();
+    //Speed UP hack
+    if (sprite == SPR_P1) {
+      spr_back_repaint();
+    } else {
+      if ((s_lin1 & 7) == 0) {
+        spr_back_repaint();
+      } else {
+        if (BIT_CHK(s_state, STAT_JUMP)) {
+          f_lin8 = s_lin0 + 8;
+          NIRVANAP_fillC(PAPER, f_lin8, s_col0);
+          NIRVANAP_fillC(PAPER, f_lin8, s_col0 + 1);
+        } else {
+          NIRVANAP_fillC(PAPER, s_lin0, s_col0);
+          NIRVANAP_fillC(PAPER, s_lin0, s_col0 + 1);
+        }
+      }
+    }
+    //End hack
     NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
     return 1;
   } else if (s_tile1 != s_tile0) {

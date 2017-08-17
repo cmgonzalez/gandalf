@@ -42,7 +42,7 @@ void game_draw_screen(void) {
   intrinsic_di();
   while (index1 < ((GAME_ROWS - 1) * 16)) {
 
-    if (index1 % 16 == 0) {
+    if (index1 % 16 == 0) {  //TODO OPTIMIZE!
       s_lin1 = s_lin1 + 16;
       s_col1 = 0;
     }
@@ -267,6 +267,7 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
 
   f_tile = scr_map[f_index];
 
+/*
   if (class[sprite] <= SPIDER) {
     if (f_tile <= TILE_ITEM_E) {
       return 0;
@@ -274,7 +275,7 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
       return 1;
     }
   }
-
+*/
   // TILE_EMPTY -> TILE_FLOOR
   if (f_tile < TILE_FLOOR) {
     return 0;

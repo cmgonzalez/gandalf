@@ -35,7 +35,7 @@ void enemy_turn(void) {
 
   sprite = 0;
 
-  while ( sprite < SPR_P1) {
+  while (sprite < SPR_P1) {
     if (class[sprite] > 0) {
       if (spr_chktime(&sprite)) {
         s_lin0 = lin[sprite];
@@ -47,26 +47,23 @@ void enemy_turn(void) {
 
         state[sprite] = s_state;
         last_time[sprite] = zx_clock();
-
       }
     }
     ++sprite;
   }
-
 }
 
 void enemy_move(void) {
 
-  if ( class[sprite] <= SPIDER ) {
+  if (class[sprite] <= SPIDER) {
     enemy_vertical();
   } else {
-    if ( class[sprite] < PLANT ) {
+    if (class[sprite] < PLANT) {
       enemy_walk();
     } else {
       enemy_static();
     }
   }
-
 }
 
 void enemy_static() {
@@ -75,7 +72,6 @@ void enemy_static() {
   if (colint[sprite] == sprite_frames[class[sprite]]) {
     colint[sprite] = 0;
   }
-
 }
 
 void enemy_vertical() {
@@ -95,7 +91,6 @@ void enemy_vertical() {
   if (colint[sprite] == sprite_frames[class[sprite]]) {
     colint[sprite] = 0;
   }
-
 }
 
 void enemy_walk(void) {
@@ -140,7 +135,8 @@ void enemy_avoid_edge() {
 
 void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,
                 unsigned char f_dir) {
-
+  //unsigned int f_index;
+  //unsigned int f_lin1;
   if (spr_count < SPR_P1) {
     class[spr_count] = f_class;
     lin[spr_count] = f_lin;
@@ -158,9 +154,50 @@ void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,
     }
     colint[spr_count] = 0;
     tile[spr_count] = spr_tile(spr_count);
-    last_time[spr_count] = 0;
+
     spr_timer[spr_count] = zx_clock();
+    last_time[spr_count] = 0;
     sprite_speed_alt[spr_count] = 0;
+    /*
+    if (f_class < SPIDER) {
+      // Speed up enemies calculating max/min lin's
+
+      // up
+      f_index = index1 - 16;
+      f_lin1 = f_lin - 16;
+      while (1) {
+        if (scr_map[f_index] >= TILE_ITEM_E)
+           {
+            lin_min[spr_count] = f_lin1 + 16;
+
+            break;
+          }
+        if (f_lin1 > GAME_LIN_FLOOR) {
+          lin_min[spr_count] = 0;
+          break;
+        }
+        f_index = f_index - 16;
+        f_lin1 = f_lin1 - 16;
+      }
+
+      // down
+      f_index = index1 + 16;
+      f_lin1 = f_lin + 16;
+      while (1) {
+        if (scr_map[f_index] >= TILE_ITEM_E)
+           {
+            lin_max[spr_count] = f_lin1 - 16;
+            break;
+          }
+        if (f_lin1 > GAME_LIN_FLOOR) {
+          lin_max[spr_count] = GAME_LIN_FLOOR;
+          break;
+        }
+        f_index = f_index + 16;
+        f_lin1 = f_lin1 + 16;
+      }
+    }
+    */
     ++spr_count;
   }
 }

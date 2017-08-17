@@ -61,11 +61,11 @@ void main(void) {
 
   game_sound = spec128 ? (GAME_SOUND_AY_FX_ON | GAME_SOUND_AY_MUS_ON)
                        : (GAME_SOUND_48_FX_ON | GAME_SOUND_48_MUS_ON);
-  player_joy = 0; /*KB1*/
-  game_gravity = 1;//8;
+  player_joy = 0;   /*KB1*/
+  game_gravity = 1; // 8;
   // vel_y0 + vel_y1 = -84
-  player_vel_y0 = -8;//-88; // Velocity
-  player_vel_y1 = -4;//-72; // Min Velocity
+  player_vel_y0 = -8; //-88; // Velocity
+  player_vel_y1 = -4; //-72; // Min Velocity
 
   // Keyboard Handling
 
@@ -116,34 +116,8 @@ void main(void) {
 
 void test_proc() {
 
-
 }
 
 unsigned char test_func() {
-  unsigned char f_check;
-  s_lin1 = lin[sprite];
-  tmp1 = s_lin1 - SPRITE_LIN_INC;
-  f_check = (s_lin1 >> 4) != (tmp1 >> 4);
-  zx_print_chr(0,col[sprite],f_check);
-
-  if (f_check) {
-    if (game_check_map(tmp1, col[sprite])) {
-      /* Only Players can hit objects */
-      if (sprite == SPR_P1) {
-        if (!BIT_CHK(state_a[SPR_P1], STAT_HITBRICK)) {
-          player_hit_platform();
-        }
-      }
-      return 1;
-    }
-  }
-
-  if (tmp1 > GAME_LIN_FLOOR) {
-    lin[sprite] = 0;
-    // NIRVANAP_fillT(18, s_lin0, s_col0);
-    return 1;
-  } else {
-    lin[sprite] = tmp1;
     return 0;
-  }
 }

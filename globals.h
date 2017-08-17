@@ -263,6 +263,8 @@ extern unsigned char state[8];
 extern unsigned char state_a[8];
 extern unsigned char tile[8];
 extern unsigned char lin[8];
+//extern unsigned char lin_max[7];      // MAX LINE FOR VERTICAL ENEMIES
+//extern unsigned char lin_min[7];      // MIN LINE FOR VERTICAL ENEMIES
 extern unsigned char col[8];
 extern unsigned char colint[8];
 extern unsigned char player_hit_lin;
