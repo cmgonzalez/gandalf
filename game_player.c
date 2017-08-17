@@ -66,8 +66,8 @@ unsigned char player_collision(void) {
     if (class[sprite] > 0) {
       if (abs(col[sprite] - s_col1) < 2) {
         if (abs(lin[sprite] - s_lin1) < 14) {
-         zx_border(INK_RED);
-         return 1;
+          zx_border(INK_RED);
+          return 1;
         }
       }
     }
@@ -127,7 +127,7 @@ void player_turn(void) {
   if (class[sprite] == PLAYER && player_lives > 0) {
     if (spr_chktime(&sprite)) {
       zx_border(INK_BLACK);
-      //dirs = 0;
+      // dirs = 0;
       dirs = (joyfunc1)(&k1);
       player_move();
       player_collision();
@@ -178,14 +178,14 @@ unsigned char player_move(void) {
 
   /* Draw Player sprite */
   if (spr_redraw()) {
-
     // The player have moved so we need to check to pick
     player_check_map();
   }
 
   /* Anim Restored hitted platforms */
-  player_hit_platform_clear();
-
+  if (player_hit_lin > 0) {
+    player_hit_platform_clear();
+  }
   /* Store State variable */
   state[sprite] = s_state;
   return 0;
@@ -362,8 +362,8 @@ unsigned char player_fire() {
 void player_check_map() {
 
   sprite_curr_index = spr_calc_index(lin[sprite], col[sprite]);
-  if ((s_col0 & 1) == 0) { // Par
-    if ((s_lin0 & 15) == 0) {
+  if ((col[sprite] & 1) == 0) { // Par
+    if ((lin[sprite] & 15) == 0) {
       // Pick single tile
       player_pick_item();
     } else {
@@ -374,7 +374,7 @@ void player_check_map() {
     }
   } else
      { // Impar
-      if ((s_lin0 & 15) == 0) {
+      if ((lin[sprite] & 15) == 0) {
         // Pick single tile
         player_pick_item();
         sprite_curr_index = sprite_curr_index + 1;
@@ -408,8 +408,11 @@ void player_pick_item(void) {
     // NIRVANAP_drawT(TILE_EMPTY, s_lin1, s_col1);
   }
   if (v0 > TILE_ITEM_E && v0 < TILE_FLOOR) {
-    //DEADLY BACKGORUNDS
-    zx_border(INK_YELLOW);
+
+    if ( ( lin[SPR_P1] & 3) != 0 ) {
+      // DEADLY BACKGROUNDS
+      zx_border(INK_YELLOW);
+    }
   }
 }
 
@@ -456,13 +459,11 @@ unsigned char player_hit_platform(void) {
 
 void player_hit_platform_clear(void) {
   // CLEAR HITTED BRICKS N MAKES THE PLAYER FALL
-  if (player_hit_lin > 0) {
-    if (game_check_time(spr_timer[sprite], PLAYER_HIT_BRICK_TIME)) {
-      index1 = spr_calc_index(player_hit_lin, player_hit_col);
-      spr_brick_anim(0);
-      player_hit_lin = 0;
-      player_hit_col = 0;
-    }
+  if (game_check_time(spr_timer[sprite], PLAYER_HIT_BRICK_TIME)) {
+    index1 = spr_calc_index(player_hit_lin, player_hit_col);
+    spr_brick_anim(0);
+    player_hit_lin = 0;
+    player_hit_col = 0;
   }
 }
 
