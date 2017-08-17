@@ -402,6 +402,8 @@ void player_pick_item(void) {
     ay_fx_play(ay_effect_10);
     sound_coin();
     scr_map[sprite_curr_index] = TILE_EMPTY;
+
+    BIT_SET(scr_obj[sprite_curr_index],scr_curr);
     s_lin1 = (sprite_curr_index >> 4) << 4;
     s_col1 = (sprite_curr_index & 15) * 2;
     spr_add_anim(s_lin1, s_col1, TILE_ANIM_PICK, 3);

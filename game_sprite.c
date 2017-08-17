@@ -269,13 +269,22 @@ void spr_page_map(void) {
     }
 
     if (v0 < 128) {
-      scr_map[k] = v0;
+      if (!(BIT_CHK(scr_obj[k], scr_curr))) {
+        scr_map[k] = v0;
+      } else {
+        scr_map[k] = TILE_EMPTY;
+      }
       ++k;
     } else {
       vr = v0 - 128; // Repeat counter Should be < 128!!
 
       for (j = 0; j < vr; j++) {
-        scr_map[k] = v1;
+        if (!(BIT_CHK(scr_obj[k], scr_curr))) {
+          scr_map[k] = v1;
+        } else {
+          scr_map[k] = TILE_EMPTY;
+        }
+
         ++k;
         if (k >= GAME_SCR_MAX_INDEX) {
           break;
@@ -310,7 +319,7 @@ unsigned char spr_redraw(void) {
         s_tile1 = s_tile1 + 4;
       }
     }
-    //Speed UP hack
+    // Speed UP hack
     if (sprite == SPR_P1) {
       spr_back_repaint();
     } else {
@@ -327,7 +336,7 @@ unsigned char spr_redraw(void) {
         }
       }
     }
-    //End hack
+    // End hack
     NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
     return 1;
   } else if (s_tile1 != s_tile0) {

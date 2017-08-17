@@ -104,6 +104,7 @@ void main(void) {
   // game_menu();
   for (tmp = 0; tmp < 160; tmp++) {
     scr_map[tmp] = TILE_EMPTY;
+    scr_obj[tmp] = 0;
   }
   scr_curr = 0;
   map_width = 8 - 1; // OJO!
