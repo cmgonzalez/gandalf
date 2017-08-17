@@ -52,15 +52,13 @@ void player_init(unsigned char f_sprite, unsigned char f_lin,
 }
 
 unsigned char player_check_input(void) {
-  if ( dirs & IN_STICK_LEFT && dirs & IN_STICK_RIGHT ) dirs = 0;
+  if (dirs & IN_STICK_LEFT && dirs & IN_STICK_RIGHT)
+    dirs = 0;
   return dirs & IN_STICK_FIRE || dirs & IN_STICK_LEFT ||
          dirs & IN_STICK_RIGHT || dirs & IN_STICK_UP || dirs & IN_STICK_DOWN;
 }
 
-unsigned char player_collision(void) {
-
-  return 0;
-}
+unsigned char player_collision(void) { return 0; }
 
 void player_kill(void) {
   if (!BIT_CHK(state[sprite], STAT_KILL)) {
@@ -130,8 +128,8 @@ unsigned char player_move(void) {
   if (BIT_CHK(s_state, STAT_JUMP) || BIT_CHK(s_state, STAT_FALL)) {
     player_fire();
 
-    //If the player push fire alone and then move HORIZONTAL
-    if ( player_vel_y < player_vel_y1 ) {
+    // If the player push fire alone and then move HORIZONTAL
+    if (player_vel_y < player_vel_y1) {
       if (dirs & IN_STICK_LEFT) {
         BIT_SET(s_state, STAT_DIRL);
         BIT_CLR(s_state, STAT_DIRR);
@@ -145,7 +143,8 @@ unsigned char player_move(void) {
     /* Jump Handling */
     if (player_move_jump()) {
       // Jump Ends
-      if (!player_over_stair) player_tile(TILE_P1_RIGHT);
+      if (!player_over_stair)
+        player_tile(TILE_P1_RIGHT);
     }
   } else {
     /* Read player input */
@@ -165,12 +164,10 @@ unsigned char player_move(void) {
 
     // The player have moved so we need to check to pick
     player_check_map();
-
   }
 
   /* Anim Restored hitted platforms */
   player_hit_platform_clear();
-
 
   /* Store State variable */
   state[sprite] = s_state;
@@ -243,7 +240,7 @@ unsigned char player_move_input(void) {
       player_over_stair = 0;
       sound_jump();
 
-      //colint[sprite] = FRAMES_PLAYER / 2;
+      // colint[sprite] = FRAMES_PLAYER / 2;
       BIT_SET(s_state, STAT_JUMP);
       BIT_CLR(s_state, STAT_FALL);
       jump_lin[sprite] = lin[sprite];
@@ -323,7 +320,8 @@ unsigned char player_fire() {
 
       if (BIT_CHK(state_a[SPR_P1], STAT_LDIRL)) {
         // Left
-        if ( col[SPR_P1] < 1) return 1;
+        if (col[SPR_P1] < 1)
+          return 1;
         bullet_col[SPR_P1] = col[SPR_P1] - 1;
         bullet_tile[SPR_P1] = TILE_FIREBALL_L;
         bullet_dir[SPR_P1] = 0x01;
@@ -331,7 +329,8 @@ unsigned char player_fire() {
       } else {
         // Right n default
         // if ( BIT_CHK(state_a[SPR_P1], STAT_LDIRR) ) {
-        if ( col[SPR_P1] > 29) return 1;
+        if (col[SPR_P1] > 29)
+          return 1;
         bullet_col[SPR_P1] = col[SPR_P1] + 1;
         bullet_tile[SPR_P1] = TILE_FIREBALL_R;
         bullet_dir[SPR_P1] = 0xFF;
@@ -442,7 +441,7 @@ void player_hit_platform_clear(void) {
       spr_brick_anim(0);
       player_hit_lin = 0;
       player_hit_col = 0;
-   }
+    }
   }
 }
 
@@ -482,10 +481,10 @@ void player_check_floor(void) {
   }
 }
 
-
 unsigned char player_move_jump(void) {
 
   signed int val_yc;
+  unsigned char f_check;
   player_vel_y = player_vel_y + game_gravity;
   sprite_on_air = 1;
   // JUMP BOOST
@@ -505,8 +504,8 @@ unsigned char player_move_jump(void) {
     player_vel_y = -120;
   }
   // CONVER TO PIXEL'S
-  //zx_print_int(0,0,player_vel_y);
-  //val_yc = player_vel_y / 10;
+  // zx_print_int(0,0,player_vel_y);
+  // val_yc = player_vel_y / 10;
   val_yc = player_vel_y;
 
   s_lin1 = (unsigned char)val_yc;
@@ -530,14 +529,19 @@ unsigned char player_move_jump(void) {
     BIT_SET(s_state, STAT_JUMP);
     BIT_CLR(s_state, STAT_FALL);
     // Asending
+    f_check = (s_lin0 >> 4) != (s_lin1 >> 0);
 
-    if (game_check_map(s_lin1, col[sprite])) {
-      // Hit Platforms
-      if (player_hit_platform()) {
+    if (f_check) {
+      if (game_check_map(s_lin1, col[sprite])) {
+        // Hit Platforms
+        if (player_hit_platform()) {
 
-        lin[sprite] = (lin[sprite] >> 4) << 4;
+          lin[sprite] = (lin[sprite] >> 4) << 4;
+        }
+        player_vel_y = 0;
+      } else {
+        lin[sprite] = s_lin1;
       }
-      player_vel_y = 0;
     } else {
       lin[sprite] = s_lin1;
     }
@@ -545,7 +549,39 @@ unsigned char player_move_jump(void) {
     // Falling
     BIT_SET(s_state, STAT_FALL);
     BIT_CLR(s_state, STAT_JUMP);
-
+    s_lin1 = s_lin1 + 16;
+    f_check = (s_lin0 >> 4) != (s_lin1 >> 0);
+    if (f_check) {
+      if (game_check_map(s_lin1, col[sprite])) {
+        // Jump end
+        s_lin1 = s_lin1 - 16;
+        player_check_stairs(0);
+        if (!player_over_stair) {
+          player_check_stairs(1);
+        }
+        if (!player_over_stair) {
+          s_lin1 = (s_lin1 >> 4) << 4;
+          if (lin[sprite] > s_lin1) {
+            lin[sprite] = s_lin1 + 16;
+            return 0;
+          } else {
+            lin[sprite] = s_lin1;
+          }
+        }
+        player_vel_y = 0;
+        BIT_CLR(s_state, STAT_FALL);
+        BIT_CLR(s_state, STAT_JUMP);
+        colint[sprite] = 0;
+        return 1;
+      } else {
+        s_lin1 = s_lin1 - 16;
+        lin[sprite] = s_lin1;
+      }
+    } else {
+      s_lin1 = s_lin1 - 16;
+      lin[sprite] = s_lin1;
+    }
+    /*
     // index1 = spr_calc_index(s_lin1 + 16, col[sprite]);
     if (game_check_map(s_lin1 + 16, col[sprite])) {
       // Jump end
@@ -572,6 +608,7 @@ unsigned char player_move_jump(void) {
     } else {
       lin[sprite] = s_lin1;
     }
+    */
   }
   sprite_horizontal_check = 1;
   if (spr_move_horizontal()) {

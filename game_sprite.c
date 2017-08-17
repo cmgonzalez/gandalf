@@ -47,36 +47,51 @@ unsigned char spr_chktime(unsigned char *sprite) __z88dk_fastcall {
 }
 
 unsigned char spr_move_up(void) {
-  tmp1 = lin[sprite] - SPRITE_LIN_INC;
+  unsigned char f_check;
+  s_lin1 = lin[sprite];
+  tmp1 = s_lin1 - SPRITE_LIN_INC;
+  f_check = (s_lin1 >> 4) != (tmp1 >> 4);
 
-  if (game_check_map(tmp1, col[sprite])) {
-    /* Only Players can hit objects */
-    if (sprite == SPR_P1 && !BIT_CHK(state_a[SPR_P1], STAT_HITBRICK)) {
-      player_hit_platform();
+  if (f_check) {
+    if (game_check_map(tmp1, col[sprite])) {
+      /* Only Players can hit objects */
+      if (sprite == SPR_P1) {
+        if (!BIT_CHK(state_a[SPR_P1], STAT_HITBRICK)) {
+          player_hit_platform();
+        }
+      }
+      return 1;
     }
-    return 1;
   }
 
-  lin[sprite] = tmp1;
-  if (lin[sprite] > GAME_LIN_FLOOR) {
+  if (tmp1 > GAME_LIN_FLOOR) {
     lin[sprite] = 0;
     // NIRVANAP_fillT(18, s_lin0, s_col0);
     return 1;
+  } else {
+    lin[sprite] = tmp1;
+    return 0;
   }
-  return 0;
 }
 
 unsigned char spr_move_down(void) {
-  tmp1 = lin[sprite] + SPRITE_LIN_INC;
-  if (game_check_map(tmp1 + 14, col[sprite])) {
-    return 1;
+  unsigned char f_check;
+  s_lin1 = lin[sprite];
+  tmp1 = s_lin1 + SPRITE_LIN_INC + 14;
+  f_check = (s_lin1 >> 4) != (tmp1 >> 4);
+  if (f_check) {
+    if (game_check_map(tmp1, col[sprite])) {
+      return 1;
+    }
   }
-  lin[sprite] = tmp1;
-  if (lin[sprite] > GAME_LIN_FLOOR) {
+
+  if (s_lin1 > GAME_LIN_FLOOR) {
     lin[sprite] = GAME_LIN_FLOOR;
     return 1;
+  } else {
+    lin[sprite] = tmp1 - 14;
+    return 0;
   }
-  return 0;
 }
 
 unsigned char spr_move_horizontal(void) {
@@ -454,7 +469,6 @@ void spr_back_repaint(void) {
       sprite_curr_index = sprite_curr_index + 16;
 
       spr_tile_paint(scr_map[sprite_curr_index], s_row, s_col0);
-
     }
   } else
      { // Impar
@@ -475,8 +489,6 @@ void spr_back_repaint(void) {
         s_row = s_row + 16;
         sprite_curr_index = sprite_curr_index + 15;
 
-
-
         // NIRVANAP_halt();
         spr_tile_paint(scr_map[sprite_curr_index], s_row, s_col0 - 1);
         sprite_curr_index = sprite_curr_index + 1;
@@ -484,7 +496,6 @@ void spr_back_repaint(void) {
       }
     }
   intrinsic_ei();
-
 }
 
 void spr_tile_paint(unsigned char f_tile, unsigned char f_lin,
