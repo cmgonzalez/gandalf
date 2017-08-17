@@ -403,15 +403,37 @@ void player_pick_item(void) {
     sound_coin();
     scr_map[sprite_curr_index] = TILE_EMPTY;
 
-    BIT_SET(scr_obj[sprite_curr_index],scr_curr);
+    BIT_SET(scr_obj[sprite_curr_index], scr_curr);
     s_lin1 = (sprite_curr_index >> 4) << 4;
     s_col1 = (sprite_curr_index & 15) * 2;
     spr_add_anim(s_lin1, s_col1, TILE_ANIM_PICK, 3);
     // NIRVANAP_drawT(TILE_EMPTY, s_lin1, s_col1);
+    switch (v0) {
+    case 28: // KEY WHITE
+      player_keys[0] = 1;
+      zx_print_ink(INK_WHITE);
+      zx_print_str(22, 3, "]");
+      break;
+    case 29: // KEY RED
+      player_keys[1] = 1;
+      zx_print_ink(INK_RED);
+      zx_print_str(22, 4, "]");
+      break;
+    case 30: // KEY GREEN
+      player_keys[2] = 1;
+      zx_print_ink(INK_GREEN);
+      zx_print_str(22, 5, "]");
+      break;
+    case 31: // KEY CYAN
+      player_keys[3] = 1;
+      zx_print_ink(INK_CYAN);
+      zx_print_str(22, 6, "]");
+      break;
+    }
   }
   if (v0 > TILE_ITEM_E && v0 < TILE_FLOOR) {
 
-    if ( ( lin[SPR_P1] & 3) != 0 ) {
+    if ((lin[SPR_P1] & 3) != 0) {
       // DEADLY BACKGROUNDS
       zx_border(INK_YELLOW);
     }
@@ -641,4 +663,42 @@ unsigned char player_move_jump(void) {
   }
   sprite_horizontal_check = 0;
   return 0;
+}
+
+void player_open_door(unsigned int f_index, unsigned char f_tile) {
+  unsigned char f_open;
+  f_open = 0;
+  switch (f_tile) {
+  case 60: // DOOR WHITE
+    if (player_keys[0]) {
+      zx_border(INK_WHITE);
+      f_open = 1;
+    }
+    break;
+  case 61: // DOOR RED
+    if (player_keys[1]) {
+      zx_border(INK_RED);
+      f_open = 1;
+    }
+    break;
+  case 62: // DOOR GREEN
+    if (player_keys[2]) {
+      zx_border(INK_GREEN);
+      f_open = 1;
+    }
+    break;
+  case 63: // DOOR CYAN
+    if (player_keys[3]) {
+      zx_border(INK_CYAN);
+      f_open = 1;
+    }
+    break;
+  }
+
+  if (f_open) {
+    zx_print_int(0,0,f_index);
+    scr_map[f_index] = TILE_EMPTY;
+    BIT_SET(scr_obj[f_index], scr_curr);
+    spr_draw_index(f_index);
+  }
 }

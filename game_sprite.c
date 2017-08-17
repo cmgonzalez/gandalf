@@ -471,12 +471,12 @@ void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
 }
 
 void spr_draw_index(unsigned int f_index) {
-  /* n % 2^i = n & (2^i - 1) */
-  s_col1 = f_index & 31; // OPTIMIZED % 32
-  s_lin1 = f_index >> 5; // div 32
-  s_lin1 = s_lin1 << 3;  // mod 32
-  // NIRVANAP_drawT_raw(spr_idx[scr_map[f_index]], s_lin1, s_col1);
+  s_col1 = (f_index & 15) << 1;
+  s_lin1 = f_index;
+  s_lin1 = ( s_lin1 >> 4 ) << 4;
+  intrinsic_di();
   NIRVANAP_drawT_raw(scr_map[f_index], s_lin1, s_col1);
+  intrinsic_ei();
 }
 
 void spr_draw_row(unsigned char f_row) {

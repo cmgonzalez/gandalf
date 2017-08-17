@@ -25,6 +25,7 @@
 #define TILE_EMPTY                    0
 #define TILE_FLOOR                    48 //START FLOOR TILES
 #define TILE_CEIL                     60 //START CEILS TILES
+#define TILE_DOOR_E                   64 //END OF DOOR TILES
 #define TILE_END                      84 //END OF TILES
 #define TILE_ITEM_S                   24 //START OF ITEMS
 #define TILE_ITEM_E                   39 //END OF ITEMS
@@ -289,6 +290,7 @@ extern signed char player_vel_y0;
 extern signed char player_vel_y1;
 
 extern signed char player_vel_inc;
+extern unsigned char player_keys[4];
 extern signed int game_gravity;
 
 extern unsigned char	sprite;

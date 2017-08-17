@@ -106,6 +106,10 @@ void main(void) {
     scr_map[tmp] = TILE_EMPTY;
     scr_obj[tmp] = 0;
   }
+  player_keys[0] = 0;
+  player_keys[1] = 0;
+  player_keys[2] = 0;
+  player_keys[3] = 0;
   scr_curr = 0;
   map_width = 8 - 1; // OJO!
   map_heigth = 1;
@@ -115,10 +119,6 @@ void main(void) {
   game_loop();
 }
 
-void test_proc() {
+void test_proc() {}
 
-}
-
-unsigned char test_func() {
-    return 0;
-}
+unsigned char test_func() { return 0; }

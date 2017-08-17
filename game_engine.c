@@ -118,30 +118,39 @@ void game_draw_screen(void) {
 }
 
 void game_print_footer(void) {
-  zx_print_str(22, 1, " ");
-  zx_print_str(22, 30, " ");
-  zx_print_str(23, 1, "     ");
-  zx_print_str(23, 30, "     ");
+  zx_print_ink(INK_CYAN);
+
+  game_fill_row(19,98);
+  zx_print_str(19,0,"a");
+  zx_print_str(19,31,"c");
+  zx_print_str(20,0,"d");
+  zx_print_str(20,31,"e");
+  zx_print_str(21,0,"d");
+  zx_print_str(21,31,"e");
+  zx_print_str(22,0,"d");
+  zx_print_str(22,31,"e");
+  game_fill_row(23,98);
+  zx_print_str(23,0,"f");
+  zx_print_str(23,31,"g");
   zx_print_ink(INK_RED);
-  zx_print_str(22, 1, "<"); // live p1 hut
+  zx_print_str(20, 1, "<"); // live p1 hut
   zx_print_ink(INK_YELLOW);
-  zx_print_str(23, 1, "\\"); // live p1 face
+  zx_print_str(21, 1, "\\"); // live p1 face
   /* phase osd bottom*/
+  zx_print_str(23, 20, "FPS:");
   game_print_lives();
 }
 
 void game_phase_print_score_back(void) {
   zx_print_ink(INK_RED);
-  zx_print_str(0, 11, "$%|"); // top
-  zx_print_ink(INK_BLUE);
-  zx_print_str(0, 1, "[|"); // I
+  zx_print_str(0, 11, "$%|"); // Top
 }
 
 void game_print_lives(void) {
   zx_print_ink(INK_WHITE);
   tmp = player_lives - 1;
   if (tmp < 255) {
-    zx_print_chr(23, 3, tmp); // LIVE P1
+    zx_print_chr(20, 3, tmp); // LIVE P1
   }
 }
 
@@ -222,7 +231,8 @@ void game_loop(void) {
     enemy_turn();
     /*each second aprox - update fps/score/phase left/phase advance*/
     if (game_check_time(frame_time, 100)) {
-      zx_print_int(23, 27, fps);
+      zx_print_ink(INK_WHITE);
+      zx_print_int(23, 24, fps);
       fps = 0;
       frame_time = zx_clock();
     }
@@ -303,6 +313,12 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
     }
   }
 
+  if (f_tile < TILE_DOOR_E) { //DOOR EXIT
+    if (sprite = SPR_P1) {
+      player_open_door(f_index, f_tile);
+      return 1;
+    }
+  }
   // TILE_CEIL -> TILE_END
   if (f_tile < TILE_END) {
     return 1;
