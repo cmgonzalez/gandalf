@@ -58,7 +58,23 @@ unsigned char player_check_input(void) {
          dirs & IN_STICK_RIGHT || dirs & IN_STICK_UP || dirs & IN_STICK_DOWN;
 }
 
-unsigned char player_collision(void) { return 0; }
+unsigned char player_collision(void) {
+  sprite = 0;
+  s_col1 = col[SPR_P1];
+  s_lin1 = lin[SPR_P1];
+  while (sprite < SPR_P1) {
+    if (class[sprite] > 0) {
+      if (abs(col[sprite] - s_col1) < 2) {
+        if (abs(lin[sprite] - s_lin1) < 14) {
+         zx_border(INK_RED);
+         return 1;
+        }
+      }
+    }
+    ++sprite;
+  }
+  return 0;
+}
 
 void player_kill(void) {
   if (!BIT_CHK(state[sprite], STAT_KILL)) {
@@ -110,7 +126,8 @@ unsigned char player_lost_life(void) {
 void player_turn(void) {
   if (class[sprite] == PLAYER && player_lives > 0) {
     if (spr_chktime(&sprite)) {
-      dirs = 0;
+      zx_border(INK_BLACK);
+      //dirs = 0;
       dirs = (joyfunc1)(&k1);
       player_move();
       player_collision();
@@ -389,6 +406,10 @@ void player_pick_item(void) {
     s_col1 = (sprite_curr_index & 15) * 2;
     spr_add_anim(s_lin1, s_col1, TILE_ANIM_PICK, 3);
     // NIRVANAP_drawT(TILE_EMPTY, s_lin1, s_col1);
+  }
+  if (v0 > TILE_ITEM_E && v0 < TILE_FLOOR) {
+    //DEADLY BACKGORUNDS
+    zx_border(INK_YELLOW);
   }
 }
 
