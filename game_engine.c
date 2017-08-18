@@ -42,7 +42,7 @@ void game_draw_screen(void) {
   intrinsic_di();
   while (index1 < ((GAME_ROWS - 1) * 16)) {
 
-    if (index1 % 16 == 0) {  //TODO OPTIMIZE!
+    if (index1 % 16 == 0) { // TODO OPTIMIZE!
       s_lin1 = s_lin1 + 16;
       s_col1 = 0;
     }
@@ -104,6 +104,9 @@ void game_draw_screen(void) {
       case INDEX_SNAKE:
         enemy_init(s_lin1, s_col1, SNAKE, DIR_RIGHT);
         break;
+      case INDEX_BAT_H:
+        enemy_init(s_lin1, s_col1, BAT_H, DIR_RIGHT);
+        break;
       }
 
       scr_map[index1] = TILE_EMPTY;
@@ -120,18 +123,18 @@ void game_draw_screen(void) {
 void game_print_footer(void) {
   zx_print_ink(INK_CYAN);
 
-  game_fill_row(19,98);
-  zx_print_str(19,0,"a");
-  zx_print_str(19,31,"c");
-  zx_print_str(20,0,"d");
-  zx_print_str(20,31,"e");
-  zx_print_str(21,0,"d");
-  zx_print_str(21,31,"e");
-  zx_print_str(22,0,"d");
-  zx_print_str(22,31,"e");
-  game_fill_row(23,98);
-  zx_print_str(23,0,"f");
-  zx_print_str(23,31,"g");
+  game_fill_row(19, 98);
+  zx_print_str(19, 0, "a");
+  zx_print_str(19, 31, "c");
+  zx_print_str(20, 0, "d");
+  zx_print_str(20, 31, "e");
+  zx_print_str(21, 0, "d");
+  zx_print_str(21, 31, "e");
+  zx_print_str(22, 0, "d");
+  zx_print_str(22, 31, "e");
+  game_fill_row(23, 98);
+  zx_print_str(23, 0, "f");
+  zx_print_str(23, 31, "g");
   zx_print_ink(INK_RED);
   zx_print_str(20, 1, "<"); // live p1 hut
   zx_print_ink(INK_YELLOW);
@@ -217,12 +220,14 @@ void game_loop(void) {
 
     if (game_check_time(anim_time, TIME_ANIM)) {
       anim_time = zx_clock();
-      if (anim_count) spr_play_anim();
+      if (anim_count)
+        spr_play_anim();
     }
 
     if (game_check_time(bullet_time, TIME_BULLETS)) {
       bullet_time = zx_clock();
-      if (bullet_count) spr_play_bullets();
+      if (bullet_count)
+        spr_play_bullets();
     }
 
     /*player 1 turn*/
@@ -277,15 +282,15 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
 
   f_tile = scr_map[f_index];
 
-/*
-  if (class[sprite] <= SPIDER) {
-    if (f_tile <= TILE_ITEM_E) {
-      return 0;
-    } else {
-      return 1;
+  /*
+    if (class[sprite] <= SPIDER) {
+      if (f_tile <= TILE_ITEM_E) {
+        return 0;
+      } else {
+        return 1;
+      }
     }
-  }
-*/
+  */
   // TILE_EMPTY -> TILE_FLOOR
   if (f_tile < TILE_FLOOR) {
     return 0;
@@ -313,8 +318,8 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
     }
   }
 
-  if (f_tile < TILE_DOOR_E) { //DOOR EXIT
-    if (sprite = SPR_P1) {
+  if (f_tile < TILE_DOOR_E) { // DOOR EXIT
+    if (sprite == SPR_P1) {
       player_open_door(f_index, f_tile);
       return 1;
     }

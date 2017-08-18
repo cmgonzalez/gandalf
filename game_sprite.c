@@ -157,8 +157,9 @@ unsigned char spr_move_right(void) {
         }
       } else {
         col[sprite] = SCR_COLS_M;
-        spr_destroy(sprite);
+        //spr_destroy(sprite);
       }
+      return 1;
     }
   }
   return 0;
@@ -181,6 +182,7 @@ unsigned char spr_move_left(void) {
     }
     --col[sprite];
     colint[sprite] = sprite_frames[class[sprite]] - 1;
+
     if (col[sprite] == 255) {
       if (sprite == SPR_P1) {
         if (spr_page_left()) {
@@ -190,8 +192,9 @@ unsigned char spr_move_left(void) {
         }
       } else {
         col[sprite] = 0;
-        spr_destroy(sprite);
+        //spr_destroy(sprite);
       }
+      return 1;
     }
   }
   return 0;
@@ -399,6 +402,9 @@ unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
   case SNAKE:
     return spr_tile_dir(TILE_ENEMY_SNAKE, f_sprite, DIRINC_ENEMY_SNAKE);
     break;
+  case BAT_H:
+    return spr_tile_dir(TILE_ENEMY_BAT_H, f_sprite, DIRINC_ENEMY_BAT_H);
+    break;
   }
   return 0;
 }
@@ -473,7 +479,7 @@ void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
 void spr_draw_index(unsigned int f_index) {
   s_col1 = (f_index & 15) << 1;
   s_lin1 = f_index;
-  s_lin1 = ( s_lin1 >> 4 ) << 4;
+  s_lin1 = (s_lin1 >> 4) << 4;
   intrinsic_di();
   NIRVANAP_drawT_raw(scr_map[f_index], s_lin1, s_col1);
   intrinsic_ei();

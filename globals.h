@@ -48,6 +48,7 @@
 
 #define PLANT                         10
 #define SNAKE                         11
+#define BAT_H                         12
 
 #define PLAYER                        16
 
@@ -125,6 +126,11 @@
 #define DIRINC_ENEMY_SNAKE           0
 #define INDEX_SNAKE                  100
 
+#define TILE_ENEMY_BAT_H            170
+#define FRAMES_ENEMY_BAT_H            3
+#define SPEED_ENEMY_BAT_H             1
+#define DIRINC_ENEMY_BAT_H            0
+#define INDEX_BAT_H                 101
 
 //TILE MAP'S
 //  0..23   BACKGROUND

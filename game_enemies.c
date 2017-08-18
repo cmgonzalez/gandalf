@@ -61,7 +61,11 @@ void enemy_move(void) {
     if (class[sprite] < PLANT) {
       enemy_walk();
     } else {
-      enemy_static();
+      if (class[sprite] < BAT_H) {
+        enemy_static();
+      } else {
+        enemy_horizontal();
+      }
     }
   }
 }
@@ -71,6 +75,20 @@ void enemy_static() {
   ++colint[sprite];
   if (colint[sprite] == sprite_frames[class[sprite]]) {
     colint[sprite] = 0;
+  }
+}
+
+void enemy_horizontal() {
+  if (BIT_CHK(s_state, STAT_DIRR)) {
+    if (spr_move_right()) {
+      BIT_CLR(s_state, STAT_DIRR);
+      BIT_SET(s_state, STAT_DIRL);
+    }
+  } else {
+    if (spr_move_left()) {
+      BIT_CLR(s_state, STAT_DIRL);
+      BIT_SET(s_state, STAT_DIRR);
+    }
   }
 }
 
@@ -135,8 +153,8 @@ void enemy_avoid_edge() {
 
 void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,
                 unsigned char f_dir) {
-  //unsigned int f_index;
-  //unsigned int f_lin1;
+  // unsigned int f_index;
+  // unsigned int f_lin1;
   if (spr_count < SPR_P1) {
     class[spr_count] = f_class;
     lin[spr_count] = f_lin;

@@ -18,6 +18,7 @@
 #define GAME_ENEMIES_H
 
 extern void          enemy_vertical(void);
+extern void          enemy_horizontal(void);
 extern void          enemy_walk(void);
 extern void          enemy_static(void);
 extern void          enemy_coin1(void);
