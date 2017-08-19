@@ -40,8 +40,7 @@ unsigned char map_width;
 unsigned char map_heigth;
 //Compressed MAP
 
-unsigned char scr_0[] = 	{0,7,8,134,0,70,130,0,130,32,131,0,9,10,130,0,101,131,0,70,130,0,130,32,131,0,95,135,0,70,131,0,94,135,0,31,11,12,89,60,0,32,100,33,130,0,135,70,58,136,70,0,44,0,101,44,29,44,58,0,70,132,32,28,70,135,0,58,0,70,133,32,70,134,0,84,58,0,61,133,32,145,70}	;
-
+unsigned char scr_0[] = 	{0,7,8,134,0,70,130,0,130,32,131,0,9,10,130,0,101,131,0,70,130,0,130,32,131,0,95,135,0,70,131,0,94,135,0,31,11,12,96,60,0,32,100,33,130,0,135,70,58,136,70,0,44,0,101,44,29,44,58,0,70,132,32,28,70,135,0,58,0,70,133,32,70,134,0,84,58,0,61,133,32,145,70}	;
 unsigned char scr_1[] = 	{141,0,7,8,130,0,32,0,32,0,32,0,32,133,0,9,10,148,0,99,87,0,11,12,133,0,84,130,0,139,70,0,130,70,58,130,70,68,131,32,130,44,130,0,130,44,131,0,58,0,70,130,0,99,134,0,5,6,130,0,58,0,70,130,32,68,32,132,0,1,2,3,4,87,58,0,135,70,130,42,135,70}	;
 unsigned char scr_2[] = 	{176,32,0,93,130,0,92,139,0,131,70,56,140,70,131,0,56,143,0,56,134,0,5,6,133,0,11,12,56,133,0,1,2,3,4,0,88,0,72,142,73,74}	;
 unsigned char scr_3[] = 	{176,32,0,93,130,0,92,139,0,131,70,56,140,70,131,0,56,143,0,56,134,0,5,6,133,0,11,12,56,133,0,1,2,3,4,0,88,0,72,142,73,74}	;
@@ -158,7 +157,7 @@ unsigned char anim_col[8];
 unsigned char anim_tile[8];
 unsigned char anim_int[8];
 unsigned char anim_end[8];
-
+unsigned char anim_loop[8];
 //BULLETS
 unsigned char bullet_lin[8];
 unsigned char bullet_col[8];
@@ -166,6 +165,7 @@ unsigned char bullet_tile[8];
 unsigned char bullet_dir[8];
 unsigned char bullet_colint[8];
 unsigned char bullet_frames[8];
+
 
 
 
@@ -184,6 +184,9 @@ unsigned char game_over;
 unsigned char game_menu_sel;
 
 unsigned int game_score_top;
+unsigned char game_respawn[8];
+unsigned char game_respawn_tile_index[8];
+unsigned char game_respawn_index;
 // PHASE RELATED VARIABLES
 unsigned char phase_curr;
 unsigned char screen_paper;

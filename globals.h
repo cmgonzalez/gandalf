@@ -149,6 +149,7 @@
 #define TILE_P1_LEN                   8 //LEN OF PLAYER SPRITES FOR EACH DIRECTION
 #define TILE_ANIM_PICK                120
 #define TILE_ANIM_FIRE                123
+#define TILE_ANIM_RESPAWN             126
 #define TILE_P1_KILL                  64
 #define TILE_P1_HITR                  64
 
@@ -343,6 +344,10 @@ extern unsigned char	game_over;
 extern unsigned char	player_lives;
 extern unsigned int		game_score_top;
 extern unsigned char	game_menu_sel;
+extern unsigned char  game_respawn[8];
+extern unsigned char  game_respawn_tile_index[8];
+extern unsigned char  game_respawn_index;
+
 extern unsigned char  player_over_stair;
 
 
@@ -373,6 +378,7 @@ extern unsigned char anim_col[8];
 extern unsigned char anim_tile[8];
 extern unsigned char anim_int[8];
 extern unsigned char anim_end[8];
+extern unsigned char anim_loop[8];
 extern unsigned char anim_count;
 
 

@@ -46,6 +46,7 @@ extern void          game_print_header(void);
 extern void          game_joystick_change(void);
 extern void          game_joystick_set(void);
 extern void          game_joystick_set_menu(void);
+extern void          game_add_enemy( unsigned char enemy_tile_index);
 
 
 #endif

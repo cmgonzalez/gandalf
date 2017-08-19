@@ -31,9 +31,85 @@
 #include <string.h>
 #include <z80.h>
 
+
+void game_loop(void) {
+  unsigned int fps;
+
+  ay_fx_play(ay_effect_10);
+  sound_coin();
+  z80_delay_ms(200);
+  ay_reset();
+
+  player_lives = 4;
+
+  player_score = 0;
+
+  /* screen init */
+  game_over = 0;
+  /* phase init */
+  game_phase_init();
+  /* game loop start */
+  dirs = 0x00;
+  game_joystick_set();
+  fps = 0;
+  while (!game_over) {
+    zx_print_chr(0,16,spr_count);
+    if (game_check_time(anim_time, TIME_ANIM)) {
+      anim_time = zx_clock();
+      if (anim_count)
+        spr_play_anim();
+    }
+
+    if (game_check_time(bullet_time, TIME_BULLETS)) {
+      bullet_time = zx_clock();
+      if (bullet_count)
+        spr_play_bullets();
+    }
+
+    /*player 1 turn*/
+    sprite = SPR_P1;
+    player_turn();
+    enemy_turn();
+    /*each second aprox - update fps/score/phase left/phase advance*/
+    if (game_check_time(frame_time, 100)) {
+
+      zx_print_ink(INK_WHITE);
+      zx_print_int(23, 24, fps);
+      zx_print_int(23, 2, spr_count);
+      fps = 0;
+      frame_time = zx_clock();
+      if (game_respawn_index == 0 ) {
+        tmp = (rand() & 7);
+        if (class[tmp] == 0 && game_respawn[tmp] != 0) {
+          game_respawn_index = tmp;
+          index1 = game_respawn[tmp];
+          s_col1 = (index1 & 15) << 1;
+          s_lin1 = index1;
+          s_lin1 = (s_lin1 >> 4) << 4;
+          scr_map[index1] = 0xFF;
+          spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 8);
+
+          //game_add_enemy(game_respawn_tile_index[tmp]);
+        }
+      }
+    }
+    ++loop_count;
+    ++fps;
+  }
+}
+
+
 void game_draw_screen(void) {
 
   NIRVANAP_halt();
+  spr_count = 0;
+  while (spr_count < 8) {
+    game_respawn[spr_count] = 0;
+    game_respawn_tile_index[spr_count] = 0;
+    class[spr_count] = 0;
+    ++spr_count;
+  }
+  spr_count = 0;
   index1 = 16;
   s_lin1 = 0;
   s_col1 = 2;
@@ -52,63 +128,11 @@ void game_draw_screen(void) {
       NIRVANAP_drawT_raw(scr_map[index1], s_lin1, s_col1);
     } else {
       // ENEMIES
-      switch (scr_map[index1]) {
-      case INDEX_SKELETON_RIGHT:
-        enemy_init(s_lin1, s_col1, SKELETON, DIR_RIGHT);
-        break;
-      case INDEX_SKELETON_LEFT:
-        enemy_init(s_lin1, s_col1, SKELETON, DIR_LEFT);
-        break;
-      case INDEX_ORC_RIGHT:
-        enemy_init(s_lin1, s_col1, ORC, DIR_RIGHT);
-        break;
-      case INDEX_ORC_LEFT:
-        enemy_init(s_lin1, s_col1, ORC, DIR_LEFT);
-        break;
-      case INDEX_WARG_RIGHT:
-        enemy_init(s_lin1, s_col1, WARG, DIR_RIGHT);
-        break;
-      case INDEX_WARG_LEFT:
-        enemy_init(s_lin1, s_col1, WARG, DIR_LEFT);
-        break;
-      case INDEX_DWARF_RIGHT:
-        enemy_init(s_lin1, s_col1, DWARF, DIR_RIGHT);
-        break;
-      case INDEX_DWARF_LEFT:
-        enemy_init(s_lin1, s_col1, DWARF, DIR_LEFT);
-        break;
-      case INDEX_ELF_RIGHT:
-        enemy_init(s_lin1, s_col1, ELF, DIR_RIGHT);
-        break;
-      case INDEX_ELF_LEFT:
-        enemy_init(s_lin1, s_col1, ELF, DIR_LEFT);
-        break;
-      case INDEX_DRAGON_RIGHT:
-        enemy_init(s_lin1, s_col1, DRAGON, DIR_RIGHT);
-        break;
-      case INDEX_DRAGON_LEFT:
-        enemy_init(s_lin1, s_col1, DRAGON, DIR_LEFT);
-        break;
-      case INDEX_BAT:
-        enemy_init(s_lin1, s_col1, BAT, DIR_RIGHT);
-        break;
-      case INDEX_WYVERN:
-        enemy_init(s_lin1, s_col1, WYVERN, DIR_RIGHT);
-        break;
-      case INDEX_SPIDER:
-        enemy_init(s_lin1, s_col1, SPIDER, DIR_RIGHT);
-        break;
-      case INDEX_PLANT:
-        enemy_init(s_lin1, s_col1, PLANT, DIR_RIGHT);
-        break;
-      case INDEX_SNAKE:
-        enemy_init(s_lin1, s_col1, SNAKE, DIR_RIGHT);
-        break;
-      case INDEX_BAT_H:
-        enemy_init(s_lin1, s_col1, BAT_H, DIR_RIGHT);
-        break;
+      if (spr_count < 8) {
+        game_respawn[spr_count] = index1;
+        game_respawn_tile_index[spr_count] = scr_map[index1];
+        game_add_enemy(scr_map[index1]);
       }
-
       scr_map[index1] = TILE_EMPTY;
     }
 
@@ -118,6 +142,65 @@ void game_draw_screen(void) {
     ++index1;
   }
   intrinsic_ei();
+}
+
+void game_add_enemy( unsigned char enemy_tile_index) {
+  switch (enemy_tile_index) {
+  case INDEX_SKELETON_RIGHT:
+    enemy_init(s_lin1, s_col1, SKELETON, DIR_RIGHT);
+    break;
+  case INDEX_SKELETON_LEFT:
+    enemy_init(s_lin1, s_col1, SKELETON, DIR_LEFT);
+    break;
+  case INDEX_ORC_RIGHT:
+    enemy_init(s_lin1, s_col1, ORC, DIR_RIGHT);
+    break;
+  case INDEX_ORC_LEFT:
+    enemy_init(s_lin1, s_col1, ORC, DIR_LEFT);
+    break;
+  case INDEX_WARG_RIGHT:
+    enemy_init(s_lin1, s_col1, WARG, DIR_RIGHT);
+    break;
+  case INDEX_WARG_LEFT:
+    enemy_init(s_lin1, s_col1, WARG, DIR_LEFT);
+    break;
+  case INDEX_DWARF_RIGHT:
+    enemy_init(s_lin1, s_col1, DWARF, DIR_RIGHT);
+    break;
+  case INDEX_DWARF_LEFT:
+    enemy_init(s_lin1, s_col1, DWARF, DIR_LEFT);
+    break;
+  case INDEX_ELF_RIGHT:
+    enemy_init(s_lin1, s_col1, ELF, DIR_RIGHT);
+    break;
+  case INDEX_ELF_LEFT:
+    enemy_init(s_lin1, s_col1, ELF, DIR_LEFT);
+    break;
+  case INDEX_DRAGON_RIGHT:
+    enemy_init(s_lin1, s_col1, DRAGON, DIR_RIGHT);
+    break;
+  case INDEX_DRAGON_LEFT:
+    enemy_init(s_lin1, s_col1, DRAGON, DIR_LEFT);
+    break;
+  case INDEX_BAT:
+    enemy_init(s_lin1, s_col1, BAT, DIR_RIGHT);
+    break;
+  case INDEX_WYVERN:
+    enemy_init(s_lin1, s_col1, WYVERN, DIR_RIGHT);
+    break;
+  case INDEX_SPIDER:
+    enemy_init(s_lin1, s_col1, SPIDER, DIR_RIGHT);
+    break;
+  case INDEX_PLANT:
+    enemy_init(s_lin1, s_col1, PLANT, DIR_RIGHT);
+    break;
+  case INDEX_SNAKE:
+    enemy_init(s_lin1, s_col1, SNAKE, DIR_RIGHT);
+    break;
+  case INDEX_BAT_H:
+    enemy_init(s_lin1, s_col1, BAT_H, DIR_RIGHT);
+    break;
+  }
 }
 
 void game_print_footer(void) {
@@ -140,7 +223,7 @@ void game_print_footer(void) {
   zx_print_ink(INK_YELLOW);
   zx_print_str(21, 1, "\\"); // live p1 face
   /* phase osd bottom*/
-  zx_print_str(23, 20, "FPS:");
+  zx_print_str(23, 20, "LPS:");
   game_print_lives();
 }
 
@@ -194,56 +277,6 @@ void game_print_header(void) {
   zx_print_ink(INK_WHITE);
   /* Print score */
   game_print_score();
-}
-
-void game_loop(void) {
-  unsigned int fps;
-
-  ay_fx_play(ay_effect_10);
-  sound_coin();
-  z80_delay_ms(200);
-  ay_reset();
-
-  player_lives = 4;
-
-  player_score = 0;
-
-  /* screen init */
-  game_over = 0;
-  /* phase init */
-  game_phase_init();
-  /* game loop start */
-  dirs = 0x00;
-  game_joystick_set();
-  fps = 0;
-  while (!game_over) {
-
-    if (game_check_time(anim_time, TIME_ANIM)) {
-      anim_time = zx_clock();
-      if (anim_count)
-        spr_play_anim();
-    }
-
-    if (game_check_time(bullet_time, TIME_BULLETS)) {
-      bullet_time = zx_clock();
-      if (bullet_count)
-        spr_play_bullets();
-    }
-
-    /*player 1 turn*/
-    sprite = SPR_P1;
-    player_turn();
-    enemy_turn();
-    /*each second aprox - update fps/score/phase left/phase advance*/
-    if (game_check_time(frame_time, 100)) {
-      zx_print_ink(INK_WHITE);
-      zx_print_int(23, 24, fps);
-      fps = 0;
-      frame_time = zx_clock();
-    }
-    ++loop_count;
-    ++fps;
-  }
 }
 
 void game_print_phase() {

@@ -406,7 +406,7 @@ void player_pick_item(void) {
     BIT_SET(scr_obj[sprite_curr_index], scr_curr);
     s_lin1 = (sprite_curr_index >> 4) << 4;
     s_col1 = (sprite_curr_index & 15) * 2;
-    spr_add_anim(s_lin1, s_col1, TILE_ANIM_PICK, 3);
+    spr_add_anim(s_lin1, s_col1, TILE_ANIM_PICK, 3, 0);
     // NIRVANAP_drawT(TILE_EMPTY, s_lin1, s_col1);
     switch (v0) {
     case 28: // KEY WHITE
@@ -696,7 +696,6 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
   }
 
   if (f_open) {
-    zx_print_int(0,0,f_index);
     scr_map[f_index] = TILE_EMPTY;
     BIT_SET(scr_obj[f_index], scr_curr);
     spr_draw_index(f_index);

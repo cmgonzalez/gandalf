@@ -583,20 +583,24 @@ void spr_init_anim_bullets(void) {
 }
 
 void spr_add_anim(unsigned char f_lin, unsigned char f_col,
-                  unsigned char f_tile, unsigned char f_end) {
+                  unsigned char f_tile, unsigned char f_end,
+                  unsigned char f_loops) {
   unsigned char f_anim;
   for (f_anim = 0; f_anim < 8; f_anim++) {
     if (anim_lin[f_anim] == 0XFF) {
+
       ++anim_count;
       anim_lin[f_anim] = f_lin;
       anim_col[f_anim] = f_col;
       anim_tile[f_anim] = f_tile;
+      anim_loop[f_anim] = f_loops;
       anim_int[f_anim] = 0;
       anim_end[f_anim] = f_end;
       intrinsic_di();
       NIRVANAP_drawT_raw(anim_tile[f_anim], anim_lin[f_anim], anim_col[f_anim]);
       intrinsic_ei();
       index0 = spr_calc_index(f_lin, f_col);
+
       if (scr_map[index0] == TILE_EMPTY)
         scr_map[index0] = 0xFF;
       break;
@@ -618,15 +622,30 @@ void spr_play_anim(void) {
         intrinsic_ei();
         ++anim_int[f_anim];
       } else {
-        --anim_count;
-        s_col0 = anim_col[f_anim];
-        s_lin0 = anim_lin[f_anim];
-        f_index = spr_calc_index(s_lin0, s_col0);
-        if (scr_map[spr_calc_index(s_lin0, s_col0)] == 0xFF) {
-          scr_map[spr_calc_index(s_lin0, s_col0)] = TILE_EMPTY;
+        if (anim_loop[f_anim] == 0) {
+          --anim_count;
+          s_col0 = anim_col[f_anim];
+          s_lin0 = anim_lin[f_anim];
+          f_index = spr_calc_index(s_lin0, s_col0);
+          if (scr_map[spr_calc_index(s_lin0, s_col0)] == 0xFF) {
+            scr_map[spr_calc_index(s_lin0, s_col0)] = TILE_EMPTY;
+          }
+          spr_back_repaint();
+
+          if (anim_tile[f_anim] == TILE_ANIM_RESPAWN) {
+            //Respawn
+            index1 = spr_calc_index(s_lin0,s_col0);
+            s_lin1 = s_lin0;
+            s_col1 = s_col0;
+            game_add_enemy(game_respawn_tile_index[game_respawn_index]);
+            game_respawn_index = 0;
+          }
+          anim_lin[f_anim] = 0xFF;
+
+        } else {
+          --anim_loop[f_anim];
+          anim_int[f_anim] = 0;
         }
-        spr_back_repaint();
-        anim_lin[f_anim] = 0xFF;
       }
     }
   }
@@ -682,7 +701,7 @@ void spr_play_bullets(void) {
               s_col0 = col[tmp0];
               spr_destroy(tmp0);
               bullet_col[f_bullet] = 0XFF;
-              spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3);
+              spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3, 0);
               break;
             }
           }
@@ -694,7 +713,7 @@ void spr_play_bullets(void) {
                            s_lin0, bullet_col[f_bullet]);
             // intrinsic_ei();
           } else {
-            spr_add_anim(s_lin0, tmp, TILE_ANIM_FIRE, 3);
+            spr_add_anim(s_lin0, tmp, TILE_ANIM_FIRE, 3, 0);
             --bullet_count;
             bullet_col[f_bullet] = 0XFF;
           }
