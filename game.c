@@ -95,6 +95,27 @@ void main(void) {
   // Init Nirvana
   NIRVANAP_tiles(_btiles);
   NIRVANAP_start();
+
+  tmp_ui = 32;
+
+  while (tmp_ui < 12*18*48) {
+    tmp0 = 0;
+    while (tmp0 < 16) {
+      tmp1 = PEEK(&btiles + tmp_ui + tmp0);
+
+      if ((tmp1 & PAPER_BLUE)) {
+
+        tmp1 = tmp1 & ( 0xC7 | PAPER_RED );
+        POKE(&btiles + tmp_ui + tmp0, tmp1 );
+      }
+
+      ++tmp0;
+    }
+    tmp_ui = tmp_ui + 32 + 16;
+  }
+
+map_paper = PAPER_BLACK;
+
   // Init Screen
   zx_paper_fill(INK_BLACK | PAPER_BLACK);
   zx_print_paper(PAPER_BLACK);

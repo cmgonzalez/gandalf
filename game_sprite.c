@@ -352,11 +352,11 @@ unsigned char spr_redraw(void) {
       } else {
         if (BIT_CHK(s_state, STAT_JUMP)) {
           f_lin8 = s_lin0 + 8;
-          NIRVANAP_fillC(PAPER, f_lin8, s_col0);
-          NIRVANAP_fillC(PAPER, f_lin8, s_col0 + 1);
+          NIRVANAP_fillC(map_paper, f_lin8, s_col0);
+          NIRVANAP_fillC(map_paper, f_lin8, s_col0 + 1);
         } else {
-          NIRVANAP_fillC(PAPER, s_lin0, s_col0);
-          NIRVANAP_fillC(PAPER, s_lin0, s_col0 + 1);
+          NIRVANAP_fillC(map_paper, s_lin0, s_col0);
+          NIRVANAP_fillC(map_paper, s_lin0, s_col0 + 1);
         }
       }
     }
@@ -450,7 +450,7 @@ unsigned char spr_tile_dir(unsigned char f_tile, unsigned char f_sprite,
 
 void spr_draw_clear(void) {
   intrinsic_di();
-  zx_paper_fill(INK_BLACK | PAPER_BLACK);
+  zx_paper_fill(map_paper);
   // todo an asm routine to clear the screen fast (nirvana)
   for (s_lin1 = 16; s_lin1 <= 162; s_lin1 += 16) {
     for (s_col1 = 0; s_col1 < 32; s_col1 += 2) {
@@ -483,14 +483,14 @@ void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
   /* Draw Brick */
   intrinsic_di();
   if (f_hit) {
-    // NIRVANAP_fillC(PAPER, f_lin, f_col);
-    // NIRVANAP_fillC(PAPER, f_lin, f_col + 1);
-    NIRVANAP_fillT_raw(PAPER, f_lin, f_col); // TODO BORRA SI HAY BRICK
+    // NIRVANAP_fillC(map_paper, f_lin, f_col);
+    // NIRVANAP_fillC(map_paper, f_lin, f_col + 1);
+    NIRVANAP_fillT_raw(map_paper, f_lin, f_col); // TODO BORRA SI HAY BRICK
                                              // ARRIBA!!!
     NIRVANAP_drawT_raw(v1, tmp, f_col);
   } else {
-    // NIRVANAP_fillC( PAPER, f_lin-16, f_col  );
-    // NIRVANAP_fillC( PAPER, f_lin-16, f_col+1);
+    // NIRVANAP_fillC( map_paper, f_lin-16, f_col  );
+    // NIRVANAP_fillC( map_paper, f_lin-16, f_col+1);
     NIRVANAP_drawT_raw(v0, tmp - 16, f_col);
     NIRVANAP_drawT_raw(v1, tmp, f_col);
   }
@@ -583,7 +583,7 @@ void spr_tile_paint(unsigned char f_tile, unsigned char f_lin,
 
   switch (f_tile) {
   case TILE_EMPTY:
-    NIRVANAP_fillT_raw(PAPER, f_lin, f_col);
+    NIRVANAP_fillT_raw(map_paper, f_lin, f_col);
     break;
   case 0XFF:
     // ANIM PLAYING

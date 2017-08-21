@@ -183,6 +183,9 @@ unsigned char phase_curr;
 unsigned char screen_paper;
 unsigned char screen_ink;
 
+unsigned char map_paper;
+
+
 
 
 //###############################################################################################
