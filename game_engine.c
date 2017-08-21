@@ -53,7 +53,7 @@ void game_loop(void) {
   game_joystick_set();
   fps = 0;
   while (!game_over) {
-    zx_print_chr(0,16,spr_count);
+
     if (game_check_time(anim_time, TIME_ANIM)) {
       anim_time = zx_clock();
       if (anim_count)
@@ -72,10 +72,9 @@ void game_loop(void) {
     enemy_turn();
     /*each second aprox - update fps/score/phase left/phase advance*/
     if (game_check_time(frame_time, 100)) {
-
+      zx_border(INK_RED);
       zx_print_ink(INK_WHITE);
       zx_print_int(23, 24, fps);
-      zx_print_int(23, 2, spr_count);
       fps = 0;
       frame_time = zx_clock();
       if (game_respawn_index == 0 ) {
@@ -103,7 +102,7 @@ void game_draw_screen(void) {
 
   NIRVANAP_halt();
   spr_count = 0;
-  while (spr_count < 8) {
+  while (spr_count < SPR_P1) {
     game_respawn[spr_count] = 0;
     game_respawn_tile_index[spr_count] = 0;
     class[spr_count] = 0;

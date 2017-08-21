@@ -121,4 +121,8 @@ void main(void) {
 
 void test_proc() {}
 
-unsigned char test_func() { return 0; }
+unsigned char test_func() {
+
+
+  return 0;
+}

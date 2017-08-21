@@ -84,9 +84,11 @@ SECTION code_crt_common
 
 PUBLIC _zx_enable_bank_00, _zx_enable_bank_06
 
+EXTERN _GLOBAL_ZX_PORT_7FFD
+
 _zx_enable_bank_00:
 
-   ld a,$10
+   ld a,(_GLOBAL_ZX_PORT_7FFD)
    jr _zx_enable_bank_06 + 2
 
 _zx_enable_bank_06:

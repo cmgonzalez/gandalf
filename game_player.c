@@ -126,8 +126,6 @@ unsigned char player_lost_life(void) {
 void player_turn(void) {
   if (class[sprite] == PLAYER && player_lives > 0) {
     if (spr_chktime(&sprite)) {
-      zx_border(INK_BLACK);
-      // dirs = 0;
       dirs = (joyfunc1)(&k1);
       player_move();
       player_collision();

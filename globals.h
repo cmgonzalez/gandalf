@@ -253,14 +253,15 @@
 #define GAME_SOUND_AY_MUS_ON         0x08
 #define GAME_SOUND_AY_MUS_OFF        0xf7
 
-
 typedef uint16_t (*JOYFUNC)(udk_t *);
+
+//typedef uint16_t (*JOYFUNC)(udk_t *);
 #endif
 
 
 extern unsigned char spec128;
 extern unsigned char btiles[];
-extern uint16_t (*joyfunc1)(udk_t *);
+extern uint16_t (*joyfunc1)(udk_t *); //TODO REMOVE THIS AS IS PART NOW OF input.h
 extern udk_t k1;
 
 
@@ -358,14 +359,14 @@ extern unsigned char sprite_speed_alt[8];
 extern unsigned char scr_map[];
 extern unsigned char scr_obj[];
 
-extern unsigned char scr_0[];
-extern unsigned char scr_1[];
-extern unsigned char scr_2[];
-extern unsigned char scr_3[];
-extern unsigned char scr_4[];
-extern unsigned char scr_5[];
-extern unsigned char scr_6[];
-extern unsigned char scr_7[];
+extern const unsigned char scr_0[];
+extern const unsigned char scr_1[];
+extern const unsigned char scr_2[];
+extern const unsigned char scr_3[];
+extern const unsigned char scr_4[];
+extern const unsigned char scr_5[];
+extern const unsigned char scr_6[];
+extern const unsigned char scr_7[];
 
 
 extern unsigned char scr_curr;
