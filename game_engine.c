@@ -31,10 +31,8 @@
 #include <string.h>
 #include <z80.h>
 
-
 void game_loop(void) {
   unsigned int fps;
-
   ay_fx_play(ay_effect_10);
   sound_coin();
   z80_delay_ms(200);
@@ -53,6 +51,7 @@ void game_loop(void) {
   game_joystick_set();
   fps = 0;
   while (!game_over) {
+    zx_border(INK_BLACK);
 
     if (game_check_time(anim_time, TIME_ANIM)) {
       anim_time = zx_clock();
@@ -77,7 +76,7 @@ void game_loop(void) {
       zx_print_int(23, 24, fps);
       fps = 0;
       frame_time = zx_clock();
-      if (game_respawn_index == 0 ) {
+      if (game_respawn_index == 0) {
         tmp = (rand() & 7);
         if (class[tmp] == 0 && game_respawn[tmp] != 0) {
           game_respawn_index = tmp;
@@ -88,7 +87,7 @@ void game_loop(void) {
           scr_map[index1] = 0xFF;
           spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 8);
 
-          //game_add_enemy(game_respawn_tile_index[tmp]);
+          // game_add_enemy(game_respawn_tile_index[tmp]);
         }
       }
     }
@@ -96,7 +95,6 @@ void game_loop(void) {
     ++fps;
   }
 }
-
 
 void game_draw_screen(void) {
 
@@ -143,7 +141,7 @@ void game_draw_screen(void) {
   intrinsic_ei();
 }
 
-void game_add_enemy( unsigned char enemy_tile_index) {
+void game_add_enemy(unsigned char enemy_tile_index) {
   switch (enemy_tile_index) {
   case INDEX_SKELETON_RIGHT:
     enemy_init(s_lin1, s_col1, SKELETON, DIR_RIGHT);

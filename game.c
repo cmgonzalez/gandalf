@@ -89,37 +89,20 @@ void main(void) {
   zx_paper_fill(INK_BLACK | PAPER_BLACK);
   zx_print_paper(PAPER_BLACK);
   zx_border(INK_BLACK);
-
   // Init Game
   game_start_timer();
   // Init Nirvana
   NIRVANAP_tiles(_btiles);
   NIRVANAP_start();
+  map_paper_last = PAPER_BLUE;
+  map_paper = PAPER_BLACK;
+  map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
 
-  tmp_ui = 32;
+  spr_btile_paint_back();
 
-  while (tmp_ui < 12*18*48) {
-    tmp0 = 0;
-    while (tmp0 < 16) {
-      tmp1 = PEEK(&btiles + tmp_ui + tmp0);
-
-      if ((tmp1 & PAPER_BLUE)) {
-
-        tmp1 = tmp1 & ( 0xC7 | PAPER_RED );
-        POKE(&btiles + tmp_ui + tmp0, tmp1 );
-      }
-
-      ++tmp0;
-    }
-    tmp_ui = tmp_ui + 32 + 16;
-  }
-
-map_paper = PAPER_BLACK;
 
   // Init Screen
-  zx_paper_fill(INK_BLACK | PAPER_BLACK);
-  zx_print_paper(PAPER_BLACK);
-  zx_border(INK_BLACK);
+
   frame_time = zx_clock();
   // GAME MENU
   // game_menu();

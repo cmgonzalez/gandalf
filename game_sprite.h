@@ -44,6 +44,6 @@ extern void             spr_play_anim(void);
 extern void             spr_play_bullets(void);
 extern void             spr_turn_horizontal(void);
 extern void             spr_init_anim_bullets(void);
-
+extern void             spr_btile_paint_back(void);
 
 #endif

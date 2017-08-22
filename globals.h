@@ -400,4 +400,7 @@ extern const char *joynames[];
 extern unsigned char g_player_hit_left;
 extern unsigned char g_player_hit_right;
 extern unsigned char draw_count;
+
 extern unsigned char map_paper;
+extern unsigned char map_paper_clr;
+extern unsigned char map_paper_last;
