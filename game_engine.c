@@ -115,7 +115,7 @@ void game_draw_screen(void) {
   intrinsic_di();
   while (index1 < ((GAME_ROWS - 1) * 16)) {
 
-    if (index1 % 16 == 0) { // TODO OPTIMIZE!
+    if ((index1 & 15) == 0) {
       s_lin1 = s_lin1 + 16;
       s_col1 = 0;
     }

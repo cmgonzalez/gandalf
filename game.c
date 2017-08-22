@@ -100,7 +100,6 @@ void main(void) {
 
   spr_btile_paint_back();
 
-
   // Init Screen
 
   frame_time = zx_clock();
@@ -123,10 +122,10 @@ void main(void) {
   game_loop();
 }
 
-void test_proc() {}
-
-unsigned char test_func() {
 
 
-  return 0;
+void test_proc() {
+
 }
+
+unsigned char test_func() { return 0; }

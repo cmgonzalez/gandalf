@@ -157,7 +157,7 @@ unsigned char spr_move_right(void) {
         }
       } else {
         col[sprite] = SCR_COLS_M;
-        //spr_destroy(sprite);
+        // spr_destroy(sprite);
       }
       return 1;
     }
@@ -192,7 +192,7 @@ unsigned char spr_move_left(void) {
         }
       } else {
         col[sprite] = 0;
-        //spr_destroy(sprite);
+        // spr_destroy(sprite);
       }
       return 1;
     }
@@ -226,109 +226,104 @@ unsigned char spr_page_left() {
 
 void spr_page_map(void) {
 
+  unsigned char v0;
+  unsigned char v1;
+  unsigned char vr;
+  unsigned char scr_curr_tmp;
+  unsigned char i;
+  unsigned char j;
+  unsigned char k;
 
-    unsigned char v0;
-    unsigned char v1;
-    unsigned char vr;
-    unsigned char scr_curr_tmp;
-    unsigned char i;
-    unsigned char j;
-    unsigned char k;
+  k = 16;
+  scr_curr_tmp = scr_curr;
+  // NIRVANAP_stop();
+  intrinsic_di();
 
-    k = 16;
-    scr_curr_tmp = scr_curr;
-    //NIRVANAP_stop();
-    intrinsic_di();
+  for (i = 0; i < GAME_SCR_MAX_INDEX; ++i) {
 
-    zx_paper_fill(INK_BLACK | PAPER_BLACK);
+    // Page in BANK 06
+    // Note that global variables are in page 0
 
-    for (i = 0; i < GAME_SCR_MAX_INDEX; ++i) {
+    GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
+    IO_7FFD = 0x10 + 6;
 
-      // Page in BANK 06
-      // Note that global variables are in page 0
+    switch (scr_curr_tmp) {
+    case 0:
+      /* TODO 128k LEVEL DATA SHOULD BE READED HERE!*/
+      v0 = scr_0[i];
+      v1 = scr_0[i + 1];
+      break;
+    case 1:
+      v0 = scr_1[i];
+      v1 = scr_1[i + 1];
+      break;
+    case 2:
+      v0 = scr_2[i];
+      v1 = scr_2[i + 1];
+      break;
+    case 3:
+      v0 = scr_3[i];
+      v1 = scr_3[i + 1];
+      break;
+    case 4:
+      v0 = scr_4[i];
+      v1 = scr_4[i + 1];
+      break;
+    case 5:
+      v0 = scr_5[i];
+      v1 = scr_5[i + 1];
+      break;
+    case 6:
+      v0 = scr_6[i];
+      v1 = scr_6[i + 1];
+      break;
+    case 7:
+      v0 = scr_7[i];
+      v1 = scr_7[i + 1];
+      break;
+    }
 
-      GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
-      IO_7FFD = 0x10 + 6;
+    // Page in BANK 00
 
-      switch (scr_curr_tmp) {
-      case 0:
-        /* TODO 128k LEVEL DATA SHOULD BE READED HERE!*/
-        v0 = scr_0[i];
-        v1 = scr_0[i + 1];
-        break;
-      case 1:
-        v0 = scr_1[i];
-        v1 = scr_1[i + 1];
-        break;
-      case 2:
-        v0 = scr_2[i];
-        v1 = scr_2[i + 1];
-        break;
-      case 3:
-        v0 = scr_3[i];
-        v1 = scr_3[i + 1];
-        break;
-      case 4:
-        v0 = scr_4[i];
-        v1 = scr_4[i + 1];
-        break;
-      case 5:
-        v0 = scr_5[i];
-        v1 = scr_5[i + 1];
-        break;
-      case 6:
-        v0 = scr_6[i];
-        v1 = scr_6[i + 1];
-        break;
-      case 7:
-        v0 = scr_7[i];
-        v1 = scr_7[i + 1];
-        break;
+    GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
+    IO_7FFD = 0x10 + 0;
+
+    if (v0 < 128) {
+      if (!(BIT_CHK(scr_obj[k], scr_curr))) {
+        scr_map[k] = v0;
+      } else {
+        scr_map[k] = TILE_EMPTY;
       }
+      ++k;
+    } else {
+      vr = v0 - 128; // Repeat counter Should be < 128!!
 
-      // Page in BANK 00
-
-      GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
-      IO_7FFD = 0x10 + 0;
-
-      if (v0 < 128) {
+      for (j = 0; j < vr; j++) {
         if (!(BIT_CHK(scr_obj[k], scr_curr))) {
-          scr_map[k] = v0;
+          scr_map[k] = v1;
         } else {
           scr_map[k] = TILE_EMPTY;
         }
+
         ++k;
-      } else {
-        vr = v0 - 128; // Repeat counter Should be < 128!!
-
-        for (j = 0; j < vr; j++) {
-          if (!(BIT_CHK(scr_obj[k], scr_curr))) {
-            scr_map[k] = v1;
-          } else {
-            scr_map[k] = TILE_EMPTY;
-          }
-
-          ++k;
-          if (k >= GAME_SCR_MAX_INDEX) {
-            break;
-          }
+        if (k >= GAME_SCR_MAX_INDEX) {
+          break;
         }
-        ++i;
       }
-      if (k >= GAME_SCR_MAX_INDEX) {
-        break;
-      }
+      ++i;
     }
-    spr_init_anim_bullets();
-    intrinsic_ei();
-    //NIRVANAP_start();
-    // Remove all enemies fast
-    for (i = 0; i < SPR_P1; ++i) {
-      class[i] = 0;
-      NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
+    if (k >= GAME_SCR_MAX_INDEX) {
+      break;
     }
-
-
+  }
+  spr_init_anim_bullets();
+  intrinsic_ei();
+  // NIRVANAP_start();
+  // Remove all enemies fast
+  for (i = 0; i < SPR_P1; ++i) {
+    class[i] = 0;
+    NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
+  }
 }
 
 unsigned char spr_redraw(void) {
@@ -489,7 +484,7 @@ void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
     // NIRVANAP_fillC(map_paper_clr, f_lin, f_col);
     // NIRVANAP_fillC(map_paper_clr, f_lin, f_col + 1);
     NIRVANAP_fillT_raw(map_paper_clr, f_lin, f_col); // TODO BORRA SI HAY BRICK
-                                             // ARRIBA!!!
+                                                     // ARRIBA!!!
     NIRVANAP_drawT_raw(v1, tmp, f_col);
   } else {
     // NIRVANAP_fillC( map_paper_clr, f_lin-16, f_col  );
@@ -599,8 +594,8 @@ void spr_tile_paint(unsigned char f_tile, unsigned char f_lin,
 void spr_init_anim_bullets(void) {
   unsigned char f_anim;
   for (f_anim = 0; f_anim < 8; f_anim++) {
-    anim_lin[f_anim] = 0XFF;
-    bullet_col[f_anim] = 0XFF;
+    anim_lin[f_anim] = 0xFF;
+    bullet_col[f_anim] = 0xFF;
   }
   bullet_count = 0;
   anim_count = 0;
@@ -657,8 +652,8 @@ void spr_play_anim(void) {
           spr_back_repaint();
 
           if (anim_tile[f_anim] == TILE_ANIM_RESPAWN) {
-            //Respawn
-            index1 = spr_calc_index(s_lin0,s_col0);
+            // Respawn
+            index1 = spr_calc_index(s_lin0, s_col0);
             s_lin1 = s_lin0;
             s_col1 = s_col0;
             game_add_enemy(game_respawn_tile_index[game_respawn_index]);
@@ -676,78 +671,110 @@ void spr_play_anim(void) {
 }
 
 void spr_play_bullets(void) {
+
   unsigned char f_bullet;
+  unsigned char f_lin0;
+  unsigned char f_col0;
+  unsigned char f_lin1;
+  unsigned char f_col1;
 
   for (f_bullet = 0; f_bullet < 8; ++f_bullet) {
+    if (bullet_col[f_bullet] == 0xFF) // Not active bullet
+      continue;
 
-    if (bullet_col[f_bullet] != 0xFF) {
-      s_lin0 = bullet_lin[f_bullet];
-      s_col0 = bullet_col[f_bullet];
-      s_col1 = s_col0;
+    s_lin0 = bullet_lin[f_bullet];
+    s_col0 = bullet_col[f_bullet];
+    f_col0 = s_col0;
+    spr_back_repaint(); // restore background
 
-      spr_back_repaint();
-
-      if (bullet_dir[f_bullet] == 0xFF) {
-        // Right
-        ++bullet_colint[f_bullet];
-
-        if (bullet_colint[f_bullet] >= bullet_frames[f_bullet]) {
-          ++bullet_col[f_bullet];
-          bullet_colint[f_bullet] = 0;
-        }
-        if ((bullet_col[f_bullet] & 1) != 0) {
-          s_col1 = bullet_col[f_bullet] + 1;
-          tmp = bullet_col[f_bullet] - 1;
-        }
-      } else {
-        // Left
-        --bullet_colint[f_bullet];
-
-        if (bullet_colint[f_bullet] == 0xFF) {
-          --bullet_col[f_bullet];
-          bullet_colint[f_bullet] = bullet_frames[f_bullet] - 1;
-        }
-        if ((bullet_col[f_bullet] & 1) != 0) {
-          s_col1 = bullet_col[f_bullet] - 1;
-          tmp = bullet_col[f_bullet] + 1;
+    // Move Bullets
+    if (bullet_dir[f_bullet] == 0xFF) {
+      // Move Right
+      ++bullet_colint[f_bullet];
+      if (bullet_colint[f_bullet] >= bullet_frames[f_bullet]) {
+        f_col0 = bullet_col[f_bullet] + 1;
+        bullet_colint[f_bullet] = 0;
+        if ((f_col0 & 1) == 1) {
+          s_col0 = f_col0 + 1;
         }
       }
-
-      if (bullet_col[f_bullet] > 0 && bullet_col[f_bullet] < 30) {
-
-        index0 = spr_calc_index(s_lin0, s_col1);
-        for (tmp0 = 0; tmp0 < 7; ++tmp0) {
-
-          if (class[tmp0] != 0) {
-            index1 = spr_calc_index(lin[tmp0], col[tmp0]);
-            if (index0 == index1) {
-              s_lin0 = lin[tmp0];
-              s_col0 = col[tmp0];
-              spr_destroy(tmp0);
-              bullet_col[f_bullet] = 0XFF;
-              spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3, 0);
-              break;
-            }
-          }
+    } else {
+      // Move Left
+      --bullet_colint[f_bullet];
+      if (bullet_colint[f_bullet] == 0xFF) {
+        f_col0 = bullet_col[f_bullet] - 1;
+        bullet_colint[f_bullet] = bullet_frames[f_bullet] - 1;
+        if ((f_col0 & 1) == 1) {
+          s_col0 = f_col0 - 1;
         }
-        if (bullet_col[f_bullet] != 0XFF) {
-          if ((scr_map[index0] < TILE_CEIL)) {
-            // intrinsic_di();
-            NIRVANAP_drawT(bullet_tile[f_bullet] + bullet_colint[f_bullet],
-                           s_lin0, bullet_col[f_bullet]);
-            // intrinsic_ei();
-          } else {
-            spr_add_anim(s_lin0, tmp, TILE_ANIM_FIRE, 3, 0);
-            --bullet_count;
-            bullet_col[f_bullet] = 0XFF;
-          }
-        }
-      } else {
-        --bullet_count;
-        bullet_col[f_bullet] = 0XFF;
       }
     }
+
+    if (f_col0 >= 30) {
+      // Out of Screen
+      --bullet_count;
+      bullet_col[f_bullet] = 0XFF;
+      continue;
+    }
+
+    // Colission with map
+    if (f_col0 != bullet_col[f_bullet]) {
+      // Column Movement
+
+      index0 = spr_calc_index(s_lin0 + 8, s_col0);
+
+      if (scr_map[index0] == TILE_DIRT) {
+        // Destroy Bricks
+        scr_map[index0] = TILE_EMPTY;
+        BIT_SET(scr_obj[index0], scr_curr);
+        bullet_lin[f_bullet] = (index0 >> 4) << 4;
+        bullet_col[f_bullet] = (index0 & 15) << 1;
+        spr_explode_bullet(f_bullet);
+        continue;
+      }
+
+      if ((scr_map[index0] > TILE_CEIL && scr_map[index0] != 0xFF)) {
+        // Explode Bullet
+        spr_explode_bullet(f_bullet);
+        continue;
+      }
+
+      // Now we can move
+      bullet_col[f_bullet] = f_col0;
+
+      // Colission with sprites
+      f_lin0 = s_lin0 - 8;
+      f_lin1 = s_lin0 + 8;
+      f_col0 = f_col0 + 0;
+      f_col1 = f_col0 + 1;
+
+      for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
+        if (class[tmp0] != 0 && lin[tmp0] >= f_lin0 && lin[tmp0] <= f_lin1 &&
+            col[tmp0] >= f_col0 && col[tmp0] <= f_col1) {
+          s_lin0 = lin[tmp0];
+          s_col0 = col[tmp0];
+          spr_destroy(tmp0);
+          bullet_col[f_bullet] = s_col0;
+          spr_explode_bullet(f_bullet);
+          break;
+        }
+      }
+    }
+    if (bullet_col[f_bullet] == 0xFF)
+      continue;
+    // We can draw
+    intrinsic_di();
+    NIRVANAP_drawT_raw(bullet_tile[f_bullet] + bullet_colint[f_bullet], s_lin0,
+                       f_col0);
+    intrinsic_ei();
   }
+}
+
+void spr_explode_bullet(unsigned char f_bullet) __z88dk_fastcall {
+  spr_add_anim(bullet_lin[f_bullet], bullet_col[f_bullet], TILE_ANIM_FIRE, 3,
+               0);
+  --bullet_count;
+  bullet_col[f_bullet] = 0XFF;
 }
 
 void spr_turn_horizontal(void) {
@@ -766,20 +793,20 @@ void spr_btile_paint_back() {
 
   tmp_ui = 32;
 
-  while (tmp_ui < (32 + (48 * 12 * 18)  ) ) {
+  while (tmp_ui < (32 + (48 * 12 * 18))) {
     tmp0 = 0;
     while (tmp0 < 16) {
       tmp = PEEK(&btiles + tmp_ui + tmp0);
 
-      if ((tmp & 0x38) == map_paper_last) { //00111000
-        tmp = tmp & 0xC7; //11000111
-        tmp = tmp | map_paper; //TODO we can hava a map array for ink to prevent using the same paper n ink
-        POKE(&btiles + tmp_ui + tmp0, tmp );
+      if ((tmp & 0x38) == map_paper_last) { // 00111000
+        tmp = tmp & 0xC7;                   // 11000111
+        tmp = tmp | map_paper; // TODO we can hava a map array for ink to
+                               // prevent using the same paper n ink
+        POKE(&btiles + tmp_ui + tmp0, tmp);
       }
 
       ++tmp0;
     }
     tmp_ui = tmp_ui + 48;
   }
-
 }

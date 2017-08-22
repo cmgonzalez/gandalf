@@ -32,6 +32,7 @@
 #define TILE_STAIR_S                  56 //START OF STAIRS
 #define TILE_STAIR_E                  60 //END OF STAIRS
 
+#define TILE_DIRT                     68 //CAN BE DESTROYED BY FIREBALLS
 
 /* Enemies Class indexes */
 
