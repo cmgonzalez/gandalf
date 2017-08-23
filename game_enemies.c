@@ -47,6 +47,17 @@ void enemy_turn(void) {
 
         state[sprite] = s_state;
         last_time[sprite] = zx_clock();
+        index1 = spr_calc_index(lin[sprite], col[sprite]);
+        if (scr_map[index1] > TILE_ITEM_E & scr_map[index1] < TILE_FLOOR ) {
+          //Deadly Backgrounds
+          s_lin0 = lin[sprite];
+          s_col0 = col[sprite];
+          spr_destroy(sprite);
+
+          spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3,
+                       0);
+
+        }
       }
     }
     ++sprite;
@@ -132,9 +143,14 @@ void enemy_walk(void) {
         spr_turn_horizontal();
       }
 
-      if (class[sprite] == ORC || class[sprite] == ELF) {
-        enemy_avoid_edge();
+      if (class[sprite] == SKELETON) {
+        enemy_avoid_fall_dead();
       }
+
+      if (class[sprite] == ORC || class[sprite] == ELF) {
+        enemy_avoid_fall();
+      }
+
       if (class[sprite] == ELF) {
         if ( abs(lin[SPR_P1] - lin[sprite]) < 32) {
           if ( BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) {
@@ -155,7 +171,7 @@ void enemy_walk(void) {
   }
 }
 
-void enemy_avoid_edge() {
+void enemy_avoid_fall() {
 
   /* Don't fall on edge*/
   if (BIT_CHK(s_state, STAT_DIRR)) {
@@ -164,6 +180,19 @@ void enemy_avoid_edge() {
     index1 = spr_calc_index(lin[sprite] + 16, col[sprite] - 2);
   }
   if (scr_map[index1] < TILE_FLOOR) {
+    spr_turn_horizontal();
+  }
+}
+
+void enemy_avoid_fall_dead() {
+
+  /* Don't fall on edge*/
+  if (BIT_CHK(s_state, STAT_DIRR)) {
+    index1 = spr_calc_index(lin[sprite] + 16, col[sprite] + 2);
+  } else {
+    index1 = spr_calc_index(lin[sprite] + 16, col[sprite] - 2);
+  }
+  if (scr_map[index1] < TILE_FLOOR && scr_map[index1] > TILE_ITEM_E) {
     spr_turn_horizontal();
   }
 }
