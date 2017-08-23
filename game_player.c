@@ -599,35 +599,19 @@ unsigned char player_move_jump(void) {
       s_lin1 = s_lin1 - 16;
       lin[sprite] = s_lin1;
     }
-    /*
-    // index1 = spr_calc_index(s_lin1 + 16, col[sprite]);
-    if (game_check_map(s_lin1 + 16, col[sprite])) {
-      // Jump end
-      player_check_stairs(0);
-      if (!player_over_stair) {
-        player_check_stairs(1);
-      }
-
-      if (!player_over_stair) {
-        s_lin1 = (s_lin1 >> 4) << 4;
-        if (lin[sprite] > s_lin1) {
-          lin[sprite] = s_lin1 + 16;
-          return 0;
-        } else {
-          lin[sprite] = s_lin1;
-        }
-      }
-      player_vel_y = 0;
-      BIT_CLR(s_state, STAT_FALL);
-      BIT_CLR(s_state, STAT_JUMP);
-      colint[sprite] = 0;
-      return 1;
-
-    } else {
-      lin[sprite] = s_lin1;
-    }
-    */
   }
+
+  if ( !BIT_CHK(s_state, STAT_DIRL) && !BIT_CHK(s_state, STAT_DIRR) ) {
+    if (dirs & IN_STICK_LEFT) {
+      BIT_SET(s_state, STAT_DIRL);
+      BIT_CLR(s_state, STAT_DIRR);
+    }
+    if (dirs & IN_STICK_RIGHT) {
+      BIT_SET(s_state, STAT_DIRR);
+      BIT_CLR(s_state, STAT_DIRL);
+    }
+  }
+
   sprite_horizontal_check = 1;
   if (spr_move_horizontal()) {
     BIT_CLR(s_state, STAT_DIRL);
