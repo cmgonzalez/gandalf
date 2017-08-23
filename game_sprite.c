@@ -723,7 +723,7 @@ void spr_play_bullets(void) {
 
       index0 = spr_calc_index(s_lin0 + 8, s_col0);
 
-      if (scr_map[index0] == TILE_DIRT) {
+      if (scr_map[index0] == TILE_DIRT && f_bullet == SPR_P1) {
         // Destroy Bricks
         scr_map[index0] = TILE_EMPTY;
         BIT_SET(scr_obj[index0], scr_curr);
@@ -747,13 +747,27 @@ void spr_play_bullets(void) {
       f_lin1 = s_lin0 + 8;
       f_col0 = f_col0 + 0;
       f_col1 = f_col0 + 1;
-
-      for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
-        if (class[tmp0] != 0 && lin[tmp0] >= f_lin0 && lin[tmp0] <= f_lin1 &&
-            col[tmp0] >= f_col0 && col[tmp0] <= f_col1) {
-          s_lin0 = lin[tmp0];
-          s_col0 = col[tmp0];
-          spr_destroy(tmp0);
+      if (f_bullet == SPR_P1) {
+        // PLAYER BULLETS
+        for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
+          if (class[tmp0] != 0 && lin[tmp0] >= f_lin0 && lin[tmp0] <= f_lin1 &&
+              col[tmp0] >= f_col0 && col[tmp0] <= f_col1) {
+            s_lin0 = lin[tmp0];
+            s_col0 = col[tmp0];
+            spr_destroy(tmp0);
+            bullet_col[f_bullet] = s_col0;
+            spr_explode_bullet(f_bullet);
+            break;
+          }
+        }
+      } else {
+        // ENEMY BULLET
+        if (lin[SPR_P1] >= f_lin0 && lin[SPR_P1] <= f_lin1 &&
+            col[SPR_P1] >= f_col0 && col[SPR_P1] <= f_col1) {
+          //s_lin0 = lin[tmp0];
+          //s_col0 = col[tmp0];
+          //spr_destroy(tmp0);
+          zx_border(INK_MAGENTA);
           bullet_col[f_bullet] = s_col0;
           spr_explode_bullet(f_bullet);
           break;

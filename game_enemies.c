@@ -82,12 +82,16 @@ void enemy_horizontal() {
   if (BIT_CHK(s_state, STAT_DIRR)) {
     if (spr_move_right()) {
       BIT_CLR(s_state, STAT_DIRR);
+      //BIT_CLR(state_a[sprite], STAT_LDIRR);
       BIT_SET(s_state, STAT_DIRL);
+      //BIT_SET(state_a[sprite], STAT_LDIRL);
     }
   } else {
     if (spr_move_left()) {
       BIT_CLR(s_state, STAT_DIRL);
+      //BIT_CLR(state_a[sprite], STAT_LDIRL);
       BIT_SET(s_state, STAT_DIRR);
+      //BIT_SET(state_a[sprite], STAT_LDIRR);
     }
   }
 }
@@ -131,6 +135,18 @@ void enemy_walk(void) {
       if (class[sprite] == ORC || class[sprite] == ELF) {
         enemy_avoid_edge();
       }
+      if (class[sprite] == ELF) {
+        if ( abs(lin[SPR_P1] - lin[sprite]) < 32) {
+          if ( BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) {
+            game_shoot_fire(sprite, TILE_ARROW_R);
+          }
+          if ( BIT_CHK(s_state, STAT_DIRL) && col[SPR_P1] < col[sprite]) {
+            game_shoot_fire(sprite, TILE_ARROW_R);
+          }
+
+        }
+
+      }
     }
   } else {
     if (spr_move_down()) {
@@ -140,13 +156,14 @@ void enemy_walk(void) {
 }
 
 void enemy_avoid_edge() {
+
   /* Don't fall on edge*/
   if (BIT_CHK(s_state, STAT_DIRR)) {
     index1 = spr_calc_index(lin[sprite] + 16, col[sprite] + 2);
   } else {
     index1 = spr_calc_index(lin[sprite] + 16, col[sprite] - 2);
   }
-  if (!game_check_cell(index1)) {
+  if (scr_map[index1] < TILE_FLOOR) {
     spr_turn_horizontal();
   }
 }

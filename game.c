@@ -76,7 +76,6 @@ void main(void) {
   k1.down = IN_KEY_SCANCODE_a; // must be defined otherwise down is always true
 
   game_joystick_set_menu();
-
   zx_border(INK_BLACK);
 
   // Wait for Keypress and Randomize
@@ -88,7 +87,6 @@ void main(void) {
 
   zx_paper_fill(INK_BLACK | PAPER_BLACK);
   zx_print_paper(PAPER_BLACK);
-  zx_border(INK_BLACK);
   // Init Game
   game_start_timer();
   // Init Nirvana

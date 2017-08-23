@@ -156,6 +156,8 @@
 
 #define TILE_FIREBALL_R               112
 #define TILE_FIREBALL_L               114
+#define TILE_ARROW_R                  116
+
 
 #define FRAMES_PLAYER                 4
 #define FRAMES_PLAYER_STAIR           4

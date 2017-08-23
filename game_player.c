@@ -325,34 +325,8 @@ unsigned char player_move_input(void) {
 
 unsigned char player_fire() {
   if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_DOWN)) {
-
     /*Fireball*/
-    if (bullet_col[SPR_P1] == 0xFF) {
-      ++bullet_count;
-      bullet_dir[SPR_P1] = 0;
-      bullet_lin[SPR_P1] = lin[SPR_P1];
-      bullet_frames[SPR_P1] = 2;
-
-      if (BIT_CHK(state_a[SPR_P1], STAT_LDIRL)) {
-        // Left
-        if (col[SPR_P1] < 1)
-          return 1;
-        bullet_col[SPR_P1] = col[SPR_P1] - 1;
-        bullet_tile[SPR_P1] = TILE_FIREBALL_L;
-        bullet_dir[SPR_P1] = 0x01;
-        bullet_colint[SPR_P1] = 2;
-      } else {
-        // Right n default
-        // if ( BIT_CHK(state_a[SPR_P1], STAT_LDIRR) ) {
-        if (col[SPR_P1] > 29)
-          return 1;
-        bullet_col[SPR_P1] = col[SPR_P1] + 1;
-        bullet_tile[SPR_P1] = TILE_FIREBALL_R;
-        bullet_dir[SPR_P1] = 0xFF;
-        bullet_colint[SPR_P1] = 0xFF;
-      }
-    }
-    return 1;
+    return game_shoot_fire(SPR_P1, TILE_FIREBALL_R);
   }
   return 0;
 }

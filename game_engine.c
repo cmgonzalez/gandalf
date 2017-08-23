@@ -51,9 +51,9 @@ void game_loop(void) {
   game_joystick_set();
   fps = 0;
   while (!game_over) {
-    zx_border(INK_BLACK);
 
     if (game_check_time(anim_time, TIME_ANIM)) {
+      zx_border(INK_BLACK);
       anim_time = zx_clock();
       if (anim_count)
         spr_play_anim();
@@ -71,7 +71,6 @@ void game_loop(void) {
     enemy_turn();
     /*each second aprox - update fps/score/phase left/phase advance*/
     if (game_check_time(frame_time, 100)) {
-      zx_border(INK_RED);
       zx_print_ink(INK_WHITE);
       zx_print_int(23, 24, fps);
       fps = 0;
@@ -454,4 +453,37 @@ unsigned char game_check_time(unsigned int start, unsigned int lapse) {
   } else {
     return 0;
   }
+}
+
+unsigned char game_shoot_fire( unsigned char f_sprite, unsigned char f_tile) {
+  unsigned char f_dir;
+  if (bullet_col[f_sprite] == 0xFF) {
+    ++bullet_count;
+    bullet_dir[f_sprite] = 0;
+    bullet_lin[f_sprite] = lin[f_sprite];
+    bullet_frames[f_sprite] = 2;
+    f_dir = BIT_CHK(s_state, STAT_DIRL);
+    if (sprite == SPR_P1) {
+      f_dir = BIT_CHK(state_a[SPR_P1], STAT_DIRL);
+    }
+
+    if (f_dir) {
+      // Left
+      if (col[f_sprite] < 1)
+        return 1;
+      bullet_col[f_sprite] = col[f_sprite] - 1;
+      bullet_tile[f_sprite] = f_tile + 2;
+      bullet_dir[f_sprite] = 0x01;
+      bullet_colint[f_sprite] = 2;
+    } else {
+      // Right n default
+      if (col[f_sprite] > 29)
+        return 1;
+      bullet_col[f_sprite] = col[f_sprite] + 1;
+      bullet_tile[f_sprite] = f_tile;
+      bullet_dir[f_sprite] = 0xFF;
+      bullet_colint[f_sprite] = 0xFF;
+    }
+  }
+  return 0;
 }
