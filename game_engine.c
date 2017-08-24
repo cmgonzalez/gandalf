@@ -466,12 +466,13 @@ unsigned char game_shoot_fire( unsigned char f_sprite, unsigned char f_tile) {
     if (sprite == SPR_P1) {
       f_dir = BIT_CHK(state_a[SPR_P1], STAT_DIRL);
     }
-
+    index1 = spr_calc_index(lin[f_sprite],col[f_sprite]);
     if (f_dir) {
       // Left
+
       if (col[f_sprite] < 1)
         return 1;
-      bullet_col[f_sprite] = col[f_sprite] - 1;
+      bullet_col[f_sprite] = col[f_sprite];
       bullet_tile[f_sprite] = f_tile + 2;
       bullet_dir[f_sprite] = 0x01;
       bullet_colint[f_sprite] = 2;
@@ -479,7 +480,7 @@ unsigned char game_shoot_fire( unsigned char f_sprite, unsigned char f_tile) {
       // Right n default
       if (col[f_sprite] > 29)
         return 1;
-      bullet_col[f_sprite] = col[f_sprite] + 1;
+      bullet_col[f_sprite] = col[f_sprite];
       bullet_tile[f_sprite] = f_tile;
       bullet_dir[f_sprite] = 0xFF;
       bullet_colint[f_sprite] = 0xFF;
