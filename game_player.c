@@ -52,8 +52,11 @@ void player_init(unsigned char f_sprite, unsigned char f_lin,
 }
 
 unsigned char player_check_input(void) {
-  if (dirs & IN_STICK_LEFT && dirs & IN_STICK_RIGHT)
+  if (dirs & IN_STICK_LEFT && dirs & IN_STICK_RIGHT){
+    //Error on reading both horizontal's
     dirs = 0;
+  }
+
   return dirs & IN_STICK_FIRE || dirs & IN_STICK_LEFT ||
          dirs & IN_STICK_RIGHT || dirs & IN_STICK_UP || dirs & IN_STICK_DOWN;
 }
@@ -243,6 +246,7 @@ unsigned char player_move_input(void) {
   if (player_check_input()) {
 
     if (player_fire()) {
+      dirs = 0;
       return 0;
     }
 
@@ -326,7 +330,8 @@ unsigned char player_move_input(void) {
 unsigned char player_fire() {
   if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_DOWN)) {
     /*Fireball*/
-    return game_shoot_fire(SPR_P1, TILE_FIREBALL_R);
+    game_shoot_fire(SPR_P1, TILE_FIREBALL_R);
+    return 1;
   }
   return 0;
 }
@@ -611,6 +616,7 @@ unsigned char player_move_jump(void) {
       BIT_CLR(s_state, STAT_DIRL);
     }
   }
+
 
   sprite_horizontal_check = 1;
   if (spr_move_horizontal()) {
