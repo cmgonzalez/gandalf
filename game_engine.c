@@ -75,18 +75,20 @@ void game_loop(void) {
       zx_print_int(23, 24, fps);
       fps = 0;
       frame_time = zx_clock();
-      if (game_respawn_index == 0) {
-        tmp = (rand() & 7);
-        if (class[tmp] == 0 && game_respawn[tmp] != 0) {
-          game_respawn_index = tmp;
-          index1 = game_respawn[tmp];
-          s_col1 = (index1 & 15) << 1;
-          s_lin1 = index1;
-          s_lin1 = (s_lin1 >> 4) << 4;
-          scr_map[index1] = 0xFF;
-          spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 8);
-
-          // game_add_enemy(game_respawn_tile_index[tmp]);
+      if (game_respawning == 0) {
+        tmp = 0;
+        while (tmp < SPR_P1) {
+          if (class[tmp] == 0 && game_respawn_tile[tmp] > 0) {
+            index1 = game_respawn_index[tmp];
+            s_col1 = (index1 & 15) << 1;
+            s_lin1 = index1;
+            s_lin1 = (s_lin1 >> 4) << 4;
+            scr_map[index1] = 0xFF;
+            spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 8);
+            game_respawning = 1;
+            break;
+          }
+          ++tmp;
         }
       }
     }
@@ -98,14 +100,15 @@ void game_loop(void) {
 void game_draw_screen(void) {
 
   NIRVANAP_halt();
+
   spr_count = 0;
   while (spr_count < SPR_P1) {
-    game_respawn[spr_count] = 0;
-    game_respawn_tile_index[spr_count] = 0;
+    game_respawn_index[spr_count] = 0;
+    game_respawn_tile[spr_count] = 0;
     class[spr_count] = 0;
     ++spr_count;
   }
-  spr_count = 0;
+  game_respawning = 0;
   index1 = 16;
   s_lin1 = 0;
   s_col1 = 2;
@@ -125,8 +128,8 @@ void game_draw_screen(void) {
     } else {
       // ENEMIES
       if (spr_count < 8) {
-        game_respawn[spr_count] = index1;
-        game_respawn_tile_index[spr_count] = scr_map[index1];
+        game_respawn_index[spr_count] = index1;
+        game_respawn_tile[spr_count] = scr_map[index1];
         game_add_enemy(scr_map[index1]);
       }
       scr_map[index1] = TILE_EMPTY;
@@ -455,7 +458,7 @@ unsigned char game_check_time(unsigned int start, unsigned int lapse) {
   }
 }
 
-unsigned char game_shoot_fire( unsigned char f_sprite, unsigned char f_tile) {
+unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
   unsigned char f_dir;
   if (bullet_col[f_sprite] == 0xFF) {
     ++bullet_count;
@@ -466,7 +469,7 @@ unsigned char game_shoot_fire( unsigned char f_sprite, unsigned char f_tile) {
     if (sprite == SPR_P1) {
       f_dir = BIT_CHK(state_a[SPR_P1], STAT_DIRL);
     }
-    index1 = spr_calc_index(lin[f_sprite],col[f_sprite]);
+    index1 = spr_calc_index(lin[f_sprite], col[f_sprite]);
     if (f_dir) {
       // Left
 

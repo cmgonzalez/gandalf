@@ -175,9 +175,10 @@ unsigned char game_over;
 unsigned char game_menu_sel;
 
 unsigned int game_score_top;
-unsigned char game_respawn[8];
-unsigned char game_respawn_tile_index[8];
-unsigned char game_respawn_index;
+unsigned char game_respawn_index[8];
+unsigned char game_respawn_tile[8];
+unsigned char game_respawning;
+
 // PHASE RELATED VARIABLES
 unsigned char phase_curr;
 unsigned char screen_paper;
@@ -196,7 +197,7 @@ unsigned char map_paper_last;
 //#
 //###############################################################################################
 unsigned char sprite_speed[] = {
-    0,
+    PLAYER_SPEED,
     SPEED_ENEMY_DRAGON,
     SPEED_ENEMY_BAT,
     SPEED_ENEMY_WYVERN,
@@ -218,7 +219,7 @@ unsigned char sprite_speed[] = {
 };
 
 unsigned char sprite_frames[] = {
-    0,
+    FRAMES_PLAYER,
     FRAMES_ENEMY_DRAGON,
     FRAMES_ENEMY_BAT,
     FRAMES_ENEMY_WYVERN,

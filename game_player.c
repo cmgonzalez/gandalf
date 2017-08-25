@@ -418,7 +418,8 @@ void player_pick_item(void) {
 }
 
 unsigned char player_hit_platform(void) {
-  if ((player_hit_lin == 0) && (lin[sprite] > 16)) {
+  if ( (player_hit_lin == 0) && (lin[sprite] > 16) && (scr_map[index1] >= TILE_HIT) ) {
+    /* Pietro Legacy...
     for (enemies = 0; enemies < 6; ++enemies) {
       // HIT ENEMIES
       if (class[enemies] != 0 && (lin[sprite] - lin[enemies] == 24) &&
@@ -428,7 +429,7 @@ unsigned char player_hit_platform(void) {
         sound_hit_enemy();
       }
     }
-
+   */
     // BIT_SET( state_a[sprite] , STAT_HITBRICK );
     spr_timer[sprite] = zx_clock();
     player_hit_lin = 8 + (((lin[sprite] - 8) >> 4) << 4);

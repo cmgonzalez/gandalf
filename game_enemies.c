@@ -48,15 +48,13 @@ void enemy_turn(void) {
         state[sprite] = s_state;
         last_time[sprite] = zx_clock();
         index1 = spr_calc_index(lin[sprite], col[sprite]);
-        if (scr_map[index1] > TILE_ITEM_E & scr_map[index1] < TILE_FLOOR ) {
-          //Deadly Backgrounds
+        if (scr_map[index1] > TILE_ITEM_E & scr_map[index1] < TILE_FLOOR) {
+          // Deadly Backgrounds
           s_lin0 = lin[sprite];
           s_col0 = col[sprite];
           spr_destroy(sprite);
 
-          spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3,
-                       0);
-
+          spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3, 0);
         }
       }
     }
@@ -93,16 +91,16 @@ void enemy_horizontal() {
   if (BIT_CHK(s_state, STAT_DIRR)) {
     if (spr_move_right()) {
       BIT_CLR(s_state, STAT_DIRR);
-      //BIT_CLR(state_a[sprite], STAT_LDIRR);
+      // BIT_CLR(state_a[sprite], STAT_LDIRR);
       BIT_SET(s_state, STAT_DIRL);
-      //BIT_SET(state_a[sprite], STAT_LDIRL);
+      // BIT_SET(state_a[sprite], STAT_LDIRL);
     }
   } else {
     if (spr_move_left()) {
       BIT_CLR(s_state, STAT_DIRL);
-      //BIT_CLR(state_a[sprite], STAT_LDIRL);
+      // BIT_CLR(state_a[sprite], STAT_LDIRL);
       BIT_SET(s_state, STAT_DIRR);
-      //BIT_SET(state_a[sprite], STAT_LDIRR);
+      // BIT_SET(state_a[sprite], STAT_LDIRR);
     }
   }
 }
@@ -152,16 +150,14 @@ void enemy_walk(void) {
       }
 
       if (class[sprite] == ELF) {
-        if ( abs(lin[SPR_P1] - lin[sprite]) < 32) {
-          if ( BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) {
+        if (abs(lin[SPR_P1] - lin[sprite]) < 32) {
+          if (BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) {
             game_shoot_fire(sprite, TILE_ARROW_R);
           }
-          if ( BIT_CHK(s_state, STAT_DIRL) && col[SPR_P1] < col[sprite]) {
+          if (BIT_CHK(s_state, STAT_DIRL) && col[SPR_P1] < col[sprite]) {
             game_shoot_fire(sprite, TILE_ARROW_R);
           }
-
         }
-
       }
     }
   } else {
@@ -199,29 +195,39 @@ void enemy_avoid_fall_dead() {
 
 void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,
                 unsigned char f_dir) {
+  unsigned char f_sprite;
+  //Get the first available sprite
+  f_sprite = 0;
+  while (f_sprite < SPR_P1) {
+    if (class[f_sprite] == 0) {
+      break;
+    } else {
+      f_sprite++;
+    }
+  }
+  //Out of sprites
+  if (f_sprite < SPR_P1) {
 
-
-  if (spr_count < SPR_P1) {
-    class[spr_count] = f_class;
-    lin[spr_count] = f_lin;
-    col[spr_count] = f_col;
+    class[f_sprite] = f_class;
+    lin[f_sprite] = f_lin;
+    col[f_sprite] = f_col;
     tmp = 0;
-    state[spr_count] = 0;
-    state_a[spr_count] = 0;
-    jump_lin[spr_count] = 0;
+    state[f_sprite] = 0;
+    state_a[f_sprite] = 0;
+    jump_lin[f_sprite] = 0;
 
     if (f_dir == DIR_RIGHT) {
-      BIT_SET(state[spr_count], STAT_DIRR);
+      BIT_SET(state[f_sprite], STAT_DIRR);
     }
     if (f_dir == DIR_LEFT) {
-      BIT_SET(state[spr_count], STAT_DIRL);
+      BIT_SET(state[f_sprite], STAT_DIRL);
     }
-    colint[spr_count] = 0;
-    tile[spr_count] = spr_tile(spr_count);
+    colint[f_sprite] = 0;
+    tile[f_sprite] = spr_tile(f_sprite);
 
-    spr_timer[spr_count] = zx_clock();
-    last_time[spr_count] = 0;
-    sprite_speed_alt[spr_count] = 0;
+    spr_timer[f_sprite] = zx_clock();
+    last_time[f_sprite] = 0;
+    sprite_speed_alt[f_sprite] = 0;
     ++spr_count;
   }
 }

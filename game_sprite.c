@@ -79,12 +79,13 @@ unsigned char spr_move_up(void) {
 
   if (f_check) {
     if (game_check_map(s_lin1, col[sprite])) {
-      /* Only Players can hit objects */
+      /*
       if (sprite == SPR_P1) {
         if (!BIT_CHK(state_a[SPR_P1], STAT_HITBRICK)) {
           player_hit_platform();
         }
       }
+      */
       return 1;
     }
   }
@@ -652,12 +653,19 @@ void spr_play_anim(void) {
           spr_back_repaint();
 
           if (anim_tile[f_anim] == TILE_ANIM_RESPAWN) {
-            // Respawn
+            // Respawn an enemy after anim...
             index1 = spr_calc_index(s_lin0, s_col0);
-            s_lin1 = s_lin0;
-            s_col1 = s_col0;
-            game_add_enemy(game_respawn_tile_index[game_respawn_index]);
-            game_respawn_index = 0;
+            tmp = 0;
+            while (tmp < SPR_P1) {
+              if (index1 == game_respawn_index[tmp]) {
+                s_lin1 = s_lin0;
+                s_col1 = s_col0;
+                game_add_enemy(game_respawn_tile[tmp]);
+                game_respawning = 0;
+                break;
+              }
+              ++tmp;
+            }
           }
           anim_lin[f_anim] = 0xFF;
 
@@ -764,9 +772,9 @@ void spr_play_bullets(void) {
         // ENEMY BULLET
         if (lin[SPR_P1] >= f_lin0 && lin[SPR_P1] <= f_lin1 &&
             col[SPR_P1] >= f_col0 && col[SPR_P1] <= f_col1) {
-          //s_lin0 = lin[tmp0];
-          //s_col0 = col[tmp0];
-          //spr_destroy(tmp0);
+          // s_lin0 = lin[tmp0];
+          // s_col0 = col[tmp0];
+          // spr_destroy(tmp0);
           zx_border(INK_MAGENTA);
           bullet_col[f_bullet] = s_col0;
           spr_explode_bullet(f_bullet);

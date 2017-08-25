@@ -32,26 +32,31 @@
 #define TILE_STAIR_S                  56 //START OF STAIRS
 #define TILE_STAIR_E                  60 //END OF STAIRS
 
-#define TILE_DIRT                     68 //CAN BE DESTROYED BY FIREBALLS
+#define TILE_DIRT                     69 //CAN BE DESTROYED BY FIREBALLS
+#define TILE_HIT                      69 //CAN BE DESTROYED BY FIREBALLS
 
 /* Enemies Class indexes */
-
+#define PLAYER                        0
 #define DRAGON                        1
 #define BAT                           2
 #define WYVERN                        3
 #define SPIDER                        4
-
 #define SKELETON                      5
 #define ORC                           6
 #define WARG                          7
 #define DWARF                         8
 #define ELF                           9
-
 #define PLANT                         10
 #define SNAKE                         11
 #define BAT_H                         12
+#define GOTA                          13
 
-#define PLAYER                        16
+#define FIRE                          0
+#define SNOWMAN                       0
+#define DEVIL                         0
+#define MUSHROOM                      0
+#define TRAP                          0
+
 
 /* Enemies Variables */
 #define TILE_ENEMY_SKELETON           132
@@ -348,9 +353,9 @@ extern unsigned char	game_over;
 extern unsigned char	player_lives;
 extern unsigned int		game_score_top;
 extern unsigned char	game_menu_sel;
-extern unsigned char  game_respawn[8];
-extern unsigned char  game_respawn_tile_index[8];
-extern unsigned char  game_respawn_index;
+extern unsigned char  game_respawn_index[8];
+extern unsigned char  game_respawn_tile[8];
+extern unsigned char  game_respawning;
 
 extern unsigned char  player_over_stair;
 
