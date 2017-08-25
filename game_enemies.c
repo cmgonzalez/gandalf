@@ -54,7 +54,7 @@ void enemy_turn(void) {
           s_col0 = col[sprite];
           spr_destroy(sprite);
 
-          spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3, 0);
+          spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
         }
       }
     }
@@ -193,19 +193,40 @@ void enemy_avoid_fall_dead() {
   }
 }
 
+void enemy_respawn(unsigned char f_anim) {
+
+  s_lin1 = s_lin0;
+  s_col1 = s_col0;
+  index1 = spr_calc_index(s_lin1, s_col1);
+  sprite = 0;
+  while (sprite < SPR_P1) {
+    if (game_respawn_index[sprite] == index1) {
+      game_add_enemy(anim_respanwn[f_anim]);
+      game_respawning = 0;
+      break;
+    }
+    ++sprite;
+  }
+}
+
 void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,
                 unsigned char f_dir) {
   unsigned char f_sprite;
-  //Get the first available sprite
-  f_sprite = 0;
-  while (f_sprite < SPR_P1) {
-    if (class[f_sprite] == 0) {
-      break;
-    } else {
-      f_sprite++;
+  // Get the first available sprite
+  if (game_respawning) {
+    f_sprite = sprite;
+  } else {
+    f_sprite = 0;
+    while (f_sprite < SPR_P1) {
+      if (class[f_sprite] == 0) {
+        break;
+      } else {
+        f_sprite++;
+      }
     }
   }
-  //Out of sprites
+
+  // Out of sprites
   if (f_sprite < SPR_P1) {
 
     class[f_sprite] = f_class;
@@ -231,6 +252,8 @@ void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,
     ++spr_count;
   }
 }
+
+
 
 void enemy_kill(unsigned char f_sprite) __z88dk_fastcall {
   tmp = f_sprite; // DUMMY

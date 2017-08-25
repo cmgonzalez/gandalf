@@ -76,19 +76,21 @@ void game_loop(void) {
       fps = 0;
       frame_time = zx_clock();
       if (game_respawning == 0) {
-        tmp = 0;
-        while (tmp < SPR_P1) {
-          if (class[tmp] == 0 && game_respawn_tile[tmp] > 0) {
-            index1 = game_respawn_index[tmp];
+        sprite = 0;
+        while (sprite < SPR_P1) {
+
+          if (game_respawn_index[sprite] > 0 && class[sprite] == 0) {
+            index1 = game_respawn_index[sprite];
             s_col1 = (index1 & 15) << 1;
             s_lin1 = index1;
             s_lin1 = (s_lin1 >> 4) << 4;
             scr_map[index1] = 0xFF;
-            spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 8);
+            spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 4,
+                         game_respawn_tile[sprite]);
             game_respawning = 1;
             break;
           }
-          ++tmp;
+          ++sprite;
         }
       }
     }

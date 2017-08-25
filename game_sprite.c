@@ -604,7 +604,7 @@ void spr_init_anim_bullets(void) {
 
 void spr_add_anim(unsigned char f_lin, unsigned char f_col,
                   unsigned char f_tile, unsigned char f_end,
-                  unsigned char f_loops) {
+                  unsigned char f_loops, unsigned char f_respawn) {
   unsigned char f_anim;
   for (f_anim = 0; f_anim < 8; f_anim++) {
     if (anim_lin[f_anim] == 0XFF) {
@@ -616,6 +616,7 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
       anim_loop[f_anim] = f_loops;
       anim_int[f_anim] = 0;
       anim_end[f_anim] = f_end;
+      anim_respanwn[f_anim] =  f_respawn;
       intrinsic_di();
       NIRVANAP_drawT_raw(anim_tile[f_anim], anim_lin[f_anim], anim_col[f_anim]);
       intrinsic_ei();
@@ -652,20 +653,9 @@ void spr_play_anim(void) {
           }
           spr_back_repaint();
 
-          if (anim_tile[f_anim] == TILE_ANIM_RESPAWN) {
+          if (anim_respanwn[f_anim]) {
             // Respawn an enemy after anim...
-            index1 = spr_calc_index(s_lin0, s_col0);
-            tmp = 0;
-            while (tmp < SPR_P1) {
-              if (index1 == game_respawn_index[tmp]) {
-                s_lin1 = s_lin0;
-                s_col1 = s_col0;
-                game_add_enemy(game_respawn_tile[tmp]);
-                game_respawning = 0;
-                break;
-              }
-              ++tmp;
-            }
+            enemy_respawn(f_anim);
           }
           anim_lin[f_anim] = 0xFF;
 
@@ -794,7 +784,7 @@ void spr_play_bullets(void) {
 
 void spr_explode_bullet(unsigned char f_bullet) __z88dk_fastcall {
   spr_add_anim(bullet_lin[f_bullet], bullet_col[f_bullet], TILE_ANIM_FIRE, 3,
-               0);
+               0, 0);
   --bullet_count;
   bullet_col[f_bullet] = 0XFF;
 }

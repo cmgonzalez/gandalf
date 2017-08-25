@@ -388,6 +388,8 @@ extern unsigned char anim_tile[8];
 extern unsigned char anim_int[8];
 extern unsigned char anim_end[8];
 extern unsigned char anim_loop[8];
+extern unsigned char anim_respanwn[8];
+
 extern unsigned char anim_count;
 
 

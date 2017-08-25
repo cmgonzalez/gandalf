@@ -120,8 +120,6 @@ void main(void) {
   game_loop();
 }
 
-
-
 void test_proc() {
 
 }
