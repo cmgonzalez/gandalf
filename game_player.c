@@ -418,6 +418,7 @@ void player_pick_item(void) {
 }
 
 unsigned char player_hit_platform(void) {
+
   if ( (player_hit_lin == 0) && (lin[sprite] > 16) && (scr_map[index1] >= TILE_HIT) ) {
     /* Pietro Legacy...
     for (enemies = 0; enemies < 6; ++enemies) {
@@ -431,6 +432,8 @@ unsigned char player_hit_platform(void) {
     }
    */
     // BIT_SET( state_a[sprite] , STAT_HITBRICK );
+
+
     spr_timer[sprite] = zx_clock();
     player_hit_lin = 8 + (((lin[sprite] - 8) >> 4) << 4);
 
@@ -452,6 +455,28 @@ unsigned char player_hit_platform(void) {
         }
       }
     }
+
+    if (scr_map[index1] == TILE_SPECIAL) {
+      zx_border(INK_BLUE);
+      tmp0 = 0;
+      while (tmp0 < SPR_P1) {
+        if ( mush_index[tmp0] == index1) {
+          zx_border(INK_YELLOW);
+          z80_delay_ms(35);
+          s_lin1 = ( ( lin[sprite] >> 4 ) << 4 ) - 32;
+          s_col1 = ( col[sprite] >> 1) << 1;
+          enemy_init(s_lin1, s_col1, MUSHROOM_FIRE, DIR_RIGHT);
+          scr_map[index1-16] = TILE_EMPTY;
+          scr_map[index1] = TILE_NOSPECIAL;
+          BIT_SET( scr_obj[index1-16], scr_curr );
+          BIT_SET( scr_obj[index1], scr_curr );
+          NIRVANAP_drawT(TILE_NOSPECIAL, s_lin1 + 16, s_col1);
+        }
+        ++tmp0;
+      }
+    }
+
+
     spr_brick_anim(1);
     sound_hit_brick();
     return 1;

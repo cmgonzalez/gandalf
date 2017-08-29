@@ -138,7 +138,8 @@ unsigned int bullet_time;
 unsigned char anim_count;
 unsigned char bullet_count;
 
-
+unsigned char mush_index[8];
+unsigned char mush_class[8];
 
 unsigned char spr_count;
 unsigned char sprite_curr_index;
@@ -191,7 +192,6 @@ unsigned char map_paper_last;
 
 
 
-
 //###############################################################################################
 //# # # ENEMIES ANIMATION SPEEDS - INTERRUPTS VALUES 50HZ
 //# #
@@ -199,46 +199,50 @@ unsigned char map_paper_last;
 //###############################################################################################
 unsigned char sprite_speed[] = {
     PLAYER_SPEED,
+    0,
     SPEED_ENEMY_DRAGON,
     SPEED_ENEMY_BAT,
     SPEED_ENEMY_WYVERN,
     SPEED_ENEMY_SPIDER,
-
+    0,  //MUSH 1
+    0, //MUSH 2
+    SPEED_ENEMY_MUSH_FIRE,
+    0, //FIRE
+    0, //SNOWMAN
     SPEED_ENEMY_SKELETON,
     SPEED_ENEMY_ORC,
     SPEED_ENEMY_WARG,
     SPEED_ENEMY_DWARF,
     SPEED_ENEMY_ELF,
-
     SPEED_ENEMY_PLANT,
+    0,            //TRAP
     SPEED_ENEMY_SNAKE,
     SPEED_ENEMY_BAT_H,
-    0,            // 13 ???
-    0,            // 14 ???
-    0,            // 15 ???
-    PLAYER_SPEED, // 16 PLAYER
+    0,            // DEVIL
 };
 
 unsigned char sprite_frames[] = {
     FRAMES_PLAYER,
+    0,
     FRAMES_ENEMY_DRAGON,
     FRAMES_ENEMY_BAT,
     FRAMES_ENEMY_WYVERN,
     FRAMES_ENEMY_SPIDER,
-
+    0,
+    0,
+    FRAMES_ENEMY_MUSH_FIRE,
+    0,
+    0,
     FRAMES_ENEMY_SKELETON,
     FRAMES_ENEMY_ORC,
     FRAMES_ENEMY_WARG,
     FRAMES_ENEMY_DWARF,
     FRAMES_ENEMY_ELF,
-
     FRAMES_ENEMY_PLANT,
+    0, //TRAP
     FRAMES_ENEMY_SNAKE,
     FRAMES_ENEMY_BAT_H,
-    0,            // 13 ???
-    0,            // 14 ???
-    0,            // 15 ???
-    FRAMES_PLAYER,
+    0, //DEVIL
 };
 
 // TEMPORARY SPEED FOR SPEED UP

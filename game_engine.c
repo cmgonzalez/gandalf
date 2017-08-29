@@ -100,13 +100,15 @@ void game_loop(void) {
 }
 
 void game_draw_screen(void) {
-
+  unsigned char f_mush;
   NIRVANAP_halt();
-
+  f_mush = 0;
   spr_count = 0;
   while (spr_count < SPR_P1) {
     game_respawn_index[spr_count] = 0;
     game_respawn_tile[spr_count] = 0;
+    mush_index[spr_count] = 0;
+    mush_class[spr_count] = 0;
     class[spr_count] = 0;
     ++spr_count;
   }
@@ -128,11 +130,18 @@ void game_draw_screen(void) {
       // TILES
       NIRVANAP_drawT_raw(scr_map[index1], s_lin1, s_col1);
     } else {
-      // ENEMIES
-      if (spr_count < 8) {
-        game_respawn_index[spr_count] = index1;
-        game_respawn_tile[spr_count] = scr_map[index1];
-        game_add_enemy(scr_map[index1]);
+      if ( scr_map[index1] < INDEX_MUSH_FIRE_L ) {
+        // ENEMIES
+        if (spr_count < 8) {
+          game_respawn_index[spr_count] = index1;
+          game_respawn_tile[spr_count] = scr_map[index1];
+          game_add_enemy(scr_map[index1]);
+        }
+      } else {
+        //MUSHROM
+        mush_index[f_mush] = index1 + 16;
+        mush_class[f_mush] = 1;
+        ++f_mush;
       }
       scr_map[index1] = TILE_EMPTY;
     }

@@ -33,29 +33,35 @@
 #define TILE_STAIR_E                  60 //END OF STAIRS
 
 #define TILE_DIRT                     69 //CAN BE DESTROYED BY FIREBALLS
+#define TILE_SPECIAL                  75 //HAVE A MUSHROM
+#define TILE_NOSPECIAL                68 //AFTER HIT
+
 #define TILE_HIT                      69 //CAN BE DESTROYED BY FIREBALLS
 
 /* Enemies Class indexes */
 #define PLAYER                        0
-#define DRAGON                        1
-#define BAT                           2
-#define WYVERN                        3
-#define SPIDER                        4
-#define SKELETON                      5
-#define ORC                           6
-#define WARG                          7
-#define DWARF                         8
-#define ELF                           9
-#define PLANT                         10
-#define SNAKE                         11
-#define BAT_H                         12
-#define GOTA                          13
+#define GOTA                          1 //VERTICAL
+#define DRAGON                        2 //VERTICAL
+#define BAT                           3 //VERTICAL
+#define WYVERN                        4 //VERTICAL
+#define SPIDER                        5 //VERTICAL
+#define MUSHROOM_2                    6  //WALKER
+#define MUSHROOM_1                    7  //WALKER
+#define MUSHROOM_FIRE                 8  //WALKER
+#define FIRE                          9  //WALKER
+#define SNOWMAN                       10 //WALKER
+#define SKELETON                      11 //WALKER
+#define ORC                           12 //WALKER
+#define WARG                          13 //WALKER
+#define DWARF                         14 //WALKER
+#define ELF                           15 //WALKER
+#define PLANT                         16 //STATIC
+#define TRAP                          17 //STATIC
+#define SNAKE                         18 //STATIC
+#define BAT_H                         19 //HORIZONTAL
+#define DEVIL                         20 //OTHER
 
-#define FIRE                          0
-#define SNOWMAN                       0
-#define DEVIL                         0
-#define MUSHROOM                      0
-#define TRAP                          0
+
 
 
 /* Enemies Variables */
@@ -137,6 +143,13 @@
 #define SPEED_ENEMY_BAT_H             1
 #define DIRINC_ENEMY_BAT_H            0
 #define INDEX_BAT_H                 101
+
+#define TILE_ENEMY_MUSH_FIRE        180
+#define FRAMES_ENEMY_MUSH_FIRE        2
+#define SPEED_ENEMY_MUSH_FIRE         2
+#define DIRINC_ENEMY_MUSH_FIRE        0
+#define INDEX_MUSH_FIRE_L           120
+#define INDEX_MUSH_FIRE_R           121
 
 //TILE MAP'S
 //  0..23   BACKGROUND
@@ -392,6 +405,8 @@ extern unsigned char anim_respanwn[8];
 
 extern unsigned char anim_count;
 
+extern unsigned char mush_index[8];
+extern unsigned char mush_class[8];
 
 //BULLETS
 //BULLETS

@@ -425,6 +425,9 @@ unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
   case BAT_H:
     return spr_tile_dir(TILE_ENEMY_BAT_H, f_sprite, DIRINC_ENEMY_BAT_H);
     break;
+  case MUSHROOM_FIRE:
+    return spr_tile_dir(TILE_ENEMY_MUSH_FIRE, f_sprite, DIRINC_ENEMY_MUSH_FIRE);
+    break;
   }
   return 0;
 }
@@ -616,7 +619,7 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
       anim_loop[f_anim] = f_loops;
       anim_int[f_anim] = 0;
       anim_end[f_anim] = f_end;
-      anim_respanwn[f_anim] =  f_respawn;
+      anim_respanwn[f_anim] = f_respawn;
       intrinsic_di();
       NIRVANAP_drawT_raw(anim_tile[f_anim], anim_lin[f_anim], anim_col[f_anim]);
       intrinsic_ei();
@@ -783,8 +786,8 @@ void spr_play_bullets(void) {
 }
 
 void spr_explode_bullet(unsigned char f_bullet) __z88dk_fastcall {
-  spr_add_anim(bullet_lin[f_bullet], bullet_col[f_bullet], TILE_ANIM_FIRE, 3,
-               0, 0);
+  spr_add_anim(bullet_lin[f_bullet], bullet_col[f_bullet], TILE_ANIM_FIRE, 3, 0,
+               0);
   --bullet_count;
   bullet_col[f_bullet] = 0XFF;
 }
