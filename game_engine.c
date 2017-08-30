@@ -127,10 +127,16 @@ void game_draw_screen(void) {
     }
 
     if (scr_map[index1] < TILE_END) {
-      // TILES
+
+      if ((scr_map[index1] == TILE_SPECIAL) &&
+          (BIT_CHK(scr_obj[index1 - 16], scr_curr))) {
+        scr_map[index1] = TILE_NOSPECIAL;
+      }
+      // NORMAL TILE
       NIRVANAP_drawT_raw(scr_map[index1], s_lin1, s_col1);
+
     } else {
-      if ( scr_map[index1] < INDEX_MUSH_FIRE_L ) {
+      if (scr_map[index1] < INDEX_MUSH_FIRE_L) {
         // ENEMIES
         if (spr_count < 8) {
           game_respawn_index[spr_count] = index1;
@@ -138,16 +144,16 @@ void game_draw_screen(void) {
           game_add_enemy(scr_map[index1]);
         }
       } else {
-        //MUSHROM
-        mush_index[f_mush] = index1 + 16;
-        mush_class[f_mush] = 1;
-        ++f_mush;
+        if (!BIT_CHK(scr_obj[index1], scr_curr)) {
+          // MUSHROMS
+          mush_index[f_mush] = index1 + 16;
+          mush_class[f_mush] = 1;
+          ++f_mush;
+        }
+        NIRVANAP_drawT_raw(TILE_EMPTY, s_lin1, s_col1);
       }
       scr_map[index1] = TILE_EMPTY;
     }
-
-    // NIRVANAP_drawT(TILE_BRICK, s_lin1, s_col1);
-
     s_col1 = s_col1 + 2;
     ++index1;
   }
@@ -215,7 +221,6 @@ void game_add_enemy(unsigned char enemy_tile_index) {
 
 void game_print_footer(void) {
   zx_print_ink(INK_CYAN);
-
   game_fill_row(19, 98);
   zx_print_str(19, 0, "a");
   zx_print_str(19, 31, "c");
@@ -228,7 +233,7 @@ void game_print_footer(void) {
   game_fill_row(23, 98);
   zx_print_str(23, 0, "f");
   zx_print_str(23, 31, "g");
-  zx_print_ink(INK_RED);
+  zx_print_ink(INK_CYAN);
   zx_print_str(20, 1, "<"); // live p1 hut
   zx_print_ink(INK_YELLOW);
   zx_print_str(21, 1, "\\"); // live p1 face

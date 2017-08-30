@@ -468,8 +468,8 @@ unsigned char player_hit_platform(void) {
           enemy_init(s_lin1, s_col1, MUSHROOM_FIRE, DIR_RIGHT);
           scr_map[index1-16] = TILE_EMPTY;
           scr_map[index1] = TILE_NOSPECIAL;
-          BIT_SET( scr_obj[index1-16], scr_curr );
-          BIT_SET( scr_obj[index1], scr_curr );
+          BIT_SET( scr_obj[index1-16], scr_curr ); //DISABLE MUSHROOM
+          //BIT_SET( scr_obj[index1], scr_curr );
           NIRVANAP_drawT(TILE_NOSPECIAL, s_lin1 + 16, s_col1);
         }
         ++tmp0;
