@@ -147,7 +147,7 @@ void game_draw_screen(void) {
         if (!BIT_CHK(scr_obj[index1], scr_curr)) {
           // MUSHROMS
           mush_index[f_mush] = index1 + 16;
-          mush_class[f_mush] = 1;
+          mush_class[f_mush] = scr_map[index1];
           ++f_mush;
         }
         NIRVANAP_drawT_raw(TILE_EMPTY, s_lin1, s_col1);

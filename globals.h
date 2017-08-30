@@ -45,8 +45,8 @@
 #define BAT                           3 //VERTICAL
 #define WYVERN                        4 //VERTICAL
 #define SPIDER                        5 //VERTICAL
-#define MUSHROOM_2                    6  //WALKER
-#define MUSHROOM_1                    7  //WALKER
+#define MUSHROOM_LIFE                 6  //WALKER
+#define MUSHROOM_POW                  7  //WALKER
 #define MUSHROOM_FIRE                 8  //WALKER
 #define FIRE                          9  //WALKER
 #define SNOWMAN                       10 //WALKER
@@ -150,6 +150,20 @@
 #define DIRINC_ENEMY_MUSH_FIRE        0
 #define INDEX_MUSH_FIRE_L           120
 #define INDEX_MUSH_FIRE_R           121
+
+#define TILE_ENEMY_MUSH_POW         182
+#define FRAMES_ENEMY_MUSH_POW         2
+#define SPEED_ENEMY_MUSH_POW          2
+#define DIRINC_ENEMY_MUSH_POW         0
+#define INDEX_MUSH_POW_L            122
+#define INDEX_MUSH_POW_R            123
+
+#define TILE_ENEMY_MUSH_LIFE        184
+#define FRAMES_ENEMY_MUSH_LIFE        2
+#define SPEED_ENEMY_MUSH_LIFE         2
+#define DIRINC_ENEMY_MUSH_LIFE        0
+#define INDEX_MUSH_LIFE_L           124
+#define INDEX_MUSH_LIFE_R           125
 
 //TILE MAP'S
 //  0..23   BACKGROUND
@@ -380,6 +394,7 @@ extern unsigned char sprite_speed_alt[8];
 extern unsigned char scr_map[];
 extern unsigned char scr_obj[];
 
+/*
 extern const unsigned char scr_0[];
 extern const unsigned char scr_1[];
 extern const unsigned char scr_2[];
@@ -388,7 +403,9 @@ extern const unsigned char scr_4[];
 extern const unsigned char scr_5[];
 extern const unsigned char scr_6[];
 extern const unsigned char scr_7[];
-
+*/
+extern const unsigned char lenght0[];
+extern const unsigned char world0[];
 
 extern unsigned char scr_curr;
 extern unsigned char map_width;

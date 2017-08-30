@@ -52,8 +52,8 @@ void player_init(unsigned char f_sprite, unsigned char f_lin,
 }
 
 unsigned char player_check_input(void) {
-  if (dirs & IN_STICK_LEFT && dirs & IN_STICK_RIGHT){
-    //Error on reading both horizontal's
+  if (dirs & IN_STICK_LEFT && dirs & IN_STICK_RIGHT) {
+    // Error on reading both horizontal's
     dirs = 0;
   }
 
@@ -419,7 +419,8 @@ void player_pick_item(void) {
 
 unsigned char player_hit_platform(void) {
 
-  if ( (player_hit_lin == 0) && (lin[sprite] > 16) && (scr_map[index1] >= TILE_HIT) ) {
+  if ((player_hit_lin == 0) && (lin[sprite] > 16) &&
+      (scr_map[index1] >= TILE_HIT)) {
     /* Pietro Legacy...
     for (enemies = 0; enemies < 6; ++enemies) {
       // HIT ENEMIES
@@ -432,7 +433,6 @@ unsigned char player_hit_platform(void) {
     }
    */
     // BIT_SET( state_a[sprite] , STAT_HITBRICK );
-
 
     spr_timer[sprite] = zx_clock();
     player_hit_lin = 8 + (((lin[sprite] - 8) >> 4) << 4);
@@ -460,22 +460,53 @@ unsigned char player_hit_platform(void) {
       zx_border(INK_BLUE);
       tmp0 = 0;
       while (tmp0 < SPR_P1) {
-        if ( mush_index[tmp0] == index1) {
-          zx_border(INK_YELLOW);
-          z80_delay_ms(35);
-          s_lin1 = ( ( lin[sprite] >> 4 ) << 4 ) - 32;
-          s_col1 = ( col[sprite] >> 1) << 1;
-          enemy_init(s_lin1, s_col1, MUSHROOM_FIRE, DIR_RIGHT);
-          scr_map[index1-16] = TILE_EMPTY;
+        if (mush_index[tmp0] == index1) {
+
+          s_lin1 = ((lin[sprite] >> 4) << 4) - 32;
+          s_col1 = (col[sprite] >> 1) << 1;
+          tmp = 0;
+          while (tmp < SPR_P1) {
+            if (mush_index[tmp] == index1) {
+              break;
+            }
+            ++tmp;
+          }
+          switch (mush_class[tmp]) {
+          case INDEX_MUSH_FIRE_L:
+            zx_border(INK_RED);
+            enemy_init(s_lin1, s_col1, MUSHROOM_FIRE, DIR_LEFT);
+            break;
+          case INDEX_MUSH_FIRE_R:
+            zx_border(INK_RED);
+            enemy_init(s_lin1, s_col1, MUSHROOM_FIRE, DIR_RIGHT);
+            break;
+          case INDEX_MUSH_POW_R:
+            zx_border(INK_BLUE);
+            enemy_init(s_lin1, s_col1, MUSHROOM_POW, DIR_RIGHT);
+            break;
+          case INDEX_MUSH_POW_L:
+            zx_border(INK_BLUE);
+            enemy_init(s_lin1, s_col1, MUSHROOM_POW, DIR_LEFT);
+            break;
+          case INDEX_MUSH_LIFE_R:
+            zx_border(INK_CYAN);
+            enemy_init(s_lin1, s_col1, MUSHROOM_LIFE, DIR_RIGHT);
+            break;
+          case INDEX_MUSH_LIFE_L:
+            zx_border(INK_CYAN);
+            enemy_init(s_lin1, s_col1, MUSHROOM_LIFE, DIR_LEFT);
+            break;
+          }
+
+          scr_map[index1 - 16] = TILE_EMPTY;
           scr_map[index1] = TILE_NOSPECIAL;
-          BIT_SET( scr_obj[index1-16], scr_curr ); //DISABLE MUSHROOM
-          //BIT_SET( scr_obj[index1], scr_curr );
+          BIT_SET(scr_obj[index1 - 16], scr_curr); // DISABLE MUSHROOM
+          // BIT_SET( scr_obj[index1], scr_curr );
           NIRVANAP_drawT(TILE_NOSPECIAL, s_lin1 + 16, s_col1);
         }
         ++tmp0;
       }
     }
-
 
     spr_brick_anim(1);
     sound_hit_brick();
@@ -632,7 +663,7 @@ unsigned char player_move_jump(void) {
     }
   }
 
-  if ( !BIT_CHK(s_state, STAT_DIRL) && !BIT_CHK(s_state, STAT_DIRR) ) {
+  if (!BIT_CHK(s_state, STAT_DIRL) && !BIT_CHK(s_state, STAT_DIRR)) {
     if (dirs & IN_STICK_LEFT) {
       BIT_SET(s_state, STAT_DIRL);
       BIT_CLR(s_state, STAT_DIRR);
@@ -642,7 +673,6 @@ unsigned char player_move_jump(void) {
       BIT_CLR(s_state, STAT_DIRL);
     }
   }
-
 
   sprite_horizontal_check = 1;
   if (spr_move_horizontal()) {

@@ -226,105 +226,7 @@ unsigned char spr_page_left() {
 }
 
 void spr_page_map(void) {
-
-  unsigned char v0;
-  unsigned char v1;
-  unsigned char vr;
-  unsigned char scr_curr_tmp;
-  unsigned char i;
-  unsigned char j;
-  unsigned char k;
-
-  k = 16;
-  scr_curr_tmp = scr_curr;
-  // NIRVANAP_stop();
-  intrinsic_di();
-
-  for (i = 0; i < GAME_SCR_MAX_INDEX; ++i) {
-
-    // Page in BANK 06
-    // Note that global variables are in page 0
-
-    GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
-    IO_7FFD = 0x10 + 6;
-
-    switch (scr_curr_tmp) {
-    case 0:
-      /* TODO 128k LEVEL DATA SHOULD BE READED HERE!*/
-      v0 = scr_0[i];
-      v1 = scr_0[i + 1];
-      break;
-    case 1:
-      v0 = scr_1[i];
-      v1 = scr_1[i + 1];
-      break;
-    case 2:
-      v0 = scr_2[i];
-      v1 = scr_2[i + 1];
-      break;
-    case 3:
-      v0 = scr_3[i];
-      v1 = scr_3[i + 1];
-      break;
-    case 4:
-      v0 = scr_4[i];
-      v1 = scr_4[i + 1];
-      break;
-    case 5:
-      v0 = scr_5[i];
-      v1 = scr_5[i + 1];
-      break;
-    case 6:
-      v0 = scr_6[i];
-      v1 = scr_6[i + 1];
-      break;
-    case 7:
-      v0 = scr_7[i];
-      v1 = scr_7[i + 1];
-      break;
-    }
-
-    // Page in BANK 00
-
-    GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
-    IO_7FFD = 0x10 + 0;
-
-    if (v0 < 128) {
-      if (!(BIT_CHK(scr_obj[k], scr_curr))) {
-        scr_map[k] = v0;
-      } else {
-        scr_map[k] = TILE_EMPTY;
-      }
-      ++k;
-    } else {
-      vr = v0 - 128; // Repeat counter Should be < 128!!
-
-      for (j = 0; j < vr; j++) {
-        if (!(BIT_CHK(scr_obj[k], scr_curr))) {
-          scr_map[k] = v1;
-        } else {
-          scr_map[k] = TILE_EMPTY;
-        }
-
-        ++k;
-        if (k >= GAME_SCR_MAX_INDEX) {
-          break;
-        }
-      }
-      ++i;
-    }
-    if (k >= GAME_SCR_MAX_INDEX) {
-      break;
-    }
-  }
-  spr_init_anim_bullets();
-  intrinsic_ei();
-  // NIRVANAP_start();
-  // Remove all enemies fast
-  for (i = 0; i < SPR_P1; ++i) {
-    class[i] = 0;
-    NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
-  }
+test_proc();
 }
 
 unsigned char spr_redraw(void) {
@@ -427,6 +329,9 @@ unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
     break;
   case MUSHROOM_FIRE:
     return spr_tile_dir(TILE_ENEMY_MUSH_FIRE, f_sprite, DIRINC_ENEMY_MUSH_FIRE);
+    break;
+  case MUSHROOM_POW:
+    return spr_tile_dir(TILE_ENEMY_MUSH_POW, f_sprite, DIRINC_ENEMY_MUSH_POW);
     break;
   }
   return 0;

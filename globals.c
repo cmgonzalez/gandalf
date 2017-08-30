@@ -204,8 +204,8 @@ unsigned char sprite_speed[] = {
     SPEED_ENEMY_BAT,
     SPEED_ENEMY_WYVERN,
     SPEED_ENEMY_SPIDER,
-    0,  //MUSH 1
-    0, //MUSH 2
+    SPEED_ENEMY_MUSH_LIFE,
+    SPEED_ENEMY_MUSH_POW,
     SPEED_ENEMY_MUSH_FIRE,
     0, //FIRE
     0, //SNOWMAN
@@ -228,8 +228,8 @@ unsigned char sprite_frames[] = {
     FRAMES_ENEMY_BAT,
     FRAMES_ENEMY_WYVERN,
     FRAMES_ENEMY_SPIDER,
-    0,
-    0,
+    FRAMES_ENEMY_MUSH_LIFE,
+    FRAMES_ENEMY_MUSH_POW,
     FRAMES_ENEMY_MUSH_FIRE,
     0,
     0,

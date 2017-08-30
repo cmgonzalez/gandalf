@@ -122,6 +122,89 @@ void main(void) {
 
 void test_proc() {
 
+    unsigned char v0;
+    unsigned char v1;
+    unsigned char vr;
+    unsigned char scr_curr_tmp;
+    unsigned char i;
+    unsigned char j;
+    unsigned char k;
+    unsigned int add_index;
+    unsigned int start_index;
+
+    k = 16;
+    scr_curr_tmp = scr_curr;
+
+    //Calculate the current screen start index in the world map
+  zx_print_ink(INK_MAGENTA);
+    i = 0;
+    start_index = 0;
+
+    while (i < scr_curr) {
+      GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
+      IO_7FFD = 0x10 + 6;
+      add_index = lenght0[i];
+      GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
+      IO_7FFD = 0x10 + 0;
+      start_index = start_index + add_index; 
+      ++i;
+    }
+
+
+    // NIRVANAP_stop();
+    intrinsic_di();
+    zx_print_chr(0,10,lenght0[i]);
+    zx_print_chr(0,16,scr_curr);
+    z80_delay_ms(20);
+  zx_print_int(0,0,start_index);
+    for (i = 0; i < GAME_SCR_MAX_INDEX; ++i) {
+
+      // Page in BANK 06 - Note that global variables are in page 0
+      GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
+      IO_7FFD = 0x10 + 6;
+      v0 = world0[start_index + i];
+      v1 = world0[start_index + i + 1];
+
+      // Page in BANK 00
+      GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
+      IO_7FFD = 0x10 + 0;
+
+      if (v0 < 128) {
+        if (!(BIT_CHK(scr_obj[k], scr_curr))) {
+          scr_map[k] = v0;
+        } else {
+          scr_map[k] = TILE_EMPTY;
+        }
+        ++k;
+      } else {
+        vr = v0 - 128; // Repeat counter Should be < 128!!
+
+        for (j = 0; j < vr; j++) {
+          if (!(BIT_CHK(scr_obj[k], scr_curr))) {
+            scr_map[k] = v1;
+          } else {
+            scr_map[k] = TILE_EMPTY;
+          }
+
+          ++k;
+          if (k >= GAME_SCR_MAX_INDEX) {
+            break;
+          }
+        }
+        ++i;
+      }
+      if (k >= GAME_SCR_MAX_INDEX) {
+        break;
+      }
+    }
+    spr_init_anim_bullets();
+    intrinsic_ei();
+    // NIRVANAP_start();
+    // Remove all enemies fast
+    for (i = 0; i < SPR_P1; ++i) {
+      class[i] = 0;
+      NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
+    }
 }
 
 unsigned char test_func() { return 0; }
