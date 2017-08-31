@@ -129,7 +129,7 @@ void game_draw_screen(void) {
     if (scr_map[index1] < TILE_END) {
 
       if ((scr_map[index1] == TILE_SPECIAL) &&
-          (BIT_CHK(scr_obj[index1 - 16], scr_curr))) {
+          game_obj_chk(index1-16) ) {
         scr_map[index1] = TILE_NOSPECIAL;
       }
       // NORMAL TILE
@@ -144,7 +144,7 @@ void game_draw_screen(void) {
           game_add_enemy(scr_map[index1]);
         }
       } else {
-        if (!BIT_CHK(scr_obj[index1], scr_curr)) {
+        if (!game_obj_chk(index1)) {
           // MUSHROMS
           mush_index[f_mush] = index1 + 16;
           mush_class[f_mush] = scr_map[index1];
@@ -506,4 +506,26 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
     }
   }
   return 0;
+}
+
+void game_obj_set( unsigned int f_index ) {
+  unsigned char f_scr_surr1;
+
+  if (scr_curr < 8) {
+    BIT_SET( scr_obj0[f_index] , scr_curr );
+  } else {
+    f_scr_surr1 = 16 - scr_curr;
+    BIT_SET( scr_obj1[f_index] , f_scr_surr1 );
+  }
+}
+
+unsigned char game_obj_chk( unsigned int f_index ) {
+  unsigned char f_scr_surr1;
+
+  if (scr_curr < 8) {
+    return BIT_CHK( scr_obj0[f_index] , scr_curr );
+  } else {
+    f_scr_surr1 = 16 - scr_curr;
+    return BIT_CHK( scr_obj1[f_index] , f_scr_surr1 );
+  }
 }

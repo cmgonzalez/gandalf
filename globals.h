@@ -392,7 +392,8 @@ extern unsigned char sprite_speed[];
 extern unsigned char sprite_frames[];
 extern unsigned char sprite_speed_alt[8];
 extern unsigned char scr_map[];
-extern unsigned char scr_obj[];
+extern unsigned char scr_obj0[];
+extern unsigned char scr_obj1[];
 
 /*
 extern const unsigned char scr_0[];

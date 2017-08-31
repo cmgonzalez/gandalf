@@ -380,7 +380,8 @@ void player_pick_item(void) {
     sound_coin();
     scr_map[sprite_curr_index] = TILE_EMPTY;
 
-    BIT_SET(scr_obj[sprite_curr_index], scr_curr);
+
+    game_obj_set(sprite_curr_index);
     s_lin1 = (sprite_curr_index >> 4) << 4;
     s_col1 = (sprite_curr_index & 15) << 1;
     spr_add_anim(s_lin1, s_col1, TILE_ANIM_PICK, 3, 0, 0);
@@ -500,8 +501,7 @@ unsigned char player_hit_platform(void) {
 
           scr_map[index1 - 16] = TILE_EMPTY;
           scr_map[index1] = TILE_NOSPECIAL;
-          BIT_SET(scr_obj[index1 - 16], scr_curr); // DISABLE MUSHROOM
-          // BIT_SET( scr_obj[index1], scr_curr );
+          game_obj_set(index1-16);
           NIRVANAP_drawT(TILE_NOSPECIAL, s_lin1 + 16, s_col1);
         }
         ++tmp0;
@@ -568,13 +568,15 @@ unsigned char player_move_jump(void) {
   player_vel_y = player_vel_y + game_gravity;
   sprite_on_air = 1;
   // JUMP BOOST
+  
   if ((player_vel_inc)) {
-    if (!(dirs & IN_STICK_FIRE) && (player_vel_y > player_vel_y1) &&
-        (player_vel_y < 0)) {
+    if (!(dirs & IN_STICK_FIRE) && (player_vel_y > player_vel_y1) && (player_vel_y < 0)) {
       player_vel_y = 0; // TODO FIX WHEN FALLING!
       player_vel_inc = 0;
     }
   }
+
+
   // MAX SPEEDS
   if (player_vel_y > 120) {
     player_vel_y = 120;
@@ -589,7 +591,7 @@ unsigned char player_move_jump(void) {
   val_yc = player_vel_y;
 
   s_lin1 = (unsigned char)val_yc;
-  // Nirvana don't support odd lin's
+  // Nirvana don't support odds lines
 
   if ((s_lin1 & 1) != 0) {
     s_lin1--;
@@ -715,7 +717,7 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
 
   if (f_open) {
     scr_map[f_index] = TILE_EMPTY;
-    BIT_SET(scr_obj[f_index], scr_curr);
+    game_obj_set(f_index);
     spr_draw_index(f_index);
   }
 }

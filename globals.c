@@ -33,7 +33,8 @@ unsigned char spec128;
 // 52..55   BRICKS (FLOOR AND CEIL)
 // 56..63   SPECIAL BRICKS (FLORR AND CEIL CAN BE HITTED)
 unsigned char scr_map[GAME_SCR_MAX_INDEX];
-unsigned char scr_obj[GAME_SCR_MAX_INDEX]; //TODO TO BE USED AS INT, TO STORE OBJECT PICKING ON WORLD
+unsigned char scr_obj0[GAME_SCR_MAX_INDEX]; //OBJECT PICK  0..15 SCREENS
+unsigned char scr_obj1[GAME_SCR_MAX_INDEX]; //OBJECT PICK 16..31 SCREENS
 
 unsigned char scr_curr;
 unsigned char map_width;
