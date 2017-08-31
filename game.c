@@ -112,7 +112,7 @@ void main(void) {
   player_keys[1] = 0;
   player_keys[2] = 0;
   player_keys[3] = 0;
-  scr_curr = 0;
+  scr_curr = 5;
   map_width = 16 - 1; // OJO!
   map_heigth = 1;
 

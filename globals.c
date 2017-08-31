@@ -81,22 +81,25 @@ unsigned char jump_lin[8]; // START JUMP LINE
 unsigned char player_hit_lin; // HIT BRICK LINE
 unsigned char player_hit_col; // HIT BRICK COL
 unsigned char player_slide; // SLIDING COUNTER
-unsigned int player_score;  // SCORE
-unsigned int player_joy;    // JOYSTICK
+unsigned int  player_score;  // SCORE
+unsigned int  player_joy;    // JOYSTICK
 unsigned char player_lives;
 unsigned char player_over_stair;
-
-signed char player_vel_x;
-//signed int player_vel_y;
-//signed int player_vel_y0;
-//signed int player_vel_y1;
-
-signed char player_vel_y;
-signed char player_vel_y0;
-signed char player_vel_y1;
-
-signed char player_vel_inc;
+signed char   player_vel_x;
+signed char   player_vel_y;
+signed char   player_vel_y0;
+signed char   player_vel_y1;
+signed char   player_vel_inc;
 unsigned char player_keys[4];
+unsigned char player_hit_count;
+//PLAYER ATTRIBUTES
+unsigned char player_mana;
+unsigned char player_vita;
+unsigned char player_str;
+unsigned char player_dex;
+unsigned char player_int;
+
+
 
 signed int game_gravity;
 
@@ -104,7 +107,7 @@ unsigned char sprite;
 unsigned char sprite_on_air;
 unsigned char sprite_horizontal_check;
 
-unsigned char player_hit_count;
+
 
 unsigned char s_tile0;
 unsigned char s_tile1;

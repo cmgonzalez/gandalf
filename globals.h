@@ -315,25 +315,24 @@ extern unsigned char player_hit_lin;
 extern unsigned char player_hit_col;
 extern unsigned char jump_lin[8];
 extern unsigned int  spr_timer[8];
-//extern unsigned int  spr_timer_c[8];
+
 extern unsigned char player_slide;
 extern unsigned int  last_time[8];
 extern unsigned int  player_score;
 extern unsigned int  player_joy;
-
-extern signed char player_vel_x;
-
-/*
-extern signed int player_vel_y;
-extern signed int player_vel_y0;
-extern signed int player_vel_y1;
-*/
-extern signed char player_vel_y;
-extern signed char player_vel_y0;
-extern signed char player_vel_y1;
-
-extern signed char player_vel_inc;
+extern signed char   player_vel_x;
+extern signed char   player_vel_y;
+extern signed char   player_vel_y0;
+extern signed char   player_vel_y1;
+extern signed char   player_vel_inc;
 extern unsigned char player_keys[4];
+//PLAYER ATTRIBUTES
+extern unsigned char player_mana;
+extern unsigned char player_vita;
+extern unsigned char player_str;
+extern unsigned char player_dex;
+extern unsigned char player_int;
+
 extern signed int game_gravity;
 
 extern unsigned char	sprite;

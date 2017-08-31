@@ -39,6 +39,11 @@ void game_loop(void) {
   ay_reset();
 
   player_lives = 4;
+  player_mana = 100;
+  player_vita = 100;
+  player_str = 0;
+  player_dex = 0;
+  player_int = 0;
 
   player_score = 0;
 
@@ -239,6 +244,18 @@ void game_print_footer(void) {
   zx_print_str(21, 1, "\\"); // live p1 face
   /* phase osd bottom*/
   zx_print_str(23, 20, "LPS:");
+
+  zx_print_ink(INK_RED);
+  zx_print_str(20, 7, "j");
+  zx_print_ink(INK_BLUE);
+  zx_print_str(20,13, "k");
+
+  zx_print_ink(INK_YELLOW);
+  zx_print_str(22, 14, "m");
+  zx_print_str(22, 20, "n");
+  zx_print_str(22, 26, "o");
+
+
   game_print_lives();
 }
 
@@ -251,8 +268,20 @@ void game_print_lives(void) {
   zx_print_ink(INK_WHITE);
   tmp = player_lives - 1;
   if (tmp < 255) {
-    zx_print_chr(20, 3, tmp); // LIVE P1
+    zx_print_chr(20, 3, tmp);
   }
+  zx_print_chr(22, 16, player_str);
+  zx_print_chr(22, 22, player_dex);
+  zx_print_chr(22, 28, player_int);
+
+  zx_print_ink(INK_RED);
+  zx_print_chr(20, 9, player_vita);
+  zx_print_ink(INK_BLUE);
+  zx_print_chr(20, 15, player_mana);
+
+
+
+
 }
 
 void game_tick(void) {
