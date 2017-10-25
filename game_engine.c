@@ -33,24 +33,9 @@
 
 void game_loop(void) {
   unsigned int fps;
-  ay_fx_play(ay_effect_10);
-  sound_coin();
-  z80_delay_ms(200);
-  ay_reset();
 
-  player_lives = 4;
-  player_mana = 100;
-  player_vita = 100;
-  player_str = 0;
-  player_dex = 0;
-  player_int = 0;
-
-  player_score = 0;
-
-  /* screen init */
-  game_over = 0;
   /* phase init */
-  game_phase_init();
+  game_round_init();
   /* game loop start */
   dirs = 0x00;
   game_joystick_set();
@@ -256,7 +241,7 @@ void game_print_footer(void) {
   zx_print_str(22, 26, "o");
 
 
-  game_print_lives();
+  game_update_stats();
 }
 
 void game_phase_print_score_back(void) {
@@ -264,7 +249,7 @@ void game_phase_print_score_back(void) {
   zx_print_str(0, 11, "$%|"); // Top
 }
 
-void game_print_lives(void) {
+void game_update_stats(void) {
   zx_print_ink(INK_WHITE);
   tmp = player_lives - 1;
   if (tmp < 255) {
@@ -278,10 +263,6 @@ void game_print_lives(void) {
   zx_print_chr(20, 9, player_vita);
   zx_print_ink(INK_BLUE);
   zx_print_chr(20, 15, player_mana);
-
-
-
-
 }
 
 void game_tick(void) {
@@ -294,7 +275,21 @@ void game_start_timer(void) {
   z80_wpoke(&NIRVANAP_ISR_HOOK[1], (unsigned int)game_tick); // game_tick
 }
 
-void game_phase_init(void) {
+void game_round_init(void) {
+  ay_fx_play(ay_effect_10);
+  sound_coin();
+  z80_delay_ms(200);
+  ay_reset();
+
+  player_lives = 4;
+  player_mana = 100;
+  player_vita = 100;
+  player_str = 0;
+  player_dex = 0;
+  player_int = 0;
+  player_score = 0;
+  /* screen init */
+  game_over = 0;
 
   /*PHASE INIT*/
   loop_count = 0;
@@ -308,6 +303,7 @@ void game_phase_init(void) {
   spr_draw_clear();
   /*Draw Platforms*/
   // zx_paper_fill(INK_BLACK | PAPER_BLACK);
+  spr_page_map();
   game_draw_screen();
   game_print_header();
   game_print_footer();

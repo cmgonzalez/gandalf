@@ -22,10 +22,10 @@
 extern void          game_draw_screen(void);
 extern void          game_fill_row(unsigned char f_row, unsigned char f_asc) __z88dk_callee;
 extern void          game_print_footer(void);
-extern void			     game_print_lives(void);
+extern void			     game_update_stats(void);
 extern void			     game_tick(void);
 extern void			     game_start_timer(void);
-extern void			     game_phase_init(void);
+extern void			     game_round_init(void);
 extern void			     game_loop(void);
 extern unsigned int  game_check_map(unsigned char f_lin, unsigned char f_col);
 extern unsigned char game_check_cell(int f_index) __z88dk_fastcall;

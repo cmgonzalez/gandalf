@@ -62,19 +62,22 @@ unsigned char player_check_input(void) {
 }
 
 unsigned char player_collision(void) {
-  sprite = 0;
-  s_col1 = col[SPR_P1];
-  s_lin1 = lin[SPR_P1];
-  while (sprite < SPR_P1) {
-    if (class[sprite] > 0) {
-      if (abs(col[sprite] - s_col1) < 2) {
-        if (abs(lin[sprite] - s_lin1) < 14) {
-          zx_border(INK_RED);
-          return 1;
+  if (game_check_time(player_hit_time, 25)) { // HACK REPATED ON player_hit
+    sprite = 0;
+    s_col1 = col[SPR_P1];
+    s_lin1 = lin[SPR_P1];
+    while (sprite < SPR_P1) {
+      if (class[sprite] > 0) {
+        if (abs(col[sprite] - s_col1) < 2) {
+          if (abs(lin[sprite] - s_lin1) < 14) {
+            zx_border(INK_RED);
+            player_hit(20);
+            return 1;
+          }
         }
       }
+      ++sprite;
     }
-    ++sprite;
   }
   return 0;
 }
@@ -112,19 +115,6 @@ void player_restart(unsigned char f_sprite) __z88dk_fastcall {
   sprite_speed_alt[f_sprite] = SPRITE_RESTART_SPEED;
 }
 
-unsigned char player_lost_life(void) {
-  sound_hit_enemy();
-  --player_lives;
-
-  if (player_lives == 0) {
-    /* Player dies */
-    game_over = 1;
-    /* Do not restart player */
-    return 0;
-  }
-  game_print_lives();
-  return 1;
-}
 
 void player_turn(void) {
   if (class[sprite] == PLAYER && player_lives > 0) {
@@ -380,7 +370,6 @@ void player_pick_item(void) {
     sound_coin();
     scr_map[sprite_curr_index] = TILE_EMPTY;
 
-
     game_obj_set(sprite_curr_index);
     s_lin1 = (sprite_curr_index >> 4) << 4;
     s_col1 = (sprite_curr_index & 15) << 1;
@@ -414,6 +403,7 @@ void player_pick_item(void) {
     if ((lin[SPR_P1] & 3) != 0) {
       // DEADLY BACKGROUNDS
       zx_border(INK_YELLOW);
+      player_hit(50);
     }
   }
 }
@@ -501,7 +491,7 @@ unsigned char player_hit_platform(void) {
 
           scr_map[index1 - 16] = TILE_EMPTY;
           scr_map[index1] = TILE_NOSPECIAL;
-          game_obj_set(index1-16);
+          game_obj_set(index1 - 16);
           NIRVANAP_drawT(TILE_NOSPECIAL, s_lin1 + 16, s_col1);
         }
         ++tmp0;
@@ -568,14 +558,14 @@ unsigned char player_move_jump(void) {
   player_vel_y = player_vel_y + game_gravity;
   sprite_on_air = 1;
   // JUMP BOOST
-  
+
   if ((player_vel_inc)) {
-    if (!(dirs & IN_STICK_FIRE) && (player_vel_y > player_vel_y1) && (player_vel_y < 0)) {
+    if (!(dirs & IN_STICK_FIRE) && (player_vel_y > player_vel_y1) &&
+        (player_vel_y < 0)) {
       player_vel_y = 0; // TODO FIX WHEN FALLING!
       player_vel_inc = 0;
     }
   }
-
 
   // MAX SPEEDS
   if (player_vel_y > 120) {
@@ -720,4 +710,62 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
     game_obj_set(f_index);
     spr_draw_index(f_index);
   }
+}
+
+void player_lost_life() {
+  unsigned char f_anim;
+
+
+  s_lin0 = lin[SPR_P1];
+  s_col0 = col[SPR_P1];
+  spr_init_anim_bullets();
+  for (f_anim = 0; f_anim < 8; f_anim++) {
+    NIRVANAP_spriteT(f_anim, TILE_EMPTY, 0, 0);
+    class[f_anim] = 0;
+  }
+  NIRVANAP_halt();
+
+  spr_add_anim(s_lin0 - 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
+  if (s_col0 >=  2) spr_add_anim(s_lin0, s_col0-2, TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
+  if (s_col0 < 30) spr_add_anim(s_lin0, s_col0+2, TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(s_lin0 + 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
+  zx_border(INK_BLACK);
+  tmp = 1;
+  while (tmp) {
+    if (game_check_time(anim_time, TIME_ANIM)) {
+      anim_time = zx_clock();
+      if (anim_count) {
+        spr_play_anim();
+      } else {
+        tmp = 0;
+      }
+    }
+    z80_delay_ms(5);
+  }
+  z80_delay_ms(500);
+  scr_curr = game_start_scr; //TODO
+  game_round_init();
+}
+
+void player_hit(unsigned char f_val) __z88dk_fastcall {
+  //if (game_check_time(player_hit_time, 25)) {
+    if (player_vita > f_val) {
+      player_vita = player_vita - f_val;
+      player_hit_time = curr_time;
+      game_update_stats();
+    } else {
+      player_vita = 0;
+      player_lost_life();
+      if (player_lives) {
+        // Player lost life
+        --player_lives;
+        game_update_stats();
+      } else {
+        // Game End
+        player_lives = 0;
+        game_over = 1;
+      }
+    }
+  //}
 }

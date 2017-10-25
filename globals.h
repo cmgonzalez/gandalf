@@ -332,6 +332,8 @@ extern unsigned char player_vita;
 extern unsigned char player_str;
 extern unsigned char player_dex;
 extern unsigned char player_int;
+extern unsigned int  player_hit_time;
+
 
 extern signed int game_gravity;
 
@@ -382,6 +384,7 @@ extern unsigned char	game_menu_sel;
 extern unsigned char  game_respawn_index[8];
 extern unsigned char  game_respawn_tile[8];
 extern unsigned char  game_respawning;
+extern unsigned char  game_start_scr;
 
 extern unsigned char  player_over_stair;
 
@@ -404,8 +407,10 @@ extern const unsigned char scr_5[];
 extern const unsigned char scr_6[];
 extern const unsigned char scr_7[];
 */
+extern const unsigned char start_scr0;
 extern const unsigned char lenght0[];
 extern const unsigned char world0[];
+
 
 extern unsigned char scr_curr;
 extern unsigned char map_width;

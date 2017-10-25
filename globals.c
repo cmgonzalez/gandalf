@@ -98,6 +98,7 @@ unsigned char player_vita;
 unsigned char player_str;
 unsigned char player_dex;
 unsigned char player_int;
+unsigned int  player_hit_time;
 
 
 
@@ -184,6 +185,7 @@ unsigned int game_score_top;
 unsigned char game_respawn_index[8];
 unsigned char game_respawn_tile[8];
 unsigned char game_respawning;
+unsigned char game_start_scr;
 
 // PHASE RELATED VARIABLES
 unsigned char phase_curr;

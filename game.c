@@ -112,11 +112,11 @@ void main(void) {
   player_keys[1] = 0;
   player_keys[2] = 0;
   player_keys[3] = 0;
-  scr_curr = 5;
+  scr_curr = 0;
   map_width = 16 - 1; // OJO!
   map_heigth = 1;
 
-  spr_page_map(); // INIT FIRST SCREEN
+  // spr_page_map(); // INIT FIRST SCREEN
 
   game_loop();
 }

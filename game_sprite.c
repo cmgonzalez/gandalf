@@ -227,83 +227,93 @@ unsigned char spr_page_left() {
 
 void spr_page_map(void) {
 
-  unsigned char v0;
-  unsigned char v1;
-  unsigned char vr;
-  unsigned char scr_curr_tmp;
-  unsigned char i;
-  unsigned char j;
-  unsigned char k;
-  unsigned int add_index;
-  unsigned int start_index;
+    unsigned char v0;
+    unsigned char v1;
+    unsigned char vr;
+    unsigned char scr_curr_tmp;
+    unsigned char i;
+    unsigned char j;
+    unsigned char k;
+    unsigned int add_index;
+    unsigned int start_index;
 
-  k = 16;
-  scr_curr_tmp = scr_curr;
-
-  // Calculate the current screen start index in the world map
-  i = 0;
-  start_index = 0;
-
-  while (i < scr_curr) {
+    k = 16;
+    scr_curr_tmp = scr_curr;
+    intrinsic_di();
+    // Read Player start screen on world map
     GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
     IO_7FFD = 0x10 + 6;
-    add_index = lenght0[i];
-    GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
-    IO_7FFD = 0x10 + 0;
-    start_index = start_index + add_index;
-    ++i;
-  }
-
-  // NIRVANAP_stop();
-  intrinsic_di();
-  for (i = 0; i < GAME_SCR_MAX_INDEX; ++i) {
-
-    // Page in BANK 06 - Note that global variables are in page 0
-    GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
-    IO_7FFD = 0x10 + 6;
-    v0 = world0[start_index + i];
-    v1 = world0[start_index + i + 1];
-
-    // Page in BANK 00
+    game_start_scr = start_scr0;
     GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
     IO_7FFD = 0x10 + 0;
 
-    if (v0 < 128) {
-      if (!game_obj_chk(k)) {
-        scr_map[k] = v0;
-      } else {
-        scr_map[k] = TILE_EMPTY;
-      }
-      ++k;
-    } else {
-      vr = v0 - 128; // Repeat counter Should be < 128!!
+    // Calculate the current screen start index in the world map
+    j = 0;
+    start_index = 0;
+    add_index = 0;
 
-      for (j = 0; j < vr; j++) {
+    while (j < scr_curr) {
+      GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
+      IO_7FFD = 0x10 + 6;
+      add_index = lenght0[j];
+      GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
+      IO_7FFD = 0x10 + 0;
+      start_index = start_index + add_index;
+      ++j;
+    }
+    intrinsic_ei();
+
+    intrinsic_di();
+    for (i = 0; i < GAME_SCR_MAX_INDEX; ++i) {
+
+      // Page in BANK 06 - Note that global variables are in page 0
+      GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
+      IO_7FFD = 0x10 + 6;
+      v0 = world0[start_index + i];
+      v1 = world0[start_index + i + 1];
+
+      // Page in BANK 00
+      GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
+      IO_7FFD = 0x10 + 0;
+
+      if (v0 < 128) {
         if (!game_obj_chk(k)) {
-          scr_map[k] = v1;
+          scr_map[k] = v0;
         } else {
           scr_map[k] = TILE_EMPTY;
         }
-
         ++k;
-        if (k >= GAME_SCR_MAX_INDEX) {
-          break;
+      } else {
+        vr = v0 - 128; // Repeat counter Should be < 128!!
+
+        for (j = 0; j < vr; j++) {
+          if (!game_obj_chk(k)) {
+            scr_map[k] = v1;
+          } else {
+            scr_map[k] = TILE_EMPTY;
+          }
+
+          ++k;
+          if (k >= GAME_SCR_MAX_INDEX) {
+            break;
+          }
         }
+        ++i;
       }
-      ++i;
+      if (k >= GAME_SCR_MAX_INDEX) {
+        break;
+      }
     }
-    if (k >= GAME_SCR_MAX_INDEX) {
-      break;
+    spr_init_anim_bullets();
+    intrinsic_ei();
+    NIRVANAP_start();
+
+    // NIRVANAP_start();
+    // Remove all enemies fast
+    for (i = 0; i < SPR_P1; ++i) {
+      class[i] = 0;
+      NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
     }
-  }
-  spr_init_anim_bullets();
-  intrinsic_ei();
-  // NIRVANAP_start();
-  // Remove all enemies fast
-  for (i = 0; i < SPR_P1; ++i) {
-    class[i] = 0;
-    NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
-  }
 }
 
 unsigned char spr_redraw(void) {
@@ -751,6 +761,8 @@ void spr_play_bullets(void) {
           // s_col0 = col[tmp0];
           // spr_destroy(tmp0);
           zx_border(INK_MAGENTA);
+          player_hit(10);
+
           bullet_col[f_bullet] = s_col0;
           spr_explode_bullet(f_bullet);
           break;
