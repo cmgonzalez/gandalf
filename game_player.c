@@ -714,7 +714,7 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
     break;
   }
 
-  if (f_open) {
+  if (f_open || game_inmune) {
     scr_map[f_index] = TILE_EMPTY;
     game_obj_set(f_index);
     spr_draw_index(f_index);

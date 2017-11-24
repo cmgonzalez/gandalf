@@ -727,7 +727,7 @@ void spr_play_bullets(void) {
         continue;
       }
 
-      if ((scr_map[index0] > TILE_CEIL && scr_map[index0] != 0xFF)) {
+      if ((scr_map[index0] >= TILE_CEIL && scr_map[index0] != 0xFF)) {
         // Explode Bullet
         spr_explode_bullet(f_bullet);
         continue;

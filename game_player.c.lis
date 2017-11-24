@@ -1056,7 +1056,7 @@
 1056  017E  2E 02       	ld	l,0x02
 1057  0180  CD 00 00    	call	_zx_border_fastcall
 1058  0183  2E 14       	ld	l,0x14
-1059  0185  CD EA 0E    	call	_player_hit
+1059  0185  CD F0 0E    	call	_player_hit
 1060  0188  2E 01       	ld	l,0x01
 1061  018A  18 08       	jr	l_player_collision_00112
 1062  018C              l_player_collision_00106:
@@ -2080,7 +2080,7 @@
 2080  081C  2E 06       	ld	l,0x06
 2081  081E  CD 00 00    	call	_zx_border_fastcall
 2082  0821  2E 32       	ld	l,0x32
-2083  0823  CD EA 0E    	call	_player_hit
+2083  0823  CD F0 0E    	call	_player_hit
 2084  0826  C9          	ret
 2085  0827              	SECTION rodata_compiler
 2086  0000              ___str_0:
@@ -2914,225 +2914,229 @@
 2914  0DB4              l_player_open_door_00113:
 2915  0DB4  79          	ld	a, c
 2916  0DB5  B7          	or	a, a
-2917  0DB6  28 24       	jr	Z,l_player_open_door_00116
-2918  0DB8  3E 00       	ld	a, +((_scr_map) & 0xFF)
-2919  0DBA  DD 86 04    	add	a,(ix+4)
-2920  0DBD  4F          	ld	c, a
-2921  0DBE  3E 00       	ld	a, +((_scr_map) / 256)
-2922  0DC0  DD 8E 05    	adc	a,(ix+5)
-2923  0DC3  47          	ld	b, a
-2924  0DC4  AF          	xor	a, a
-2925  0DC5  02          	ld	(bc), a
-2926  0DC6  DD 6E 04    	ld	l,(ix+4)
-2927  0DC9  DD 66 05    	ld	h,(ix+5)
-2928  0DCC  E5          	push	hl
-2929  0DCD  CD 00 00    	call	_game_obj_set
-2930  0DD0  F1          	pop	af
-2931  0DD1  DD 6E 04    	ld	l,(ix+4)
-2932  0DD4  DD 66 05    	ld	h,(ix+5)
-2933  0DD7  E5          	push	hl
-2934  0DD8  CD 00 00    	call	_spr_draw_index
-2935  0DDB  F1          	pop	af
-2936  0DDC              l_player_open_door_00116:
-2937  0DDC  DD E1       	pop	ix
-2938  0DDE  C9          	ret
-2939  0DDF              	SECTION code_compiler
-2940  0DDF              ;	---------------------------------
-2941  0DDF              ; Function player_lost_life
-2942  0DDF              ; ---------------------------------
-2943  0DDF              _player_lost_life:
-2944  0DDF  3A 07 00    	ld	a,(_lin + 0x0007)
-2945  0DE2  32 00 00    	ld	(_s_lin0),a
-2946  0DE5  3A 07 00    	ld	a,(_col + 0x0007)
-2947  0DE8  32 00 00    	ld	(_s_col0),a
-2948  0DEB  CD 00 00    	call	_spr_init_anim_bullets
-2949  0DEE  01 00 00    	ld	bc,_class+0
-2950  0DF1  16 00       	ld	d,0x00
-2951  0DF3              l_player_lost_life_00114:
-2952  0DF3  C5          	push	bc
-2953  0DF4  D5          	push	de
-2954  0DF5  21 00 00    	ld	hl,0x0000
-2955  0DF8  E5          	push	hl
-2956  0DF9  AF          	xor	a, a
-2957  0DFA  5A          	ld	e,d
-2958  0DFB  57          	ld	d,a
-2959  0DFC  D5          	push	de
-2960  0DFD  CD 00 00    	call	_NIRVANAP_spriteT_callee
-2961  0E00  D1          	pop	de
-2962  0E01  C1          	pop	bc
-2963  0E02  6A          	ld	l,d
-2964  0E03  26 00       	ld	h,0x00
-2965  0E05  09          	add	hl, bc
-2966  0E06  36 00       	ld	(hl),0x00
-2967  0E08  14          	inc	d
-2968  0E09  7A          	ld	a, d
-2969  0E0A  D6 08       	sub	a,0x08
-2970  0E0C  38 E5       	jr	C,l_player_lost_life_00114
-2971  0E0E  76          	halt
-2972  0E0F  3A 00 00    	ld	a,(_s_lin0)
-2973  0E12  C6 F0       	add	a,0xf0
-2974  0E14  47          	ld	b, a
-2975  0E15  3A 00 00    	ld	a,(_s_col0)
-2976  0E18  21 00 00    	ld	hl,0x0000
-2977  0E1B  E5          	push	hl
-2978  0E1C  21 7B 03    	ld	hl,0x037b
-2979  0E1F  E5          	push	hl
-2980  0E20  48          	ld	c,b
-2981  0E21  47          	ld	b,a
-2982  0E22  C5          	push	bc
-2983  0E23  CD 00 00    	call	_spr_add_anim
-2984  0E26  F1          	pop	af
-2985  0E27  F1          	pop	af
-2986  0E28  F1          	pop	af
-2987  0E29  21 00 00    	ld	hl,_s_col0
-2988  0E2C  7E          	ld	a, (hl)
-2989  0E2D  D6 02       	sub	a,0x02
-2990  0E2F  38 18       	jr	C,l_player_lost_life_00103
-2991  0E31  46          	ld	b, (hl)
-2992  0E32  05          	dec	b
-2993  0E33  05          	dec	b
-2994  0E34  21 00 00    	ld	hl,0x0000
-2995  0E37  E5          	push	hl
-2996  0E38  21 7B 03    	ld	hl,0x037b
-2997  0E3B  E5          	push	hl
-2998  0E3C  C5          	push	bc
-2999  0E3D  33          	inc	sp
-3000  0E3E  3A 00 00    	ld	a,(_s_lin0)
-3001  0E41  F5          	push	af
-3002  0E42  33          	inc	sp
-3003  0E43  CD 00 00    	call	_spr_add_anim
-3004  0E46  F1          	pop	af
-3005  0E47  F1          	pop	af
-3006  0E48  F1          	pop	af
-3007  0E49              l_player_lost_life_00103:
-3008  0E49  3A 00 00    	ld	a,(_s_col0)
-3009  0E4C  21 00 00    	ld	hl,0x0000
-3010  0E4F  E5          	push	hl
-3011  0E50  21 7B 03    	ld	hl,0x037b
-3012  0E53  E5          	push	hl
-3013  0E54  F5          	push	af
-3014  0E55  33          	inc	sp
-3015  0E56  3A 00 00    	ld	a,(_s_lin0)
-3016  0E59  F5          	push	af
-3017  0E5A  33          	inc	sp
-3018  0E5B  CD 00 00    	call	_spr_add_anim
-3019  0E5E  F1          	pop	af
-3020  0E5F  F1          	pop	af
-3021  0E60  F1          	pop	af
-3022  0E61  21 00 00    	ld	hl,_s_col0
-3023  0E64  7E          	ld	a, (hl)
-3024  0E65  D6 1E       	sub	a,0x1e
-3025  0E67  30 18       	jr	NC,l_player_lost_life_00105
-3026  0E69  46          	ld	b, (hl)
-3027  0E6A  04          	inc	b
-3028  0E6B  04          	inc	b
-3029  0E6C  21 00 00    	ld	hl,0x0000
-3030  0E6F  E5          	push	hl
-3031  0E70  21 7B 03    	ld	hl,0x037b
-3032  0E73  E5          	push	hl
-3033  0E74  C5          	push	bc
-3034  0E75  33          	inc	sp
-3035  0E76  3A 00 00    	ld	a,(_s_lin0)
-3036  0E79  F5          	push	af
-3037  0E7A  33          	inc	sp
-3038  0E7B  CD 00 00    	call	_spr_add_anim
-3039  0E7E  F1          	pop	af
-3040  0E7F  F1          	pop	af
-3041  0E80  F1          	pop	af
-3042  0E81              l_player_lost_life_00105:
-3043  0E81  3A 00 00    	ld	a,(_s_lin0)
-3044  0E84  C6 10       	add	a,0x10
-3045  0E86  47          	ld	b, a
-3046  0E87  3A 00 00    	ld	a,(_s_col0)
-3047  0E8A  21 00 00    	ld	hl,0x0000
-3048  0E8D  E5          	push	hl
-3049  0E8E  21 7B 03    	ld	hl,0x037b
-3050  0E91  E5          	push	hl
-3051  0E92  48          	ld	c,b
-3052  0E93  47          	ld	b,a
-3053  0E94  C5          	push	bc
-3054  0E95  CD 00 00    	call	_spr_add_anim
-3055  0E98  F1          	pop	af
-3056  0E99  F1          	pop	af
-3057  0E9A  F1          	pop	af
-3058  0E9B  2E 00       	ld	l,0x00
-3059  0E9D  CD 00 00    	call	_zx_border_fastcall
-3060  0EA0  21 00 00    	ld	hl,_tmp
-3061  0EA3  36 01       	ld	(hl),0x01
-3062  0EA5              l_player_lost_life_00111:
-3063  0EA5  3A 00 00    	ld	a,(_tmp)
-3064  0EA8  B7          	or	a, a
-3065  0EA9  28 2F       	jr	Z,l_player_lost_life_00113
-3066  0EAB  21 06 00    	ld	hl,0x0006
-3067  0EAE  E5          	push	hl
-3068  0EAF  2A 00 00    	ld	hl,(_anim_time)
-3069  0EB2  E5          	push	hl
-3070  0EB3  CD 00 00    	call	_game_check_time
-3071  0EB6  F1          	pop	af
-3072  0EB7  F1          	pop	af
-3073  0EB8  7D          	ld	a, l
-3074  0EB9  B7          	or	a, a
-3075  0EBA  28 16       	jr	Z,l_player_lost_life_00110
-3076  0EBC  2A 00 00    	ld	hl,(_curr_time)
-3077  0EBF  22 00 00    	ld	(_anim_time),hl
-3078  0EC2  3A 00 00    	ld	a,(_anim_count)
-3079  0EC5  B7          	or	a,a
-3080  0EC6  28 05       	jr	Z,l_player_lost_life_00107
-3081  0EC8  CD 00 00    	call	_spr_play_anim
-3082  0ECB  18 05       	jr	l_player_lost_life_00110
-3083  0ECD              l_player_lost_life_00107:
-3084  0ECD  21 00 00    	ld	hl,_tmp
-3085  0ED0  36 00       	ld	(hl),0x00
-3086  0ED2              l_player_lost_life_00110:
-3087  0ED2  21 05 00    	ld	hl,0x0005
-3088  0ED5  CD 00 00    	call	_z80_delay_ms_fastcall
-3089  0ED8  18 CB       	jr	l_player_lost_life_00111
-3090  0EDA              l_player_lost_life_00113:
-3091  0EDA  21 F4 01    	ld	hl,0x01f4
-3092  0EDD  CD 00 00    	call	_z80_delay_ms_fastcall
-3093  0EE0  3A 00 00    	ld	a,(_game_start_scr)
-3094  0EE3  32 00 00    	ld	(_scr_curr),a
-3095  0EE6  CD 00 00    	call	_game_round_init
-3096  0EE9  C9          	ret
-3097  0EEA              	SECTION code_compiler
-3098  0EEA              ;	---------------------------------
-3099  0EEA              ; Function player_hit
-3100  0EEA              ; ---------------------------------
-3101  0EEA              _player_hit:
-3102  0EEA  7D          	ld	a,l
-3103  0EEB  4D          	ld	c,l
-3104  0EEC  21 00 00    	ld	hl,_player_vita
-3105  0EEF  96          	sub	a, (hl)
-3106  0EF0  30 17       	jr	NC,l_player_hit_00107
-3107  0EF2  3A 00 00    	ld	a,(_game_inmune)
-3108  0EF5  B7          	or	a, a
-3109  0EF6  20 06       	jr	NZ,l_player_hit_00102
-3110  0EF8  21 00 00    	ld	hl,_player_vita
-3111  0EFB  7E          	ld	a, (hl)
-3112  0EFC  91          	sub	a, c
-3113  0EFD  77          	ld	(hl), a
-3114  0EFE              l_player_hit_00102:
-3115  0EFE  2A 00 00    	ld	hl,(_curr_time)
-3116  0F01  22 00 00    	ld	(_player_hit_time),hl
-3117  0F04  CD 00 00    	call	_game_update_stats
-3118  0F07  18 1F       	jr	l_player_hit_00109
-3119  0F09              l_player_hit_00107:
-3120  0F09  21 00 00    	ld	hl,_player_vita
-3121  0F0C  36 00       	ld	(hl),0x00
-3122  0F0E  CD DF 0D    	call	_player_lost_life
-3123  0F11  21 00 00    	ld	hl,_player_lives
-3124  0F14  7E          	ld	a, (hl)
-3125  0F15  B7          	or	a, a
-3126  0F16  28 06       	jr	Z,l_player_hit_00104
-3127  0F18  35          	dec	(hl)
-3128  0F19  CD 00 00    	call	_game_update_stats
-3129  0F1C  18 0A       	jr	l_player_hit_00109
-3130  0F1E              l_player_hit_00104:
-3131  0F1E  21 00 00    	ld	hl,_player_lives
-3132  0F21  36 00       	ld	(hl),0x00
-3133  0F23  21 00 00    	ld	hl,_game_over
-3134  0F26  36 01       	ld	(hl),0x01
-3135  0F28              l_player_hit_00109:
-3136  0F28  C9          	ret
-3137  0F29              	SECTION IGNORE
-3138  0000              
+2917  0DB6  20 06       	jr	NZ,l_player_open_door_00114
+2918  0DB8  3A 00 00    	ld	a,(_game_inmune)
+2919  0DBB  B7          	or	a, a
+2920  0DBC  28 24       	jr	Z,l_player_open_door_00117
+2921  0DBE              l_player_open_door_00114:
+2922  0DBE  3E 00       	ld	a, +((_scr_map) & 0xFF)
+2923  0DC0  DD 86 04    	add	a,(ix+4)
+2924  0DC3  4F          	ld	c, a
+2925  0DC4  3E 00       	ld	a, +((_scr_map) / 256)
+2926  0DC6  DD 8E 05    	adc	a,(ix+5)
+2927  0DC9  47          	ld	b, a
+2928  0DCA  AF          	xor	a, a
+2929  0DCB  02          	ld	(bc), a
+2930  0DCC  DD 6E 04    	ld	l,(ix+4)
+2931  0DCF  DD 66 05    	ld	h,(ix+5)
+2932  0DD2  E5          	push	hl
+2933  0DD3  CD 00 00    	call	_game_obj_set
+2934  0DD6  F1          	pop	af
+2935  0DD7  DD 6E 04    	ld	l,(ix+4)
+2936  0DDA  DD 66 05    	ld	h,(ix+5)
+2937  0DDD  E5          	push	hl
+2938  0DDE  CD 00 00    	call	_spr_draw_index
+2939  0DE1  F1          	pop	af
+2940  0DE2              l_player_open_door_00117:
+2941  0DE2  DD E1       	pop	ix
+2942  0DE4  C9          	ret
+2943  0DE5              	SECTION code_compiler
+2944  0DE5              ;	---------------------------------
+2945  0DE5              ; Function player_lost_life
+2946  0DE5              ; ---------------------------------
+2947  0DE5              _player_lost_life:
+2948  0DE5  3A 07 00    	ld	a,(_lin + 0x0007)
+2949  0DE8  32 00 00    	ld	(_s_lin0),a
+2950  0DEB  3A 07 00    	ld	a,(_col + 0x0007)
+2951  0DEE  32 00 00    	ld	(_s_col0),a
+2952  0DF1  CD 00 00    	call	_spr_init_anim_bullets
+2953  0DF4  01 00 00    	ld	bc,_class+0
+2954  0DF7  16 00       	ld	d,0x00
+2955  0DF9              l_player_lost_life_00114:
+2956  0DF9  C5          	push	bc
+2957  0DFA  D5          	push	de
+2958  0DFB  21 00 00    	ld	hl,0x0000
+2959  0DFE  E5          	push	hl
+2960  0DFF  AF          	xor	a, a
+2961  0E00  5A          	ld	e,d
+2962  0E01  57          	ld	d,a
+2963  0E02  D5          	push	de
+2964  0E03  CD 00 00    	call	_NIRVANAP_spriteT_callee
+2965  0E06  D1          	pop	de
+2966  0E07  C1          	pop	bc
+2967  0E08  6A          	ld	l,d
+2968  0E09  26 00       	ld	h,0x00
+2969  0E0B  09          	add	hl, bc
+2970  0E0C  36 00       	ld	(hl),0x00
+2971  0E0E  14          	inc	d
+2972  0E0F  7A          	ld	a, d
+2973  0E10  D6 08       	sub	a,0x08
+2974  0E12  38 E5       	jr	C,l_player_lost_life_00114
+2975  0E14  76          	halt
+2976  0E15  3A 00 00    	ld	a,(_s_lin0)
+2977  0E18  C6 F0       	add	a,0xf0
+2978  0E1A  47          	ld	b, a
+2979  0E1B  3A 00 00    	ld	a,(_s_col0)
+2980  0E1E  21 00 00    	ld	hl,0x0000
+2981  0E21  E5          	push	hl
+2982  0E22  21 7B 03    	ld	hl,0x037b
+2983  0E25  E5          	push	hl
+2984  0E26  48          	ld	c,b
+2985  0E27  47          	ld	b,a
+2986  0E28  C5          	push	bc
+2987  0E29  CD 00 00    	call	_spr_add_anim
+2988  0E2C  F1          	pop	af
+2989  0E2D  F1          	pop	af
+2990  0E2E  F1          	pop	af
+2991  0E2F  21 00 00    	ld	hl,_s_col0
+2992  0E32  7E          	ld	a, (hl)
+2993  0E33  D6 02       	sub	a,0x02
+2994  0E35  38 18       	jr	C,l_player_lost_life_00103
+2995  0E37  46          	ld	b, (hl)
+2996  0E38  05          	dec	b
+2997  0E39  05          	dec	b
+2998  0E3A  21 00 00    	ld	hl,0x0000
+2999  0E3D  E5          	push	hl
+3000  0E3E  21 7B 03    	ld	hl,0x037b
+3001  0E41  E5          	push	hl
+3002  0E42  C5          	push	bc
+3003  0E43  33          	inc	sp
+3004  0E44  3A 00 00    	ld	a,(_s_lin0)
+3005  0E47  F5          	push	af
+3006  0E48  33          	inc	sp
+3007  0E49  CD 00 00    	call	_spr_add_anim
+3008  0E4C  F1          	pop	af
+3009  0E4D  F1          	pop	af
+3010  0E4E  F1          	pop	af
+3011  0E4F              l_player_lost_life_00103:
+3012  0E4F  3A 00 00    	ld	a,(_s_col0)
+3013  0E52  21 00 00    	ld	hl,0x0000
+3014  0E55  E5          	push	hl
+3015  0E56  21 7B 03    	ld	hl,0x037b
+3016  0E59  E5          	push	hl
+3017  0E5A  F5          	push	af
+3018  0E5B  33          	inc	sp
+3019  0E5C  3A 00 00    	ld	a,(_s_lin0)
+3020  0E5F  F5          	push	af
+3021  0E60  33          	inc	sp
+3022  0E61  CD 00 00    	call	_spr_add_anim
+3023  0E64  F1          	pop	af
+3024  0E65  F1          	pop	af
+3025  0E66  F1          	pop	af
+3026  0E67  21 00 00    	ld	hl,_s_col0
+3027  0E6A  7E          	ld	a, (hl)
+3028  0E6B  D6 1E       	sub	a,0x1e
+3029  0E6D  30 18       	jr	NC,l_player_lost_life_00105
+3030  0E6F  46          	ld	b, (hl)
+3031  0E70  04          	inc	b
+3032  0E71  04          	inc	b
+3033  0E72  21 00 00    	ld	hl,0x0000
+3034  0E75  E5          	push	hl
+3035  0E76  21 7B 03    	ld	hl,0x037b
+3036  0E79  E5          	push	hl
+3037  0E7A  C5          	push	bc
+3038  0E7B  33          	inc	sp
+3039  0E7C  3A 00 00    	ld	a,(_s_lin0)
+3040  0E7F  F5          	push	af
+3041  0E80  33          	inc	sp
+3042  0E81  CD 00 00    	call	_spr_add_anim
+3043  0E84  F1          	pop	af
+3044  0E85  F1          	pop	af
+3045  0E86  F1          	pop	af
+3046  0E87              l_player_lost_life_00105:
+3047  0E87  3A 00 00    	ld	a,(_s_lin0)
+3048  0E8A  C6 10       	add	a,0x10
+3049  0E8C  47          	ld	b, a
+3050  0E8D  3A 00 00    	ld	a,(_s_col0)
+3051  0E90  21 00 00    	ld	hl,0x0000
+3052  0E93  E5          	push	hl
+3053  0E94  21 7B 03    	ld	hl,0x037b
+3054  0E97  E5          	push	hl
+3055  0E98  48          	ld	c,b
+3056  0E99  47          	ld	b,a
+3057  0E9A  C5          	push	bc
+3058  0E9B  CD 00 00    	call	_spr_add_anim
+3059  0E9E  F1          	pop	af
+3060  0E9F  F1          	pop	af
+3061  0EA0  F1          	pop	af
+3062  0EA1  2E 00       	ld	l,0x00
+3063  0EA3  CD 00 00    	call	_zx_border_fastcall
+3064  0EA6  21 00 00    	ld	hl,_tmp
+3065  0EA9  36 01       	ld	(hl),0x01
+3066  0EAB              l_player_lost_life_00111:
+3067  0EAB  3A 00 00    	ld	a,(_tmp)
+3068  0EAE  B7          	or	a, a
+3069  0EAF  28 2F       	jr	Z,l_player_lost_life_00113
+3070  0EB1  21 06 00    	ld	hl,0x0006
+3071  0EB4  E5          	push	hl
+3072  0EB5  2A 00 00    	ld	hl,(_anim_time)
+3073  0EB8  E5          	push	hl
+3074  0EB9  CD 00 00    	call	_game_check_time
+3075  0EBC  F1          	pop	af
+3076  0EBD  F1          	pop	af
+3077  0EBE  7D          	ld	a, l
+3078  0EBF  B7          	or	a, a
+3079  0EC0  28 16       	jr	Z,l_player_lost_life_00110
+3080  0EC2  2A 00 00    	ld	hl,(_curr_time)
+3081  0EC5  22 00 00    	ld	(_anim_time),hl
+3082  0EC8  3A 00 00    	ld	a,(_anim_count)
+3083  0ECB  B7          	or	a,a
+3084  0ECC  28 05       	jr	Z,l_player_lost_life_00107
+3085  0ECE  CD 00 00    	call	_spr_play_anim
+3086  0ED1  18 05       	jr	l_player_lost_life_00110
+3087  0ED3              l_player_lost_life_00107:
+3088  0ED3  21 00 00    	ld	hl,_tmp
+3089  0ED6  36 00       	ld	(hl),0x00
+3090  0ED8              l_player_lost_life_00110:
+3091  0ED8  21 05 00    	ld	hl,0x0005
+3092  0EDB  CD 00 00    	call	_z80_delay_ms_fastcall
+3093  0EDE  18 CB       	jr	l_player_lost_life_00111
+3094  0EE0              l_player_lost_life_00113:
+3095  0EE0  21 F4 01    	ld	hl,0x01f4
+3096  0EE3  CD 00 00    	call	_z80_delay_ms_fastcall
+3097  0EE6  3A 00 00    	ld	a,(_game_start_scr)
+3098  0EE9  32 00 00    	ld	(_scr_curr),a
+3099  0EEC  CD 00 00    	call	_game_round_init
+3100  0EEF  C9          	ret
+3101  0EF0              	SECTION code_compiler
+3102  0EF0              ;	---------------------------------
+3103  0EF0              ; Function player_hit
+3104  0EF0              ; ---------------------------------
+3105  0EF0              _player_hit:
+3106  0EF0  7D          	ld	a,l
+3107  0EF1  4D          	ld	c,l
+3108  0EF2  21 00 00    	ld	hl,_player_vita
+3109  0EF5  96          	sub	a, (hl)
+3110  0EF6  30 17       	jr	NC,l_player_hit_00107
+3111  0EF8  3A 00 00    	ld	a,(_game_inmune)
+3112  0EFB  B7          	or	a, a
+3113  0EFC  20 06       	jr	NZ,l_player_hit_00102
+3114  0EFE  21 00 00    	ld	hl,_player_vita
+3115  0F01  7E          	ld	a, (hl)
+3116  0F02  91          	sub	a, c
+3117  0F03  77          	ld	(hl), a
+3118  0F04              l_player_hit_00102:
+3119  0F04  2A 00 00    	ld	hl,(_curr_time)
+3120  0F07  22 00 00    	ld	(_player_hit_time),hl
+3121  0F0A  CD 00 00    	call	_game_update_stats
+3122  0F0D  18 1F       	jr	l_player_hit_00109
+3123  0F0F              l_player_hit_00107:
+3124  0F0F  21 00 00    	ld	hl,_player_vita
+3125  0F12  36 00       	ld	(hl),0x00
+3126  0F14  CD E5 0D    	call	_player_lost_life
+3127  0F17  21 00 00    	ld	hl,_player_lives
+3128  0F1A  7E          	ld	a, (hl)
+3129  0F1B  B7          	or	a, a
+3130  0F1C  28 06       	jr	Z,l_player_hit_00104
+3131  0F1E  35          	dec	(hl)
+3132  0F1F  CD 00 00    	call	_game_update_stats
+3133  0F22  18 0A       	jr	l_player_hit_00109
+3134  0F24              l_player_hit_00104:
+3135  0F24  21 00 00    	ld	hl,_player_lives
+3136  0F27  36 00       	ld	(hl),0x00
+3137  0F29  21 00 00    	ld	hl,_game_over
+3138  0F2C  36 01       	ld	(hl),0x01
+3139  0F2E              l_player_hit_00109:
+3140  0F2E  C9          	ret
+3141  0F2F              	SECTION IGNORE
+3142  0000              

@@ -27,7 +27,7 @@
 #define TILE_CEIL                     60 //START CEILS TILES
 #define TILE_DOOR_E                   64 //END OF DOOR TILES
 #define TILE_END                      84 //END OF TILES
-#define TILE_ITEM_S                   28 //START OF ITEMS
+#define TILE_ITEM_S                   32 //START OF ITEMS
 #define TILE_ITEM_E                   39 //END OF ITEMS
 #define TILE_STAIR_S                  56 //START OF STAIRS
 #define TILE_STAIR_E                  60 //END OF STAIRS

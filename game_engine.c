@@ -118,8 +118,7 @@ void game_draw_screen(void) {
 
     if (scr_map[index1] < TILE_END) {
 
-      if ((scr_map[index1] == TILE_SPECIAL) &&
-          game_obj_chk(index1-16) ) {
+      if ((scr_map[index1] == TILE_SPECIAL) && game_obj_chk(index1 - 16)) {
         scr_map[index1] = TILE_NOSPECIAL;
       }
       // NORMAL TILE
@@ -233,13 +232,12 @@ void game_print_footer(void) {
   zx_print_ink(INK_RED);
   zx_print_str(20, 7, "j");
   zx_print_ink(INK_BLUE);
-  zx_print_str(20,13, "k");
+  zx_print_str(20, 13, "k");
 
   zx_print_ink(INK_YELLOW);
   zx_print_str(22, 14, "m");
   zx_print_str(22, 20, "n");
   zx_print_str(22, 26, "o");
-
 
   game_update_stats();
 }
@@ -304,7 +302,7 @@ void game_round_init(void) {
   /*Draw Platforms*/
   // zx_paper_fill(INK_BLACK | PAPER_BLACK);
   spr_page_map();
-  //scr_curr = game_start_scr;
+  // scr_curr = game_start_scr;
   game_draw_screen();
   game_print_header();
   game_print_footer();
@@ -361,12 +359,15 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
     if (class[sprite] <= SPIDER) {
       if (f_tile <= TILE_ITEM_E) {
         return 0;
+      }
+    } else {
+      if (f_tile <= TILE_ITEM_S) {
+        return 0;
       } else {
         return 1;
       }
     }
   }
-
 
   // TILE_EMPTY -> TILE_FLOOR
   if (f_tile < TILE_FLOOR) {
@@ -537,24 +538,24 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
   return 0;
 }
 
-void game_obj_set( unsigned int f_index ) {
+void game_obj_set(unsigned int f_index) {
   unsigned char f_scr_surr1;
 
   if (scr_curr < 8) {
-    BIT_SET( scr_obj0[f_index] , scr_curr );
+    BIT_SET(scr_obj0[f_index], scr_curr);
   } else {
     f_scr_surr1 = 16 - scr_curr;
-    BIT_SET( scr_obj1[f_index] , f_scr_surr1 );
+    BIT_SET(scr_obj1[f_index], f_scr_surr1);
   }
 }
 
-unsigned char game_obj_chk( unsigned int f_index ) {
+unsigned char game_obj_chk(unsigned int f_index) {
   unsigned char f_scr_surr1;
 
   if (scr_curr < 8) {
-    return BIT_CHK( scr_obj0[f_index] , scr_curr );
+    return BIT_CHK(scr_obj0[f_index], scr_curr);
   } else {
     f_scr_surr1 = 16 - scr_curr;
-    return BIT_CHK( scr_obj1[f_index] , f_scr_surr1 );
+    return BIT_CHK(scr_obj1[f_index], f_scr_surr1);
   }
 }
