@@ -33,7 +33,9 @@
 #define TILE_STAIR_E                  60 //END OF STAIRS
 
 #define TILE_DIRT                     69 //CAN BE DESTROYED BY FIREBALLS
-#define TILE_SPECIAL                  75 //HAVE A MUSHROM
+#define TILE_SPECIAL                  75 //HAVE A MUSHROM VITA / MANA
+#define TILE_HIDDEN_BRICK             76 //HIDDEN TREASURE (COINS LIKE MARIO?)
+#define TILE_NORMAL_BRICK             70
 #define TILE_NOSPECIAL                68 //AFTER HIT
 
 #define TILE_HIT                      69 //CAN BE DESTROYED BY FIREBALLS

@@ -115,7 +115,6 @@ void player_restart(unsigned char f_sprite) __z88dk_fastcall {
   sprite_speed_alt[f_sprite] = SPRITE_RESTART_SPEED;
 }
 
-
 void player_turn(void) {
   if (class[sprite] == PLAYER && player_lives > 0) {
     if (spr_chktime(&sprite)) {
@@ -320,15 +319,14 @@ unsigned char player_move_input(void) {
 unsigned char player_fire() {
   if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_DOWN)) {
     /*Fireball*/
-    if (player_mana > 0 && (bullet_col[SPR_P1] == 0xFF) ) {
-      if ( player_mana > 5 ) {
+    if (player_mana > 0 && (bullet_col[SPR_P1] == 0xFF)) {
+      if (player_mana > 5) {
         player_mana = player_mana - 5;
       } else {
         player_mana = 0;
       }
       game_update_stats();
       game_shoot_fire(SPR_P1, TILE_FIREBALL_R);
-
     }
     return 1;
   }
@@ -456,7 +454,8 @@ unsigned char player_hit_platform(void) {
       }
     }
 
-    if (scr_map[index1] == TILE_SPECIAL) {
+    if (scr_map[index1] == TILE_SPECIAL ||
+        scr_map[index1] == TILE_HIDDEN_BRICK) {
       zx_border(INK_BLUE);
       tmp0 = 0;
       while (tmp0 < SPR_P1) {
@@ -499,7 +498,12 @@ unsigned char player_hit_platform(void) {
           }
 
           scr_map[index1 - 16] = TILE_EMPTY;
-          scr_map[index1] = TILE_NOSPECIAL;
+          if (scr_map[index1] == TILE_SPECIAL) {
+            scr_map[index1] = TILE_NOSPECIAL;
+          } else {
+            scr_map[index1] = TILE_NORMAL_BRICK;
+          }
+
           game_obj_set(index1 - 16);
           NIRVANAP_drawT(TILE_NOSPECIAL, s_lin1 + 16, s_col1);
         }
@@ -724,7 +728,6 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
 void player_lost_life() {
   unsigned char f_anim;
 
-
   s_lin0 = lin[SPR_P1];
   s_col0 = col[SPR_P1];
   spr_init_anim_bullets();
@@ -735,9 +738,11 @@ void player_lost_life() {
   NIRVANAP_halt();
 
   spr_add_anim(s_lin0 - 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
-  if (s_col0 >=  2) spr_add_anim(s_lin0, s_col0-2, TILE_ANIM_FIRE, 3, 0, 0);
+  if (s_col0 >= 2)
+    spr_add_anim(s_lin0, s_col0 - 2, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
-  if (s_col0 < 30) spr_add_anim(s_lin0, s_col0+2, TILE_ANIM_FIRE, 3, 0, 0);
+  if (s_col0 < 30)
+    spr_add_anim(s_lin0, s_col0 + 2, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(s_lin0 + 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
   zx_border(INK_BLACK);
   tmp = 1;
@@ -753,28 +758,29 @@ void player_lost_life() {
     z80_delay_ms(5);
   }
   z80_delay_ms(500);
-  scr_curr = game_start_scr; //TODO
+  scr_curr = game_start_scr; // TODO
   game_round_init();
 }
 
 void player_hit(unsigned char f_val) __z88dk_fastcall {
-  //if (game_check_time(player_hit_time, 25)) {
-    if (player_vita > f_val) {
-      if (!game_inmune) player_vita = player_vita - f_val;
-      player_hit_time = curr_time;
+  // if (game_check_time(player_hit_time, 25)) {
+  if (player_vita > f_val) {
+    if (!game_inmune)
+      player_vita = player_vita - f_val;
+    player_hit_time = curr_time;
+    game_update_stats();
+  } else {
+    player_vita = 0;
+    player_lost_life();
+    if (player_lives) {
+      // Player lost life
+      --player_lives;
       game_update_stats();
     } else {
-      player_vita = 0;
-      player_lost_life();
-      if (player_lives) {
-        // Player lost life
-        --player_lives;
-        game_update_stats();
-      } else {
-        // Game End
-        player_lives = 0;
-        game_over = 1;
-      }
+      // Game End
+      player_lives = 0;
+      game_over = 1;
     }
+  }
   //}
 }
