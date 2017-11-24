@@ -230,7 +230,6 @@ void spr_page_map(void) {
     unsigned char v0;
     unsigned char v1;
     unsigned char vr;
-    unsigned char scr_curr_tmp;
     unsigned char i;
     unsigned char j;
     unsigned char k;
@@ -238,24 +237,25 @@ void spr_page_map(void) {
     unsigned int start_index;
 
     k = 16;
-    scr_curr_tmp = scr_curr;
     intrinsic_di();
     // Read Player start screen on world map
     GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
     IO_7FFD = 0x10 + 6;
-    game_start_scr = start_scr0;
+    v0 = start_scr0; //TODO n LEVELS
     GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
     IO_7FFD = 0x10 + 0;
-
+    game_start_scr = v0;
     // Calculate the current screen start index in the world map
     j = 0;
     start_index = 0;
     add_index = 0;
-
+    if ( scr_curr == 255 ) {
+      scr_curr = game_start_scr;
+    }
     while (j < scr_curr) {
       GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
       IO_7FFD = 0x10 + 6;
-      add_index = lenght0[j];
+      add_index = lenght0[j]; //TODO n LEVELS
       GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
       IO_7FFD = 0x10 + 0;
       start_index = start_index + add_index;
@@ -269,13 +269,14 @@ void spr_page_map(void) {
       // Page in BANK 06 - Note that global variables are in page 0
       GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
       IO_7FFD = 0x10 + 6;
-      v0 = world0[start_index + i];
-      v1 = world0[start_index + i + 1];
+      v0 = world0[start_index + i]; //TODO n LEVELS
+      v1 = world0[start_index + i + 1]; //TODO n LEVELS
 
       // Page in BANK 00
       GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
       IO_7FFD = 0x10 + 0;
 
+      //REMEMBER OBJECT PICK
       if (v0 < 128) {
         if (!game_obj_chk(k)) {
           scr_map[k] = v0;

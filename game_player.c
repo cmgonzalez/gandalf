@@ -320,7 +320,16 @@ unsigned char player_move_input(void) {
 unsigned char player_fire() {
   if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_DOWN)) {
     /*Fireball*/
-    game_shoot_fire(SPR_P1, TILE_FIREBALL_R);
+    if (player_mana > 0 && (bullet_col[SPR_P1] == 0xFF) ) {
+      if ( player_mana > 5 ) {
+        player_mana = player_mana - 5;
+      } else {
+        player_mana = 0;
+      }
+      game_update_stats();
+      game_shoot_fire(SPR_P1, TILE_FIREBALL_R);
+
+    }
     return 1;
   }
   return 0;
@@ -751,7 +760,7 @@ void player_lost_life() {
 void player_hit(unsigned char f_val) __z88dk_fastcall {
   //if (game_check_time(player_hit_time, 25)) {
     if (player_vita > f_val) {
-      player_vita = player_vita - f_val;
+      if (!game_inmune) player_vita = player_vita - f_val;
       player_hit_time = curr_time;
       game_update_stats();
     } else {

@@ -36,7 +36,7 @@ void main(void) {
   unsigned int counter;
 
   game_god_mode = 0;
-  game_inmune = 0;
+  game_inmune = 1;
   // INTERRUPTS ARE DISABLED
 
   // RESET AY CHIP
@@ -93,7 +93,7 @@ void main(void) {
   NIRVANAP_tiles(_btiles);
   NIRVANAP_start();
   map_paper_last = PAPER_BLUE;
-  map_paper = PAPER_BLACK;
+  map_paper = PAPER_BLUE;
   map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
 
   spr_btile_paint_back();
@@ -112,7 +112,7 @@ void main(void) {
   player_keys[1] = 0;
   player_keys[2] = 0;
   player_keys[3] = 0;
-  scr_curr = 0;
+  scr_curr = 255; //255 equals read default screen from map
   map_width = 16 - 1; // OJO!
   map_heigth = 1;
 
