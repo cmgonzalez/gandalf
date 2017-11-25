@@ -70,6 +70,24 @@ unsigned char player_collision(void) {
       if (class[sprite] > 0) {
         if (abs(col[sprite] - s_col1) < 2) {
           if (abs(lin[sprite] - s_lin1) < 14) {
+            if (class[sprite] == MUSHROOM_VITA) {
+                player_vita = player_vita + 20;
+                game_update_stats();
+                spr_destroy(sprite);
+                return 0;
+            }
+            if (class[sprite] == MUSHROOM_MANA) {
+                player_mana = player_mana + 20;
+                game_update_stats();
+                spr_destroy(sprite);
+                return 0;
+            }
+            if (class[sprite] == MUSHROOM_EXTRA) {
+                player_lives++;
+                game_update_stats();
+                spr_destroy(sprite);
+                return 0;
+            }
             zx_border(INK_RED);
             player_hit(20);
             return 1;
@@ -471,29 +489,29 @@ unsigned char player_hit_platform(void) {
             ++tmp;
           }
           switch (mush_class[tmp]) {
-          case INDEX_MUSH_FIRE_L:
+          case INDEX_MUSH_VITA_L:
             zx_border(INK_RED);
-            enemy_init(s_lin1, s_col1, MUSHROOM_FIRE, DIR_LEFT);
+            enemy_init(s_lin1, s_col1, MUSHROOM_VITA, DIR_LEFT);
             break;
-          case INDEX_MUSH_FIRE_R:
+          case INDEX_MUSH_VITA_R:
             zx_border(INK_RED);
-            enemy_init(s_lin1, s_col1, MUSHROOM_FIRE, DIR_RIGHT);
+            enemy_init(s_lin1, s_col1, MUSHROOM_VITA, DIR_RIGHT);
             break;
-          case INDEX_MUSH_POW_R:
+          case INDEX_MUSH_MANA_R:
             zx_border(INK_BLUE);
-            enemy_init(s_lin1, s_col1, MUSHROOM_POW, DIR_RIGHT);
+            enemy_init(s_lin1, s_col1, MUSHROOM_MANA, DIR_RIGHT);
             break;
-          case INDEX_MUSH_POW_L:
+          case INDEX_MUSH_MANA_L:
             zx_border(INK_BLUE);
-            enemy_init(s_lin1, s_col1, MUSHROOM_POW, DIR_LEFT);
+            enemy_init(s_lin1, s_col1, MUSHROOM_MANA, DIR_LEFT);
             break;
-          case INDEX_MUSH_LIFE_R:
-            zx_border(INK_CYAN);
-            enemy_init(s_lin1, s_col1, MUSHROOM_LIFE, DIR_RIGHT);
+          case INDEX_MUSH_EXTRA_R:
+            zx_border(INK_GREEN);
+            enemy_init(s_lin1, s_col1, MUSHROOM_EXTRA, DIR_RIGHT);
             break;
-          case INDEX_MUSH_LIFE_L:
-            zx_border(INK_CYAN);
-            enemy_init(s_lin1, s_col1, MUSHROOM_LIFE, DIR_LEFT);
+          case INDEX_MUSH_EXTRA_L:
+            zx_border(INK_GREEN);
+            enemy_init(s_lin1, s_col1, MUSHROOM_EXTRA, DIR_LEFT);
             break;
           }
 
@@ -782,5 +800,4 @@ void player_hit(unsigned char f_val) __z88dk_fastcall {
       game_over = 1;
     }
   }
-  //}
 }

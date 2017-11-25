@@ -227,94 +227,94 @@ unsigned char spr_page_left() {
 
 void spr_page_map(void) {
 
-    unsigned char v0;
-    unsigned char v1;
-    unsigned char vr;
-    unsigned char i;
-    unsigned char j;
-    unsigned char k;
-    unsigned int add_index;
-    unsigned int start_index;
+  unsigned char v0;
+  unsigned char v1;
+  unsigned char vr;
+  unsigned char i;
+  unsigned char j;
+  unsigned char k;
+  unsigned int add_index;
+  unsigned int start_index;
 
-    k = 16;
-    intrinsic_di();
-    // Read Player start screen on world map
+  k = 16;
+  intrinsic_di();
+  // Read Player start screen on world map
+  GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
+  IO_7FFD = 0x10 + 6;
+  v0 = start_scr0; // TODO n LEVELS
+  GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
+  IO_7FFD = 0x10 + 0;
+  game_start_scr = v0;
+  // Calculate the current screen start index in the world map
+  j = 0;
+  start_index = 0;
+  add_index = 0;
+  if (scr_curr == 255) {
+    scr_curr = game_start_scr;
+  }
+  while (j < scr_curr) {
     GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
     IO_7FFD = 0x10 + 6;
-    v0 = start_scr0; //TODO n LEVELS
+    add_index = lenght0[j]; // TODO n LEVELS
     GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
     IO_7FFD = 0x10 + 0;
-    game_start_scr = v0;
-    // Calculate the current screen start index in the world map
-    j = 0;
-    start_index = 0;
-    add_index = 0;
-    if ( scr_curr == 255 ) {
-      scr_curr = game_start_scr;
-    }
-    while (j < scr_curr) {
-      GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
-      IO_7FFD = 0x10 + 6;
-      add_index = lenght0[j]; //TODO n LEVELS
-      GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
-      IO_7FFD = 0x10 + 0;
-      start_index = start_index + add_index;
-      ++j;
-    }
-    intrinsic_ei();
+    start_index = start_index + add_index;
+    ++j;
+  }
+  intrinsic_ei();
 
-    intrinsic_di();
-    for (i = 0; i < GAME_SCR_MAX_INDEX; ++i) {
+  intrinsic_di();
+  for (i = 0; i < GAME_SCR_MAX_INDEX; ++i) {
 
-      // Page in BANK 06 - Note that global variables are in page 0
-      GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
-      IO_7FFD = 0x10 + 6;
-      v0 = world0[start_index + i]; //TODO n LEVELS
-      v1 = world0[start_index + i + 1]; //TODO n LEVELS
+    // Page in BANK 06 - Note that global variables are in page 0
+    GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
+    IO_7FFD = 0x10 + 6;
+    v0 = world0[start_index + i];     // TODO n LEVELS
+    v1 = world0[start_index + i + 1]; // TODO n LEVELS
 
-      // Page in BANK 00
-      GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
-      IO_7FFD = 0x10 + 0;
+    // Page in BANK 00
+    GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
+    IO_7FFD = 0x10 + 0;
 
-      //REMEMBER OBJECT PICK
-      if (v0 < 128) {
+    // REMEMBER OBJECT PICK
+    if (v0 < 128) {
+      if (!game_obj_chk(k)) {
+        scr_map[k] = v0;
+      } else {
+        scr_map[k] = TILE_EMPTY;
+      }
+      ++k;
+    } else {
+      vr = v0 - 128; // Repeat counter Should be < 128!!
+
+      for (j = 0; j < vr; j++) {
         if (!game_obj_chk(k)) {
-          scr_map[k] = v0;
+          scr_map[k] = v1;
         } else {
           scr_map[k] = TILE_EMPTY;
         }
+
         ++k;
-      } else {
-        vr = v0 - 128; // Repeat counter Should be < 128!!
-
-        for (j = 0; j < vr; j++) {
-          if (!game_obj_chk(k)) {
-            scr_map[k] = v1;
-          } else {
-            scr_map[k] = TILE_EMPTY;
-          }
-
-          ++k;
-          if (k >= GAME_SCR_MAX_INDEX) {
-            break;
-          }
+        if (k >= GAME_SCR_MAX_INDEX) {
+          break;
         }
-        ++i;
       }
-      if (k >= GAME_SCR_MAX_INDEX) {
-        break;
-      }
+      ++i;
     }
-    spr_init_anim_bullets();
-    intrinsic_ei();
-    NIRVANAP_start();
+    if (k >= GAME_SCR_MAX_INDEX) {
+      break;
+    }
+  }
+  spr_init_anim_bullets();
+  intrinsic_ei();
+  NIRVANAP_start();
 
-    // NIRVANAP_start();
-    // Remove all enemies fast
-    for (i = 0; i < SPR_P1; ++i) {
-      class[i] = 0;
-      NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
-    }
+  // NIRVANAP_start();
+  // Remove all enemies fast
+  for (i = 0; i < SPR_P1; ++i) {
+    class[i] = 0;
+    NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
+  }
 }
 
 unsigned char spr_redraw(void) {
@@ -415,11 +415,14 @@ unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
   case BAT_H:
     return spr_tile_dir(TILE_ENEMY_BAT_H, f_sprite, DIRINC_ENEMY_BAT_H);
     break;
-  case MUSHROOM_FIRE:
-    return spr_tile_dir(TILE_ENEMY_MUSH_FIRE, f_sprite, DIRINC_ENEMY_MUSH_FIRE);
+  case MUSHROOM_VITA:
+    return spr_tile_dir(TILE_ENEMY_MUSH_VITA, f_sprite, DIRINC_ENEMY_MUSH_EXTRA);
     break;
-  case MUSHROOM_POW:
-    return spr_tile_dir(TILE_ENEMY_MUSH_POW, f_sprite, DIRINC_ENEMY_MUSH_POW);
+  case MUSHROOM_MANA:
+    return spr_tile_dir(TILE_ENEMY_MUSH_MANA, f_sprite, DIRINC_ENEMY_MUSH_MANA);
+    break;
+  case MUSHROOM_EXTRA:
+    return spr_tile_dir(TILE_ENEMY_MUSH_EXTRA, f_sprite, DIRINC_ENEMY_MUSH_MANA);
     break;
   }
   return 0;

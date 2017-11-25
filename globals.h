@@ -47,9 +47,9 @@
 #define BAT                           3 //VERTICAL
 #define WYVERN                        4 //VERTICAL
 #define SPIDER                        5 //VERTICAL
-#define MUSHROOM_LIFE                 6  //WALKER
-#define MUSHROOM_POW                  7  //WALKER
-#define MUSHROOM_FIRE                 8  //WALKER
+#define MUSHROOM_VITA                 6  //WALKER
+#define MUSHROOM_MANA                 7  //WALKER
+#define MUSHROOM_EXTRA                8  //WALKER
 #define FIRE                          9  //WALKER
 #define SNOWMAN                       10 //WALKER
 #define SKELETON                      11 //WALKER
@@ -146,26 +146,26 @@
 #define DIRINC_ENEMY_BAT_H            0
 #define INDEX_BAT_H                 101
 
-#define TILE_ENEMY_MUSH_FIRE        180
-#define FRAMES_ENEMY_MUSH_FIRE        2
-#define SPEED_ENEMY_MUSH_FIRE         2
-#define DIRINC_ENEMY_MUSH_FIRE        0
-#define INDEX_MUSH_FIRE_L           120
-#define INDEX_MUSH_FIRE_R           121
+#define TILE_ENEMY_MUSH_VITA        180
+#define FRAMES_ENEMY_MUSH_VITA        2
+#define SPEED_ENEMY_MUSH_VITA         2
+#define DIRINC_ENEMY_MUSH_VITA        0
+#define INDEX_MUSH_VITA_L           120
+#define INDEX_MUSH_VITA_R           121
 
-#define TILE_ENEMY_MUSH_POW         182
-#define FRAMES_ENEMY_MUSH_POW         2
-#define SPEED_ENEMY_MUSH_POW          2
-#define DIRINC_ENEMY_MUSH_POW         0
-#define INDEX_MUSH_POW_L            122
-#define INDEX_MUSH_POW_R            123
+#define TILE_ENEMY_MUSH_MANA         182
+#define FRAMES_ENEMY_MUSH_MANA         2
+#define SPEED_ENEMY_MUSH_MANA          2
+#define DIRINC_ENEMY_MUSH_MANA         0
+#define INDEX_MUSH_MANA_L            122
+#define INDEX_MUSH_MANA_R            123
 
-#define TILE_ENEMY_MUSH_LIFE        184
-#define FRAMES_ENEMY_MUSH_LIFE        2
-#define SPEED_ENEMY_MUSH_LIFE         2
-#define DIRINC_ENEMY_MUSH_LIFE        0
-#define INDEX_MUSH_LIFE_L           124
-#define INDEX_MUSH_LIFE_R           125
+#define TILE_ENEMY_MUSH_EXTRA        184
+#define FRAMES_ENEMY_MUSH_EXTRA        2
+#define SPEED_ENEMY_MUSH_EXTRA         2
+#define DIRINC_ENEMY_MUSH_EXTRA        0
+#define INDEX_MUSH_EXTRA_L           124
+#define INDEX_MUSH_EXTRA_R           125
 
 //TILE MAP'S
 //  0..23   BACKGROUND

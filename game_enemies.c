@@ -252,10 +252,3 @@ void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,
     ++spr_count;
   }
 }
-
-
-
-void enemy_kill(unsigned char f_sprite) __z88dk_fastcall {
-  tmp = f_sprite; // DUMMY
-  sound_kill();
-}
