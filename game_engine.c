@@ -125,7 +125,7 @@ void game_draw_screen(void) {
       NIRVANAP_drawT_raw(scr_map[index1], s_lin1, s_col1);
 
     } else {
-      if (scr_map[index1] < INDEX_MUSH_EXTRA_L) {
+      if (scr_map[index1] < INDEX_MUSH_VITA_L) {
         // ENEMIES
         if (spr_count < 8) {
           game_respawn_index[spr_count] = index1;

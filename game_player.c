@@ -41,7 +41,6 @@ void player_init(unsigned char f_sprite, unsigned char f_lin,
   jump_lin[f_sprite] = f_lin;
   last_time[f_sprite] = zx_clock();
   sprite_speed_alt[f_sprite] = 0;
-
   BIT_SET(state_a[f_sprite], STAT_LOCK);
   // PLAYER ONLY VARIABLES
   BIT_SET(state_a[f_sprite], STAT_LDIRR);
@@ -62,10 +61,23 @@ unsigned char player_check_input(void) {
 }
 
 unsigned char player_collision(void) {
+  unsigned char v0;
   if (game_check_time(player_hit_time, 25)) { // HACK REPATED ON player_hit
     sprite = 0;
     s_col1 = col[SPR_P1];
     s_lin1 = lin[SPR_P1];
+
+    sprite_curr_index = spr_calc_index(s_lin1 + 8, s_col1);
+    v0 = scr_map[sprite_curr_index];
+
+    if (v0 > TILE_ITEM_E && v0 < TILE_FLOOR) {
+      //if ((s_lin1  & 3) != 0) {
+        // DEADLY BACKGROUNDS
+        zx_border(INK_YELLOW);
+        player_hit(50);
+      //}
+    }
+
     while (sprite < SPR_P1) {
       if (class[sprite] > 0) {
         if (abs(col[sprite] - s_col1) < 2) {
@@ -134,7 +146,7 @@ void player_restart(unsigned char f_sprite) __z88dk_fastcall {
 }
 
 void player_turn(void) {
-  if (class[sprite] == PLAYER && player_lives > 0) {
+  if (player_lives > 0) {
     if (spr_chktime(&sprite)) {
       dirs = (joyfunc1)(&k1);
       player_move();
@@ -344,7 +356,7 @@ unsigned char player_fire() {
         player_mana = 0;
       }
       game_update_stats();
-      game_shoot_fire(SPR_P1, TILE_FIREBALL_R);
+      game_shoot_fire(SPR_P1, TILE_FIREBALL);
     }
     return 1;
   }
@@ -352,7 +364,6 @@ unsigned char player_fire() {
 }
 
 void player_check_map() {
-
   sprite_curr_index = spr_calc_index(lin[sprite], col[sprite]);
   if ((col[sprite] & 1) == 0) { // Par
     if ((lin[sprite] & 15) == 0) {
@@ -387,8 +398,8 @@ void player_check_map() {
 void player_pick_item(void) {
   unsigned char v0;
   v0 = scr_map[sprite_curr_index];
-  if (v0 >= TILE_ITEM_S && v0 <= TILE_ITEM_E) {
 
+  if (v0 >= TILE_ITEM_S && v0 <= TILE_ITEM_E) {
     // PICK ITEM
     ay_reset();
     ay_fx_play(ay_effect_10);
@@ -399,36 +410,27 @@ void player_pick_item(void) {
     s_lin1 = (sprite_curr_index >> 4) << 4;
     s_col1 = (sprite_curr_index & 15) << 1;
     spr_add_anim(s_lin1, s_col1, TILE_ANIM_PICK, 3, 0, 0);
-    // NIRVANAP_drawT(TILE_EMPTY, s_lin1, s_col1);
     switch (v0) {
-    case 28: // KEY WHITE
+    case TILE_KEY_WHITE:
       player_keys[0] = 1;
       zx_print_ink(INK_WHITE);
       zx_print_str(22, 3, "]");
       break;
-    case 29: // KEY RED
+    case TILE_KEY_RED:
       player_keys[1] = 1;
       zx_print_ink(INK_RED);
       zx_print_str(22, 4, "]");
       break;
-    case 30: // KEY GREEN
+    case TILE_KEY_GREEN:
       player_keys[2] = 1;
       zx_print_ink(INK_GREEN);
       zx_print_str(22, 5, "]");
       break;
-    case 31: // KEY CYAN
+    case TILE_KEY_CYAN:
       player_keys[3] = 1;
       zx_print_ink(INK_CYAN);
       zx_print_str(22, 6, "]");
       break;
-    }
-  }
-  if (v0 > TILE_ITEM_E && v0 < TILE_FLOOR) {
-
-    if ((lin[SPR_P1] & 3) != 0) {
-      // DEADLY BACKGROUNDS
-      zx_border(INK_YELLOW);
-      player_hit(50);
     }
   }
 }
@@ -472,13 +474,12 @@ unsigned char player_hit_platform(void) {
       }
     }
 
-    if (scr_map[index1] == TILE_SPECIAL ||
-        scr_map[index1] == TILE_HIDDEN_BRICK) {
-      zx_border(INK_BLUE);
+    if (scr_map[index1] == TILE_SPECIAL || scr_map[index1] == TILE_HIDDEN_BRICK) {
+
+
       tmp0 = 0;
       while (tmp0 < SPR_P1) {
         if (mush_index[tmp0] == index1) {
-
           s_lin1 = ((lin[sprite] >> 4) << 4) - 32;
           s_col1 = (col[sprite] >> 1) << 1;
           tmp = 0;
@@ -710,25 +711,25 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
   unsigned char f_open;
   f_open = 0;
   switch (f_tile) {
-  case 60: // DOOR WHITE
+  case TILE_DOOR_WHITE:
     if (player_keys[0]) {
       zx_border(INK_WHITE);
       f_open = 1;
     }
     break;
-  case 61: // DOOR RED
+  case TILE_DOOR_RED:
     if (player_keys[1]) {
       zx_border(INK_RED);
       f_open = 1;
     }
     break;
-  case 62: // DOOR GREEN
+  case TILE_DOOR_GREEN:
     if (player_keys[2]) {
       zx_border(INK_GREEN);
       f_open = 1;
     }
     break;
-  case 63: // DOOR CYAN
+  case TILE_DOOR_CYAN:
     if (player_keys[3]) {
       zx_border(INK_CYAN);
       f_open = 1;
@@ -789,11 +790,11 @@ void player_hit(unsigned char f_val) __z88dk_fastcall {
     game_update_stats();
   } else {
     player_vita = 0;
+    game_update_stats();
     player_lost_life();
     if (player_lives) {
       // Player lost life
       --player_lives;
-      game_update_stats();
     } else {
       // Game End
       player_lives = 0;

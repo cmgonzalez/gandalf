@@ -22,21 +22,28 @@
 #define GAME_SCR_MAX_INDEX            160
 
 /* Map foreground tiles */
-#define TILE_EMPTY                    0
-#define TILE_FLOOR                    48 //START FLOOR TILES
-#define TILE_CEIL                     60 //START CEILS TILES
-#define TILE_DOOR_E                   64 //END OF DOOR TILES
-#define TILE_END                      84 //END OF TILES
-#define TILE_ITEM_S                   32 //START OF ITEMS
-#define TILE_ITEM_E                   39 //END OF ITEMS
-#define TILE_STAIR_S                  56 //START OF STAIRS
-#define TILE_STAIR_E                  60 //END OF STAIRS
 
-#define TILE_DIRT                     69 //CAN BE DESTROYED BY FIREBALLS
-#define TILE_SPECIAL                  75 //HAVE A MUSHROM VITA / MANA
-#define TILE_HIDDEN_BRICK             76 //HIDDEN TREASURE (COINS LIKE MARIO?)
-#define TILE_NORMAL_BRICK             70
-#define TILE_NOSPECIAL                68 //AFTER HIT
+#define TILE_EMPTY                    0
+#define TILE_BACKGROUND_S             0  //START OF BACKGROUND
+#define TILE_BACKGROUND_E             35 //END OF BACKGROUND
+
+#define TILE_ITEM_S                   36 //START OF ITEMS
+#define TILE_ITEM_E                   47 //END OF ITEMS
+
+#define TILE_FLOOR                    60 //START FLOOR TILES
+#define TILE_CEIL                     72 //START CEILS TILES
+
+#define TILE_DOOR_E                   76 //END OF DOOR TILES
+#define TILE_END                      96 //END OF TILES
+
+#define TILE_STAIR_S                  68 //START OF STAIRS
+#define TILE_STAIR_E                  71 //END OF STAIRS
+
+#define TILE_DIRT                     81 //CAN BE DESTROYED BY FIREBALLS
+#define TILE_SPECIAL                  92 //HAVE A MUSHROM VITA / MANA
+#define TILE_HIDDEN_BRICK             93 //HIDDEN TREASURE (COINS LIKE MARIO?)
+#define TILE_NORMAL_BRICK             84
+#define TILE_NOSPECIAL                79 //AFTER HIT
 
 #define TILE_HIT                      69 //CAN BE DESTROYED BY FIREBALLS
 
@@ -67,105 +74,105 @@
 
 
 /* Enemies Variables */
-#define TILE_ENEMY_SKELETON           132
+#define TILE_ENEMY_SKELETON           144
 #define FRAMES_ENEMY_SKELETON         4
 #define SPEED_ENEMY_SKELETON          4
 #define DIRINC_ENEMY_SKELETON         0
-#define INDEX_SKELETON_LEFT           84
-#define INDEX_SKELETON_RIGHT          85
+#define INDEX_SKELETON_LEFT           96
+#define INDEX_SKELETON_RIGHT          97
 
 
-#define TILE_ENEMY_ORC                136
+#define TILE_ENEMY_ORC                148
 #define FRAMES_ENEMY_ORC              4
 #define SPEED_ENEMY_ORC               3
 #define DIRINC_ENEMY_ORC              0
-#define INDEX_ORC_LEFT                86
-#define INDEX_ORC_RIGHT               87
+#define INDEX_ORC_LEFT                98
+#define INDEX_ORC_RIGHT               99
 
-#define TILE_ENEMY_WARG               140
+#define TILE_ENEMY_WARG               152
 #define FRAMES_ENEMY_WARG             2
 #define SPEED_ENEMY_WARG              1
 #define DIRINC_ENEMY_WARG             2
-#define INDEX_WARG_LEFT               88
-#define INDEX_WARG_RIGHT              89
+#define INDEX_WARG_LEFT               100
+#define INDEX_WARG_RIGHT              101
 
-#define TILE_ENEMY_DWARF              144
+#define TILE_ENEMY_DWARF              156
 #define FRAMES_ENEMY_DWARF            4
 #define SPEED_ENEMY_DWARF             4
 #define DIRINC_ENEMY_DWARF            0
-#define INDEX_DWARF_LEFT              90
-#define INDEX_DWARF_RIGHT             91
+#define INDEX_DWARF_LEFT              102
+#define INDEX_DWARF_RIGHT             103
 
-#define TILE_ENEMY_ELF                148
+#define TILE_ENEMY_ELF                160
 #define FRAMES_ENEMY_ELF              4
 #define SPEED_ENEMY_ELF               6
 #define DIRINC_ENEMY_ELF              4
-#define INDEX_ELF_LEFT                92
-#define INDEX_ELF_RIGHT               93
+#define INDEX_ELF_LEFT                104
+#define INDEX_ELF_RIGHT               105
 
-#define TILE_ENEMY_DRAGON             156
+#define TILE_ENEMY_DRAGON             168
 #define FRAMES_ENEMY_DRAGON           2
 #define SPEED_ENEMY_DRAGON            3
 #define DIRINC_ENEMY_DRAGON           2
-#define INDEX_DRAGON_LEFT             94
-#define INDEX_DRAGON_RIGHT            95
+#define INDEX_DRAGON_LEFT             106
+#define INDEX_DRAGON_RIGHT            107
 
-#define TILE_ENEMY_BAT                160
+#define TILE_ENEMY_BAT                172
 #define FRAMES_ENEMY_BAT              2
 #define SPEED_ENEMY_BAT               1
 #define DIRINC_ENEMY_BAT              0
-#define INDEX_BAT                     96
+#define INDEX_BAT                     108
 
-#define TILE_ENEMY_WYVERN             162
+#define TILE_ENEMY_WYVERN             174
 #define FRAMES_ENEMY_WYVERN           2
 #define SPEED_ENEMY_WYVERN            2
 #define DIRINC_ENEMY_WYVERN           0
-#define INDEX_WYVERN                  97
+#define INDEX_WYVERN                  109
 
-#define TILE_ENEMY_SPIDER             164
+#define TILE_ENEMY_SPIDER             176
 #define FRAMES_ENEMY_SPIDER           2
 #define SPEED_ENEMY_SPIDER            2
 #define DIRINC_ENEMY_SPIDER           0
-#define INDEX_SPIDER                  98
+#define INDEX_SPIDER                  110
 
-#define TILE_ENEMY_PLANT             166
-#define FRAMES_ENEMY_PLANT           2
-#define SPEED_ENEMY_PLANT            6
-#define DIRINC_ENEMY_PLANT           0
-#define INDEX_PLANT                  99
+#define TILE_ENEMY_PLANT              178
+#define FRAMES_ENEMY_PLANT            2
+#define SPEED_ENEMY_PLANT             6
+#define DIRINC_ENEMY_PLANT            0
+#define INDEX_PLANT                   111
 
-#define TILE_ENEMY_SNAKE             168
-#define FRAMES_ENEMY_SNAKE           2
-#define SPEED_ENEMY_SNAKE            6
-#define DIRINC_ENEMY_SNAKE           0
-#define INDEX_SNAKE                  100
+#define TILE_ENEMY_SNAKE              180
+#define FRAMES_ENEMY_SNAKE            2
+#define SPEED_ENEMY_SNAKE             6
+#define DIRINC_ENEMY_SNAKE            0
+#define INDEX_SNAKE                   112
 
-#define TILE_ENEMY_BAT_H            170
+#define TILE_ENEMY_BAT_H              182
 #define FRAMES_ENEMY_BAT_H            3
 #define SPEED_ENEMY_BAT_H             1
 #define DIRINC_ENEMY_BAT_H            0
-#define INDEX_BAT_H                 101
+#define INDEX_BAT_H                   113
 
-#define TILE_ENEMY_MUSH_VITA        180
+#define TILE_ENEMY_MUSH_VITA          192
 #define FRAMES_ENEMY_MUSH_VITA        2
 #define SPEED_ENEMY_MUSH_VITA         2
 #define DIRINC_ENEMY_MUSH_VITA        0
-#define INDEX_MUSH_VITA_L           120
-#define INDEX_MUSH_VITA_R           121
+#define INDEX_MUSH_VITA_L             120
+#define INDEX_MUSH_VITA_R             121
 
-#define TILE_ENEMY_MUSH_MANA         182
+#define TILE_ENEMY_MUSH_MANA           194
 #define FRAMES_ENEMY_MUSH_MANA         2
 #define SPEED_ENEMY_MUSH_MANA          2
 #define DIRINC_ENEMY_MUSH_MANA         0
-#define INDEX_MUSH_MANA_L            122
-#define INDEX_MUSH_MANA_R            123
+#define INDEX_MUSH_MANA_L              122
+#define INDEX_MUSH_MANA_R              123
 
-#define TILE_ENEMY_MUSH_EXTRA        184
+#define TILE_ENEMY_MUSH_EXTRA          196
 #define FRAMES_ENEMY_MUSH_EXTRA        2
 #define SPEED_ENEMY_MUSH_EXTRA         2
 #define DIRINC_ENEMY_MUSH_EXTRA        0
-#define INDEX_MUSH_EXTRA_L           124
-#define INDEX_MUSH_EXTRA_R           125
+#define INDEX_MUSH_EXTRA_L             124
+#define INDEX_MUSH_EXTRA_R             125
 
 //TILE MAP'S
 //  0..23   BACKGROUND
@@ -177,21 +184,30 @@
 // 56..63   SPECIAL BRICKS (FLORR AND CEIL CAN BE HITTED)
 
 /* Player 1 tiles */
-#define TILE_P1_STANR                 100
-#define TILE_P1_RIGHT                 84
-#define TILE_P1_STAIR                 102
-#define TILE_P1_JUMPR                 88
+#define TILE_P1_STANR                 112
+#define TILE_P1_RIGHT                 96
+#define TILE_P1_STAIR                 114
+#define TILE_P1_JUMPR                 100
 #define TILE_P1_LEN                   8 //LEN OF PLAYER SPRITES FOR EACH DIRECTION
-#define TILE_ANIM_PICK                120
-#define TILE_ANIM_FIRE                123
-#define TILE_ANIM_RESPAWN             126
-#define TILE_P1_KILL                  64
-#define TILE_P1_HITR                  64
+#define TILE_ANIM_PICK                132
+#define TILE_ANIM_FIRE                135
+#define TILE_ANIM_RESPAWN             138
+#define TILE_P1_KILL                  76
+#define TILE_P1_HITR                  76
 
-#define TILE_FIREBALL_R               112
-#define TILE_FIREBALL_L               114
-#define TILE_ARROW_R                  116
+#define TILE_FIREBALL                 120
+#define TILE_ARROW                    124
+#define TILE_AXE                      128
 
+#define TILE_KEY_WHITE                36
+#define TILE_KEY_RED                  37
+#define TILE_KEY_GREEN                38
+#define TILE_KEY_CYAN                 39
+
+#define TILE_DOOR_WHITE               72
+#define TILE_DOOR_RED                 73
+#define TILE_DOOR_GREEN               74
+#define TILE_DOOR_CYAN                75
 
 #define FRAMES_PLAYER                 4
 #define FRAMES_PLAYER_STAIR           4

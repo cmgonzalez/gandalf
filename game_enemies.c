@@ -152,10 +152,10 @@ void enemy_walk(void) {
       if (class[sprite] == ELF) {
         if (abs(lin[SPR_P1] - lin[sprite]) < 32) {
           if (BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) {
-            game_shoot_fire(sprite, TILE_ARROW_R);
+            game_shoot_fire(sprite, TILE_ARROW);
           }
           if (BIT_CHK(s_state, STAT_DIRL) && col[SPR_P1] < col[sprite]) {
-            game_shoot_fire(sprite, TILE_ARROW_R);
+            game_shoot_fire(sprite, TILE_ARROW);
           }
         }
       }

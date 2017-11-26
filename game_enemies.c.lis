@@ -915,13 +915,13 @@
 915   00A3  01 00 00    	ld	bc,_scr_map
 916   00A6  09          	add	hl,bc
 917   00A7  4E          	ld	c, (hl)
-918   00A8  3E 27       	ld	a,0x27
+918   00A8  3E 2F       	ld	a,0x2f
 919   00AA  91          	sub	a, c
 920   00AB  3E 00       	ld	a,0x00
 921   00AD  17          	rla
 922   00AE  47          	ld	b, a
 923   00AF  79          	ld	a, c
-924   00B0  D6 30       	sub	a,0x30
+924   00B0  D6 3C       	sub	a,0x3c
 925   00B2  3E 00       	ld	a,0x00
 926   00B4  17          	rla
 927   00B5  A0          	and	a,b
@@ -943,7 +943,7 @@
 943   00D8  3A 00 00    	ld	a,(_s_col0)
 944   00DB  21 00 00    	ld	hl,0x0000
 945   00DE  E5          	push	hl
-946   00DF  21 7B 03    	ld	hl,0x037b
+946   00DF  21 87 03    	ld	hl,0x0387
 947   00E2  E5          	push	hl
 948   00E3  F5          	push	af
 949   00E4  33          	inc	sp
@@ -1248,7 +1248,7 @@
 1248  02AD  91          	sub	a,c
 1249  02AE  30 0A       	jr	NC,l_enemy_walk_00114
 1250  02B0  2A 00 00    	ld	hl,(_sprite)
-1251  02B3  26 74       	ld	h,0x74
+1251  02B3  26 7C       	ld	h,0x7c
 1252  02B5  E5          	push	hl
 1253  02B6  CD 00 00    	call	_game_shoot_fire
 1254  02B9  F1          	pop	af
@@ -1267,7 +1267,7 @@
 1267  02D0  90          	sub	a,b
 1268  02D1  30 17       	jr	NC,l_enemy_walk_00130
 1269  02D3  2A 00 00    	ld	hl,(_sprite)
-1270  02D6  26 74       	ld	h,0x74
+1270  02D6  26 7C       	ld	h,0x7c
 1271  02D8  E5          	push	hl
 1272  02D9  CD 00 00    	call	_game_shoot_fire
 1273  02DC  F1          	pop	af
@@ -1333,7 +1333,7 @@
 1333  033C  2A 00 00    	ld	hl,(_index1)
 1334  033F  09          	add	hl,bc
 1335  0340  7E          	ld	a,(hl)
-1336  0341  D6 30       	sub	a,0x30
+1336  0341  D6 3C       	sub	a,0x3c
 1337  0343  D0          	ret	NC
 1338  0344  C3 00 00    	jp  _spr_turn_horizontal
 1339  0347              	SECTION code_compiler
@@ -1389,9 +1389,9 @@
 1389  039B  09          	add	hl,bc
 1390  039C  7E          	ld	a,(hl)
 1391  039D  4F          	ld	c,a
-1392  039E  D6 30       	sub	a,0x30
+1392  039E  D6 3C       	sub	a,0x3c
 1393  03A0  D0          	ret	NC
-1394  03A1  3E 27       	ld	a,0x27
+1394  03A1  3E 2F       	ld	a,0x2f
 1395  03A3  91          	sub	a, c
 1396  03A4  D0          	ret	NC
 1397  03A5  C3 00 00    	jp  _spr_turn_horizontal
@@ -1483,7 +1483,7 @@
 1483  042D              l_enemy_init_00109:
 1484  042D  7B          	ld	a, e
 1485  042E  D6 07       	sub	a,0x07
-1486  0430  D2 E1 04    	jp	NC, l_enemy_init_00116
+1486  0430  D2 E3 04    	jp	NC, l_enemy_init_00116
 1487  0433  3E 00       	ld	a, +((_class) & 0xFF)
 1488  0435  83          	add	a, e
 1489  0436  4F          	ld	c, a
@@ -1561,38 +1561,37 @@
 1561  04A8  6B          	ld	l, e
 1562  04A9  26 00       	ld	h,0x00
 1563  04AB  29          	add	hl, hl
-1564  04AC  E3          	ex	(sp), hl
-1565  04AD  3E 00       	ld	a, +((_spr_timer) & 0xFF)
-1566  04AF  DD 86 FC    	add	a,(ix-4)
-1567  04B2  DD 77 FE    	ld	(ix-2),a
-1568  04B5  3E 00       	ld	a, +((_spr_timer) / 256)
-1569  04B7  DD 8E FD    	adc	a,(ix-3)
-1570  04BA  DD 77 FF    	ld	(ix-1),a
-1571  04BD  2A 00 00    	ld	hl,(_curr_time)
-1572  04C0  4D          	ld	c,l
-1573  04C1  DD 6E FE    	ld	l,(ix-2)
-1574  04C4  44          	ld	b,h
-1575  04C5  DD 66 FF    	ld	h,(ix-1)
-1576  04C8  71          	ld	(hl), c
-1577  04C9  23          	inc	hl
-1578  04CA  70          	ld	(hl), b
-1579  04CB  E1          	pop	hl
-1580  04CC  01 00 00    	ld	bc,_last_time+0
-1581  04CF  E5          	push	hl
-1582  04D0  09          	add	hl, bc
-1583  04D1  AF          	xor	a, a
-1584  04D2  77          	ld	(hl), a
-1585  04D3  23          	inc	hl
-1586  04D4  77          	ld	(hl), a
-1587  04D5  16 00       	ld	d,0x00
-1588  04D7  21 00 00    	ld	hl,_sprite_speed_alt
-1589  04DA  19          	add	hl, de
-1590  04DB  36 00       	ld	(hl),0x00
-1591  04DD  21 00 00    	ld	hl,_spr_count
-1592  04E0  34          	inc	(hl)
-1593  04E1              l_enemy_init_00116:
-1594  04E1  DD F9       	ld	sp, ix
-1595  04E3  DD E1       	pop	ix
-1596  04E5  C9          	ret
-1597  04E6              	SECTION IGNORE
-1598  0000              
+1564  04AC  DD 75 FE    	ld	(ix-2),l
+1565  04AF  DD 74 FF    	ld	(ix-1),h
+1566  04B2  3E 00       	ld	a,+((_spr_timer) & 0xFF)
+1567  04B4  85          	add	a,l
+1568  04B5  DD 77 FC    	ld	(ix-4),a
+1569  04B8  3E 00       	ld	a, +((_spr_timer) / 256)
+1570  04BA  DD 8E FF    	adc	a,(ix-1)
+1571  04BD  DD 77 FD    	ld	(ix-3),a
+1572  04C0  E1          	pop	hl
+1573  04C1  ED 4B 00 00 	ld	bc,(_curr_time)
+1574  04C5  E5          	push	hl
+1575  04C6  71          	ld	(hl), c
+1576  04C7  23          	inc	hl
+1577  04C8  70          	ld	(hl), b
+1578  04C9  01 00 00    	ld	bc,_last_time+0
+1579  04CC  DD 6E FE    	ld	l,(ix-2)
+1580  04CF  DD 66 FF    	ld	h,(ix-1)
+1581  04D2  09          	add	hl, bc
+1582  04D3  AF          	xor	a, a
+1583  04D4  77          	ld	(hl), a
+1584  04D5  23          	inc	hl
+1585  04D6  77          	ld	(hl), a
+1586  04D7  16 00       	ld	d,0x00
+1587  04D9  21 00 00    	ld	hl,_sprite_speed_alt
+1588  04DC  19          	add	hl, de
+1589  04DD  36 00       	ld	(hl),0x00
+1590  04DF  21 00 00    	ld	hl,_spr_count
+1591  04E2  34          	inc	(hl)
+1592  04E3              l_enemy_init_00116:
+1593  04E3  DD F9       	ld	sp, ix
+1594  04E5  DD E1       	pop	ix
+1595  04E7  C9          	ret
+1596  04E8              	SECTION IGNORE
+1597  0000              
