@@ -48,6 +48,15 @@ void enemy_turn(void) {
         state[sprite] = s_state;
         last_time[sprite] = zx_clock();
         index1 = spr_calc_index(lin[sprite], col[sprite]);
+
+        if (col[sprite] == 0 || col[sprite] == 30) {
+          if (class[sprite] == MUSHROOM_VITA ||
+              class[sprite] == MUSHROOM_MANA ||
+              class[sprite] == MUSHROOM_EXTRA) {
+            spr_destroy(sprite);
+          }
+        }
+
         if (scr_map[index1] > TILE_ITEM_E & scr_map[index1] < TILE_FLOOR) {
           // Deadly Backgrounds
           s_lin0 = lin[sprite];
@@ -138,18 +147,22 @@ void enemy_walk(void) {
       }
 
       if (col[sprite] == 0 || col[sprite] == 30) {
-        spr_turn_horizontal();
+        if (class[sprite] != MUSHROOM_VITA && class[sprite] != MUSHROOM_MANA &&
+            class[sprite] != MUSHROOM_EXTRA) {
+          spr_turn_horizontal();
+        }
       }
 
       if (class[sprite] == SKELETON) {
         enemy_avoid_fall_dead();
       }
 
-      if (class[sprite] == ORC || class[sprite] == ELF) {
+      if (class[sprite] == ORC || class[sprite] == DWARF) {
         enemy_avoid_fall();
       }
 
       if (class[sprite] == ELF) {
+        enemy_avoid_fall();
         if (abs(lin[SPR_P1] - lin[sprite]) < 32) {
           if (BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) {
             game_shoot_fire(sprite, TILE_ARROW);

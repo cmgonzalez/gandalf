@@ -833,23 +833,23 @@
 833   0000              _enemy_turn:
 834   0000  21 00 00    	ld	hl,_sprite
 835   0003  36 00       	ld	(hl),0x00
-836   0005              l_enemy_turn_00107:
+836   0005              l_enemy_turn_00114:
 837   0005  21 00 00    	ld	hl,_sprite
 838   0008  7E          	ld	a, (hl)
 839   0009  D6 07       	sub	a,0x07
-840   000B  D2 F7 00    	jp	NC, l_enemy_turn_00110
+840   000B  D2 27 01    	jp	NC, l_enemy_turn_00117
 841   000E  4E          	ld	c,(hl)
 842   000F  06 00       	ld	b,0x00
 843   0011  21 00 00    	ld	hl,_class
 844   0014  09          	add	hl,bc
 845   0015  7E          	ld	a,(hl)
 846   0016  B7          	or	a, a
-847   0017  CA F0 00    	jp	Z, l_enemy_turn_00106
+847   0017  CA 20 01    	jp	Z, l_enemy_turn_00113
 848   001A  21 00 00    	ld	hl,_sprite
 849   001D  CD 00 00    	call	_spr_chktime
 850   0020  7D          	ld	a, l
 851   0021  B7          	or	a, a
-852   0022  CA F0 00    	jp	Z, l_enemy_turn_00106
+852   0022  CA 20 01    	jp	Z, l_enemy_turn_00113
 853   0025  2A 00 00    	ld	hl,(_sprite)
 854   0028  26 00       	ld	h,0x00
 855   002A  01 00 00    	ld	bc,_lin
@@ -881,7 +881,7 @@
 881   0060  09          	add	hl,bc
 882   0061  7E          	ld	a,(hl)
 883   0062  32 00 00    	ld	(_s_state),a
-884   0065  CD F8 00    	call	_enemy_move
+884   0065  CD 28 01    	call	_enemy_move
 885   0068  CD 00 00    	call	_spr_redraw
 886   006B  2A 00 00    	ld	hl,(_sprite)
 887   006E  26 00       	ld	h,0x00
@@ -912,686 +912,724 @@
 912   009C  CD 00 00    	call	_spr_calc_index
 913   009F  F1          	pop	af
 914   00A0  22 00 00    	ld	(_index1),hl
-915   00A3  01 00 00    	ld	bc,_scr_map
-916   00A6  09          	add	hl,bc
-917   00A7  4E          	ld	c, (hl)
-918   00A8  3E 2F       	ld	a,0x2f
-919   00AA  91          	sub	a, c
-920   00AB  3E 00       	ld	a,0x00
-921   00AD  17          	rla
-922   00AE  47          	ld	b, a
-923   00AF  79          	ld	a, c
-924   00B0  D6 3C       	sub	a,0x3c
-925   00B2  3E 00       	ld	a,0x00
-926   00B4  17          	rla
-927   00B5  A0          	and	a,b
-928   00B6  28 38       	jr	Z,l_enemy_turn_00106
-929   00B8  2A 00 00    	ld	hl,(_sprite)
-930   00BB  26 00       	ld	h,0x00
-931   00BD  01 00 00    	ld	bc,_lin
-932   00C0  09          	add	hl,bc
-933   00C1  7E          	ld	a,(hl)
-934   00C2  32 00 00    	ld	(_s_lin0),a
-935   00C5  2A 00 00    	ld	hl,(_sprite)
-936   00C8  26 00       	ld	h,0x00
-937   00CA  01 00 00    	ld	bc,_col
-938   00CD  09          	add	hl,bc
-939   00CE  7E          	ld	a,(hl)
-940   00CF  32 00 00    	ld	(_s_col0),a
-941   00D2  2A 00 00    	ld	hl,(_sprite)
-942   00D5  CD 00 00    	call	_spr_destroy
-943   00D8  3A 00 00    	ld	a,(_s_col0)
-944   00DB  21 00 00    	ld	hl,0x0000
-945   00DE  E5          	push	hl
-946   00DF  21 87 03    	ld	hl,0x0387
-947   00E2  E5          	push	hl
-948   00E3  F5          	push	af
-949   00E4  33          	inc	sp
-950   00E5  3A 00 00    	ld	a,(_s_lin0)
-951   00E8  F5          	push	af
-952   00E9  33          	inc	sp
-953   00EA  CD 00 00    	call	_spr_add_anim
-954   00ED  F1          	pop	af
-955   00EE  F1          	pop	af
-956   00EF  F1          	pop	af
-957   00F0              l_enemy_turn_00106:
-958   00F0  21 00 00    	ld	hl,_sprite
-959   00F3  34          	inc	(hl)
-960   00F4  C3 05 00    	jp	l_enemy_turn_00107
-961   00F7              l_enemy_turn_00110:
-962   00F7  C9          	ret
-963   00F8              	SECTION code_compiler
-964   00F8              ;	---------------------------------
-965   00F8              ; Function enemy_move
-966   00F8              ; ---------------------------------
-967   00F8              _enemy_move:
-968   00F8  2A 00 00    	ld	hl,(_sprite)
-969   00FB  26 00       	ld	h,0x00
-970   00FD  01 00 00    	ld	bc,_class
-971   0100  09          	add	hl,bc
-972   0101  4E          	ld	c,(hl)
-973   0102  3E 05       	ld	a,0x05
-974   0104  91          	sub	a, c
-975   0105  38 05       	jr	C,l_enemy_move_00108
-976   0107  CD 86 01    	call	_enemy_vertical
-977   010A  18 17       	jr	l_enemy_move_00110
-978   010C              l_enemy_move_00108:
-979   010C  79          	ld	a, c
-980   010D  D6 10       	sub	a,0x10
-981   010F  30 05       	jr	NC,l_enemy_move_00105
-982   0111  CD E8 01    	call	_enemy_walk
-983   0114  18 0D       	jr	l_enemy_move_00110
-984   0116              l_enemy_move_00105:
-985   0116  79          	ld	a, c
-986   0117  D6 13       	sub	a,0x13
-987   0119  30 05       	jr	NC,l_enemy_move_00102
-988   011B  CD 24 01    	call	_enemy_static
-989   011E  18 03       	jr	l_enemy_move_00110
-990   0120              l_enemy_move_00102:
-991   0120  CD 5D 01    	call	_enemy_horizontal
-992   0123              l_enemy_move_00110:
-993   0123  C9          	ret
-994   0124              	SECTION code_compiler
-995   0124              ;	---------------------------------
-996   0124              ; Function enemy_static
-997   0124              ; ---------------------------------
-998   0124              _enemy_static:
-999   0124  CD 00 00    	call	___sdcc_enter_ix
-1000  0127  3B          	dec	sp
-1001  0128  01 00 00    	ld	bc,_colint+0
-1002  012B  79          	ld	a, c
-1003  012C  21 00 00    	ld	hl,_sprite
-1004  012F  86          	add	a, (hl)
-1005  0130  5F          	ld	e, a
-1006  0131  78          	ld	a, b
-1007  0132  CE 00       	adc	a,0x00
-1008  0134  57          	ld	d, a
-1009  0135  1A          	ld	a, (de)
-1010  0136  3C          	inc	a
-1011  0137  12          	ld	(de), a
-1012  0138  79          	ld	a, c
-1013  0139  86          	add	a, (hl)
-1014  013A  4F          	ld	c, a
-1015  013B  78          	ld	a, b
-1016  013C  CE 00       	adc	a,0x00
-1017  013E  47          	ld	b, a
-1018  013F  0A          	ld	a, (bc)
-1019  0140  DD 77 FF    	ld	(ix-1),a
-1020  0143  5E          	ld	e,(hl)
-1021  0144  16 00       	ld	d,0x00
-1022  0146  21 00 00    	ld	hl,_class
-1023  0149  19          	add	hl,de
-1024  014A  5E          	ld	e, (hl)
-1025  014B  16 00       	ld	d,0x00
-1026  014D  21 00 00    	ld	hl,_sprite_frames
-1027  0150  19          	add	hl, de
-1028  0151  DD 7E FF    	ld	a,(ix-1)
-1029  0154  96          	sub	a,(hl)
-1030  0155  20 02       	jr	NZ,l_enemy_static_00103
-1031  0157  AF          	xor	a, a
-1032  0158  02          	ld	(bc), a
-1033  0159              l_enemy_static_00103:
-1034  0159  33          	inc	sp
-1035  015A  DD E1       	pop	ix
-1036  015C  C9          	ret
-1037  015D              	SECTION code_compiler
-1038  015D              ;	---------------------------------
-1039  015D              ; Function enemy_horizontal
-1040  015D              ; ---------------------------------
-1041  015D              _enemy_horizontal:
-1042  015D  21 00 00    	ld	hl,_s_state
-1043  0160  CB 56       	bit	2, (hl)
-1044  0162  28 12       	jr	Z,l_enemy_horizontal_00106
-1045  0164  CD 00 00    	call	_spr_move_right
-1046  0167  7D          	ld	a, l
-1047  0168  B7          	or	a, a
-1048  0169  28 1A       	jr	Z,l_enemy_horizontal_00108
-1049  016B  21 00 00    	ld	hl,_s_state
-1050  016E  7E          	ld	a,(hl)
-1051  016F  E6 FB       	and	a,0xfb
-1052  0171  F6 08       	or	a,0x08
-1053  0173  77          	ld	(hl),a
-1054  0174  18 0F       	jr	l_enemy_horizontal_00108
-1055  0176              l_enemy_horizontal_00106:
-1056  0176  CD 00 00    	call	_spr_move_left
-1057  0179  7D          	ld	a, l
-1058  017A  B7          	or	a, a
-1059  017B  C8          	ret	Z
-1060  017C  21 00 00    	ld	hl,_s_state
-1061  017F  7E          	ld	a,(hl)
-1062  0180  E6 F7       	and	a,0xf7
-1063  0182  F6 04       	or	a,0x04
-1064  0184  77          	ld	(hl),a
-1065  0185              l_enemy_horizontal_00108:
-1066  0185  C9          	ret
-1067  0186              	SECTION code_compiler
-1068  0186              ;	---------------------------------
-1069  0186              ; Function enemy_vertical
-1070  0186              ; ---------------------------------
-1071  0186              _enemy_vertical:
-1072  0186  CD 00 00    	call	___sdcc_enter_ix
-1073  0189  3B          	dec	sp
-1074  018A  21 00 00    	ld	hl,_s_state
-1075  018D  CB 46       	bit	0, (hl)
-1076  018F  28 12       	jr	Z,l_enemy_vertical_00106
-1077  0191  CD 00 00    	call	_spr_move_up
-1078  0194  7D          	ld	a, l
-1079  0195  B7          	or	a, a
-1080  0196  28 1B       	jr	Z,l_enemy_vertical_00107
-1081  0198  21 00 00    	ld	hl,_s_state
-1082  019B  7E          	ld	a,(hl)
-1083  019C  E6 FE       	and	a,0xfe
-1084  019E  F6 02       	or	a,0x02
-1085  01A0  77          	ld	(hl),a
-1086  01A1  18 10       	jr	l_enemy_vertical_00107
-1087  01A3              l_enemy_vertical_00106:
-1088  01A3  CD 00 00    	call	_spr_move_down
-1089  01A6  7D          	ld	a, l
-1090  01A7  B7          	or	a, a
-1091  01A8  28 09       	jr	Z,l_enemy_vertical_00107
-1092  01AA  21 00 00    	ld	hl,_s_state
-1093  01AD  7E          	ld	a,(hl)
-1094  01AE  E6 FD       	and	a,0xfd
-1095  01B0  F6 01       	or	a,0x01
-1096  01B2  77          	ld	(hl),a
-1097  01B3              l_enemy_vertical_00107:
-1098  01B3  01 00 00    	ld	bc,_colint+0
-1099  01B6  79          	ld	a, c
-1100  01B7  21 00 00    	ld	hl,_sprite
-1101  01BA  86          	add	a, (hl)
-1102  01BB  5F          	ld	e, a
-1103  01BC  78          	ld	a, b
-1104  01BD  CE 00       	adc	a,0x00
-1105  01BF  57          	ld	d, a
-1106  01C0  1A          	ld	a, (de)
-1107  01C1  3C          	inc	a
-1108  01C2  12          	ld	(de), a
-1109  01C3  79          	ld	a, c
-1110  01C4  86          	add	a, (hl)
-1111  01C5  4F          	ld	c, a
-1112  01C6  78          	ld	a, b
-1113  01C7  CE 00       	adc	a,0x00
-1114  01C9  47          	ld	b, a
-1115  01CA  0A          	ld	a, (bc)
-1116  01CB  DD 77 FF    	ld	(ix-1),a
-1117  01CE  5E          	ld	e,(hl)
-1118  01CF  16 00       	ld	d,0x00
-1119  01D1  21 00 00    	ld	hl,_class
-1120  01D4  19          	add	hl,de
-1121  01D5  5E          	ld	e, (hl)
-1122  01D6  16 00       	ld	d,0x00
-1123  01D8  21 00 00    	ld	hl,_sprite_frames
-1124  01DB  19          	add	hl, de
-1125  01DC  DD 7E FF    	ld	a,(ix-1)
-1126  01DF  96          	sub	a,(hl)
-1127  01E0  20 02       	jr	NZ,l_enemy_vertical_00110
-1128  01E2  AF          	xor	a, a
-1129  01E3  02          	ld	(bc), a
-1130  01E4              l_enemy_vertical_00110:
-1131  01E4  33          	inc	sp
-1132  01E5  DD E1       	pop	ix
-1133  01E7  C9          	ret
-1134  01E8              	SECTION code_compiler
-1135  01E8              ;	---------------------------------
-1136  01E8              ; Function enemy_walk
-1137  01E8              ; ---------------------------------
-1138  01E8              _enemy_walk:
-1139  01E8  21 00 00    	ld	hl,_s_state
-1140  01EB  CB 4E       	bit	1, (hl)
-1141  01ED  C2 DF 02    	jp	NZ,l_enemy_walk_00128
-1142  01F0  CD 00 00    	call	_spr_move_horizontal
-1143  01F3  7D          	ld	a, l
-1144  01F4  B7          	or	a, a
-1145  01F5  28 03       	jr	Z,l_enemy_walk_00102
-1146  01F7  CD 00 00    	call	_spr_turn_horizontal
-1147  01FA              l_enemy_walk_00102:
-1148  01FA  2A 00 00    	ld	hl,(_sprite)
-1149  01FD  26 00       	ld	h,0x00
-1150  01FF  01 00 00    	ld	bc,_col
-1151  0202  09          	add	hl,bc
-1152  0203  7E          	ld	a,(hl)
-1153  0204  CB 47       	bit	0,a
-1154  0206  C2 EA 02    	jp	NZ,l_enemy_walk_00130
-1155  0209  57          	ld	d,a
-1156  020A  2A 00 00    	ld	hl,(_sprite)
-1157  020D  26 00       	ld	h,0x00
-1158  020F  01 00 00    	ld	bc,_lin
-1159  0212  09          	add	hl,bc
-1160  0213  7E          	ld	a,(hl)
-1161  0214  C6 10       	add	a,0x10
-1162  0216  5F          	ld	e, a
-1163  0217  D5          	push	de
-1164  0218  CD 00 00    	call	_spr_calc_index
-1165  021B  F1          	pop	af
-1166  021C  22 00 00    	ld	(_index1),hl
-1167  021F  CD 00 00    	call	_game_check_cell
-1168  0222  7D          	ld	a, l
-1169  0223  B7          	or	a, a
-1170  0224  20 05       	jr	NZ,l_enemy_walk_00104
-1171  0226  21 00 00    	ld	hl,_s_state
-1172  0229  CB CE       	set	1, (hl)
-1173  022B              l_enemy_walk_00104:
-1174  022B  2A 00 00    	ld	hl,(_sprite)
-1175  022E  26 00       	ld	h,0x00
-1176  0230  01 00 00    	ld	bc,_col
-1177  0233  09          	add	hl,bc
-1178  0234  7E          	ld	a,(hl)
-1179  0235  B7          	or	a, a
-1180  0236  28 04       	jr	Z,l_enemy_walk_00105
-1181  0238  D6 1E       	sub	a,0x1e
-1182  023A  20 03       	jr	NZ,l_enemy_walk_00106
-1183  023C              l_enemy_walk_00105:
-1184  023C  CD 00 00    	call	_spr_turn_horizontal
-1185  023F              l_enemy_walk_00106:
-1186  023F  2A 00 00    	ld	hl,(_sprite)
-1187  0242  26 00       	ld	h,0x00
-1188  0244  01 00 00    	ld	bc,_class
-1189  0247  09          	add	hl,bc
-1190  0248  7E          	ld	a,(hl)
-1191  0249  D6 0B       	sub	a,0x0b
-1192  024B  20 03       	jr	NZ,l_enemy_walk_00109
-1193  024D  CD 47 03    	call	_enemy_avoid_fall_dead
-1194  0250              l_enemy_walk_00109:
-1195  0250  2A 00 00    	ld	hl,(_sprite)
-1196  0253  26 00       	ld	h,0x00
-1197  0255  01 00 00    	ld	bc,_class
-1198  0258  09          	add	hl,bc
-1199  0259  7E          	ld	a,(hl)
-1200  025A  FE 0C       	cp	a,0x0c
-1201  025C  28 04       	jr	Z,l_enemy_walk_00110
-1202  025E  D6 0F       	sub	a,0x0f
-1203  0260  20 03       	jr	NZ,l_enemy_walk_00111
-1204  0262              l_enemy_walk_00110:
-1205  0262  CD EB 02    	call	_enemy_avoid_fall
-1206  0265              l_enemy_walk_00111:
-1207  0265  2A 00 00    	ld	hl,(_sprite)
-1208  0268  26 00       	ld	h,0x00
-1209  026A  01 00 00    	ld	bc,_class
-1210  026D  09          	add	hl,bc
-1211  026E  7E          	ld	a,(hl)
-1212  026F  D6 0F       	sub	a,0x0f
-1213  0271  20 77       	jr	NZ,l_enemy_walk_00130
-1214  0273  21 07 00    	ld	hl,_lin + 7
-1215  0276  4E          	ld	c, (hl)
-1216  0277  06 00       	ld	b,0x00
-1217  0279  2A 00 00    	ld	hl,(_sprite)
-1218  027C  60          	ld	h,b
-1219  027D  11 00 00    	ld	de,_lin
-1220  0280  19          	add	hl,de
-1221  0281  5E          	ld	e, (hl)
-1222  0282  16 00       	ld	d,0x00
-1223  0284  79          	ld	a, c
-1224  0285  93          	sub	a, e
-1225  0286  6F          	ld	l, a
-1226  0287  78          	ld	a, b
-1227  0288  9A          	sbc	a, d
-1228  0289  67          	ld	h, a
-1229  028A  CD 00 00    	call	_abs_fastcall
-1230  028D  7D          	ld	a,l
-1231  028E  D6 20       	sub	a,0x20
-1232  0290  7C          	ld	a,h
-1233  0291  17          	rla
-1234  0292  3F          	ccf
-1235  0293  1F          	rra
-1236  0294  DE 80       	sbc	a,0x80
-1237  0296  30 52       	jr	NC,l_enemy_walk_00130
-1238  0298  21 00 00    	ld	hl,_s_state
-1239  029B  CB 56       	bit	2, (hl)
-1240  029D  28 1B       	jr	Z,l_enemy_walk_00114
-1241  029F  21 07 00    	ld	hl,+(_col + 0x0007)
-1242  02A2  4E          	ld	c, (hl)
-1243  02A3  2A 00 00    	ld	hl,(_sprite)
-1244  02A6  26 00       	ld	h,0x00
-1245  02A8  11 00 00    	ld	de,_col
-1246  02AB  19          	add	hl,de
-1247  02AC  7E          	ld	a,(hl)
-1248  02AD  91          	sub	a,c
-1249  02AE  30 0A       	jr	NC,l_enemy_walk_00114
-1250  02B0  2A 00 00    	ld	hl,(_sprite)
-1251  02B3  26 7C       	ld	h,0x7c
-1252  02B5  E5          	push	hl
-1253  02B6  CD 00 00    	call	_game_shoot_fire
-1254  02B9  F1          	pop	af
-1255  02BA              l_enemy_walk_00114:
-1256  02BA  21 00 00    	ld	hl,_s_state
-1257  02BD  CB 5E       	bit	3, (hl)
-1258  02BF  28 29       	jr	Z,l_enemy_walk_00130
-1259  02C1  21 07 00    	ld	hl,+(_col + 0x0007)
-1260  02C4  4E          	ld	c, (hl)
-1261  02C5  2A 00 00    	ld	hl,(_sprite)
-1262  02C8  26 00       	ld	h,0x00
-1263  02CA  11 00 00    	ld	de,_col
-1264  02CD  19          	add	hl,de
-1265  02CE  46          	ld	b, (hl)
-1266  02CF  79          	ld	a,c
-1267  02D0  90          	sub	a,b
-1268  02D1  30 17       	jr	NC,l_enemy_walk_00130
-1269  02D3  2A 00 00    	ld	hl,(_sprite)
-1270  02D6  26 7C       	ld	h,0x7c
-1271  02D8  E5          	push	hl
-1272  02D9  CD 00 00    	call	_game_shoot_fire
-1273  02DC  F1          	pop	af
-1274  02DD  18 0B       	jr	l_enemy_walk_00130
-1275  02DF              l_enemy_walk_00128:
-1276  02DF  CD 00 00    	call	_spr_move_down
-1277  02E2  7D          	ld	a, l
-1278  02E3  B7          	or	a, a
-1279  02E4  C8          	ret	Z
-1280  02E5  21 00 00    	ld	hl,_s_state
-1281  02E8  CB 8E       	res	1, (hl)
-1282  02EA              l_enemy_walk_00130:
-1283  02EA  C9          	ret
-1284  02EB              	SECTION code_compiler
-1285  02EB              ;	---------------------------------
-1286  02EB              ; Function enemy_avoid_fall
-1287  02EB              ; ---------------------------------
-1288  02EB              _enemy_avoid_fall:
-1289  02EB  21 00 00    	ld	hl,_s_state
-1290  02EE  CB 56       	bit	2, (hl)
-1291  02F0  28 25       	jr	Z,l_enemy_avoid_fall_00102
-1292  02F2  2A 00 00    	ld	hl,(_sprite)
-1293  02F5  26 00       	ld	h,0x00
-1294  02F7  01 00 00    	ld	bc,_col
-1295  02FA  09          	add	hl,bc
-1296  02FB  7E          	ld	a,(hl)
-1297  02FC  C6 02       	add	a,0x02
-1298  02FE  47          	ld	b,a
-1299  02FF  3A 00 00    	ld	a,(_sprite)
-1300  0302  5F          	ld	e,a
-1301  0303  16 00       	ld	d,0x00
-1302  0305  21 00 00    	ld	hl,_lin
-1303  0308  19          	add	hl,de
-1304  0309  7E          	ld	a,(hl)
-1305  030A  C6 10       	add	a,0x10
-1306  030C  4F          	ld	c,a
-1307  030D  C5          	push	bc
-1308  030E  CD 00 00    	call	_spr_calc_index
-1309  0311  F1          	pop	af
-1310  0312  22 00 00    	ld	(_index1),hl
-1311  0315  18 22       	jr	l_enemy_avoid_fall_00103
-1312  0317              l_enemy_avoid_fall_00102:
-1313  0317  2A 00 00    	ld	hl,(_sprite)
-1314  031A  26 00       	ld	h,0x00
-1315  031C  01 00 00    	ld	bc,_col
-1316  031F  09          	add	hl,bc
-1317  0320  7E          	ld	a,(hl)
-1318  0321  C6 FE       	add	a,-0x02
-1319  0323  57          	ld	d,a
-1320  0324  2A 00 00    	ld	hl,(_sprite)
-1321  0327  26 00       	ld	h,0x00
-1322  0329  01 00 00    	ld	bc,_lin
-1323  032C  09          	add	hl,bc
-1324  032D  7E          	ld	a,(hl)
-1325  032E  C6 10       	add	a,0x10
-1326  0330  5F          	ld	e, a
-1327  0331  D5          	push	de
-1328  0332  CD 00 00    	call	_spr_calc_index
-1329  0335  F1          	pop	af
-1330  0336  22 00 00    	ld	(_index1),hl
-1331  0339              l_enemy_avoid_fall_00103:
-1332  0339  01 00 00    	ld	bc,_scr_map
-1333  033C  2A 00 00    	ld	hl,(_index1)
-1334  033F  09          	add	hl,bc
-1335  0340  7E          	ld	a,(hl)
-1336  0341  D6 3C       	sub	a,0x3c
-1337  0343  D0          	ret	NC
-1338  0344  C3 00 00    	jp  _spr_turn_horizontal
-1339  0347              	SECTION code_compiler
-1340  0347              ;	---------------------------------
-1341  0347              ; Function enemy_avoid_fall_dead
-1342  0347              ; ---------------------------------
-1343  0347              _enemy_avoid_fall_dead:
-1344  0347  21 00 00    	ld	hl,_s_state
-1345  034A  CB 56       	bit	2, (hl)
-1346  034C  28 25       	jr	Z,l_enemy_avoid_fall_dead_00102
-1347  034E  2A 00 00    	ld	hl,(_sprite)
-1348  0351  26 00       	ld	h,0x00
-1349  0353  01 00 00    	ld	bc,_col
-1350  0356  09          	add	hl,bc
-1351  0357  7E          	ld	a,(hl)
-1352  0358  C6 02       	add	a,0x02
-1353  035A  47          	ld	b,a
-1354  035B  3A 00 00    	ld	a,(_sprite)
-1355  035E  5F          	ld	e,a
-1356  035F  16 00       	ld	d,0x00
-1357  0361  21 00 00    	ld	hl,_lin
-1358  0364  19          	add	hl,de
-1359  0365  7E          	ld	a,(hl)
-1360  0366  C6 10       	add	a,0x10
-1361  0368  4F          	ld	c,a
-1362  0369  C5          	push	bc
-1363  036A  CD 00 00    	call	_spr_calc_index
-1364  036D  F1          	pop	af
-1365  036E  22 00 00    	ld	(_index1),hl
-1366  0371  18 22       	jr	l_enemy_avoid_fall_dead_00103
-1367  0373              l_enemy_avoid_fall_dead_00102:
-1368  0373  2A 00 00    	ld	hl,(_sprite)
-1369  0376  26 00       	ld	h,0x00
-1370  0378  01 00 00    	ld	bc,_col
-1371  037B  09          	add	hl,bc
-1372  037C  7E          	ld	a,(hl)
-1373  037D  C6 FE       	add	a,-0x02
-1374  037F  57          	ld	d,a
-1375  0380  2A 00 00    	ld	hl,(_sprite)
-1376  0383  26 00       	ld	h,0x00
-1377  0385  01 00 00    	ld	bc,_lin
-1378  0388  09          	add	hl,bc
-1379  0389  7E          	ld	a,(hl)
-1380  038A  C6 10       	add	a,0x10
-1381  038C  5F          	ld	e, a
-1382  038D  D5          	push	de
-1383  038E  CD 00 00    	call	_spr_calc_index
-1384  0391  F1          	pop	af
-1385  0392  22 00 00    	ld	(_index1),hl
-1386  0395              l_enemy_avoid_fall_dead_00103:
-1387  0395  01 00 00    	ld	bc,_scr_map
-1388  0398  2A 00 00    	ld	hl,(_index1)
-1389  039B  09          	add	hl,bc
-1390  039C  7E          	ld	a,(hl)
-1391  039D  4F          	ld	c,a
-1392  039E  D6 3C       	sub	a,0x3c
-1393  03A0  D0          	ret	NC
-1394  03A1  3E 2F       	ld	a,0x2f
-1395  03A3  91          	sub	a, c
-1396  03A4  D0          	ret	NC
-1397  03A5  C3 00 00    	jp  _spr_turn_horizontal
-1398  03A8              	SECTION code_compiler
-1399  03A8              ;	---------------------------------
-1400  03A8              ; Function enemy_respawn
-1401  03A8              ; ---------------------------------
-1402  03A8              _enemy_respawn:
-1403  03A8  CD 00 00    	call	___sdcc_enter_ix
-1404  03AB  3A 00 00    	ld	a,(_s_lin0)
-1405  03AE  32 00 00    	ld	(_s_lin1),a
-1406  03B1  3A 00 00    	ld	a,(_s_col0)
-1407  03B4  32 00 00    	ld	(_s_col1),a
-1408  03B7  2A FF FF    	ld	hl,(_s_col1 - 1)
-1409  03BA  3A 00 00    	ld	a,(_s_lin1)
-1410  03BD  6F          	ld	l,a
-1411  03BE  E5          	push	hl
-1412  03BF  CD 00 00    	call	_spr_calc_index
-1413  03C2  F1          	pop	af
-1414  03C3  22 00 00    	ld	(_index1),hl
-1415  03C6  21 00 00    	ld	hl,_sprite
-1416  03C9  36 00       	ld	(hl),0x00
-1417  03CB              l_enemy_respawn_00103:
-1418  03CB  21 00 00    	ld	hl,_sprite
-1419  03CE  7E          	ld	a, (hl)
-1420  03CF  D6 07       	sub	a,0x07
-1421  03D1  30 31       	jr	NC,l_enemy_respawn_00106
-1422  03D3  4E          	ld	c,(hl)
-1423  03D4  06 00       	ld	b,0x00
-1424  03D6  21 00 00    	ld	hl,_game_respawn_index
-1425  03D9  09          	add	hl,bc
-1426  03DA  4E          	ld	c, (hl)
-1427  03DB  06 00       	ld	b,0x00
-1428  03DD  2A 00 00    	ld	hl,(_index1)
-1429  03E0  AF          	xor	a,a
-1430  03E1  ED 42       	sbc	hl,bc
-1431  03E3  20 19       	jr	NZ,l_enemy_respawn_00102
-1432  03E5  3E 00       	ld	a, +((_anim_respanwn) & 0xFF)
-1433  03E7  DD 86 04    	add	a,(ix+4)
-1434  03EA  4F          	ld	c, a
-1435  03EB  3E 00       	ld	a, +((_anim_respanwn) / 256)
-1436  03ED  CE 00       	adc	a,0x00
-1437  03EF  47          	ld	b, a
-1438  03F0  0A          	ld	a, (bc)
-1439  03F1  F5          	push	af
-1440  03F2  33          	inc	sp
-1441  03F3  CD 00 00    	call	_game_add_enemy
-1442  03F6  33          	inc	sp
-1443  03F7  21 00 00    	ld	hl,_game_respawning
-1444  03FA  36 00       	ld	(hl),0x00
-1445  03FC  18 06       	jr	l_enemy_respawn_00106
-1446  03FE              l_enemy_respawn_00102:
-1447  03FE  21 00 00    	ld	hl,_sprite
-1448  0401  34          	inc	(hl)
-1449  0402  18 C7       	jr	l_enemy_respawn_00103
-1450  0404              l_enemy_respawn_00106:
-1451  0404  DD E1       	pop	ix
-1452  0406  C9          	ret
-1453  0407              	SECTION code_compiler
-1454  0407              ;	---------------------------------
-1455  0407              ; Function enemy_init
-1456  0407              ; ---------------------------------
-1457  0407              _enemy_init:
-1458  0407  CD 00 00    	call	___sdcc_enter_ix
-1459  040A  F5          	push	af
-1460  040B  F5          	push	af
-1461  040C  3A 00 00    	ld	a,(_game_respawning)
-1462  040F  B7          	or	a, a
-1463  0410  28 06       	jr	Z,l_enemy_init_00121
-1464  0412  21 00 00    	ld	hl,_sprite
-1465  0415  5E          	ld	e, (hl)
-1466  0416  18 15       	jr	l_enemy_init_00109
-1467  0418              l_enemy_init_00121:
-1468  0418  01 00 00    	ld	bc,_class+0
-1469  041B  1E 00       	ld	e,0x00
-1470  041D              l_enemy_init_00104:
-1471  041D  7B          	ld	a, e
-1472  041E  D6 07       	sub	a,0x07
-1473  0420  30 0B       	jr	NC,l_enemy_init_00125
-1474  0422  6B          	ld	l,e
-1475  0423  26 00       	ld	h,0x00
-1476  0425  09          	add	hl, bc
-1477  0426  7E          	ld	a, (hl)
-1478  0427  B7          	or	a, a
-1479  0428  28 03       	jr	Z,l_enemy_init_00125
-1480  042A  1C          	inc	e
-1481  042B  18 F0       	jr	l_enemy_init_00104
-1482  042D              l_enemy_init_00125:
-1483  042D              l_enemy_init_00109:
-1484  042D  7B          	ld	a, e
-1485  042E  D6 07       	sub	a,0x07
-1486  0430  D2 E3 04    	jp	NC, l_enemy_init_00116
-1487  0433  3E 00       	ld	a, +((_class) & 0xFF)
-1488  0435  83          	add	a, e
-1489  0436  4F          	ld	c, a
-1490  0437  3E 00       	ld	a, +((_class) / 256)
-1491  0439  CE 00       	adc	a,0x00
-1492  043B  47          	ld	b, a
-1493  043C  DD 7E 06    	ld	a,(ix+6)
-1494  043F  02          	ld	(bc), a
-1495  0440  3E 00       	ld	a, +((_lin) & 0xFF)
-1496  0442  83          	add	a, e
-1497  0443  4F          	ld	c, a
-1498  0444  3E 00       	ld	a, +((_lin) / 256)
-1499  0446  CE 00       	adc	a,0x00
-1500  0448  47          	ld	b, a
-1501  0449  DD 7E 04    	ld	a,(ix+4)
-1502  044C  02          	ld	(bc), a
-1503  044D  3E 00       	ld	a, +((_col) & 0xFF)
-1504  044F  83          	add	a, e
-1505  0450  4F          	ld	c, a
-1506  0451  3E 00       	ld	a, +((_col) / 256)
-1507  0453  CE 00       	adc	a,0x00
-1508  0455  47          	ld	b, a
-1509  0456  DD 7E 05    	ld	a,(ix+5)
-1510  0459  02          	ld	(bc), a
-1511  045A  21 00 00    	ld	hl,_tmp
-1512  045D  36 00       	ld	(hl),0x00
-1513  045F  3E 00       	ld	a, +((_state) & 0xFF)
-1514  0461  83          	add	a, e
-1515  0462  4F          	ld	c, a
-1516  0463  3E 00       	ld	a, +((_state) / 256)
-1517  0465  CE 00       	adc	a,0x00
-1518  0467  47          	ld	b, a
-1519  0468  AF          	xor	a, a
-1520  0469  02          	ld	(bc), a
-1521  046A  16 00       	ld	d,0x00
-1522  046C  21 00 00    	ld	hl,_state_a
-1523  046F  19          	add	hl, de
-1524  0470  16 00       	ld	d,0x00
-1525  0472  72          	ld	(hl),d
-1526  0473  21 00 00    	ld	hl,_jump_lin
-1527  0476  19          	add	hl, de
-1528  0477  36 00       	ld	(hl),0x00
-1529  0479  DD 7E 07    	ld	a,(ix+7)
-1530  047C  3D          	dec	a
-1531  047D  20 04       	jr	NZ,l_enemy_init_00111
-1532  047F  0A          	ld	a, (bc)
-1533  0480  F6 04       	or	a,0x04
-1534  0482  02          	ld	(bc), a
-1535  0483              l_enemy_init_00111:
-1536  0483  DD 7E 07    	ld	a,(ix+7)
-1537  0486  3C          	inc	a
-1538  0487  20 04       	jr	NZ,l_enemy_init_00113
-1539  0489  0A          	ld	a, (bc)
-1540  048A  F6 08       	or	a,0x08
-1541  048C  02          	ld	(bc), a
-1542  048D              l_enemy_init_00113:
-1543  048D  16 00       	ld	d,0x00
-1544  048F  21 00 00    	ld	hl,_colint
-1545  0492  19          	add	hl, de
-1546  0493  36 00       	ld	(hl),0x00
-1547  0495  3E 00       	ld	a, +((_tile) & 0xFF)
-1548  0497  83          	add	a, e
-1549  0498  4F          	ld	c, a
-1550  0499  3E 00       	ld	a, +((_tile) / 256)
-1551  049B  CE 00       	adc	a,0x00
-1552  049D  47          	ld	b, a
-1553  049E  C5          	push	bc
-1554  049F  D5          	push	de
-1555  04A0  6B          	ld	l, e
-1556  04A1  CD 00 00    	call	_spr_tile
-1557  04A4  D1          	pop	de
-1558  04A5  C1          	pop	bc
-1559  04A6  7D          	ld	a,l
-1560  04A7  02          	ld	(bc), a
-1561  04A8  6B          	ld	l, e
-1562  04A9  26 00       	ld	h,0x00
-1563  04AB  29          	add	hl, hl
-1564  04AC  DD 75 FE    	ld	(ix-2),l
-1565  04AF  DD 74 FF    	ld	(ix-1),h
-1566  04B2  3E 00       	ld	a,+((_spr_timer) & 0xFF)
-1567  04B4  85          	add	a,l
-1568  04B5  DD 77 FC    	ld	(ix-4),a
-1569  04B8  3E 00       	ld	a, +((_spr_timer) / 256)
-1570  04BA  DD 8E FF    	adc	a,(ix-1)
-1571  04BD  DD 77 FD    	ld	(ix-3),a
-1572  04C0  E1          	pop	hl
-1573  04C1  ED 4B 00 00 	ld	bc,(_curr_time)
-1574  04C5  E5          	push	hl
-1575  04C6  71          	ld	(hl), c
-1576  04C7  23          	inc	hl
-1577  04C8  70          	ld	(hl), b
-1578  04C9  01 00 00    	ld	bc,_last_time+0
-1579  04CC  DD 6E FE    	ld	l,(ix-2)
-1580  04CF  DD 66 FF    	ld	h,(ix-1)
-1581  04D2  09          	add	hl, bc
-1582  04D3  AF          	xor	a, a
-1583  04D4  77          	ld	(hl), a
-1584  04D5  23          	inc	hl
-1585  04D6  77          	ld	(hl), a
-1586  04D7  16 00       	ld	d,0x00
-1587  04D9  21 00 00    	ld	hl,_sprite_speed_alt
-1588  04DC  19          	add	hl, de
-1589  04DD  36 00       	ld	(hl),0x00
-1590  04DF  21 00 00    	ld	hl,_spr_count
-1591  04E2  34          	inc	(hl)
-1592  04E3              l_enemy_init_00116:
-1593  04E3  DD F9       	ld	sp, ix
-1594  04E5  DD E1       	pop	ix
-1595  04E7  C9          	ret
-1596  04E8              	SECTION IGNORE
-1597  0000              
+915   00A3  2A 00 00    	ld	hl,(_sprite)
+916   00A6  26 00       	ld	h,0x00
+917   00A8  01 00 00    	ld	bc,_col
+918   00AB  09          	add	hl,bc
+919   00AC  7E          	ld	a,(hl)
+920   00AD  B7          	or	a, a
+921   00AE  28 04       	jr	Z,l_enemy_turn_00105
+922   00B0  D6 1E       	sub	a,0x1e
+923   00B2  20 1C       	jr	NZ,l_enemy_turn_00106
+924   00B4              l_enemy_turn_00105:
+925   00B4  2A 00 00    	ld	hl,(_sprite)
+926   00B7  26 00       	ld	h,0x00
+927   00B9  01 00 00    	ld	bc,_class
+928   00BC  09          	add	hl,bc
+929   00BD  7E          	ld	a,(hl)
+930   00BE  FE 06       	cp	a,0x06
+931   00C0  28 08       	jr	Z,l_enemy_turn_00101
+932   00C2  FE 07       	cp	a,0x07
+933   00C4  28 04       	jr	Z,l_enemy_turn_00101
+934   00C6  D6 08       	sub	a,0x08
+935   00C8  20 06       	jr	NZ,l_enemy_turn_00106
+936   00CA              l_enemy_turn_00101:
+937   00CA  2A 00 00    	ld	hl,(_sprite)
+938   00CD  CD 00 00    	call	_spr_destroy
+939   00D0              l_enemy_turn_00106:
+940   00D0  01 00 00    	ld	bc,_scr_map
+941   00D3  2A 00 00    	ld	hl,(_index1)
+942   00D6  09          	add	hl,bc
+943   00D7  4E          	ld	c, (hl)
+944   00D8  3E 2F       	ld	a,0x2f
+945   00DA  91          	sub	a, c
+946   00DB  3E 00       	ld	a,0x00
+947   00DD  17          	rla
+948   00DE  47          	ld	b, a
+949   00DF  79          	ld	a, c
+950   00E0  D6 3C       	sub	a,0x3c
+951   00E2  3E 00       	ld	a,0x00
+952   00E4  17          	rla
+953   00E5  A0          	and	a,b
+954   00E6  28 38       	jr	Z,l_enemy_turn_00113
+955   00E8  2A 00 00    	ld	hl,(_sprite)
+956   00EB  26 00       	ld	h,0x00
+957   00ED  01 00 00    	ld	bc,_lin
+958   00F0  09          	add	hl,bc
+959   00F1  7E          	ld	a,(hl)
+960   00F2  32 00 00    	ld	(_s_lin0),a
+961   00F5  2A 00 00    	ld	hl,(_sprite)
+962   00F8  26 00       	ld	h,0x00
+963   00FA  01 00 00    	ld	bc,_col
+964   00FD  09          	add	hl,bc
+965   00FE  7E          	ld	a,(hl)
+966   00FF  32 00 00    	ld	(_s_col0),a
+967   0102  2A 00 00    	ld	hl,(_sprite)
+968   0105  CD 00 00    	call	_spr_destroy
+969   0108  3A 00 00    	ld	a,(_s_col0)
+970   010B  21 00 00    	ld	hl,0x0000
+971   010E  E5          	push	hl
+972   010F  21 87 03    	ld	hl,0x0387
+973   0112  E5          	push	hl
+974   0113  F5          	push	af
+975   0114  33          	inc	sp
+976   0115  3A 00 00    	ld	a,(_s_lin0)
+977   0118  F5          	push	af
+978   0119  33          	inc	sp
+979   011A  CD 00 00    	call	_spr_add_anim
+980   011D  F1          	pop	af
+981   011E  F1          	pop	af
+982   011F  F1          	pop	af
+983   0120              l_enemy_turn_00113:
+984   0120  21 00 00    	ld	hl,_sprite
+985   0123  34          	inc	(hl)
+986   0124  C3 05 00    	jp	l_enemy_turn_00114
+987   0127              l_enemy_turn_00117:
+988   0127  C9          	ret
+989   0128              	SECTION code_compiler
+990   0128              ;	---------------------------------
+991   0128              ; Function enemy_move
+992   0128              ; ---------------------------------
+993   0128              _enemy_move:
+994   0128  2A 00 00    	ld	hl,(_sprite)
+995   012B  26 00       	ld	h,0x00
+996   012D  01 00 00    	ld	bc,_class
+997   0130  09          	add	hl,bc
+998   0131  4E          	ld	c,(hl)
+999   0132  3E 05       	ld	a,0x05
+1000  0134  91          	sub	a, c
+1001  0135  38 05       	jr	C,l_enemy_move_00108
+1002  0137  CD B6 01    	call	_enemy_vertical
+1003  013A  18 17       	jr	l_enemy_move_00110
+1004  013C              l_enemy_move_00108:
+1005  013C  79          	ld	a, c
+1006  013D  D6 10       	sub	a,0x10
+1007  013F  30 05       	jr	NC,l_enemy_move_00105
+1008  0141  CD 18 02    	call	_enemy_walk
+1009  0144  18 0D       	jr	l_enemy_move_00110
+1010  0146              l_enemy_move_00105:
+1011  0146  79          	ld	a, c
+1012  0147  D6 13       	sub	a,0x13
+1013  0149  30 05       	jr	NC,l_enemy_move_00102
+1014  014B  CD 54 01    	call	_enemy_static
+1015  014E  18 03       	jr	l_enemy_move_00110
+1016  0150              l_enemy_move_00102:
+1017  0150  CD 8D 01    	call	_enemy_horizontal
+1018  0153              l_enemy_move_00110:
+1019  0153  C9          	ret
+1020  0154              	SECTION code_compiler
+1021  0154              ;	---------------------------------
+1022  0154              ; Function enemy_static
+1023  0154              ; ---------------------------------
+1024  0154              _enemy_static:
+1025  0154  CD 00 00    	call	___sdcc_enter_ix
+1026  0157  3B          	dec	sp
+1027  0158  01 00 00    	ld	bc,_colint+0
+1028  015B  79          	ld	a, c
+1029  015C  21 00 00    	ld	hl,_sprite
+1030  015F  86          	add	a, (hl)
+1031  0160  5F          	ld	e, a
+1032  0161  78          	ld	a, b
+1033  0162  CE 00       	adc	a,0x00
+1034  0164  57          	ld	d, a
+1035  0165  1A          	ld	a, (de)
+1036  0166  3C          	inc	a
+1037  0167  12          	ld	(de), a
+1038  0168  79          	ld	a, c
+1039  0169  86          	add	a, (hl)
+1040  016A  4F          	ld	c, a
+1041  016B  78          	ld	a, b
+1042  016C  CE 00       	adc	a,0x00
+1043  016E  47          	ld	b, a
+1044  016F  0A          	ld	a, (bc)
+1045  0170  DD 77 FF    	ld	(ix-1),a
+1046  0173  5E          	ld	e,(hl)
+1047  0174  16 00       	ld	d,0x00
+1048  0176  21 00 00    	ld	hl,_class
+1049  0179  19          	add	hl,de
+1050  017A  5E          	ld	e, (hl)
+1051  017B  16 00       	ld	d,0x00
+1052  017D  21 00 00    	ld	hl,_sprite_frames
+1053  0180  19          	add	hl, de
+1054  0181  DD 7E FF    	ld	a,(ix-1)
+1055  0184  96          	sub	a,(hl)
+1056  0185  20 02       	jr	NZ,l_enemy_static_00103
+1057  0187  AF          	xor	a, a
+1058  0188  02          	ld	(bc), a
+1059  0189              l_enemy_static_00103:
+1060  0189  33          	inc	sp
+1061  018A  DD E1       	pop	ix
+1062  018C  C9          	ret
+1063  018D              	SECTION code_compiler
+1064  018D              ;	---------------------------------
+1065  018D              ; Function enemy_horizontal
+1066  018D              ; ---------------------------------
+1067  018D              _enemy_horizontal:
+1068  018D  21 00 00    	ld	hl,_s_state
+1069  0190  CB 56       	bit	2, (hl)
+1070  0192  28 12       	jr	Z,l_enemy_horizontal_00106
+1071  0194  CD 00 00    	call	_spr_move_right
+1072  0197  7D          	ld	a, l
+1073  0198  B7          	or	a, a
+1074  0199  28 1A       	jr	Z,l_enemy_horizontal_00108
+1075  019B  21 00 00    	ld	hl,_s_state
+1076  019E  7E          	ld	a,(hl)
+1077  019F  E6 FB       	and	a,0xfb
+1078  01A1  F6 08       	or	a,0x08
+1079  01A3  77          	ld	(hl),a
+1080  01A4  18 0F       	jr	l_enemy_horizontal_00108
+1081  01A6              l_enemy_horizontal_00106:
+1082  01A6  CD 00 00    	call	_spr_move_left
+1083  01A9  7D          	ld	a, l
+1084  01AA  B7          	or	a, a
+1085  01AB  C8          	ret	Z
+1086  01AC  21 00 00    	ld	hl,_s_state
+1087  01AF  7E          	ld	a,(hl)
+1088  01B0  E6 F7       	and	a,0xf7
+1089  01B2  F6 04       	or	a,0x04
+1090  01B4  77          	ld	(hl),a
+1091  01B5              l_enemy_horizontal_00108:
+1092  01B5  C9          	ret
+1093  01B6              	SECTION code_compiler
+1094  01B6              ;	---------------------------------
+1095  01B6              ; Function enemy_vertical
+1096  01B6              ; ---------------------------------
+1097  01B6              _enemy_vertical:
+1098  01B6  CD 00 00    	call	___sdcc_enter_ix
+1099  01B9  3B          	dec	sp
+1100  01BA  21 00 00    	ld	hl,_s_state
+1101  01BD  CB 46       	bit	0, (hl)
+1102  01BF  28 12       	jr	Z,l_enemy_vertical_00106
+1103  01C1  CD 00 00    	call	_spr_move_up
+1104  01C4  7D          	ld	a, l
+1105  01C5  B7          	or	a, a
+1106  01C6  28 1B       	jr	Z,l_enemy_vertical_00107
+1107  01C8  21 00 00    	ld	hl,_s_state
+1108  01CB  7E          	ld	a,(hl)
+1109  01CC  E6 FE       	and	a,0xfe
+1110  01CE  F6 02       	or	a,0x02
+1111  01D0  77          	ld	(hl),a
+1112  01D1  18 10       	jr	l_enemy_vertical_00107
+1113  01D3              l_enemy_vertical_00106:
+1114  01D3  CD 00 00    	call	_spr_move_down
+1115  01D6  7D          	ld	a, l
+1116  01D7  B7          	or	a, a
+1117  01D8  28 09       	jr	Z,l_enemy_vertical_00107
+1118  01DA  21 00 00    	ld	hl,_s_state
+1119  01DD  7E          	ld	a,(hl)
+1120  01DE  E6 FD       	and	a,0xfd
+1121  01E0  F6 01       	or	a,0x01
+1122  01E2  77          	ld	(hl),a
+1123  01E3              l_enemy_vertical_00107:
+1124  01E3  01 00 00    	ld	bc,_colint+0
+1125  01E6  79          	ld	a, c
+1126  01E7  21 00 00    	ld	hl,_sprite
+1127  01EA  86          	add	a, (hl)
+1128  01EB  5F          	ld	e, a
+1129  01EC  78          	ld	a, b
+1130  01ED  CE 00       	adc	a,0x00
+1131  01EF  57          	ld	d, a
+1132  01F0  1A          	ld	a, (de)
+1133  01F1  3C          	inc	a
+1134  01F2  12          	ld	(de), a
+1135  01F3  79          	ld	a, c
+1136  01F4  86          	add	a, (hl)
+1137  01F5  4F          	ld	c, a
+1138  01F6  78          	ld	a, b
+1139  01F7  CE 00       	adc	a,0x00
+1140  01F9  47          	ld	b, a
+1141  01FA  0A          	ld	a, (bc)
+1142  01FB  DD 77 FF    	ld	(ix-1),a
+1143  01FE  5E          	ld	e,(hl)
+1144  01FF  16 00       	ld	d,0x00
+1145  0201  21 00 00    	ld	hl,_class
+1146  0204  19          	add	hl,de
+1147  0205  5E          	ld	e, (hl)
+1148  0206  16 00       	ld	d,0x00
+1149  0208  21 00 00    	ld	hl,_sprite_frames
+1150  020B  19          	add	hl, de
+1151  020C  DD 7E FF    	ld	a,(ix-1)
+1152  020F  96          	sub	a,(hl)
+1153  0210  20 02       	jr	NZ,l_enemy_vertical_00110
+1154  0212  AF          	xor	a, a
+1155  0213  02          	ld	(bc), a
+1156  0214              l_enemy_vertical_00110:
+1157  0214  33          	inc	sp
+1158  0215  DD E1       	pop	ix
+1159  0217  C9          	ret
+1160  0218              	SECTION code_compiler
+1161  0218              ;	---------------------------------
+1162  0218              ; Function enemy_walk
+1163  0218              ; ---------------------------------
+1164  0218              _enemy_walk:
+1165  0218  21 00 00    	ld	hl,_s_state
+1166  021B  CB 4E       	bit	1, (hl)
+1167  021D  C2 29 03    	jp	NZ,l_enemy_walk_00132
+1168  0220  CD 00 00    	call	_spr_move_horizontal
+1169  0223  7D          	ld	a, l
+1170  0224  B7          	or	a, a
+1171  0225  28 03       	jr	Z,l_enemy_walk_00102
+1172  0227  CD 00 00    	call	_spr_turn_horizontal
+1173  022A              l_enemy_walk_00102:
+1174  022A  2A 00 00    	ld	hl,(_sprite)
+1175  022D  26 00       	ld	h,0x00
+1176  022F  01 00 00    	ld	bc,_col
+1177  0232  09          	add	hl,bc
+1178  0233  7E          	ld	a,(hl)
+1179  0234  CB 47       	bit	0,a
+1180  0236  C2 34 03    	jp	NZ,l_enemy_walk_00134
+1181  0239  57          	ld	d,a
+1182  023A  2A 00 00    	ld	hl,(_sprite)
+1183  023D  26 00       	ld	h,0x00
+1184  023F  01 00 00    	ld	bc,_lin
+1185  0242  09          	add	hl,bc
+1186  0243  7E          	ld	a,(hl)
+1187  0244  C6 10       	add	a,0x10
+1188  0246  5F          	ld	e, a
+1189  0247  D5          	push	de
+1190  0248  CD 00 00    	call	_spr_calc_index
+1191  024B  F1          	pop	af
+1192  024C  22 00 00    	ld	(_index1),hl
+1193  024F  CD 00 00    	call	_game_check_cell
+1194  0252  7D          	ld	a, l
+1195  0253  B7          	or	a, a
+1196  0254  20 05       	jr	NZ,l_enemy_walk_00104
+1197  0256  21 00 00    	ld	hl,_s_state
+1198  0259  CB CE       	set	1, (hl)
+1199  025B              l_enemy_walk_00104:
+1200  025B  2A 00 00    	ld	hl,(_sprite)
+1201  025E  26 00       	ld	h,0x00
+1202  0260  01 00 00    	ld	bc,_col
+1203  0263  09          	add	hl,bc
+1204  0264  7E          	ld	a,(hl)
+1205  0265  B7          	or	a, a
+1206  0266  28 04       	jr	Z,l_enemy_walk_00109
+1207  0268  D6 1E       	sub	a,0x1e
+1208  026A  20 19       	jr	NZ,l_enemy_walk_00110
+1209  026C              l_enemy_walk_00109:
+1210  026C  2A 00 00    	ld	hl,(_sprite)
+1211  026F  26 00       	ld	h,0x00
+1212  0271  01 00 00    	ld	bc,_class
+1213  0274  09          	add	hl,bc
+1214  0275  7E          	ld	a,(hl)
+1215  0276  FE 06       	cp	a,0x06
+1216  0278  28 0B       	jr	Z,l_enemy_walk_00110
+1217  027A  FE 07       	cp	a,0x07
+1218  027C  28 07       	jr	Z,l_enemy_walk_00110
+1219  027E  D6 08       	sub	a,0x08
+1220  0280  28 03       	jr	Z,l_enemy_walk_00110
+1221  0282  CD 00 00    	call	_spr_turn_horizontal
+1222  0285              l_enemy_walk_00110:
+1223  0285  2A 00 00    	ld	hl,(_sprite)
+1224  0288  26 00       	ld	h,0x00
+1225  028A  01 00 00    	ld	bc,_class
+1226  028D  09          	add	hl,bc
+1227  028E  7E          	ld	a,(hl)
+1228  028F  D6 0B       	sub	a,0x0b
+1229  0291  20 03       	jr	NZ,l_enemy_walk_00113
+1230  0293  CD 91 03    	call	_enemy_avoid_fall_dead
+1231  0296              l_enemy_walk_00113:
+1232  0296  2A 00 00    	ld	hl,(_sprite)
+1233  0299  26 00       	ld	h,0x00
+1234  029B  01 00 00    	ld	bc,_class
+1235  029E  09          	add	hl,bc
+1236  029F  7E          	ld	a,(hl)
+1237  02A0  FE 0C       	cp	a,0x0c
+1238  02A2  28 04       	jr	Z,l_enemy_walk_00114
+1239  02A4  D6 0E       	sub	a,0x0e
+1240  02A6  20 03       	jr	NZ,l_enemy_walk_00115
+1241  02A8              l_enemy_walk_00114:
+1242  02A8  CD 35 03    	call	_enemy_avoid_fall
+1243  02AB              l_enemy_walk_00115:
+1244  02AB  2A 00 00    	ld	hl,(_sprite)
+1245  02AE  26 00       	ld	h,0x00
+1246  02B0  01 00 00    	ld	bc,_class
+1247  02B3  09          	add	hl,bc
+1248  02B4  7E          	ld	a,(hl)
+1249  02B5  D6 0F       	sub	a,0x0f
+1250  02B7  C2 34 03    	jp	NZ,l_enemy_walk_00134
+1251  02BA  CD 35 03    	call	_enemy_avoid_fall
+1252  02BD  21 07 00    	ld	hl,_lin + 7
+1253  02C0  4E          	ld	c, (hl)
+1254  02C1  06 00       	ld	b,0x00
+1255  02C3  2A 00 00    	ld	hl,(_sprite)
+1256  02C6  60          	ld	h,b
+1257  02C7  11 00 00    	ld	de,_lin
+1258  02CA  19          	add	hl,de
+1259  02CB  5E          	ld	e, (hl)
+1260  02CC  16 00       	ld	d,0x00
+1261  02CE  79          	ld	a, c
+1262  02CF  93          	sub	a, e
+1263  02D0  6F          	ld	l, a
+1264  02D1  78          	ld	a, b
+1265  02D2  9A          	sbc	a, d
+1266  02D3  67          	ld	h, a
+1267  02D4  CD 00 00    	call	_abs_fastcall
+1268  02D7  7D          	ld	a,l
+1269  02D8  D6 20       	sub	a,0x20
+1270  02DA  7C          	ld	a,h
+1271  02DB  17          	rla
+1272  02DC  3F          	ccf
+1273  02DD  1F          	rra
+1274  02DE  DE 80       	sbc	a,0x80
+1275  02E0  30 52       	jr	NC,l_enemy_walk_00134
+1276  02E2  21 00 00    	ld	hl,_s_state
+1277  02E5  CB 56       	bit	2, (hl)
+1278  02E7  28 1B       	jr	Z,l_enemy_walk_00118
+1279  02E9  21 07 00    	ld	hl,+(_col + 0x0007)
+1280  02EC  4E          	ld	c, (hl)
+1281  02ED  2A 00 00    	ld	hl,(_sprite)
+1282  02F0  26 00       	ld	h,0x00
+1283  02F2  11 00 00    	ld	de,_col
+1284  02F5  19          	add	hl,de
+1285  02F6  7E          	ld	a,(hl)
+1286  02F7  91          	sub	a,c
+1287  02F8  30 0A       	jr	NC,l_enemy_walk_00118
+1288  02FA  2A 00 00    	ld	hl,(_sprite)
+1289  02FD  26 7C       	ld	h,0x7c
+1290  02FF  E5          	push	hl
+1291  0300  CD 00 00    	call	_game_shoot_fire
+1292  0303  F1          	pop	af
+1293  0304              l_enemy_walk_00118:
+1294  0304  21 00 00    	ld	hl,_s_state
+1295  0307  CB 5E       	bit	3, (hl)
+1296  0309  28 29       	jr	Z,l_enemy_walk_00134
+1297  030B  21 07 00    	ld	hl,+(_col + 0x0007)
+1298  030E  4E          	ld	c, (hl)
+1299  030F  2A 00 00    	ld	hl,(_sprite)
+1300  0312  26 00       	ld	h,0x00
+1301  0314  11 00 00    	ld	de,_col
+1302  0317  19          	add	hl,de
+1303  0318  46          	ld	b, (hl)
+1304  0319  79          	ld	a,c
+1305  031A  90          	sub	a,b
+1306  031B  30 17       	jr	NC,l_enemy_walk_00134
+1307  031D  2A 00 00    	ld	hl,(_sprite)
+1308  0320  26 7C       	ld	h,0x7c
+1309  0322  E5          	push	hl
+1310  0323  CD 00 00    	call	_game_shoot_fire
+1311  0326  F1          	pop	af
+1312  0327  18 0B       	jr	l_enemy_walk_00134
+1313  0329              l_enemy_walk_00132:
+1314  0329  CD 00 00    	call	_spr_move_down
+1315  032C  7D          	ld	a, l
+1316  032D  B7          	or	a, a
+1317  032E  C8          	ret	Z
+1318  032F  21 00 00    	ld	hl,_s_state
+1319  0332  CB 8E       	res	1, (hl)
+1320  0334              l_enemy_walk_00134:
+1321  0334  C9          	ret
+1322  0335              	SECTION code_compiler
+1323  0335              ;	---------------------------------
+1324  0335              ; Function enemy_avoid_fall
+1325  0335              ; ---------------------------------
+1326  0335              _enemy_avoid_fall:
+1327  0335  21 00 00    	ld	hl,_s_state
+1328  0338  CB 56       	bit	2, (hl)
+1329  033A  28 25       	jr	Z,l_enemy_avoid_fall_00102
+1330  033C  2A 00 00    	ld	hl,(_sprite)
+1331  033F  26 00       	ld	h,0x00
+1332  0341  01 00 00    	ld	bc,_col
+1333  0344  09          	add	hl,bc
+1334  0345  7E          	ld	a,(hl)
+1335  0346  C6 02       	add	a,0x02
+1336  0348  47          	ld	b,a
+1337  0349  3A 00 00    	ld	a,(_sprite)
+1338  034C  5F          	ld	e,a
+1339  034D  16 00       	ld	d,0x00
+1340  034F  21 00 00    	ld	hl,_lin
+1341  0352  19          	add	hl,de
+1342  0353  7E          	ld	a,(hl)
+1343  0354  C6 10       	add	a,0x10
+1344  0356  4F          	ld	c,a
+1345  0357  C5          	push	bc
+1346  0358  CD 00 00    	call	_spr_calc_index
+1347  035B  F1          	pop	af
+1348  035C  22 00 00    	ld	(_index1),hl
+1349  035F  18 22       	jr	l_enemy_avoid_fall_00103
+1350  0361              l_enemy_avoid_fall_00102:
+1351  0361  2A 00 00    	ld	hl,(_sprite)
+1352  0364  26 00       	ld	h,0x00
+1353  0366  01 00 00    	ld	bc,_col
+1354  0369  09          	add	hl,bc
+1355  036A  7E          	ld	a,(hl)
+1356  036B  C6 FE       	add	a,-0x02
+1357  036D  57          	ld	d,a
+1358  036E  2A 00 00    	ld	hl,(_sprite)
+1359  0371  26 00       	ld	h,0x00
+1360  0373  01 00 00    	ld	bc,_lin
+1361  0376  09          	add	hl,bc
+1362  0377  7E          	ld	a,(hl)
+1363  0378  C6 10       	add	a,0x10
+1364  037A  5F          	ld	e, a
+1365  037B  D5          	push	de
+1366  037C  CD 00 00    	call	_spr_calc_index
+1367  037F  F1          	pop	af
+1368  0380  22 00 00    	ld	(_index1),hl
+1369  0383              l_enemy_avoid_fall_00103:
+1370  0383  01 00 00    	ld	bc,_scr_map
+1371  0386  2A 00 00    	ld	hl,(_index1)
+1372  0389  09          	add	hl,bc
+1373  038A  7E          	ld	a,(hl)
+1374  038B  D6 3C       	sub	a,0x3c
+1375  038D  D0          	ret	NC
+1376  038E  C3 00 00    	jp  _spr_turn_horizontal
+1377  0391              	SECTION code_compiler
+1378  0391              ;	---------------------------------
+1379  0391              ; Function enemy_avoid_fall_dead
+1380  0391              ; ---------------------------------
+1381  0391              _enemy_avoid_fall_dead:
+1382  0391  21 00 00    	ld	hl,_s_state
+1383  0394  CB 56       	bit	2, (hl)
+1384  0396  28 25       	jr	Z,l_enemy_avoid_fall_dead_00102
+1385  0398  2A 00 00    	ld	hl,(_sprite)
+1386  039B  26 00       	ld	h,0x00
+1387  039D  01 00 00    	ld	bc,_col
+1388  03A0  09          	add	hl,bc
+1389  03A1  7E          	ld	a,(hl)
+1390  03A2  C6 02       	add	a,0x02
+1391  03A4  47          	ld	b,a
+1392  03A5  3A 00 00    	ld	a,(_sprite)
+1393  03A8  5F          	ld	e,a
+1394  03A9  16 00       	ld	d,0x00
+1395  03AB  21 00 00    	ld	hl,_lin
+1396  03AE  19          	add	hl,de
+1397  03AF  7E          	ld	a,(hl)
+1398  03B0  C6 10       	add	a,0x10
+1399  03B2  4F          	ld	c,a
+1400  03B3  C5          	push	bc
+1401  03B4  CD 00 00    	call	_spr_calc_index
+1402  03B7  F1          	pop	af
+1403  03B8  22 00 00    	ld	(_index1),hl
+1404  03BB  18 22       	jr	l_enemy_avoid_fall_dead_00103
+1405  03BD              l_enemy_avoid_fall_dead_00102:
+1406  03BD  2A 00 00    	ld	hl,(_sprite)
+1407  03C0  26 00       	ld	h,0x00
+1408  03C2  01 00 00    	ld	bc,_col
+1409  03C5  09          	add	hl,bc
+1410  03C6  7E          	ld	a,(hl)
+1411  03C7  C6 FE       	add	a,-0x02
+1412  03C9  57          	ld	d,a
+1413  03CA  2A 00 00    	ld	hl,(_sprite)
+1414  03CD  26 00       	ld	h,0x00
+1415  03CF  01 00 00    	ld	bc,_lin
+1416  03D2  09          	add	hl,bc
+1417  03D3  7E          	ld	a,(hl)
+1418  03D4  C6 10       	add	a,0x10
+1419  03D6  5F          	ld	e, a
+1420  03D7  D5          	push	de
+1421  03D8  CD 00 00    	call	_spr_calc_index
+1422  03DB  F1          	pop	af
+1423  03DC  22 00 00    	ld	(_index1),hl
+1424  03DF              l_enemy_avoid_fall_dead_00103:
+1425  03DF  01 00 00    	ld	bc,_scr_map
+1426  03E2  2A 00 00    	ld	hl,(_index1)
+1427  03E5  09          	add	hl,bc
+1428  03E6  7E          	ld	a,(hl)
+1429  03E7  4F          	ld	c,a
+1430  03E8  D6 3C       	sub	a,0x3c
+1431  03EA  D0          	ret	NC
+1432  03EB  3E 2F       	ld	a,0x2f
+1433  03ED  91          	sub	a, c
+1434  03EE  D0          	ret	NC
+1435  03EF  C3 00 00    	jp  _spr_turn_horizontal
+1436  03F2              	SECTION code_compiler
+1437  03F2              ;	---------------------------------
+1438  03F2              ; Function enemy_respawn
+1439  03F2              ; ---------------------------------
+1440  03F2              _enemy_respawn:
+1441  03F2  CD 00 00    	call	___sdcc_enter_ix
+1442  03F5  3A 00 00    	ld	a,(_s_lin0)
+1443  03F8  32 00 00    	ld	(_s_lin1),a
+1444  03FB  3A 00 00    	ld	a,(_s_col0)
+1445  03FE  32 00 00    	ld	(_s_col1),a
+1446  0401  2A FF FF    	ld	hl,(_s_col1 - 1)
+1447  0404  3A 00 00    	ld	a,(_s_lin1)
+1448  0407  6F          	ld	l,a
+1449  0408  E5          	push	hl
+1450  0409  CD 00 00    	call	_spr_calc_index
+1451  040C  F1          	pop	af
+1452  040D  22 00 00    	ld	(_index1),hl
+1453  0410  21 00 00    	ld	hl,_sprite
+1454  0413  36 00       	ld	(hl),0x00
+1455  0415              l_enemy_respawn_00103:
+1456  0415  21 00 00    	ld	hl,_sprite
+1457  0418  7E          	ld	a, (hl)
+1458  0419  D6 07       	sub	a,0x07
+1459  041B  30 31       	jr	NC,l_enemy_respawn_00106
+1460  041D  4E          	ld	c,(hl)
+1461  041E  06 00       	ld	b,0x00
+1462  0420  21 00 00    	ld	hl,_game_respawn_index
+1463  0423  09          	add	hl,bc
+1464  0424  4E          	ld	c, (hl)
+1465  0425  06 00       	ld	b,0x00
+1466  0427  2A 00 00    	ld	hl,(_index1)
+1467  042A  AF          	xor	a,a
+1468  042B  ED 42       	sbc	hl,bc
+1469  042D  20 19       	jr	NZ,l_enemy_respawn_00102
+1470  042F  3E 00       	ld	a, +((_anim_respanwn) & 0xFF)
+1471  0431  DD 86 04    	add	a,(ix+4)
+1472  0434  4F          	ld	c, a
+1473  0435  3E 00       	ld	a, +((_anim_respanwn) / 256)
+1474  0437  CE 00       	adc	a,0x00
+1475  0439  47          	ld	b, a
+1476  043A  0A          	ld	a, (bc)
+1477  043B  F5          	push	af
+1478  043C  33          	inc	sp
+1479  043D  CD 00 00    	call	_game_add_enemy
+1480  0440  33          	inc	sp
+1481  0441  21 00 00    	ld	hl,_game_respawning
+1482  0444  36 00       	ld	(hl),0x00
+1483  0446  18 06       	jr	l_enemy_respawn_00106
+1484  0448              l_enemy_respawn_00102:
+1485  0448  21 00 00    	ld	hl,_sprite
+1486  044B  34          	inc	(hl)
+1487  044C  18 C7       	jr	l_enemy_respawn_00103
+1488  044E              l_enemy_respawn_00106:
+1489  044E  DD E1       	pop	ix
+1490  0450  C9          	ret
+1491  0451              	SECTION code_compiler
+1492  0451              ;	---------------------------------
+1493  0451              ; Function enemy_init
+1494  0451              ; ---------------------------------
+1495  0451              _enemy_init:
+1496  0451  CD 00 00    	call	___sdcc_enter_ix
+1497  0454  F5          	push	af
+1498  0455  F5          	push	af
+1499  0456  3A 00 00    	ld	a,(_game_respawning)
+1500  0459  B7          	or	a, a
+1501  045A  28 06       	jr	Z,l_enemy_init_00121
+1502  045C  21 00 00    	ld	hl,_sprite
+1503  045F  5E          	ld	e, (hl)
+1504  0460  18 15       	jr	l_enemy_init_00109
+1505  0462              l_enemy_init_00121:
+1506  0462  01 00 00    	ld	bc,_class+0
+1507  0465  1E 00       	ld	e,0x00
+1508  0467              l_enemy_init_00104:
+1509  0467  7B          	ld	a, e
+1510  0468  D6 07       	sub	a,0x07
+1511  046A  30 0B       	jr	NC,l_enemy_init_00125
+1512  046C  6B          	ld	l,e
+1513  046D  26 00       	ld	h,0x00
+1514  046F  09          	add	hl, bc
+1515  0470  7E          	ld	a, (hl)
+1516  0471  B7          	or	a, a
+1517  0472  28 03       	jr	Z,l_enemy_init_00125
+1518  0474  1C          	inc	e
+1519  0475  18 F0       	jr	l_enemy_init_00104
+1520  0477              l_enemy_init_00125:
+1521  0477              l_enemy_init_00109:
+1522  0477  7B          	ld	a, e
+1523  0478  D6 07       	sub	a,0x07
+1524  047A  D2 2D 05    	jp	NC, l_enemy_init_00116
+1525  047D  3E 00       	ld	a, +((_class) & 0xFF)
+1526  047F  83          	add	a, e
+1527  0480  4F          	ld	c, a
+1528  0481  3E 00       	ld	a, +((_class) / 256)
+1529  0483  CE 00       	adc	a,0x00
+1530  0485  47          	ld	b, a
+1531  0486  DD 7E 06    	ld	a,(ix+6)
+1532  0489  02          	ld	(bc), a
+1533  048A  3E 00       	ld	a, +((_lin) & 0xFF)
+1534  048C  83          	add	a, e
+1535  048D  4F          	ld	c, a
+1536  048E  3E 00       	ld	a, +((_lin) / 256)
+1537  0490  CE 00       	adc	a,0x00
+1538  0492  47          	ld	b, a
+1539  0493  DD 7E 04    	ld	a,(ix+4)
+1540  0496  02          	ld	(bc), a
+1541  0497  3E 00       	ld	a, +((_col) & 0xFF)
+1542  0499  83          	add	a, e
+1543  049A  4F          	ld	c, a
+1544  049B  3E 00       	ld	a, +((_col) / 256)
+1545  049D  CE 00       	adc	a,0x00
+1546  049F  47          	ld	b, a
+1547  04A0  DD 7E 05    	ld	a,(ix+5)
+1548  04A3  02          	ld	(bc), a
+1549  04A4  21 00 00    	ld	hl,_tmp
+1550  04A7  36 00       	ld	(hl),0x00
+1551  04A9  3E 00       	ld	a, +((_state) & 0xFF)
+1552  04AB  83          	add	a, e
+1553  04AC  4F          	ld	c, a
+1554  04AD  3E 00       	ld	a, +((_state) / 256)
+1555  04AF  CE 00       	adc	a,0x00
+1556  04B1  47          	ld	b, a
+1557  04B2  AF          	xor	a, a
+1558  04B3  02          	ld	(bc), a
+1559  04B4  16 00       	ld	d,0x00
+1560  04B6  21 00 00    	ld	hl,_state_a
+1561  04B9  19          	add	hl, de
+1562  04BA  16 00       	ld	d,0x00
+1563  04BC  72          	ld	(hl),d
+1564  04BD  21 00 00    	ld	hl,_jump_lin
+1565  04C0  19          	add	hl, de
+1566  04C1  36 00       	ld	(hl),0x00
+1567  04C3  DD 7E 07    	ld	a,(ix+7)
+1568  04C6  3D          	dec	a
+1569  04C7  20 04       	jr	NZ,l_enemy_init_00111
+1570  04C9  0A          	ld	a, (bc)
+1571  04CA  F6 04       	or	a,0x04
+1572  04CC  02          	ld	(bc), a
+1573  04CD              l_enemy_init_00111:
+1574  04CD  DD 7E 07    	ld	a,(ix+7)
+1575  04D0  3C          	inc	a
+1576  04D1  20 04       	jr	NZ,l_enemy_init_00113
+1577  04D3  0A          	ld	a, (bc)
+1578  04D4  F6 08       	or	a,0x08
+1579  04D6  02          	ld	(bc), a
+1580  04D7              l_enemy_init_00113:
+1581  04D7  16 00       	ld	d,0x00
+1582  04D9  21 00 00    	ld	hl,_colint
+1583  04DC  19          	add	hl, de
+1584  04DD  36 00       	ld	(hl),0x00
+1585  04DF  3E 00       	ld	a, +((_tile) & 0xFF)
+1586  04E1  83          	add	a, e
+1587  04E2  4F          	ld	c, a
+1588  04E3  3E 00       	ld	a, +((_tile) / 256)
+1589  04E5  CE 00       	adc	a,0x00
+1590  04E7  47          	ld	b, a
+1591  04E8  C5          	push	bc
+1592  04E9  D5          	push	de
+1593  04EA  6B          	ld	l, e
+1594  04EB  CD 00 00    	call	_spr_tile
+1595  04EE  D1          	pop	de
+1596  04EF  C1          	pop	bc
+1597  04F0  7D          	ld	a,l
+1598  04F1  02          	ld	(bc), a
+1599  04F2  6B          	ld	l, e
+1600  04F3  26 00       	ld	h,0x00
+1601  04F5  29          	add	hl, hl
+1602  04F6  DD 75 FE    	ld	(ix-2),l
+1603  04F9  DD 74 FF    	ld	(ix-1),h
+1604  04FC  3E 00       	ld	a,+((_spr_timer) & 0xFF)
+1605  04FE  85          	add	a,l
+1606  04FF  DD 77 FC    	ld	(ix-4),a
+1607  0502  3E 00       	ld	a, +((_spr_timer) / 256)
+1608  0504  DD 8E FF    	adc	a,(ix-1)
+1609  0507  DD 77 FD    	ld	(ix-3),a
+1610  050A  E1          	pop	hl
+1611  050B  ED 4B 00 00 	ld	bc,(_curr_time)
+1612  050F  E5          	push	hl
+1613  0510  71          	ld	(hl), c
+1614  0511  23          	inc	hl
+1615  0512  70          	ld	(hl), b
+1616  0513  01 00 00    	ld	bc,_last_time+0
+1617  0516  DD 6E FE    	ld	l,(ix-2)
+1618  0519  DD 66 FF    	ld	h,(ix-1)
+1619  051C  09          	add	hl, bc
+1620  051D  AF          	xor	a, a
+1621  051E  77          	ld	(hl), a
+1622  051F  23          	inc	hl
+1623  0520  77          	ld	(hl), a
+1624  0521  16 00       	ld	d,0x00
+1625  0523  21 00 00    	ld	hl,_sprite_speed_alt
+1626  0526  19          	add	hl, de
+1627  0527  36 00       	ld	(hl),0x00
+1628  0529  21 00 00    	ld	hl,_spr_count
+1629  052C  34          	inc	(hl)
+1630  052D              l_enemy_init_00116:
+1631  052D  DD F9       	ld	sp, ix
+1632  052F  DD E1       	pop	ix
+1633  0531  C9          	ret
+1634  0532              	SECTION IGNORE
+1635  0000              
