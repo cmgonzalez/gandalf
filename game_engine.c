@@ -517,7 +517,7 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
     bullet_lin[f_sprite] = lin[f_sprite];
     bullet_frames[f_sprite] = 2;
     if (f_tile == TILE_ARROW) {
-      bullet_class[f_sprite] == BULLET_ARROW;
+      bullet_class[f_sprite] = BULLET_ARROW;
     }
 
     if (f_tile == TILE_FIREBALL) {
