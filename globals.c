@@ -157,6 +157,8 @@ unsigned char anim_end[8];
 unsigned char anim_loop[8];
 unsigned char anim_respanwn[8];
 //BULLETS
+unsigned char bullet_class[8];
+unsigned char bullet_lin0[8];
 unsigned char bullet_lin[8];
 unsigned char bullet_col[8];
 unsigned char bullet_tile[8];

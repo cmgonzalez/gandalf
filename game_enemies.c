@@ -127,6 +127,18 @@ void enemy_vertical() {
       BIT_SET(s_state, STAT_JUMP);
     }
   }
+
+  if (class[sprite] == DRAGON) {
+    if (abs(lin[SPR_P1] - lin[sprite]) < 8) {
+      if (BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) {
+        game_shoot_fire(sprite, TILE_FIREBALL);
+      }
+      if (BIT_CHK(s_state, STAT_DIRL) && col[SPR_P1] < col[sprite]) {
+        game_shoot_fire(sprite, TILE_FIREBALL);
+      }
+    }
+  }
+
   ++colint[sprite];
   if (colint[sprite] == sprite_frames[class[sprite]]) {
     colint[sprite] = 0;

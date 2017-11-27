@@ -682,8 +682,24 @@ void spr_play_bullets(void) {
     s_lin0 = bullet_lin[f_bullet];
     s_col0 = bullet_col[f_bullet];
     f_col0 = s_col0;
+  
     spr_back_repaint(); // restore background
-
+    if (bullet_class[f_bullet] == BULLET_FIREBALL_UP) {
+      if ( s_lin0 - bullet_lin0[f_bullet] <= 8 ) {
+        bullet_lin[f_bullet] = bullet_lin[f_bullet]+2;
+        s_lin0 = bullet_lin[f_bullet];
+      } else {
+        bullet_class[f_bullet] = BULLET_FIREBALL_DOWN;
+      }
+    }
+    if (bullet_class[f_bullet] == BULLET_FIREBALL_DOWN) {
+      if ( bullet_lin0[f_bullet] - s_lin0 <= 8 ) {
+        bullet_lin[f_bullet] = bullet_lin[f_bullet]-2;
+        s_lin0 = bullet_lin[f_bullet];
+      } else {
+        bullet_class[f_bullet] = BULLET_FIREBALL_UP;
+      }
+    }
     // Move Bullets
     if (bullet_dir[f_bullet] == 0xFF) {
       // Move Right

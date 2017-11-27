@@ -306,6 +306,12 @@
 #define GAME_SOUND_AY_MUS_ON         0x08
 #define GAME_SOUND_AY_MUS_OFF        0xf7
 
+#define BULLET_ARROW                 0x01
+#define BULLET_FIREBALL_UP           0x02
+#define BULLET_FIREBALL_DOWN         0x03
+#define BULLET_AXE                   0x04
+
+
 typedef uint16_t (*JOYFUNC)(udk_t *);
 
 //typedef uint16_t (*JOYFUNC)(udk_t *);
@@ -450,6 +456,8 @@ extern unsigned char mush_class[8];
 
 //BULLETS
 //BULLETS
+extern unsigned char bullet_class[8];
+extern unsigned char bullet_lin0[8];
 extern unsigned char bullet_lin[8];
 extern unsigned char bullet_col[8];
 extern unsigned char bullet_tile[8];

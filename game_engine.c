@@ -357,14 +357,14 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
 
   if (sprite != SPR_P1) {
     if (class[sprite] <= SPIDER) {
-      //VERTICAL ENEMIES
+      // VERTICAL ENEMIES
       if (f_tile <= TILE_ITEM_E) {
         return 0;
       } else {
         return 1;
       }
     } else {
-      //HORIZONTAL ENEMIES
+      // HORIZONTAL ENEMIES
       if (f_tile <= TILE_ITEM_S) {
         return 0;
       } else {
@@ -513,8 +513,25 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
   if (bullet_col[f_sprite] == 0xFF) {
     ++bullet_count;
     bullet_dir[f_sprite] = 0;
+    bullet_lin0[f_sprite] = lin[f_sprite];
     bullet_lin[f_sprite] = lin[f_sprite];
     bullet_frames[f_sprite] = 2;
+    if (f_tile == TILE_ARROW) {
+      bullet_class[f_sprite] == BULLET_ARROW;
+    }
+
+    if (f_tile == TILE_FIREBALL) {
+      if (f_sprite == SPR_P1) {
+        bullet_class[f_sprite] = BULLET_ARROW;
+      } else {
+        bullet_class[f_sprite] = BULLET_FIREBALL_UP;
+      }
+    }
+
+    if (f_tile == TILE_AXE) {
+      bullet_class[f_sprite] = BULLET_AXE;
+    }
+
     f_dir = BIT_CHK(s_state, STAT_DIRL);
     if (sprite == SPR_P1) {
       f_dir = BIT_CHK(state_a[SPR_P1], STAT_DIRL);
