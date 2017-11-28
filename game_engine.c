@@ -530,6 +530,9 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
 
     if (f_tile == TILE_AXE) {
       bullet_class[f_sprite] = BULLET_AXE;
+      bullet_lin[f_sprite] = lin[f_sprite] - 4;
+      bullet_frames[f_sprite] = 4;
+      bullet_vel[f_sprite] = player_vel_y0;
     }
 
     f_dir = BIT_CHK(s_state, STAT_DIRL);
@@ -539,11 +542,14 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
     index1 = spr_calc_index(lin[f_sprite], col[f_sprite]);
     if (f_dir) {
       // Left
-
       if (col[f_sprite] < 1)
         return 1;
       bullet_col[f_sprite] = col[f_sprite];
-      bullet_tile[f_sprite] = f_tile + 2;
+      if (f_tile != TILE_AXE) {
+         bullet_tile[f_sprite] = f_tile + 2;
+      } else {
+         bullet_tile[f_sprite] = f_tile;
+      }
       bullet_dir[f_sprite] = 0x01;
       bullet_colint[f_sprite] = 2;
     } else {

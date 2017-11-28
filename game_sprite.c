@@ -674,6 +674,8 @@ void spr_play_bullets(void) {
   unsigned char f_col0;
   unsigned char f_lin1;
   unsigned char f_col1;
+  signed int val_yc;
+
 
   for (f_bullet = 0; f_bullet < 8; ++f_bullet) {
     if (bullet_col[f_bullet] == 0xFF) // Not active bullet
@@ -682,7 +684,7 @@ void spr_play_bullets(void) {
     s_lin0 = bullet_lin[f_bullet];
     s_col0 = bullet_col[f_bullet];
     f_col0 = s_col0;
-  
+
     spr_back_repaint(); // restore background
     if (bullet_class[f_bullet] == BULLET_FIREBALL_UP) {
       if ( s_lin0 - bullet_lin0[f_bullet] <= 8 ) {
@@ -699,6 +701,36 @@ void spr_play_bullets(void) {
       } else {
         bullet_class[f_bullet] = BULLET_FIREBALL_UP;
       }
+    }
+    if (bullet_class[f_bullet] == BULLET_AXE) {
+      bullet_vel[f_bullet] = bullet_vel[f_bullet] + game_gravity;
+
+      if (bullet_vel[f_bullet] > 120) {
+        bullet_vel[f_bullet] = 120;
+      }
+
+      if (bullet_vel[f_bullet] < -120) {
+        bullet_vel[f_bullet] = -120;
+      }
+
+      val_yc = bullet_vel[f_bullet];
+
+      s_lin1 = (unsigned char)val_yc;
+      // Nirvana don't support odds lines
+      if ((s_lin1 & 1) != 0) {
+        s_lin1--;
+      }
+
+
+      s_lin0 = bullet_lin[f_bullet] + s_lin1;
+      if (s_lin0 > GAME_LIN_FLOOR) {
+        --bullet_count;
+        bullet_col[f_bullet] = 0XFF;
+        continue;
+      } else {
+        bullet_lin[f_bullet] = s_lin0;
+      }
+
     }
     // Move Bullets
     if (bullet_dir[f_bullet] == 0xFF) {
@@ -756,8 +788,14 @@ void spr_play_bullets(void) {
       bullet_col[f_bullet] = f_col0;
 
       // Colission with sprites
-      f_lin0 = s_lin0 - 8;
-      f_lin1 = s_lin0 + 8;
+      if (bullet_class[f_bullet] == BULLET_AXE) {
+        f_lin0 = s_lin0 - 16;
+        f_lin1 = s_lin0 + 16;
+      } else {
+        f_lin0 = s_lin0 - 8;
+        f_lin1 = s_lin0 + 8;
+      }
+
       f_col0 = f_col0 + 0;
       f_col1 = f_col0 + 1;
       if (f_bullet == SPR_P1) {

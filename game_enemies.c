@@ -169,7 +169,7 @@ void enemy_walk(void) {
         enemy_avoid_fall_dead();
       }
 
-      if (class[sprite] == ORC || class[sprite] == DWARF) {
+      if (class[sprite] == ORC) {
         enemy_avoid_fall();
       }
 
@@ -181,6 +181,17 @@ void enemy_walk(void) {
           }
           if (BIT_CHK(s_state, STAT_DIRL) && col[SPR_P1] < col[sprite]) {
             game_shoot_fire(sprite, TILE_ARROW);
+          }
+        }
+      }
+
+      if (class[sprite] == DWARF) {
+        enemy_avoid_fall();
+        s_col1 = abs(col[SPR_P1] - col[sprite]);
+        if (s_col1 < 6) {
+          if ( ( BIT_CHK(s_state, STAT_DIRL) && (col[sprite] > col[SPR_P1]) ) ||
+               ( BIT_CHK(s_state, STAT_DIRR) && (col[sprite] < col[SPR_P1]) ) ) {
+            game_shoot_fire(sprite, TILE_AXE);
           }
         }
       }
