@@ -49,14 +49,15 @@ void enemy_turn(void) {
         last_time[sprite] = zx_clock();
         index1 = spr_calc_index(lin[sprite], col[sprite]);
 
-        if (col[sprite] == 0 || col[sprite] == 30) {
-          if (class[sprite] == MUSHROOM_VITA ||
-              class[sprite] == MUSHROOM_MANA ||
-              class[sprite] == MUSHROOM_EXTRA) {
-            spr_destroy(sprite);
+        if (!BIT_CHK(s_state, STAT_FALL)) {
+          if (col[sprite] == 0 || col[sprite] == 30) {
+            if (class[sprite] == MUSHROOM_VITA ||
+                class[sprite] == MUSHROOM_MANA ||
+                class[sprite] == MUSHROOM_EXTRA) {
+              spr_destroy(sprite);
+            }
           }
         }
-
         if (scr_map[index1] > TILE_ITEM_E & scr_map[index1] < TILE_FLOOR) {
           // Deadly Backgrounds
           s_lin0 = lin[sprite];

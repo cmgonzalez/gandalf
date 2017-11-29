@@ -95,9 +95,14 @@ unsigned char player_hit_count;
 //PLAYER ATTRIBUTES
 unsigned char player_mana;
 unsigned char player_vita;
+//Maximun Mana n Vitality
+unsigned char player_max_mana;
+unsigned char player_max_vita;
+//Player stats
 unsigned char player_str;
-unsigned char player_dex;
 unsigned char player_int;
+unsigned char player_lvl;
+
 unsigned int  player_hit_time;
 
 
@@ -158,7 +163,9 @@ unsigned char anim_loop[8];
 unsigned char anim_respanwn[8];
 //BULLETS
 unsigned char bullet_class[8];
+unsigned char bullet_max[8];
 unsigned char bullet_lin0[8];
+unsigned char bullet_col0[8];
 unsigned char bullet_lin[8];
 unsigned char bullet_col[8];
 unsigned char bullet_tile[8];

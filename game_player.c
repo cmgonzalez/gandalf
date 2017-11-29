@@ -71,10 +71,10 @@ unsigned char player_collision(void) {
     v0 = scr_map[sprite_curr_index];
 
     if (v0 > TILE_ITEM_E && v0 < TILE_FLOOR) {
-      //if ((s_lin1  & 3) != 0) {
-        // DEADLY BACKGROUNDS
-        zx_border(INK_YELLOW);
-        player_hit(50);
+      // if ((s_lin1  & 3) != 0) {
+      // DEADLY BACKGROUNDS
+      zx_border(INK_YELLOW);
+      player_hit(50);
       //}
     }
 
@@ -83,22 +83,28 @@ unsigned char player_collision(void) {
         if (abs(col[sprite] - s_col1) < 2) {
           if (abs(lin[sprite] - s_lin1) < 14) {
             if (class[sprite] == MUSHROOM_VITA) {
-                player_vita = player_vita + 20;
-                game_update_stats();
-                spr_destroy(sprite);
-                return 0;
+              player_vita = player_vita + 20;
+              if (player_vita > player_max_vita) {
+                player_vita = player_max_vita;
+              }
+              game_update_stats();
+              spr_destroy(sprite);
+              return 0;
             }
             if (class[sprite] == MUSHROOM_MANA) {
-                player_mana = player_mana + 20;
-                game_update_stats();
-                spr_destroy(sprite);
-                return 0;
+              player_mana = player_mana + 20;
+              if (player_mana > player_max_mana) {
+                player_mana = player_max_mana;
+              }
+              game_update_stats();
+              spr_destroy(sprite);
+              return 0;
             }
             if (class[sprite] == MUSHROOM_EXTRA) {
-                player_lives++;
-                game_update_stats();
-                spr_destroy(sprite);
-                return 0;
+              player_lives++;
+              game_update_stats();
+              spr_destroy(sprite);
+              return 0;
             }
             zx_border(INK_RED);
             player_hit(20);
@@ -414,22 +420,58 @@ void player_pick_item(void) {
     case TILE_KEY_WHITE:
       player_keys[0] = 1;
       zx_print_ink(INK_WHITE);
-      zx_print_str(22, 3, "]");
+      zx_print_str(20, 20, "]");
       break;
     case TILE_KEY_RED:
       player_keys[1] = 1;
       zx_print_ink(INK_RED);
-      zx_print_str(22, 4, "]");
+      zx_print_str(20, 21, "]");
       break;
     case TILE_KEY_GREEN:
       player_keys[2] = 1;
       zx_print_ink(INK_GREEN);
-      zx_print_str(22, 5, "]");
+      zx_print_str(20, 22, "]");
       break;
     case TILE_KEY_CYAN:
       player_keys[3] = 1;
       zx_print_ink(INK_CYAN);
-      zx_print_str(22, 6, "]");
+      zx_print_str(20, 23, "]");
+      break;
+    case TILE_MONEY:
+      player_score_add(1);
+      break;
+    case TILE_CHEST:
+      player_score_add(100);
+      break;
+    case TILE_SHIELD:
+      player_str++;
+      player_max_vita = player_max_vita + 10;
+      game_update_stats();
+      break;
+    case TILE_HELMET:
+      player_str++;
+      player_max_vita = player_max_vita + 10;
+      game_update_stats();
+      break;
+    case TILE_SWORD:
+      player_str++;
+      player_max_vita = player_max_vita + 10;
+      game_update_stats();
+      break;
+    case TILE_POTION:
+      player_int++;
+      player_max_mana = player_max_mana + 10;
+      game_update_stats();
+      break;
+    case TILE_ORB:
+      player_int++;
+      player_max_mana = player_max_mana + 10;
+      game_update_stats();
+      break;
+    case TILE_SCROLL:
+      player_int++;
+      player_max_mana = player_max_mana + 10;
+      game_update_stats();
       break;
     }
   }
@@ -439,19 +481,6 @@ unsigned char player_hit_platform(void) {
 
   if ((player_hit_lin == 0) && (lin[sprite] > 16) &&
       (scr_map[index1] >= TILE_HIT)) {
-    /* Pietro Legacy...
-    for (enemies = 0; enemies < 6; ++enemies) {
-      // HIT ENEMIES
-      if (class[enemies] != 0 && (lin[sprite] - lin[enemies] == 24) &&
-          (!BIT_CHK(state[enemies], STAT_KILL)) &&
-          (abs(col[sprite] - col[enemies]) <= 2)) {
-        enemy_hit();
-        sound_hit_enemy();
-      }
-    }
-   */
-    // BIT_SET( state_a[sprite] , STAT_HITBRICK );
-
     spr_timer[sprite] = zx_clock();
     player_hit_lin = 8 + (((lin[sprite] - 8) >> 4) << 4);
 
@@ -474,8 +503,8 @@ unsigned char player_hit_platform(void) {
       }
     }
 
-    if (scr_map[index1] == TILE_SPECIAL || scr_map[index1] == TILE_HIDDEN_BRICK) {
-
+    if (scr_map[index1] == TILE_SPECIAL ||
+        scr_map[index1] == TILE_HIDDEN_BRICK) {
 
       tmp0 = 0;
       while (tmp0 < SPR_P1) {

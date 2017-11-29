@@ -234,6 +234,7 @@ void game_print_footer(void) {
   zx_print_ink(INK_BLUE);
   zx_print_str(20, 13, "k");
 
+  zx_print_str(22, 3, "XP");
   zx_print_ink(INK_YELLOW);
   zx_print_str(22, 14, "m");
   zx_print_str(22, 20, "n");
@@ -254,8 +255,8 @@ void game_update_stats(void) {
     zx_print_chr(20, 3, tmp);
   }
   zx_print_chr(22, 16, player_str);
-  zx_print_chr(22, 22, player_dex);
-  zx_print_chr(22, 28, player_int);
+  zx_print_chr(22, 22, player_int);
+  zx_print_chr(22, 28, player_lvl);
 
   zx_print_ink(INK_RED);
   zx_print_chr(20, 9, player_vita);
@@ -278,12 +279,13 @@ void game_round_init(void) {
   sound_coin();
   z80_delay_ms(200);
   ay_reset();
-
+  player_max_mana = 100;
+  player_max_vita = 100;
   player_lives = 4;
-  player_mana = 100;
-  player_vita = 100;
+  player_mana = player_max_mana;
+  player_vita = player_max_vita;
   player_str = 0;
-  player_dex = 0;
+  player_lvl = 0;
   player_int = 0;
   player_score = 0;
   /* screen init */
@@ -428,8 +430,8 @@ game_enemy_add_get_index(unsigned char f_search) __z88dk_fastcall {
 void game_print_score(void) {
   zx_print_ink(INK_WHITE);
   zx_print_paper(PAPER_BLACK);
-  // zx_print_int(0, 3, player_score);
-  zx_print_int(0, 14, game_score_top); // SCORE TOP
+  zx_print_int(22, 6, player_score);
+  zx_print_int( 0, 14, game_score_top); // SCORE TOP
 }
 
 void game_paint_attrib(unsigned char e_r1) __z88dk_fastcall {
@@ -514,8 +516,15 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
     ++bullet_count;
     bullet_dir[f_sprite] = 0;
     bullet_lin0[f_sprite] = lin[f_sprite];
+    bullet_col0[f_sprite] = col[f_sprite];
     bullet_lin[f_sprite] = lin[f_sprite];
     bullet_frames[f_sprite] = 2;
+
+    if (f_sprite == SPR_P1) {
+      bullet_max[f_sprite] = 4 + player_lvl;
+    } else {
+      bullet_max[f_sprite] = 0;
+    }
     if (f_tile == TILE_ARROW) {
       bullet_class[f_sprite] = BULLET_ARROW;
     }

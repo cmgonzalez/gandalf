@@ -416,13 +416,15 @@ unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
     return spr_tile_dir(TILE_ENEMY_BAT_H, f_sprite, DIRINC_ENEMY_BAT_H);
     break;
   case MUSHROOM_VITA:
-    return spr_tile_dir(TILE_ENEMY_MUSH_VITA, f_sprite, DIRINC_ENEMY_MUSH_EXTRA);
+    return spr_tile_dir(TILE_ENEMY_MUSH_VITA, f_sprite,
+                        DIRINC_ENEMY_MUSH_EXTRA);
     break;
   case MUSHROOM_MANA:
     return spr_tile_dir(TILE_ENEMY_MUSH_MANA, f_sprite, DIRINC_ENEMY_MUSH_MANA);
     break;
   case MUSHROOM_EXTRA:
-    return spr_tile_dir(TILE_ENEMY_MUSH_EXTRA, f_sprite, DIRINC_ENEMY_MUSH_MANA);
+    return spr_tile_dir(TILE_ENEMY_MUSH_EXTRA, f_sprite,
+                        DIRINC_ENEMY_MUSH_MANA);
     break;
   }
   return 0;
@@ -676,7 +678,6 @@ void spr_play_bullets(void) {
   unsigned char f_col1;
   signed int val_yc;
 
-
   for (f_bullet = 0; f_bullet < 8; ++f_bullet) {
     if (bullet_col[f_bullet] == 0xFF) // Not active bullet
       continue;
@@ -687,16 +688,16 @@ void spr_play_bullets(void) {
 
     spr_back_repaint(); // restore background
     if (bullet_class[f_bullet] == BULLET_FIREBALL_UP) {
-      if ( s_lin0 - bullet_lin0[f_bullet] <= 8 ) {
-        bullet_lin[f_bullet] = bullet_lin[f_bullet]+2;
+      if (s_lin0 - bullet_lin0[f_bullet] <= 8) {
+        bullet_lin[f_bullet] = bullet_lin[f_bullet] + 2;
         s_lin0 = bullet_lin[f_bullet];
       } else {
         bullet_class[f_bullet] = BULLET_FIREBALL_DOWN;
       }
     }
     if (bullet_class[f_bullet] == BULLET_FIREBALL_DOWN) {
-      if ( bullet_lin0[f_bullet] - s_lin0 <= 8 ) {
-        bullet_lin[f_bullet] = bullet_lin[f_bullet]-2;
+      if (bullet_lin0[f_bullet] - s_lin0 <= 8) {
+        bullet_lin[f_bullet] = bullet_lin[f_bullet] - 2;
         s_lin0 = bullet_lin[f_bullet];
       } else {
         bullet_class[f_bullet] = BULLET_FIREBALL_UP;
@@ -721,7 +722,6 @@ void spr_play_bullets(void) {
         s_lin1--;
       }
 
-
       s_lin0 = bullet_lin[f_bullet] + s_lin1;
       if (s_lin0 > GAME_LIN_FLOOR) {
         --bullet_count;
@@ -730,7 +730,6 @@ void spr_play_bullets(void) {
       } else {
         bullet_lin[f_bullet] = s_lin0;
       }
-
     }
     // Move Bullets
     if (bullet_dir[f_bullet] == 0xFF) {
@@ -755,13 +754,24 @@ void spr_play_bullets(void) {
       }
     }
 
+    tmp1 = 0;
+    if (bullet_max[f_bullet] > 0) {
+      // Max Fireball
+      tmp0 = abs( f_col0  - bullet_col0[f_bullet] );
+      if (tmp0 > bullet_max[f_bullet]) {
+        tmp1 = 1;
+      }
+    }
     if (f_col0 >= 30) {
       // Out of Screen
+      tmp1 = 1;
+    }
+
+    if (tmp1) {
       --bullet_count;
       bullet_col[f_bullet] = 0XFF;
       continue;
     }
-
     // Colission with map
     if (f_col0 != bullet_col[f_bullet]) {
       // Column Movement
@@ -791,13 +801,15 @@ void spr_play_bullets(void) {
       if (bullet_class[f_bullet] == BULLET_AXE) {
         f_lin0 = s_lin0 - 16;
         f_lin1 = s_lin0 + 16;
+        f_col0 = f_col0 - 1;
+        f_col1 = f_col0 + 1;
       } else {
         f_lin0 = s_lin0 - 8;
         f_lin1 = s_lin0 + 8;
+        f_col0 = f_col0 + 0;
+        f_col1 = f_col0 + 1;
       }
 
-      f_col0 = f_col0 + 0;
-      f_col1 = f_col0 + 1;
       if (f_bullet == SPR_P1) {
         // PLAYER BULLETS
         for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
@@ -805,6 +817,7 @@ void spr_play_bullets(void) {
               col[tmp0] >= f_col0 && col[tmp0] <= f_col1) {
             s_lin0 = lin[tmp0];
             s_col0 = col[tmp0];
+            player_score_add(50);
             spr_destroy(tmp0);
             bullet_col[f_bullet] = s_col0;
             spr_explode_bullet(f_bullet);

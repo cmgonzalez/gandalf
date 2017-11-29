@@ -204,6 +204,19 @@
 #define TILE_KEY_GREEN                38
 #define TILE_KEY_CYAN                 39
 
+#define TILE_MONEY                    40
+
+#define TILE_SHIELD                   41
+#define TILE_HELMET                   42
+#define TILE_SWORD                    43
+
+#define TILE_POTION                   44
+#define TILE_ORB                      45
+#define TILE_SCROLL                   46
+
+#define TILE_CHEST                    47
+
+
 #define TILE_DOOR_WHITE               72
 #define TILE_DOOR_RED                 73
 #define TILE_DOOR_GREEN               74
@@ -353,9 +366,15 @@ extern unsigned char player_keys[4];
 //PLAYER ATTRIBUTES
 extern unsigned char player_mana;
 extern unsigned char player_vita;
+
+extern unsigned char player_max_mana;
+extern unsigned char player_max_vita;
+
+
 extern unsigned char player_str;
-extern unsigned char player_dex;
 extern unsigned char player_int;
+extern unsigned char player_lvl;
+
 extern unsigned int  player_hit_time;
 
 
@@ -457,7 +476,9 @@ extern unsigned char mush_class[8];
 //BULLETS
 //BULLETS
 extern unsigned char bullet_class[8];
+extern unsigned char bullet_max[8];
 extern unsigned char bullet_lin0[8];
+extern unsigned char bullet_col0[8];
 extern unsigned char bullet_lin[8];
 extern unsigned char bullet_col[8];
 extern unsigned char bullet_tile[8];
