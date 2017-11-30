@@ -31,9 +31,20 @@
 #include <string.h>
 #include <z80.h>
 
+/* Main Game Loop  */
+
 void game_loop(void) {
   unsigned int fps;
-
+  /*Player Init*/
+  player_max_mana = GAME_START_MAX_MANA;
+  player_max_vita = GAME_START_MAX_VITA;
+  player_lives = GAME_START_LIVES;
+  player_mana = player_max_mana;
+  player_vita = player_max_vita;
+  player_str = 0;
+  player_lvl = 0;
+  player_int = 0;
+  player_score = 0;
   /* phase init */
   game_round_init();
   /* game loop start */
@@ -87,6 +98,11 @@ void game_loop(void) {
     ++loop_count;
     ++fps;
   }
+  game_over = 0;
+  zx_print_str(12,12,"GAME OVER");
+  game_colour_message(12,12,12+9,250);
+  game_obj_clear();
+  game_loop();
 }
 
 void game_draw_screen(void) {
@@ -250,14 +266,10 @@ void game_phase_print_score_back(void) {
 
 void game_update_stats(void) {
   zx_print_ink(INK_WHITE);
-  tmp = player_lives - 1;
-  if (tmp < 255) {
-    zx_print_chr(20, 3, tmp);
-  }
+  zx_print_chr(20,  3, player_lives);
   zx_print_chr(22, 16, player_str);
   zx_print_chr(22, 22, player_int);
   zx_print_chr(22, 28, player_lvl);
-
   zx_print_ink(INK_RED);
   zx_print_chr(20, 9, player_vita);
   zx_print_ink(INK_BLUE);
@@ -279,18 +291,8 @@ void game_round_init(void) {
   sound_coin();
   z80_delay_ms(200);
   ay_reset();
-  player_max_mana = 100;
-  player_max_vita = 100;
-  player_lives = 4;
-  player_mana = player_max_mana;
-  player_vita = player_max_vita;
-  player_str = 0;
-  player_lvl = 0;
-  player_int = 0;
-  player_score = 0;
-  /* screen init */
-  game_over = 0;
 
+  /* screen init */
   /*PHASE INIT*/
   loop_count = 0;
   entry_time = 0;
@@ -309,9 +311,7 @@ void game_round_init(void) {
   game_print_header();
   game_print_footer();
   /* Player(s) init */
-  if (player_lives)
-
-    player_init(SPR_P1, GAME_LIN_FLOOR - 16, 2, TILE_P1_STANR);
+  player_init(SPR_P1, GAME_LIN_FLOOR - 16, 2, TILE_P1_STANR);
 }
 
 void game_print_header(void) {
@@ -585,6 +585,7 @@ void game_obj_set(unsigned int f_index) {
   }
 }
 
+
 unsigned char game_obj_chk(unsigned int f_index) {
   unsigned char f_scr_surr1;
 
@@ -594,4 +595,16 @@ unsigned char game_obj_chk(unsigned int f_index) {
     f_scr_surr1 = 16 - scr_curr;
     return BIT_CHK(scr_obj1[f_index], f_scr_surr1);
   }
+}
+
+void game_obj_clear() {
+  for (tmp = 0; tmp < 160; tmp++) {
+    scr_map[tmp] = TILE_EMPTY;
+    scr_obj0[tmp] = 0;
+    scr_obj1[tmp] = 0;
+  }
+  player_keys[0] = 0;
+  player_keys[1] = 0;
+  player_keys[2] = 0;
+  player_keys[3] = 0;
 }

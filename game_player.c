@@ -152,13 +152,11 @@ void player_restart(unsigned char f_sprite) __z88dk_fastcall {
 }
 
 void player_turn(void) {
-  if (player_lives > 0) {
     if (spr_chktime(&sprite)) {
       dirs = (joyfunc1)(&k1);
       player_move();
       player_collision();
     }
-  }
 }
 
 unsigned char player_move(void) {
@@ -811,7 +809,6 @@ void player_lost_life() {
 }
 
 void player_hit(unsigned char f_val) __z88dk_fastcall {
-  // if (game_check_time(player_hit_time, 25)) {
   if (player_vita > f_val) {
     if (!game_inmune)
       player_vita = player_vita - f_val;
@@ -821,9 +818,10 @@ void player_hit(unsigned char f_val) __z88dk_fastcall {
     player_vita = 0;
     game_update_stats();
     player_lost_life();
-    if (player_lives) {
+    if (player_lives > 0) {
       // Player lost life
       --player_lives;
+      game_update_stats();
     } else {
       // Game End
       player_lives = 0;

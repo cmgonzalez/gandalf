@@ -21,6 +21,14 @@
 #define GAME_ROWS                     11
 #define GAME_SCR_MAX_INDEX            160
 
+#define GAME_GOD_MODE                 0
+#define GAME_INMUNE                   0
+#define GAME_GRAVITY                  1
+#define GAME_VELOCITY                 -8
+#define GAME_MIN_VELOCITY             -7
+#define GAME_START_LIVES              3
+#define GAME_START_MAX_MANA           100
+#define GAME_START_MAX_VITA           100
 /* Map foreground tiles */
 
 #define TILE_EMPTY                    0

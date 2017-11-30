@@ -35,8 +35,8 @@
 void main(void) {
   unsigned int counter;
 
-  game_god_mode = 0;
-  game_inmune = 0;
+  game_god_mode = GAME_GOD_MODE;
+  game_inmune = GAME_INMUNE;
   // INTERRUPTS ARE DISABLED
 
   // RESET AY CHIP
@@ -62,10 +62,10 @@ void main(void) {
   game_sound = spec128 ? (GAME_SOUND_AY_FX_ON | GAME_SOUND_AY_MUS_ON)
                        : (GAME_SOUND_48_FX_ON | GAME_SOUND_48_MUS_ON);
   player_joy = 0;   /*KB1*/
-  game_gravity = 1; // 8;
+  game_gravity = GAME_GRAVITY; // 8;
   // vel_y0 + vel_y1 = -84
-  player_vel_y0 = -8; //-88; // Velocity
-  player_vel_y1 = -7; //-72; // Min Velocity
+  player_vel_y0 = GAME_VELOCITY; //-88; // Velocity
+  player_vel_y1 = GAME_MIN_VELOCITY; //-72; // Min Velocity
 
   // Keyboard Handling
 
@@ -97,27 +97,17 @@ void main(void) {
   map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
 
   spr_btile_paint_back();
-
   // Init Screen
-
   frame_time = zx_clock();
   // GAME MENU
   // game_menu();
-  for (tmp = 0; tmp < 160; tmp++) {
-    scr_map[tmp] = TILE_EMPTY;
-    scr_obj0[tmp] = 0;
-    scr_obj1[tmp] = 0;
-  }
-  player_keys[0] = 0;
-  player_keys[1] = 0;
-  player_keys[2] = 0;
-  player_keys[3] = 0;
+
+
   scr_curr = 255; //255 equals read default screen from map
   map_width = 16 - 1; // OJO!
   map_heigth = 1;
 
-  // spr_page_map(); // INIT FIRST SCREEN
-
+  game_obj_clear();
   game_loop();
 }
 

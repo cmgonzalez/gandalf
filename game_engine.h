@@ -50,5 +50,5 @@ extern void          game_add_enemy( unsigned char enemy_tile_index);
 extern unsigned char game_shoot_fire( unsigned char f_sprite, unsigned char f_tile);
 extern void          game_obj_set( unsigned int f_index );
 extern unsigned char game_obj_chk( unsigned int f_index );
-
+extern void          game_obj_clear( );
 #endif
