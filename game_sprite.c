@@ -607,25 +607,27 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
                   unsigned char f_tile, unsigned char f_end,
                   unsigned char f_loops, unsigned char f_respawn) {
   unsigned char f_anim;
-  for (f_anim = 0; f_anim < 8; f_anim++) {
-    if (anim_lin[f_anim] == 0XFF) {
+  if (f_col < 31 && f_lin < SCR_LINS ) {
+    for (f_anim = 0; f_anim < 8; f_anim++) {
+      if (anim_lin[f_anim] == 0XFF) {
+        ++anim_count;
+        anim_lin[f_anim] = f_lin;
+        anim_col[f_anim] = f_col;
+        anim_tile[f_anim] = f_tile;
+        anim_loop[f_anim] = f_loops;
+        anim_int[f_anim] = 0;
+        anim_end[f_anim] = f_end;
+        anim_respanwn[f_anim] = f_respawn;
+        intrinsic_di();
+        NIRVANAP_drawT_raw(anim_tile[f_anim], anim_lin[f_anim],
+                           anim_col[f_anim]);
+        intrinsic_ei();
+        index0 = spr_calc_index(f_lin, f_col);
 
-      ++anim_count;
-      anim_lin[f_anim] = f_lin;
-      anim_col[f_anim] = f_col;
-      anim_tile[f_anim] = f_tile;
-      anim_loop[f_anim] = f_loops;
-      anim_int[f_anim] = 0;
-      anim_end[f_anim] = f_end;
-      anim_respanwn[f_anim] = f_respawn;
-      intrinsic_di();
-      NIRVANAP_drawT_raw(anim_tile[f_anim], anim_lin[f_anim], anim_col[f_anim]);
-      intrinsic_ei();
-      index0 = spr_calc_index(f_lin, f_col);
-
-      if (scr_map[index0] == TILE_EMPTY)
-        scr_map[index0] = 0xFF;
-      break;
+        if (scr_map[index0] == TILE_EMPTY)
+          scr_map[index0] = 0xFF;
+        break;
+      }
     }
   }
 }
@@ -757,7 +759,7 @@ void spr_play_bullets(void) {
     tmp1 = 0;
     if (bullet_max[f_bullet] > 0) {
       // Max Fireball
-      tmp0 = abs( f_col0  - bullet_col0[f_bullet] );
+      tmp0 = abs(f_col0 - bullet_col0[f_bullet]);
       if (tmp0 > bullet_max[f_bullet]) {
         tmp1 = 1;
       }

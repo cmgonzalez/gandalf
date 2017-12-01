@@ -35,25 +35,7 @@
 
 void game_loop(void) {
   unsigned int fps;
-  /*Player Init*/
-  player_max_mana = GAME_START_MAX_MANA;
-  player_max_vita = GAME_START_MAX_VITA;
-  player_lives = GAME_START_LIVES;
-  player_mana = player_max_mana;
-  player_vita = player_max_vita;
-  player_str = 0;
-  player_lvl = 0;
-  player_int = 0;
-  player_score = 0;
-  /* phase init */
-  game_over = 0;
-  game_round_init();
-  zx_print_str(12, 6, "WORLD 1 THE SHIRE");
-  game_colour_message(12, 6, 6 + 17, 250, 0);
-  /* game loop start */
-  dirs = 0x00;
-  game_joystick_set();
-  fps = 0;
+
 
   while (!game_over) {
 
@@ -70,10 +52,8 @@ void game_loop(void) {
         spr_play_bullets();
     }
 
-    /*player 1 turn*/
-    sprite = SPR_P1;
-    player_turn();
-    enemy_turn();
+
+
     /*each second aprox - update fps/score/phase left/phase advance*/
     if (game_check_time(frame_time, 100)) {
       zx_print_ink(INK_WHITE);
@@ -99,13 +79,13 @@ void game_loop(void) {
         }
       }
     }
+    enemy_turn();
+    /*player 1 turn*/
+    sprite = SPR_P1;
+    player_turn();
     ++loop_count;
     ++fps;
   }
-  zx_print_str(12, 12, "GAME OVER");
-  game_colour_message(12, 12, 12 + 9, 250, 0);
-  game_obj_clear();
-  game_loop();
 }
 
 void game_draw_screen(void) {
@@ -372,7 +352,7 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
       }
     } else {
       // HORIZONTAL ENEMIES
-      if (f_tile <= TILE_ITEM_S) {
+      if (f_tile <= TILE_ITEM_E) {
         return 0;
       } else {
         return 1;

@@ -584,8 +584,8 @@ void player_score_add(unsigned int f_score) __z88dk_fastcall {
   if (player_lvl < 20) {
     if (player_score >= player_lvl_table[player_lvl]) {
       player_lvl++;
-      zx_print_str(12,12,"LEVEL UP!");
-      game_colour_message(12,12,12+9,25,0);
+      zx_print_str(12, 12, "LEVEL UP!");
+      game_colour_message(12, 12, 12 + 9, 25, 0);
 
       game_update_stats();
     }
@@ -797,13 +797,11 @@ void player_lost_life() {
     class[f_anim] = 0;
   }
   NIRVANAP_halt();
-
+  // Player Explode
   spr_add_anim(s_lin0 - 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
-  if (s_col0 >= 2)
-    spr_add_anim(s_lin0, s_col0 - 2, TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(s_lin0, s_col0 - 2, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
-  if (s_col0 < 30)
-    spr_add_anim(s_lin0, s_col0 + 2, TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(s_lin0, s_col0 + 2, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(s_lin0 + 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
   zx_border(INK_BLACK);
   tmp = 1;
@@ -818,9 +816,11 @@ void player_lost_life() {
     }
     z80_delay_ms(5);
   }
-  z80_delay_ms(500);
-  scr_curr = game_start_scr; // TODO
-  game_round_init();
+  if (player_lives > 0) {
+    z80_delay_ms(500);
+    scr_curr = game_start_scr; // TODO
+    game_round_init();
+  }
 }
 
 void player_hit(unsigned char f_val) __z88dk_fastcall {

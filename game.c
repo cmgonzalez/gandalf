@@ -61,10 +61,10 @@ void main(void) {
 
   game_sound = spec128 ? (GAME_SOUND_AY_FX_ON | GAME_SOUND_AY_MUS_ON)
                        : (GAME_SOUND_48_FX_ON | GAME_SOUND_48_MUS_ON);
-  player_joy = 0;   /*KB1*/
+  player_joy = 0;              /*KB1*/
   game_gravity = GAME_GRAVITY; // 8;
   // vel_y0 + vel_y1 = -84
-  player_vel_y0 = GAME_VELOCITY; //-88; // Velocity
+  player_vel_y0 = GAME_VELOCITY;     //-88; // Velocity
   player_vel_y1 = GAME_MIN_VELOCITY; //-72; // Min Velocity
 
   // Keyboard Handling
@@ -102,17 +102,38 @@ void main(void) {
   // GAME MENU
   // game_menu();
 
-
-  scr_curr = 255; //255 equals read default screen from map
+  scr_curr = 255;     // 255 equals read default screen from map
   map_width = 16 - 1; // OJO!
   map_heigth = 1;
 
   game_obj_clear();
-  game_loop();
+  while (1) {
+    /*Player Init*/
+    player_max_mana = GAME_START_MAX_MANA;
+    player_max_vita = GAME_START_MAX_VITA;
+    player_lives = GAME_START_LIVES;
+    player_mana = player_max_mana;
+    player_vita = player_max_vita;
+    player_str = 0;
+    player_lvl = 0;
+    player_int = 0;
+    player_score = 0;
+    /* phase init */
+    game_over = 0;
+    game_round_init();
+    zx_print_str(12, 6, "WORLD 1 THE SHIRE");
+    game_colour_message(12, 6, 6 + 17, 25, 0);
+    /* game loop start */
+    dirs = 0x00;
+    game_joystick_set();
+    game_loop();
+    zx_print_str(12, 12, "GAME OVER");
+    game_over = 0; //Hack game_colour_message to render background
+    game_colour_message(12, 12, 12 + 9, 250, 0);
+    game_obj_clear();
+  }
 }
 
-void test_proc() {
-
-}
+void test_proc() {}
 
 unsigned char test_func() { return 0; }
