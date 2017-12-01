@@ -46,11 +46,15 @@ void game_loop(void) {
   player_int = 0;
   player_score = 0;
   /* phase init */
+  game_over = 0;
   game_round_init();
+  zx_print_str(12, 6, "WORLD 1 THE SHIRE");
+  game_colour_message(12, 6, 6 + 17, 250, 0);
   /* game loop start */
   dirs = 0x00;
   game_joystick_set();
   fps = 0;
+
   while (!game_over) {
 
     if (game_check_time(anim_time, TIME_ANIM)) {
@@ -98,9 +102,8 @@ void game_loop(void) {
     ++loop_count;
     ++fps;
   }
-  game_over = 0;
-  zx_print_str(12,12,"GAME OVER");
-  game_colour_message(12,12,12+9,250);
+  zx_print_str(12, 12, "GAME OVER");
+  game_colour_message(12, 12, 12 + 9, 250, 0);
   game_obj_clear();
   game_loop();
 }
@@ -266,7 +269,7 @@ void game_phase_print_score_back(void) {
 
 void game_update_stats(void) {
   zx_print_ink(INK_WHITE);
-  zx_print_chr(20,  3, player_lives);
+  zx_print_chr(20, 3, player_lives);
   zx_print_chr(22, 16, player_str);
   zx_print_chr(22, 22, player_int);
   zx_print_chr(22, 28, player_lvl);
@@ -311,7 +314,9 @@ void game_round_init(void) {
   game_print_header();
   game_print_footer();
   /* Player(s) init */
-  player_init(SPR_P1, GAME_LIN_FLOOR - 16, 2, TILE_P1_STANR);
+  if (!game_over) {
+    player_init(SPR_P1, GAME_LIN_FLOOR - 16, 2, TILE_P1_STANR);
+  }
 }
 
 void game_print_header(void) {
@@ -431,7 +436,7 @@ void game_print_score(void) {
   zx_print_ink(INK_WHITE);
   zx_print_paper(PAPER_BLACK);
   zx_print_int(22, 6, player_score);
-  zx_print_int( 0, 14, game_score_top); // SCORE TOP
+  zx_print_int(0, 14, game_score_top); // SCORE TOP
 }
 
 void game_paint_attrib(unsigned char e_r1) __z88dk_fastcall {
@@ -486,7 +491,8 @@ void game_rotate_attrib(void) {
 }
 
 void game_colour_message(unsigned char f_row, unsigned char f_col,
-                         unsigned char f_col2, unsigned int f_microsecs) {
+                         unsigned char f_col2, unsigned int f_microsecs,
+                         unsigned char skip) {
   tmp = 1;
   frame_time = zx_clock();
   entry_time = zx_clock();
@@ -497,9 +503,26 @@ void game_colour_message(unsigned char f_row, unsigned char f_col,
       game_paint_attrib_lin_h(f_col, f_col2, (f_row << 3) + 8);
       game_rotate_attrib();
     }
-    while ((joyfunc1)(&k1) != 0)
-      tmp = 0;
+    if (skip) {
+      while ((joyfunc1)(&k1) != 0)
+        tmp = 0;
+    };
   };
+  if (game_over) {
+    // Clear Message
+    tmp1 = f_col2 - f_col;
+    for (tmp0 = 0; tmp0 < tmp1; tmp0++) {
+      zx_print_str(f_row, f_col + tmp0, " "); // SPACE
+    }
+  } else {
+    tmp1 = f_col2 - f_col;
+    s_lin0 = f_row * 8; // TODO OPTIMIZE
+    s_col1 = (f_col / 2) * 2;
+    for (tmp0 = 0; tmp0 < tmp1; tmp0 = tmp0 + 2) {
+      s_col0 = s_col1 + tmp0;
+      spr_back_repaint();
+    }
+  }
 }
 
 unsigned char game_check_time(unsigned int start, unsigned int lapse) {
@@ -555,9 +578,9 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
         return 1;
       bullet_col[f_sprite] = col[f_sprite];
       if (f_tile != TILE_AXE) {
-         bullet_tile[f_sprite] = f_tile + 2;
+        bullet_tile[f_sprite] = f_tile + 2;
       } else {
-         bullet_tile[f_sprite] = f_tile;
+        bullet_tile[f_sprite] = f_tile;
       }
       bullet_dir[f_sprite] = 0x01;
       bullet_colint[f_sprite] = 2;
@@ -584,7 +607,6 @@ void game_obj_set(unsigned int f_index) {
     BIT_SET(scr_obj1[f_index], f_scr_surr1);
   }
 }
-
 
 unsigned char game_obj_chk(unsigned int f_index) {
   unsigned char f_scr_surr1;

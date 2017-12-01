@@ -261,6 +261,27 @@ unsigned char sprite_frames[] = {
     0, //DEVIL
 };
 
+unsigned int player_lvl_table[] = {
+     100,
+     500,
+    1000,
+    2000,
+    4000,
+    6000,
+    7000,
+    8000,
+    9000,
+   10000,
+   12000,
+   13000,
+   14000,
+   15000,
+   16000,
+   17000,
+   18000,
+   19000,
+   20000,
+};
 // TEMPORARY SPEED FOR SPEED UP
 unsigned char sprite_speed_alt[8];
 unsigned char draw_count;

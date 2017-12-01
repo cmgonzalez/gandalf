@@ -508,3 +508,5 @@ extern unsigned char draw_count;
 extern unsigned char map_paper;
 extern unsigned char map_paper_clr;
 extern unsigned char map_paper_last;
+
+extern unsigned int player_lvl_table[];

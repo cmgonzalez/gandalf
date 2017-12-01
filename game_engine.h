@@ -37,7 +37,7 @@ extern void			     game_print_score(void);
 extern void			     game_paint_attrib(unsigned char e_r1) __z88dk_fastcall;
 extern void			     game_paint_attrib_lin(unsigned char f_start,unsigned char f_end,unsigned char f_lin);
 extern void			     game_paint_attrib_lin_h(unsigned char f_start,unsigned char f_end,unsigned char f_lin);
-extern void			     game_colour_message( unsigned char f_row, unsigned char f_col, unsigned char f_col2, unsigned int f_miliseconds	);
+extern void			     game_colour_message( unsigned char f_row, unsigned char f_col, unsigned char f_col2, unsigned int f_miliseconds, unsigned char skip);
 extern void			     game_rotate_attrib(void);
 extern unsigned char game_check_time(unsigned int start, unsigned int lapse);
 extern void          game_phase_print_score_back(void);

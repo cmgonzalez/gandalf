@@ -156,11 +156,11 @@ void player_restart(unsigned char f_sprite) __z88dk_fastcall {
 }
 
 void player_turn(void) {
-    if (spr_chktime(&sprite)) {
-      dirs = (joyfunc1)(&k1);
-      player_move();
-      player_collision();
-    }
+  if (spr_chktime(&sprite)) {
+    dirs = (joyfunc1)(&k1);
+    player_move();
+    player_collision();
+  }
 }
 
 unsigned char player_move(void) {
@@ -580,6 +580,17 @@ void player_hit_platform_clear(void) {
 
 void player_score_add(unsigned int f_score) __z88dk_fastcall {
   player_score = player_score + f_score;
+
+  if (player_lvl < 20) {
+    if (player_score >= player_lvl_table[player_lvl]) {
+      player_lvl++;
+      zx_print_str(12,12,"LEVEL UP!");
+      game_colour_message(12,12,12+9,25,0);
+
+      game_update_stats();
+    }
+  }
+
   // CHECK FOR TOP SCORE
   if (player_score > game_score_top) {
     game_score_top = player_score;
@@ -825,6 +836,8 @@ void player_hit(unsigned char f_val) __z88dk_fastcall {
     if (player_lives > 0) {
       // Player lost life
       --player_lives;
+      player_mana = GAME_START_MAX_MANA;
+      player_vita = GAME_START_MAX_VITA;
       game_update_stats();
     } else {
       // Game End
