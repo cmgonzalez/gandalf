@@ -82,11 +82,13 @@ unsigned char player_collision(void) {
       if (class[sprite] > 0) {
         if (abs(col[sprite] - s_col1) < 2) {
           if (abs(lin[sprite] - s_lin1) < 14) {
+            /*MUSHROMS*/
             if (class[sprite] == MUSHROOM_VITA) {
               player_vita = player_vita + 20;
               if (player_vita > player_max_vita) {
                 player_vita = player_max_vita;
               }
+              player_score_add(1);
               game_update_stats();
               spr_destroy(sprite);
               return 0;
@@ -96,12 +98,14 @@ unsigned char player_collision(void) {
               if (player_mana > player_max_mana) {
                 player_mana = player_max_mana;
               }
+              player_score_add(1);
               game_update_stats();
               spr_destroy(sprite);
               return 0;
             }
             if (class[sprite] == MUSHROOM_EXTRA) {
               player_lives++;
+              player_score_add(1);
               game_update_stats();
               spr_destroy(sprite);
               return 0;
@@ -439,7 +443,7 @@ void player_pick_item(void) {
       player_score_add(1);
       break;
     case TILE_CHEST:
-      player_score_add(100);
+      player_score_add(10);
       break;
     case TILE_SHIELD:
       player_str++;
