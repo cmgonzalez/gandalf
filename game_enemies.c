@@ -170,7 +170,7 @@ void enemy_walk(void) {
         enemy_avoid_fall_dead();
       }
 
-      if (class[sprite] == ORC) {
+      if (class[sprite] == ORC || class[sprite] == WARG) {
         enemy_avoid_fall();
       }
 

@@ -794,7 +794,6 @@ void player_lost_life() {
   spr_init_anim_bullets();
   for (f_anim = 0; f_anim < 8; f_anim++) {
     NIRVANAP_spriteT(f_anim, TILE_EMPTY, 0, 0);
-    class[f_anim] = 0;
   }
   NIRVANAP_halt();
   // Player Explode
@@ -816,9 +815,19 @@ void player_lost_life() {
     }
     z80_delay_ms(5);
   }
+  for (sprite = 0; sprite < SPR_P1; ++sprite) {
+    if (class[sprite] != 0) {
+      NIRVANAP_spriteT(sprite, tile[sprite] + colint[sprite], lin[sprite],
+                       col[sprite]);
+    }
+    //Clean Sprites
+    class[sprite] = 0;
+    //Clean Bullets
+    bullet_col[sprite] = 0xFF;
+  }
+
   if (player_lives > 0) {
     z80_delay_ms(500);
-    scr_curr = game_start_scr; // TODO
     game_round_init();
   }
 }

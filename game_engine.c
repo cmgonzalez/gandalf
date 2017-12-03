@@ -295,7 +295,8 @@ void game_round_init(void) {
   game_print_footer();
   /* Player(s) init */
   if (!game_over) {
-    player_init(SPR_P1, GAME_LIN_FLOOR - 16, 2, TILE_P1_STANR);
+
+    player_init(SPR_P1, player_lin_scr, player_col_scr, TILE_P1_STANR);
   }
 }
 
@@ -579,11 +580,10 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
 
 void game_obj_set(unsigned int f_index) {
   unsigned char f_scr_surr1;
-
   if (scr_curr < 8) {
     BIT_SET(scr_obj0[f_index], scr_curr);
   } else {
-    f_scr_surr1 = 16 - scr_curr;
+    f_scr_surr1 = scr_curr - 8;
     BIT_SET(scr_obj1[f_index], f_scr_surr1);
   }
 }
@@ -594,7 +594,7 @@ unsigned char game_obj_chk(unsigned int f_index) {
   if (scr_curr < 8) {
     return BIT_CHK(scr_obj0[f_index], scr_curr);
   } else {
-    f_scr_surr1 = 16 - scr_curr;
+    f_scr_surr1 = scr_curr - 8;
     return BIT_CHK(scr_obj1[f_index], f_scr_surr1);
   }
 }

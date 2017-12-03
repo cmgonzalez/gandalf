@@ -102,7 +102,6 @@ void main(void) {
   // GAME MENU
   // game_menu();
 
-  scr_curr = 255;     // 255 equals read default screen from map
   map_width = 16 - 1; // OJO!
   map_heigth = 1;
 
@@ -118,8 +117,11 @@ void main(void) {
     player_lvl = 0;
     player_int = 0;
     player_score = 0;
+    player_lin_scr = GAME_LIN_FLOOR - 16;
+    player_col_scr = 2; 
     /* phase init */
     game_over = 0;
+    scr_curr = 255; // 255 equals read default screen from map
     game_round_init();
     zx_print_str(12, 6, "WORLD 1 THE SHIRE");
     game_colour_message(12, 6, 6 + 17, 25, 0);
@@ -128,7 +130,7 @@ void main(void) {
     game_joystick_set();
     game_loop();
     zx_print_str(12, 12, "GAME OVER");
-    game_over = 0; //Hack game_colour_message to render background
+    game_over = 0; // Hack game_colour_message to render background
     game_colour_message(12, 12, 12 + 9, 250, 0);
     game_obj_clear();
   }

@@ -382,6 +382,8 @@ extern unsigned char player_max_vita;
 extern unsigned char player_str;
 extern unsigned char player_int;
 extern unsigned char player_lvl;
+extern unsigned char player_col_scr;
+extern unsigned char player_lin_scr;
 
 extern unsigned int  player_hit_time;
 

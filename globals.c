@@ -103,6 +103,9 @@ unsigned char player_str;
 unsigned char player_int;
 unsigned char player_lvl;
 
+unsigned char player_col_scr;
+unsigned char player_lin_scr;
+
 unsigned int  player_hit_time;
 
 
@@ -191,7 +194,7 @@ unsigned char game_sound;
 unsigned char game_over;
 unsigned char game_menu_sel;
 
-unsigned int game_score_top;
+unsigned int  game_score_top;
 unsigned char game_respawn_index[8];
 unsigned char game_respawn_tile[8];
 unsigned char game_respawning;

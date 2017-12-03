@@ -153,6 +153,8 @@ unsigned char spr_move_right(void) {
       if (sprite == SPR_P1) {
         if (spr_page_right()) {
           col[sprite] = 0;
+          player_lin_scr = lin[SPR_P1];
+          player_col_scr = 0;
         } else {
           col[sprite] = SCR_COLS_M;
         }
@@ -188,6 +190,8 @@ unsigned char spr_move_left(void) {
       if (sprite == SPR_P1) {
         if (spr_page_left()) {
           col[sprite] = SCR_COLS_M;
+          player_lin_scr = lin[SPR_P1];
+          player_col_scr = SCR_COLS_M;
         } else {
           col[sprite] = 0;
         }
