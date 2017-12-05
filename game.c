@@ -118,7 +118,7 @@ void main(void) {
     player_int = 0;
     player_score = 0;
     player_lin_scr = GAME_LIN_FLOOR - 16;
-    player_col_scr = 2; 
+    player_col_scr = 2;
     /* phase init */
     game_over = 0;
     scr_curr = 255; // 255 equals read default screen from map

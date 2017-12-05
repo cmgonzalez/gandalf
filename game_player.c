@@ -505,6 +505,13 @@ unsigned char player_hit_platform(void) {
       }
     }
 
+    if (scr_map[index1] == TILE_DIRT) {
+      // Destroy Bricks
+      scr_map[index1] = TILE_EMPTY;
+      game_obj_set(index0);
+      spr_add_anim((index1 >> 4) << 4, (index1 & 15) << 1, TILE_ANIM_FIRE, 3, 0, 0);
+      return 1;
+    }
     if (scr_map[index1] == TILE_SPECIAL ||
         scr_map[index1] == TILE_HIDDEN_BRICK) {
 

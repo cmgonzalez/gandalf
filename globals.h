@@ -21,8 +21,8 @@
 #define GAME_ROWS                     11
 #define GAME_SCR_MAX_INDEX            160
 
-#define GAME_GOD_MODE                 0
-#define GAME_INMUNE                   0
+#define GAME_GOD_MODE                 1
+#define GAME_INMUNE                   1
 #define GAME_GRAVITY                  1
 #define GAME_VELOCITY                 -8
 #define GAME_MIN_VELOCITY             -7
@@ -47,7 +47,7 @@
 #define TILE_STAIR_S                  68 //START OF STAIRS
 #define TILE_STAIR_E                  71 //END OF STAIRS
 
-#define TILE_DIRT                     81 //CAN BE DESTROYED BY FIREBALLS
+#define TILE_DIRT                     77 //CAN BE DESTROYED BY FIREBALLS
 #define TILE_SPECIAL                  92 //HAVE A MUSHROM VITA / MANA
 #define TILE_HIDDEN_BRICK             93 //HIDDEN TREASURE (COINS LIKE MARIO?)
 #define TILE_NORMAL_BRICK             84
