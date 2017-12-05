@@ -53,7 +53,8 @@
 #define TILE_NORMAL_BRICK             84
 #define TILE_NOSPECIAL                79 //AFTER HIT
 
-#define TILE_HIT                      69 //CAN BE DESTROYED BY FIREBALLS
+#define TILE_HIT                      69 //UP FROM THIS CAN BE HIT BY PLAYER JUMP
+#define TILE_STOPPER                  35 //TURN ENEMY DIRECTION
 
 /* Enemies Class indexes */
 #define PLAYER                        0

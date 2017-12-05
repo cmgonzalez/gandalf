@@ -75,7 +75,7 @@ unsigned char spr_move_up(void) {
   unsigned char f_check;
 
   s_lin1 = lin[sprite] - SPRITE_LIN_INC;
-  f_check = (s_lin1 >> 4) != (tmp1 >> 4);
+  f_check = (s_lin1 >> 4) != (s_lin0 >> 4);
 
   if (f_check) {
     if (game_check_map(s_lin1, col[sprite])) {
@@ -104,7 +104,7 @@ unsigned char spr_move_down(void) {
   unsigned char f_check;
 
   s_lin1 = lin[sprite] + SPRITE_LIN_INC + 14;
-  f_check = (s_lin1 >> 4) != (tmp1 >> 4);
+  f_check = (s_lin1 >> 4) != (s_lin0 >> 4);
   if (f_check) {
     if (game_check_map(s_lin1, col[sprite])) {
       return 1;

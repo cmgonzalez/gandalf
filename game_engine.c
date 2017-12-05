@@ -346,7 +346,7 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
   if (sprite != SPR_P1) {
     if (class[sprite] <= SPIDER) {
       // VERTICAL ENEMIES
-      if (f_tile <= TILE_ITEM_E) {
+      if (f_tile <= TILE_ITEM_E && f_tile != TILE_STOPPER) {
         return 0;
       } else {
         return 1;
