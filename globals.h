@@ -1,19 +1,19 @@
 /*
-	This file is part of Pietro Bros.
+   This file is part of Pietro Bros.
 
-	Pietro Bros is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+   Pietro Bros is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
 
-	Pietro Bros is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+   Pietro Bros is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Pietro Bros.  If not, see <http://www.gnu.org/licenses/>.
-*/
+   You should have received a copy of the GNU General Public License
+   along with Pietro Bros.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef GLOBALS_H
 #define GLOBALS_H
 #include <input.h>
@@ -360,17 +360,17 @@ extern unsigned char colint[8];
 extern unsigned char player_hit_lin;
 extern unsigned char player_hit_col;
 extern unsigned char jump_lin[8];
-extern unsigned int  spr_timer[8];
+extern unsigned int spr_timer[8];
 
 extern unsigned char player_slide;
-extern unsigned int  last_time[8];
-extern unsigned int  player_score;
-extern unsigned int  player_joy;
-extern signed char   player_vel_x;
-extern signed char   player_vel_y;
-extern signed char   player_vel_y0;
-extern signed char   player_vel_y1;
-extern signed char   player_vel_inc;
+extern unsigned int last_time[8];
+extern unsigned int player_score;
+extern unsigned int player_joy;
+extern signed char player_vel_x;
+extern signed char player_vel_y;
+extern signed char player_vel_y0;
+extern signed char player_vel_y1;
+extern signed char player_vel_inc;
 extern unsigned char player_keys[4];
 //PLAYER ATTRIBUTES
 extern unsigned char player_mana;
@@ -386,61 +386,61 @@ extern unsigned char player_lvl;
 extern unsigned char player_col_scr;
 extern unsigned char player_lin_scr;
 
-extern unsigned int  player_hit_time;
+extern unsigned int player_hit_time;
 
 
 extern signed int game_gravity;
 
-extern unsigned char	sprite;
+extern unsigned char sprite;
 extern unsigned char sprite_on_air;
 extern unsigned char sprite_horizontal_check;
 
-extern unsigned char	player_hit_count;
-extern unsigned char	s_tile0;
-extern unsigned char	s_tile1;
-extern unsigned char	s_lin0;
-extern unsigned char	s_lin1;
-extern unsigned char	s_col0;
-extern unsigned char	s_col1;
-extern unsigned int		loop_count;
-extern unsigned int		index0;
-extern unsigned int		index1;
-extern unsigned char	tmp;
-extern unsigned char	tmp0;
-extern unsigned char	tmp1;
-extern unsigned char	tmp_uc;
-extern signed char		tmp_sc;
-extern unsigned int		tmp_ui;
-extern unsigned char	enemies;
-extern unsigned char	zx_val_asm;
-extern unsigned char	attrib[4];
-extern unsigned char	attrib_hl[4];
-extern unsigned char	s_state;
-extern unsigned int		curr_time;
-extern unsigned int		entry_time;
-extern unsigned int		frame_time;
-extern unsigned int  	anim_time;
-extern unsigned int  	bullet_time;
-extern unsigned char	spr_count;
-extern unsigned char   sprite_curr_index;
+extern unsigned char player_hit_count;
+extern unsigned char s_tile0;
+extern unsigned char s_tile1;
+extern unsigned char s_lin0;
+extern unsigned char s_lin1;
+extern unsigned char s_col0;
+extern unsigned char s_col1;
+extern unsigned int loop_count;
+extern unsigned int index0;
+extern unsigned int index1;
+extern unsigned char tmp;
+extern unsigned char tmp0;
+extern unsigned char tmp1;
+extern unsigned char tmp_uc;
+extern signed char tmp_sc;
+extern unsigned int tmp_ui;
+extern unsigned char enemies;
+extern unsigned char zx_val_asm;
+extern unsigned char attrib[4];
+extern unsigned char attrib_hl[4];
+extern unsigned char s_state;
+extern unsigned int curr_time;
+extern unsigned int entry_time;
+extern unsigned int frame_time;
+extern unsigned int anim_time;
+extern unsigned int bullet_time;
+extern unsigned char spr_count;
+extern unsigned char sprite_curr_index;
 
 
-extern unsigned char 	game_brick_tile;
-extern unsigned char 	game_two_player;
-extern unsigned char  game_god_mode;
-extern unsigned char  game_inmune;
-extern unsigned char	game_sound;
+extern unsigned char game_brick_tile;
+extern unsigned char game_two_player;
+extern unsigned char game_god_mode;
+extern unsigned char game_inmune;
+extern unsigned char game_sound;
 
-extern unsigned char	game_over;
-extern unsigned char	player_lives;
-extern unsigned int		game_score_top;
-extern unsigned char	game_menu_sel;
-extern unsigned char  game_respawn_index[8];
-extern unsigned char  game_respawn_tile[8];
-extern unsigned char  game_respawning;
-extern unsigned char  game_start_scr;
+extern unsigned char game_over;
+extern unsigned char player_lives;
+extern unsigned int game_score_top;
+extern unsigned char game_menu_sel;
+extern unsigned int game_respawn_time[7];
+extern unsigned char game_respawn_index[7];
+extern unsigned char game_respawn_tile[7];
+extern unsigned char game_start_scr;
 
-extern unsigned char  player_over_stair;
+extern unsigned char player_over_stair;
 
 
 extern unsigned char screen_paper, screen_ink;
@@ -452,15 +452,15 @@ extern unsigned char scr_obj0[];
 extern unsigned char scr_obj1[];
 
 /*
-extern const unsigned char scr_0[];
-extern const unsigned char scr_1[];
-extern const unsigned char scr_2[];
-extern const unsigned char scr_3[];
-extern const unsigned char scr_4[];
-extern const unsigned char scr_5[];
-extern const unsigned char scr_6[];
-extern const unsigned char scr_7[];
-*/
+   extern const unsigned char scr_0[];
+   extern const unsigned char scr_1[];
+   extern const unsigned char scr_2[];
+   extern const unsigned char scr_3[];
+   extern const unsigned char scr_4[];
+   extern const unsigned char scr_5[];
+   extern const unsigned char scr_6[];
+   extern const unsigned char scr_7[];
+ */
 extern const unsigned char start_scr0;
 extern const unsigned char lenght0[];
 extern const unsigned char world0[];
@@ -496,7 +496,7 @@ extern unsigned char bullet_tile[8];
 extern unsigned char bullet_dir[8];
 extern unsigned char bullet_colint[8];
 extern unsigned char bullet_frames[8];
-extern signed char   bullet_vel[8];
+extern signed char bullet_vel[8];
 
 extern unsigned char bullet_count;
 

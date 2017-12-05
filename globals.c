@@ -33,14 +33,14 @@ unsigned char spec128;
 // 52..55   BRICKS (FLOOR AND CEIL)
 // 56..63   SPECIAL BRICKS (FLORR AND CEIL CAN BE HITTED)
 unsigned char scr_map[GAME_SCR_MAX_INDEX];
-unsigned char scr_obj0[GAME_SCR_MAX_INDEX]; //OBJECT PICK  0..15 SCREENS
-unsigned char scr_obj1[GAME_SCR_MAX_INDEX]; //OBJECT PICK 16..31 SCREENS
+unsigned char scr_obj0[GAME_SCR_MAX_INDEX]; // OBJECT PICK  0..15 SCREENS
+unsigned char scr_obj1[GAME_SCR_MAX_INDEX]; // OBJECT PICK 16..31 SCREENS
 
 unsigned char scr_curr;
 unsigned char map_width;
 unsigned char map_heigth;
 
-//Compressed MAP is in globals_bank06.c
+// Compressed MAP is in globals_bank06.c
 
 //#########################################################################################
 //# # # CONTROL VARIABLES
@@ -62,14 +62,14 @@ const JOYFUNC control_method[7] = {
     (JOYFUNC)(in_stick_fuller)};
 
 // SPRITES GAME ARRAYS
-unsigned char class[8];    // CLASS OF SPRITE
-unsigned char state[8];    // SPRITE STATES SEE DEFINES UPPER BIT VALUES
-unsigned char state_a[8];  // SPRITE STATES ALT SEE DEFINES UPPER BIT VALUES
-unsigned char tile[8];     // TILE
-unsigned char lin[8];      // LINE
+unsigned char class[8];   // CLASS OF SPRITE
+unsigned char state[8];   // SPRITE STATES SEE DEFINES UPPER BIT VALUES
+unsigned char state_a[8]; // SPRITE STATES ALT SEE DEFINES UPPER BIT VALUES
+unsigned char tile[8];    // TILE
+unsigned char lin[8];     // LINE
 
-//unsigned char lin_max[7];      // MAX LINE FOR VERTICAL ENEMIES
-//unsigned char lin_min[7];      // MIN LINE FOR VERTICAL ENEMIES
+// unsigned char lin_max[7];      // MAX LINE FOR VERTICAL ENEMIES
+// unsigned char lin_min[7];      // MIN LINE FOR VERTICAL ENEMIES
 
 unsigned char col[8];      // COLUMN
 unsigned char colint[8];   // INTERNAL COLUMN/TILE INCREMENT
@@ -80,25 +80,25 @@ unsigned char jump_lin[8]; // START JUMP LINE
 // PLAYER ONLY
 unsigned char player_hit_lin; // HIT BRICK LINE
 unsigned char player_hit_col; // HIT BRICK COL
-unsigned char player_slide; // SLIDING COUNTER
-unsigned int  player_score;  // SCORE
-unsigned int  player_joy;    // JOYSTICK
+unsigned char player_slide;   // SLIDING COUNTER
+unsigned int player_score;    // SCORE
+unsigned int player_joy;      // JOYSTICK
 unsigned char player_lives;
 unsigned char player_over_stair;
-signed char   player_vel_x;
-signed char   player_vel_y;
-signed char   player_vel_y0;
-signed char   player_vel_y1;
-signed char   player_vel_inc;
+signed char player_vel_x;
+signed char player_vel_y;
+signed char player_vel_y0;
+signed char player_vel_y1;
+signed char player_vel_inc;
 unsigned char player_keys[4];
 unsigned char player_hit_count;
-//PLAYER ATTRIBUTES
+// PLAYER ATTRIBUTES
 unsigned char player_mana;
 unsigned char player_vita;
-//Maximun Mana n Vitality
+// Maximun Mana n Vitality
 unsigned char player_max_mana;
 unsigned char player_max_vita;
-//Player stats
+// Player stats
 unsigned char player_str;
 unsigned char player_int;
 unsigned char player_lvl;
@@ -106,17 +106,13 @@ unsigned char player_lvl;
 unsigned char player_col_scr;
 unsigned char player_lin_scr;
 
-unsigned int  player_hit_time;
-
-
+unsigned int player_hit_time;
 
 signed int game_gravity;
 
 unsigned char sprite;
 unsigned char sprite_on_air;
 unsigned char sprite_horizontal_check;
-
-
 
 unsigned char s_tile0;
 unsigned char s_tile1;
@@ -156,7 +152,7 @@ unsigned char mush_class[8];
 
 unsigned char spr_count;
 unsigned char sprite_curr_index;
-//ANIMATIONS
+// ANIMATIONS
 unsigned char anim_lin[8];
 unsigned char anim_col[8];
 unsigned char anim_tile[8];
@@ -164,7 +160,7 @@ unsigned char anim_int[8];
 unsigned char anim_end[8];
 unsigned char anim_loop[8];
 unsigned char anim_respanwn[8];
-//BULLETS
+// BULLETS
 unsigned char bullet_class[8];
 unsigned char bullet_max[8];
 unsigned char bullet_lin0[8];
@@ -175,10 +171,7 @@ unsigned char bullet_tile[8];
 unsigned char bullet_dir[8];
 unsigned char bullet_colint[8];
 unsigned char bullet_frames[8];
-signed char   bullet_vel[8];
-
-
-
+signed char bullet_vel[8];
 
 //###############################################################################################
 //# # # GAME VARIABLES
@@ -194,10 +187,10 @@ unsigned char game_sound;
 unsigned char game_over;
 unsigned char game_menu_sel;
 
-unsigned int  game_score_top;
-unsigned char game_respawn_index[8];
-unsigned char game_respawn_tile[8];
-unsigned char game_respawning;
+unsigned int game_score_top;
+unsigned int game_respawn_time[7]; // 8-1=7 Player don't respawn
+unsigned char game_respawn_index[7];
+unsigned char game_respawn_tile[7];
 unsigned char game_start_scr;
 
 // PHASE RELATED VARIABLES
@@ -208,8 +201,6 @@ unsigned char screen_ink;
 unsigned char map_paper;
 unsigned char map_paper_clr;
 unsigned char map_paper_last;
-
-
 
 //###############################################################################################
 //# # # ENEMIES ANIMATION SPEEDS - INTERRUPTS VALUES 50HZ
@@ -226,18 +217,18 @@ unsigned char sprite_speed[] = {
     SPEED_ENEMY_MUSH_VITA,
     SPEED_ENEMY_MUSH_MANA,
     SPEED_ENEMY_MUSH_EXTRA,
-    0, //FIRE
-    0, //SNOWMAN
+    0, // FIRE
+    0, // SNOWMAN
     SPEED_ENEMY_SKELETON,
     SPEED_ENEMY_ORC,
     SPEED_ENEMY_WARG,
     SPEED_ENEMY_DWARF,
     SPEED_ENEMY_ELF,
     SPEED_ENEMY_PLANT,
-    0,            //TRAP
+    0, // TRAP
     SPEED_ENEMY_SNAKE,
     SPEED_ENEMY_BAT_H,
-    0,            // DEVIL
+    0, // DEVIL
 };
 
 unsigned char sprite_frames[] = {
@@ -258,32 +249,15 @@ unsigned char sprite_frames[] = {
     FRAMES_ENEMY_DWARF,
     FRAMES_ENEMY_ELF,
     FRAMES_ENEMY_PLANT,
-    0, //TRAP
+    0, // TRAP
     FRAMES_ENEMY_SNAKE,
     FRAMES_ENEMY_BAT_H,
-    0, //DEVIL
+    0, // DEVIL
 };
 
 unsigned int player_lvl_table[] = {
-     100,
-     500,
-    1000,
-    2000,
-    4000,
-    6000,
-    7000,
-    8000,
-    9000,
-   10000,
-   12000,
-   13000,
-   14000,
-   15000,
-   16000,
-   17000,
-   18000,
-   19000,
-   20000,
+    100,   500,   1000,  2000,  4000,  6000,  7000,  8000,  9000,  10000,
+    12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000,
 };
 // TEMPORARY SPEED FOR SPEED UP
 unsigned char sprite_speed_alt[8];

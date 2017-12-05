@@ -824,6 +824,7 @@ void spr_play_bullets(void) {
             s_lin0 = lin[tmp0];
             s_col0 = col[tmp0];
             player_score_add(rand() % 6);
+            game_respawn_time[tmp0] = zx_clock();
             spr_destroy(tmp0);
             bullet_col[f_bullet] = s_col0;
             spr_explode_bullet(f_bullet);

@@ -359,6 +359,7 @@ unsigned char player_fire() {
     /*Fireball*/
     if (player_mana > 0 && (bullet_col[SPR_P1] == 0xFF)) {
       if (player_mana > 5) {
+        sound_hit_enemy();
         player_mana = player_mana - 5;
       } else {
         player_mana = 0;

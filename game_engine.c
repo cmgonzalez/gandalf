@@ -36,23 +36,21 @@
 void game_loop(void) {
   unsigned int fps;
 
-
   while (!game_over) {
 
+    //Play animatios
     if (game_check_time(anim_time, TIME_ANIM)) {
       zx_border(INK_BLACK);
       anim_time = zx_clock();
       if (anim_count)
         spr_play_anim();
     }
-
+    //Anim Bullets
     if (game_check_time(bullet_time, TIME_BULLETS)) {
       bullet_time = zx_clock();
       if (bullet_count)
         spr_play_bullets();
     }
-
-
 
     /*each second aprox - update fps/score/phase left/phase advance*/
     if (game_check_time(frame_time, 100)) {
@@ -60,11 +58,11 @@ void game_loop(void) {
       zx_print_int(23, 24, fps);
       fps = 0;
       frame_time = zx_clock();
-      if (game_respawning == 0) {
-        sprite = 0;
-        while (sprite < SPR_P1) {
-
-          if (game_respawn_index[sprite] > 0 && class[sprite] == 0) {
+      sprite = 0;
+      //Enemy Respawn
+      while (sprite < SPR_P1) {
+        if (game_respawn_time[sprite] > 0) {
+          if (game_check_time(game_respawn_time[sprite], 25)) {
             index1 = game_respawn_index[sprite];
             s_col1 = (index1 & 15) << 1;
             s_lin1 = index1;
@@ -72,11 +70,11 @@ void game_loop(void) {
             scr_map[index1] = 0xFF;
             spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 4,
                          game_respawn_tile[sprite]);
-            game_respawning = 1;
+            game_respawn_time[sprite] = 0;
             break;
           }
-          ++sprite;
         }
+        ++sprite;
       }
     }
     enemy_turn();
@@ -96,12 +94,12 @@ void game_draw_screen(void) {
   while (spr_count < SPR_P1) {
     game_respawn_index[spr_count] = 0;
     game_respawn_tile[spr_count] = 0;
+    game_respawn_time[spr_count] = 0;
     mush_index[spr_count] = 0;
     mush_class[spr_count] = 0;
     class[spr_count] = 0;
     ++spr_count;
   }
-  game_respawning = 0;
   index1 = 16;
   s_lin1 = 0;
   s_col1 = 2;

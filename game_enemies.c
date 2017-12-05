@@ -190,8 +190,8 @@ void enemy_walk(void) {
         enemy_avoid_fall();
         s_col1 = abs(col[SPR_P1] - col[sprite]);
         if (s_col1 < 6) {
-          if ( ( BIT_CHK(s_state, STAT_DIRL) && (col[sprite] > col[SPR_P1]) ) ||
-               ( BIT_CHK(s_state, STAT_DIRR) && (col[sprite] < col[SPR_P1]) ) ) {
+          if ((BIT_CHK(s_state, STAT_DIRL) && (col[sprite] > col[SPR_P1])) ||
+              (BIT_CHK(s_state, STAT_DIRR) && (col[sprite] < col[SPR_P1]))) {
             game_shoot_fire(sprite, TILE_AXE);
           }
         }
@@ -239,7 +239,6 @@ void enemy_respawn(unsigned char f_anim) {
   while (sprite < SPR_P1) {
     if (game_respawn_index[sprite] == index1) {
       game_add_enemy(anim_respanwn[f_anim]);
-      game_respawning = 0;
       break;
     }
     ++sprite;
@@ -250,16 +249,12 @@ void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,
                 unsigned char f_dir) {
   unsigned char f_sprite;
   // Get the first available sprite
-  if (game_respawning) {
-    f_sprite = sprite;
-  } else {
-    f_sprite = 0;
-    while (f_sprite < SPR_P1) {
-      if (class[f_sprite] == 0) {
-        break;
-      } else {
-        f_sprite++;
-      }
+  f_sprite = 0;
+  while (f_sprite < SPR_P1) {
+    if (class[f_sprite] == 0) {
+      break;
+    } else {
+      f_sprite++;
     }
   }
 
