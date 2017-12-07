@@ -101,16 +101,12 @@ void enemy_horizontal() {
   if (BIT_CHK(s_state, STAT_DIRR)) {
     if (spr_move_right()) {
       BIT_CLR(s_state, STAT_DIRR);
-      // BIT_CLR(state_a[sprite], STAT_LDIRR);
       BIT_SET(s_state, STAT_DIRL);
-      // BIT_SET(state_a[sprite], STAT_LDIRL);
     }
   } else {
     if (spr_move_left()) {
       BIT_CLR(s_state, STAT_DIRL);
-      // BIT_CLR(state_a[sprite], STAT_LDIRL);
       BIT_SET(s_state, STAT_DIRR);
-      // BIT_SET(state_a[sprite], STAT_LDIRR);
     }
   }
 }
@@ -149,6 +145,7 @@ void enemy_vertical() {
 void enemy_walk(void) {
 
   if (!BIT_CHK(s_state, STAT_FALL)) {
+    //WALKING
     if (spr_move_horizontal()) {
       spr_turn_horizontal();
     }

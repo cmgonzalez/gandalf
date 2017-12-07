@@ -10,7 +10,8 @@ OUT = bin/game_release.tap
 OUTC = bin/game_release_zx7.tap
 ORG = 23552
 
-CFLAGS = -SO3 --max-allocs-per-node200000 --opt-code-size
+//CFLAGS = -SO3 --max-allocs-per-node200000 --opt-code-size
+CFLAGS = -SO3 --max-allocs-per-node10000 --opt-code-size
 
 .PHONY: depend clean
 
@@ -25,7 +26,7 @@ zx7: loader.tap game_scr.bin game.font $(OUTC)
 	grep code_compiler_size game.map
 
 loader.tap: src_tap/loader.bas
-	src_tap/bas2tap -sGandalf -a10 src_tap/loader.bas loader.tap 
+	src_tap/bas2tap -sGandalf -a10 src_tap/loader.bas loader.tap
 
 game_scr.bin: src_tap/game_scr.bin
 	cp src_tap/game_scr.bin game_scr.bin

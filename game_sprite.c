@@ -121,7 +121,6 @@ unsigned char spr_move_down(void) {
 }
 
 unsigned char spr_move_horizontal(void) {
-
   if (BIT_CHK(state[sprite], STAT_DIRR)) {
     return spr_move_right();
   } else {
@@ -138,8 +137,15 @@ unsigned char spr_move_right(void) {
     s_lin1 = lin[sprite];
     if (col[sprite] < 30) {
       s_col1 = col[sprite] + 1;
-      if (game_check_map(s_lin1, s_col1) ||
-          game_check_map(s_lin1 + 15, s_col1)) {
+      sprite_horizontal_check = 1;
+      tmp0 = game_check_map(s_lin1, s_col1);
+      if (!tmp0) {
+        tmp0 = game_check_map(s_lin1 + 15, s_col1);
+      }
+      sprite_horizontal_check = 0;
+
+
+      if (tmp0) {
         --colint[sprite];
         if (!sprite_on_air) {
           --colint[sprite];
@@ -174,8 +180,14 @@ unsigned char spr_move_left(void) {
     s_lin1 = lin[sprite];
     if (col[sprite] > 0) {
       s_col1 = col[sprite] - 1;
-      if (game_check_map(s_lin1, s_col1) ||
-          game_check_map(s_lin1 + 15, s_col1)) {
+      sprite_horizontal_check = 1;
+      tmp0 = game_check_map(s_lin1, s_col1);
+      if (!tmp0) {
+        tmp0 = game_check_map(s_lin1 + 15, s_col1);
+      }
+      sprite_horizontal_check = 0;
+
+      if (tmp0) {
         ++colint[sprite];
         if (!sprite_on_air) {
           ++colint[sprite];

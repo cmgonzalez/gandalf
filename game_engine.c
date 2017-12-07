@@ -35,17 +35,17 @@
 
 void game_loop(void) {
   unsigned int fps;
-
+  game_respawn_curr_time = 250; // TODO Should decrement on world n
   while (!game_over) {
 
-    //Play animatios
+    // Play animatios
     if (game_check_time(anim_time, TIME_ANIM)) {
       zx_border(INK_BLACK);
       anim_time = zx_clock();
       if (anim_count)
         spr_play_anim();
     }
-    //Anim Bullets
+    // Anim Bullets
     if (game_check_time(bullet_time, TIME_BULLETS)) {
       bullet_time = zx_clock();
       if (bullet_count)
@@ -59,10 +59,11 @@ void game_loop(void) {
       fps = 0;
       frame_time = zx_clock();
       sprite = 0;
-      //Enemy Respawn
+      // Enemy Respawn
       while (sprite < SPR_P1) {
         if (game_respawn_time[sprite] > 0) {
-          if (game_check_time(game_respawn_time[sprite], 25)) {
+          if (game_check_time(game_respawn_time[sprite],
+                              game_respawn_curr_time)) {
             index1 = game_respawn_index[sprite];
             s_col1 = (index1 & 15) << 1;
             s_lin1 = index1;
@@ -305,11 +306,6 @@ void game_print_header(void) {
   game_print_score();
 }
 
-void game_print_phase() {
-  zx_print_str(23, 11, "PHASE");
-  zx_print_chr(23, 18, phase_curr + 1);
-}
-
 unsigned int game_check_map(unsigned char f_lin, unsigned char f_col) {
   // TODO A SINGLE FUNCTION TO SAVE BYTES
   if ((f_col & 1) == 0) {
@@ -325,15 +321,19 @@ unsigned int game_check_map(unsigned char f_lin, unsigned char f_col) {
     if (game_check_cell(index1)) {
       g_player_hit_left = 1;
     }
-    if (game_check_cell(index1 + 1)) {
-      g_player_hit_right = 1;
+    if (g_player_hit_left == 0) {
+      if (game_check_cell(index1 + 1)) {
+        g_player_hit_right = 1;
+      }
     }
+
     return g_player_hit_left || g_player_hit_right;
   }
 }
 
 unsigned char game_check_cell(int f_index) __z88dk_fastcall {
   unsigned char f_tile;
+
   // OUT OFF SCREEN
   if (f_index > GAME_SCR_MAX_INDEX) {
     return 1;
@@ -351,11 +351,20 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
       }
     } else {
       // HORIZONTAL ENEMIES
-      if (f_tile <= TILE_ITEM_E && f_tile != TILE_STOPPER) {
-        return 0;
+      if (sprite_horizontal_check) {
+        if (f_tile < TILE_CEIL && f_tile != TILE_STOPPER) {
+          return 0;
+        } else {
+          return 1;
+        }
       } else {
-        return 1;
+        if (f_tile <= TILE_ITEM_E && f_tile != TILE_STOPPER) {
+          return 0;
+        } else {
+          return 1;
+        }
       }
+
     }
   }
 

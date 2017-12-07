@@ -389,7 +389,10 @@ extern unsigned char player_lin_scr;
 extern unsigned int player_hit_time;
 
 
-extern signed int game_gravity;
+extern signed   int  game_gravity;
+extern unsigned char game_world;
+extern unsigned char game_respawn_curr_time;
+
 
 extern unsigned char sprite;
 extern unsigned char sprite_on_air;
@@ -469,7 +472,6 @@ extern const unsigned char world0[];
 extern unsigned char scr_curr;
 extern unsigned char map_width;
 extern unsigned char map_heigth;
-extern unsigned char phase_curr;
 
 extern unsigned char anim_lin[8];
 extern unsigned char anim_col[8];

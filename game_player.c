@@ -84,7 +84,7 @@ unsigned char player_collision(void) {
           if (abs(lin[sprite] - s_lin1) < 14) {
             /*MUSHROMS*/
             if (class[sprite] == MUSHROOM_VITA) {
-              player_vita = player_vita + 20;
+              player_vita = player_vita + 25;
               if (player_vita > player_max_vita) {
                 player_vita = player_max_vita;
               }
@@ -94,7 +94,7 @@ unsigned char player_collision(void) {
               return 0;
             }
             if (class[sprite] == MUSHROOM_MANA) {
-              player_mana = player_mana + 20;
+              player_mana = player_mana + 25;
               if (player_mana > player_max_mana) {
                 player_mana = player_max_mana;
               }
@@ -748,12 +748,10 @@ unsigned char player_move_jump(void) {
     }
   }
 
-  sprite_horizontal_check = 1;
   if (spr_move_horizontal()) {
     BIT_CLR(s_state, STAT_DIRL);
     BIT_CLR(s_state, STAT_DIRR);
   }
-  sprite_horizontal_check = 0;
   return 0;
 }
 

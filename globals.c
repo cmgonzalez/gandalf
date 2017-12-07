@@ -108,7 +108,9 @@ unsigned char player_lin_scr;
 
 unsigned int player_hit_time;
 
-signed int game_gravity;
+signed   int game_gravity;
+unsigned char game_world;
+unsigned char game_respawn_curr_time;
 
 unsigned char sprite;
 unsigned char sprite_on_air;
@@ -193,8 +195,8 @@ unsigned char game_respawn_index[7];
 unsigned char game_respawn_tile[7];
 unsigned char game_start_scr;
 
+
 // PHASE RELATED VARIABLES
-unsigned char phase_curr;
 unsigned char screen_paper;
 unsigned char screen_ink;
 

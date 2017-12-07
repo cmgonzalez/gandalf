@@ -35,8 +35,8 @@
 void main(void) {
   unsigned int counter;
 
-  game_god_mode = GAME_GOD_MODE;
-  game_inmune = GAME_INMUNE;
+  game_god_mode = 0;//GAME_GOD_MODE;
+  game_inmune = 0;//GAME_INMUNE;
   // INTERRUPTS ARE DISABLED
 
   // RESET AY CHIP
