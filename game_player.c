@@ -448,33 +448,45 @@ void player_pick_item(void) {
       break;
     case TILE_SHIELD:
       player_str++;
-      player_max_vita = player_max_vita + 10;
-      game_update_stats();
+      if (player_max_vita < GAME_MAX_VITA) {
+        player_max_vita = player_max_vita + 10;
+        game_update_stats();
+      }
       break;
     case TILE_HELMET:
       player_str++;
-      player_max_vita = player_max_vita + 10;
-      game_update_stats();
+      if (player_max_vita < GAME_MAX_VITA) {
+        player_max_vita = player_max_vita + 10;
+        game_update_stats();
+      }
       break;
     case TILE_SWORD:
       player_str++;
-      player_max_vita = player_max_vita + 10;
-      game_update_stats();
+      if (player_max_vita < GAME_MAX_VITA) {
+        player_max_vita = player_max_vita + 10;
+        game_update_stats();
+      }
       break;
     case TILE_POTION:
       player_int++;
-      player_max_mana = player_max_mana + 10;
-      game_update_stats();
+      if (player_max_mana < GAME_MAX_MANA) {
+        player_max_mana = player_max_mana + 10;
+        game_update_stats();
+      }
       break;
     case TILE_ORB:
       player_int++;
-      player_max_mana = player_max_mana + 10;
-      game_update_stats();
+      if (player_max_mana < GAME_MAX_MANA) {
+        player_max_mana = player_max_mana + 10;
+        game_update_stats();
+      }
       break;
     case TILE_SCROLL:
       player_int++;
-      player_max_mana = player_max_mana + 10;
-      game_update_stats();
+      if (player_max_mana < GAME_MAX_MANA) {
+        player_max_mana = player_max_mana + 10;
+        game_update_stats();
+      }
       break;
     }
   }
@@ -589,7 +601,7 @@ void player_hit_platform_clear(void) {
 void player_score_add(unsigned int f_score) __z88dk_fastcall {
   player_score = player_score + f_score;
 
-  if (player_lvl < 20) {
+  if (player_lvl < GAME_MAX_LEVEL) {
     if (player_score >= player_lvl_table[player_lvl]) {
       player_lvl++;
       zx_print_str(12, 12, "LEVEL UP!");
@@ -800,26 +812,28 @@ void player_lost_life() {
   spr_init_anim_bullets();
   for (f_anim = 0; f_anim < 8; f_anim++) {
     NIRVANAP_spriteT(f_anim, TILE_EMPTY, 0, 0);
+    anim_lin[f_anim] = 0xFF;
   }
+  anim_count = 0;
   NIRVANAP_halt();
   // Player Explode
-  spr_add_anim(s_lin0 - 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
-  spr_add_anim(s_lin0, s_col0 - 2, TILE_ANIM_FIRE, 3, 0, 0);
-  spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
-  spr_add_anim(s_lin0, s_col0 + 2, TILE_ANIM_FIRE, 3, 0, 0);
-  spr_add_anim(s_lin0 + 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(s_lin0 - 16, s_col0    , TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(s_lin0     , s_col0 - 2, TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(s_lin0     , s_col0    , TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(s_lin0     , s_col0 + 2, TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(s_lin0 + 16, s_col0    , TILE_ANIM_FIRE, 3, 0, 0);
   zx_border(INK_BLACK);
-  tmp = 1;
-  while (tmp) {
-    if (game_check_time(anim_time, TIME_ANIM)) {
+  f_anim = 1;
+  anim_time = zx_clock();
+  while (f_anim) {
+    if (game_check_time(anim_time, TIME_ANIM_PLAYER_EXPODE)) {
       anim_time = zx_clock();
       if (anim_count) {
         spr_play_anim();
       } else {
-        tmp = 0;
+        f_anim = 0;
       }
     }
-    z80_delay_ms(5);
   }
   for (sprite = 0; sprite < SPR_P1; ++sprite) {
     if (class[sprite] != 0) {

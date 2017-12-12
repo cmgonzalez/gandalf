@@ -114,17 +114,17 @@ void main(void) {
     player_mana = player_max_mana;
     player_vita = player_max_vita;
     player_str = 0;
-    player_lvl = 0;
+    player_lvl = 20;
     player_int = 0;
     player_score = 0;
     player_lin_scr = GAME_LIN_FLOOR - 16;
     player_col_scr = 2;
+    fps = 0;
+    game_worldup = 0;
+    game_respawn_curr_time = 255;
     /* phase init */
     game_over = 0;
     scr_curr = 255; // 255 equals read default screen from map
-    game_round_init();
-    zx_print_str(12, 6, "WORLD 1 THE SHIRE");
-    game_colour_message(12, 6, 6 + 17, 25, 0);
     /* game loop start */
     dirs = 0x00;
     game_joystick_set();

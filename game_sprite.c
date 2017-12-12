@@ -652,14 +652,19 @@ void spr_play_anim(void) {
   unsigned char f_anim;
   unsigned int f_index;
 
+
   for (f_anim = 0; f_anim < 8; f_anim++) {
     if (anim_lin[f_anim] != 0xFF) {
 
+      z80_delay_ms(1); //TODO I don't get that...
       if (anim_int[f_anim] < anim_end[f_anim]) {
+
         intrinsic_di();
+
         NIRVANAP_drawT_raw(anim_tile[f_anim] + anim_int[f_anim],
                            anim_lin[f_anim], anim_col[f_anim]);
         intrinsic_ei();
+
         ++anim_int[f_anim];
       } else {
         if (anim_loop[f_anim] == 0) {
@@ -676,9 +681,11 @@ void spr_play_anim(void) {
             // Respawn an enemy after anim...
             enemy_respawn(f_anim);
           }
+          //End Animation
           anim_lin[f_anim] = 0xFF;
 
         } else {
+          //loops animation
           --anim_loop[f_anim];
           anim_int[f_anim] = 0;
         }

@@ -34,59 +34,70 @@
 /* Main Game Loop  */
 
 void game_loop(void) {
-  unsigned int fps;
-  game_respawn_curr_time = 250; // TODO Should decrement on world n
+
+  // TODO CALL MENU HERE
   while (!game_over) {
+    game_round_init();
 
-    // Play animatios
-    if (game_check_time(anim_time, TIME_ANIM)) {
-      zx_border(INK_BLACK);
-      anim_time = zx_clock();
-      if (anim_count)
-        spr_play_anim();
-    }
-    // Anim Bullets
-    if (game_check_time(bullet_time, TIME_BULLETS)) {
-      bullet_time = zx_clock();
-      if (bullet_count)
-        spr_play_bullets();
-    }
-
-    /*each second aprox - update fps/score/phase left/phase advance*/
-    if (game_check_time(frame_time, 100)) {
-      zx_print_ink(INK_WHITE);
-      zx_print_int(23, 24, fps);
-      fps = 0;
-      frame_time = zx_clock();
-      sprite = 0;
-      // Enemy Respawn
-      while (sprite < SPR_P1) {
-        if (game_respawn_time[sprite] > 0) {
-          if (game_check_time(game_respawn_time[sprite],
-                              game_respawn_curr_time)) {
-            index1 = game_respawn_index[sprite];
-            s_col1 = (index1 & 15) << 1;
-            s_lin1 = index1;
-            s_lin1 = (s_lin1 >> 4) << 4;
-            scr_map[index1] = 0xFF;
-            spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 4,
-                         game_respawn_tile[sprite]);
-            game_respawn_time[sprite] = 0;
-            break;
-          }
-        }
-        ++sprite;
+    while (!game_worldup && !game_over) {
+      /*Play animatios*/
+      if (game_check_time(anim_time, TIME_ANIM)) {
+        zx_border(INK_BLACK);
+        anim_time = zx_clock();
+        if (anim_count)
+          spr_play_anim();
       }
+      /*Anim Bullets*/
+      if (game_check_time(bullet_time, TIME_BULLETS)) {
+        bullet_time = zx_clock();
+        if (bullet_count)
+          spr_play_bullets();
+      }
+      /*Each second aprox - update fps/score/phase left/phase advance*/
+      if (game_check_time(frame_time, 100)) {
+        frame_time = zx_clock();
+        game_fps();
+        game_respawn();
+      }
+      /*Enemies turn*/
+      enemy_turn();
+      /*Player 1 turn*/
+      sprite = SPR_P1;
+      player_turn();
+      ++loop_count;
+      ++fps;
     }
-    enemy_turn();
-    /*player 1 turn*/
-    sprite = SPR_P1;
-    player_turn();
-    ++loop_count;
-    ++fps;
+    if (game_worldup) {
+      game_respawn_curr_time = game_respawn_curr_time - 32;
+      game_world++;
+    }
   }
 }
 
+void game_fps(void) {
+  zx_print_ink(INK_WHITE);
+  zx_print_int(23, 24, fps);
+  fps = 0;
+}
+void game_respawn(void) {
+  // Enemy Respawn
+  sprite = 0;
+  while (sprite < SPR_P1) {
+    if (game_respawn_time[sprite] > 0) {
+      if (game_check_time(game_respawn_time[sprite], game_respawn_curr_time)) {
+        index1 = game_respawn_index[sprite];
+        s_col1 = (index1 & 15) << 1;
+        s_lin1 = index1;
+        s_lin1 = (s_lin1 >> 4) << 4;
+        scr_map[index1] = 0xFF;
+        spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 4, game_respawn_tile[sprite]);
+        game_respawn_time[sprite] = 0;
+        break;
+      }
+    }
+    ++sprite;
+  }
+}
 void game_draw_screen(void) {
   unsigned char f_mush;
   NIRVANAP_halt();
@@ -292,6 +303,10 @@ void game_round_init(void) {
   game_draw_screen();
   game_print_header();
   game_print_footer();
+  z80_delay_ms(50);
+  zx_print_str(12, 6, "WORLD 1 THE SHIRE"); //TODO WORLD NAMES ARRAY
+  game_colour_message(12, 6, 6 + 17, 25, 0);
+
   /* Player(s) init */
   if (!game_over) {
 
@@ -364,7 +379,6 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
           return 1;
         }
       }
-
     }
   }
 
@@ -504,8 +518,8 @@ void game_colour_message(unsigned char f_row, unsigned char f_col,
     }
   } else {
     tmp1 = f_col2 - f_col;
-    s_lin0 = f_row * 8; // TODO OPTIMIZE
-    s_col1 = (f_col / 2) * 2;
+    s_lin0 = f_row << 3;        //* 8; // TODO OPTIMIZE
+    s_col1 = (f_col >> 1) << 1; // (x*2)/2
     for (tmp0 = 0; tmp0 < tmp1; tmp0 = tmp0 + 2) {
       s_col0 = s_col1 + tmp0;
       spr_back_repaint();
@@ -538,6 +552,8 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
     }
     if (f_tile == TILE_ARROW) {
       bullet_class[f_sprite] = BULLET_ARROW;
+      bullet_max[f_sprite] = 8 + (game_world * 4);
+
     }
 
     if (f_tile == TILE_FIREBALL) {

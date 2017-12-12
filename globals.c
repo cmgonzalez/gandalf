@@ -73,23 +73,23 @@ unsigned char lin[8];     // LINE
 
 unsigned char col[8];      // COLUMN
 unsigned char colint[8];   // INTERNAL COLUMN/TILE INCREMENT
-unsigned int spr_timer[8]; // SPRITE GENERAL TIMER MILISECONDS
-unsigned int last_time[8]; // LAST TIME OF MOVEMENT FOR ANIMATIONS / SPEED
+unsigned int  spr_timer[8]; // SPRITE GENERAL TIMER MILISECONDS
+unsigned int  last_time[8]; // LAST TIME OF MOVEMENT FOR ANIMATIONS / SPEED
 unsigned char jump_lin[8]; // START JUMP LINE
 
 // PLAYER ONLY
 unsigned char player_hit_lin; // HIT BRICK LINE
 unsigned char player_hit_col; // HIT BRICK COL
 unsigned char player_slide;   // SLIDING COUNTER
-unsigned int player_score;    // SCORE
-unsigned int player_joy;      // JOYSTICK
+unsigned int  player_score;    // SCORE
+unsigned int  player_joy;      // JOYSTICK
 unsigned char player_lives;
 unsigned char player_over_stair;
-signed char player_vel_x;
-signed char player_vel_y;
-signed char player_vel_y0;
-signed char player_vel_y1;
-signed char player_vel_inc;
+signed char   player_vel_x;
+signed char   player_vel_y;
+signed char   player_vel_y0;
+signed char   player_vel_y1;
+signed char   player_vel_inc;
 unsigned char player_keys[4];
 unsigned char player_hit_count;
 // PLAYER ATTRIBUTES
@@ -108,9 +108,11 @@ unsigned char player_lin_scr;
 
 unsigned int player_hit_time;
 
-signed   int game_gravity;
+signed   int  game_gravity;
 unsigned char game_world;
+unsigned char game_worldup;
 unsigned char game_respawn_curr_time;
+unsigned int fps;
 
 unsigned char sprite;
 unsigned char sprite_on_air;

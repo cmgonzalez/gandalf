@@ -29,6 +29,9 @@
 #define GAME_START_LIVES              3
 #define GAME_START_MAX_MANA           100
 #define GAME_START_MAX_VITA           100
+#define GAME_MAX_LEVEL                20
+#define GAME_MAX_MANA                 200
+#define GAME_MAX_VITA                 200
 /* Map foreground tiles */
 
 #define TILE_EMPTY                    0
@@ -314,7 +317,8 @@
 
 /* Game times */
 #define TIME_EVENT                    100
-#define TIME_ANIM                     6
+#define TIME_ANIM                     16
+#define TIME_ANIM_PLAYER_EXPODE       16
 #define TIME_BULLETS                  2
 #define GAME_RANDOM_TYPE              2
 
@@ -366,11 +370,11 @@ extern unsigned char player_slide;
 extern unsigned int last_time[8];
 extern unsigned int player_score;
 extern unsigned int player_joy;
-extern signed char player_vel_x;
-extern signed char player_vel_y;
-extern signed char player_vel_y0;
-extern signed char player_vel_y1;
-extern signed char player_vel_inc;
+extern signed char  player_vel_x;
+extern signed char  player_vel_y;
+extern signed char  player_vel_y0;
+extern signed char  player_vel_y1;
+extern signed char  player_vel_inc;
 extern unsigned char player_keys[4];
 //PLAYER ATTRIBUTES
 extern unsigned char player_mana;
@@ -391,7 +395,9 @@ extern unsigned int player_hit_time;
 
 extern signed   int  game_gravity;
 extern unsigned char game_world;
+extern unsigned char game_worldup;
 extern unsigned char game_respawn_curr_time;
+extern unsigned int fps;
 
 
 extern unsigned char sprite;
