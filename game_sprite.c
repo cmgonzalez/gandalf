@@ -144,7 +144,6 @@ unsigned char spr_move_right(void) {
       }
       sprite_horizontal_check = 0;
 
-
       if (tmp0) {
         --colint[sprite];
         if (!sprite_on_air) {
@@ -623,7 +622,7 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
                   unsigned char f_tile, unsigned char f_end,
                   unsigned char f_loops, unsigned char f_respawn) {
   unsigned char f_anim;
-  if (f_col < 31 && f_lin < SCR_LINS ) {
+  if (f_col < 31 && f_lin < SCR_LINS) {
     for (f_anim = 0; f_anim < 8; f_anim++) {
       if (anim_lin[f_anim] == 0XFF) {
         ++anim_count;
@@ -652,11 +651,10 @@ void spr_play_anim(void) {
   unsigned char f_anim;
   unsigned int f_index;
 
-
   for (f_anim = 0; f_anim < 8; f_anim++) {
     if (anim_lin[f_anim] != 0xFF) {
 
-      z80_delay_ms(1); //TODO I don't get that...
+      z80_delay_ms(1); // TODO I don't get that...
       if (anim_int[f_anim] < anim_end[f_anim]) {
 
         intrinsic_di();
@@ -681,11 +679,11 @@ void spr_play_anim(void) {
             // Respawn an enemy after anim...
             enemy_respawn(f_anim);
           }
-          //End Animation
+          // End Animation
           anim_lin[f_anim] = 0xFF;
 
         } else {
-          //loops animation
+          // loops animation
           --anim_loop[f_anim];
           anim_int[f_anim] = 0;
         }
@@ -729,6 +727,13 @@ void spr_play_bullets(void) {
       }
     }
     if (bullet_class[f_bullet] == BULLET_AXE) {
+      // FIX CORRUPTION
+      s_lin0 = bullet_lin[f_bullet];
+      s_col0 = bullet_col[f_bullet] - 1;
+      if (s_col0 < 32){
+        spr_back_repaint();
+      };
+
       bullet_vel[f_bullet] = bullet_vel[f_bullet] + game_gravity;
 
       if (bullet_vel[f_bullet] > 120) {
@@ -841,15 +846,15 @@ void spr_play_bullets(void) {
           if (class[tmp0] != 0 && lin[tmp0] >= f_lin0 && lin[tmp0] <= f_lin1 &&
               col[tmp0] >= f_col0 && col[tmp0] <= f_col1) {
 
-            //PLAYER KILL
+            // PLAYER KILL
             s_lin0 = lin[tmp0];
             s_col0 = col[tmp0];
             player_score_add(rand() % 6);
             game_respawn_time[tmp0] = zx_clock();
             spr_destroy(tmp0);
-            if ( bullet_col[tmp0] != 0xFF ) {
+            if (bullet_col[tmp0] != 0xFF) {
               s_lin0 = bullet_lin[f_bullet];
-              s_col0 = bullet_col[f_bullet];          
+              s_col0 = bullet_col[f_bullet];
               spr_back_repaint(); // restore background
               bullet_col[tmp0] = 0xFF;
             };
