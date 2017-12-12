@@ -840,11 +840,20 @@ void spr_play_bullets(void) {
         for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
           if (class[tmp0] != 0 && lin[tmp0] >= f_lin0 && lin[tmp0] <= f_lin1 &&
               col[tmp0] >= f_col0 && col[tmp0] <= f_col1) {
+
+            //PLAYER KILL
             s_lin0 = lin[tmp0];
             s_col0 = col[tmp0];
             player_score_add(rand() % 6);
             game_respawn_time[tmp0] = zx_clock();
             spr_destroy(tmp0);
+            if ( bullet_col[tmp0] != 0xFF ) {
+              s_lin0 = bullet_lin[f_bullet];
+              s_col0 = bullet_col[f_bullet];          
+              spr_back_repaint(); // restore background
+              bullet_col[tmp0] = 0xFF;
+            };
+
             bullet_col[f_bullet] = s_col0;
             spr_explode_bullet(f_bullet);
             break;

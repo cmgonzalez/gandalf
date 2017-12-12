@@ -858,12 +858,12 @@
 858   0022  22 02 00    	ld	(_attrib_hl + 2),hl
 859   0025  3A 00 00    	ld	a,(_spec128)
 860   0028  B7          	or	a,a
-861   0029  28 04       	jr	Z,l_main_00110
+861   0029  28 04       	jr	Z,l_main_00113
 862   002B  0E 0C       	ld	c,0x0c
-863   002D  18 02       	jr	l_main_00111
-864   002F              l_main_00110:
+863   002D  18 02       	jr	l_main_00114
+864   002F              l_main_00113:
 865   002F  0E 03       	ld	c,0x03
-866   0031              l_main_00111:
+866   0031              l_main_00114:
 867   0031  21 00 00    	ld	hl,_game_sound
 868   0034  71          	ld	(hl), c
 869   0035  21 00 00    	ld	hl,0x0000
@@ -889,7 +889,7 @@
 889   006B  CD 00 00    	call	_zx_border_fastcall
 890   006E  CD 00 00    	call	_in_wait_nokey
 891   0071  01 B8 7A    	ld	bc,0x7ab8
-892   0074              l_main_00106:
+892   0074              l_main_00107:
 893   0074  CD 00 00    	call	_in_test_key
 894   0077  7C          	ld	a, h
 895   0078  B5          	or	a,l
@@ -898,7 +898,7 @@
 898   007E  09          	add	hl,bc
 899   007F  4D          	ld	c, l
 900   0080  44          	ld	b, h
-901   0081  18 F1       	jr	l_main_00106
+901   0081  18 F1       	jr	l_main_00107
 902   0083              l_main_00101:
 903   0083  69          	ld	l, c
 904   0084  60          	ld	h, b
@@ -925,7 +925,7 @@
 925   00BB  21 00 00    	ld	hl,_map_heigth
 926   00BE  36 01       	ld	(hl),0x01
 927   00C0  CD 00 00    	call	_game_obj_clear
-928   00C3              l_main_00103:
+928   00C3              l_main_00104:
 929   00C3  21 00 00    	ld	hl,_player_max_mana
 930   00C6  36 64       	ld	(hl),0x64
 931   00C8  21 00 00    	ld	hl,_player_max_vita
@@ -962,45 +962,63 @@
 962   0118  36 00       	ld	(hl),0x00
 963   011A  CD 00 00    	call	_game_joystick_set
 964   011D  CD 00 00    	call	_game_loop
-965   0120  21 00 00    	ld	hl,___str_0
-966   0123  E5          	push	hl
-967   0124  21 0C 0C    	ld	hl,0x0c0c
-968   0127  E5          	push	hl
-969   0128  CD 00 00    	call	_zx_print_str
-970   012B  AF          	xor	a,a
-971   012C  32 00 00    	ld	(_game_over),a
-972   012F  F5          	push	af
-973   0130  33          	inc	sp
-974   0131  21 FA 00    	ld	hl,0x00fa
-975   0134  E5          	push	hl
-976   0135  21 0C 15    	ld	hl,0x150c
-977   0138  E5          	push	hl
-978   0139  3E 0C       	ld	a,0x0c
-979   013B  F5          	push	af
-980   013C  33          	inc	sp
-981   013D  CD 00 00    	call	_game_colour_message
-982   0140  F1          	pop	af
-983   0141  F1          	pop	af
-984   0142  F1          	pop	af
-985   0143  CD 00 00    	call	_game_obj_clear
-986   0146  C3 C3 00    	jp	l_main_00103
-987   0149              	SECTION rodata_compiler
-988   0000              ___str_0:
-989   0000  47 41 4D 45 20 4F 56 45 52 
+965   0120  21 00 00    	ld	hl,_sprite
+966   0123  36 00       	ld	(hl),0x00
+967   0125              l_main_00109:
+968   0125  21 00 00    	ld	hl,0x0000
+969   0128  E5          	push	hl
+970   0129  AF          	xor	a, a
+971   012A  F5          	push	af
+972   012B  33          	inc	sp
+973   012C  3A 00 00    	ld	a,(_sprite)
+974   012F  F5          	push	af
+975   0130  33          	inc	sp
+976   0131  CD 00 00    	call	_NIRVANAP_spriteT_callee
+977   0134  21 00 00    	ld	hl,_sprite
+978   0137  7E          	ld	a,(hl)
+979   0138  3C          	inc	a
+980   0139  77          	ld	(hl),a
+981   013A  D6 08       	sub	a,0x08
+982   013C  38 E7       	jr	C,l_main_00109
+983   013E  21 00 00    	ld	hl,___str_0
+984   0141  E5          	push	hl
+985   0142  21 0C 0C    	ld	hl,0x0c0c
+986   0145  E5          	push	hl
+987   0146  CD 00 00    	call	_zx_print_str
+988   0149  AF          	xor	a,a
+989   014A  32 00 00    	ld	(_game_over),a
+990   014D  F5          	push	af
+991   014E  33          	inc	sp
+992   014F  21 FA 00    	ld	hl,0x00fa
+993   0152  E5          	push	hl
+994   0153  21 0C 15    	ld	hl,0x150c
+995   0156  E5          	push	hl
+996   0157  3E 0C       	ld	a,0x0c
+997   0159  F5          	push	af
+998   015A  33          	inc	sp
+999   015B  CD 00 00    	call	_game_colour_message
+1000  015E  F1          	pop	af
+1001  015F  F1          	pop	af
+1002  0160  F1          	pop	af
+1003  0161  CD 00 00    	call	_game_obj_clear
+1004  0164  C3 C3 00    	jp	l_main_00104
+1005  0167              	SECTION rodata_compiler
+1006  0000              ___str_0:
+1007  0000  47 41 4D 45 20 4F 56 45 52 
                         	DEFM "GAME OVER"
-990   0009  00          	DEFB 0x00
-991   000A              	SECTION code_compiler
-992   0149              ;	---------------------------------
-993   0149              ; Function test_proc is a stub
-994   0149              ; ---------------------------------
-995   0149              EXTERN l_ret
-996   0149              defc _test_proc = l_ret
-997   0149              	SECTION code_compiler
-998   0149              ;	---------------------------------
-999   0149              ; Function test_func
-1000  0149              ; ---------------------------------
-1001  0149              _test_func:
-1002  0149  2E 00       	ld	l,0x00
-1003  014B  C9          	ret
-1004  014C              	SECTION IGNORE
-1005  0000              
+1008  0009  00          	DEFB 0x00
+1009  000A              	SECTION code_compiler
+1010  0167              ;	---------------------------------
+1011  0167              ; Function test_proc is a stub
+1012  0167              ; ---------------------------------
+1013  0167              EXTERN l_ret
+1014  0167              defc _test_proc = l_ret
+1015  0167              	SECTION code_compiler
+1016  0167              ;	---------------------------------
+1017  0167              ; Function test_func
+1018  0167              ; ---------------------------------
+1019  0167              _test_func:
+1020  0167  2E 00       	ld	l,0x00
+1021  0169  C9          	ret
+1022  016A              	SECTION IGNORE
+1023  0000              

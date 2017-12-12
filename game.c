@@ -129,6 +129,9 @@ void main(void) {
     dirs = 0x00;
     game_joystick_set();
     game_loop();
+    for (sprite = 0; sprite < 8; ++sprite) {
+      NIRVANAP_spriteT(sprite, TILE_EMPTY, 0, 0);
+    }
     zx_print_str(12, 12, "GAME OVER");
     game_over = 0; // Hack game_colour_message to render background
     game_colour_message(12, 12, 12 + 9, 250, 0);
