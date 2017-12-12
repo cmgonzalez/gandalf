@@ -730,7 +730,7 @@ void spr_play_bullets(void) {
       // FIX CORRUPTION
       s_lin0 = bullet_lin[f_bullet];
       s_col0 = bullet_col[f_bullet] - 1;
-      if (s_col0 < 32){
+      if (s_col0 < 32) {
         spr_back_repaint();
       };
 
@@ -883,10 +883,12 @@ void spr_play_bullets(void) {
     if (bullet_col[f_bullet] == 0xFF)
       continue;
     // We can draw
-    intrinsic_di();
-    NIRVANAP_drawT_raw(bullet_tile[f_bullet] + bullet_colint[f_bullet], s_lin0,
-                       f_col0);
-    intrinsic_ei();
+    if (f_col0 < 32) {
+      intrinsic_di();
+      NIRVANAP_drawT_raw(bullet_tile[f_bullet] + bullet_colint[f_bullet],
+                         s_lin0, f_col0);
+      intrinsic_ei();
+    }
   }
 }
 
