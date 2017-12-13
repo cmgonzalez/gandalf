@@ -885,6 +885,7 @@ void spr_play_bullets(void) {
     // We can draw
     if (f_col0 < 32) {
       intrinsic_di();
+
       NIRVANAP_drawT_raw(bullet_tile[f_bullet] + bullet_colint[f_bullet],
                          s_lin0, f_col0);
       intrinsic_ei();

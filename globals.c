@@ -110,6 +110,7 @@ unsigned int player_hit_time;
 
 signed   int  game_gravity;
 unsigned char game_world;
+unsigned char game_boss;
 unsigned char game_worldup;
 unsigned char game_respawn_curr_time;
 unsigned int fps;
@@ -176,6 +177,13 @@ unsigned char bullet_dir[8];
 unsigned char bullet_colint[8];
 unsigned char bullet_frames[8];
 signed char bullet_vel[8];
+
+unsigned char boss_lin;
+unsigned char boss_col;
+unsigned char boss_inc;
+unsigned char boss_tile;
+unsigned int  boss_time;
+unsigned char boss_stat;
 
 //###############################################################################################
 //# # # GAME VARIABLES

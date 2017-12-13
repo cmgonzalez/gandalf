@@ -90,7 +90,8 @@ void game_respawn(void) {
         s_lin1 = index1;
         s_lin1 = (s_lin1 >> 4) << 4;
         scr_map[index1] = 0xFF;
-        spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 4, game_respawn_tile[sprite]);
+        spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 4,
+                     game_respawn_tile[sprite]);
         game_respawn_time[sprite] = 0;
         break;
       }
@@ -101,6 +102,7 @@ void game_respawn(void) {
 void game_draw_screen(void) {
   unsigned char f_mush;
   NIRVANAP_halt();
+  game_boss = 0;
   f_mush = 0;
   spr_count = 0;
   while (spr_count < SPR_P1) {
@@ -214,6 +216,19 @@ void game_add_enemy(unsigned char enemy_tile_index) {
   case INDEX_BAT_H:
     enemy_init(s_lin1, s_col1, BAT_H, DIR_RIGHT);
     break;
+  case INDEX_ENEMY_BOSS1:
+    if (game_boss == 0) {
+      boss_lin = s_lin1;
+      boss_col = s_col1;
+      zx_print_ink(INK_WHITE);
+      zx_print_chr(23,8,boss_col);
+      z80_delay_ms(200);
+      boss_tile = TILE_ENEMY_BOSS1;
+      boss_stat = 0;
+      BIT_SET(boss_stat, STAT_JUMP);
+      game_boss = 1;
+    };
+    break;
   }
 }
 
@@ -304,7 +319,7 @@ void game_round_init(void) {
   game_print_header();
   game_print_footer();
   z80_delay_ms(50);
-  zx_print_str(12, 6, "WORLD 1 THE SHIRE"); //TODO WORLD NAMES ARRAY
+  zx_print_str(12, 6, "WORLD 1 THE SHIRE"); // TODO WORLD NAMES ARRAY
   game_colour_message(12, 6, 6 + 17, 25, 0);
 
   /* Player(s) init */
@@ -553,7 +568,6 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
     if (f_tile == TILE_ARROW) {
       bullet_class[f_sprite] = BULLET_ARROW;
       bullet_max[f_sprite] = 8 + (game_world * 4);
-
     }
 
     if (f_tile == TILE_FIREBALL) {

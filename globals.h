@@ -186,6 +186,14 @@
 #define INDEX_MUSH_EXTRA_L             124
 #define INDEX_MUSH_EXTRA_R             125
 
+//BOSSES
+#define INDEX_ENEMY_BOSS1              116
+#define TILE_ENEMY_BOSS1               216
+
+
+
+
+
 //TILE MAP'S
 //  0..23   BACKGROUND
 // 24..31   OBJECTS (CAN BE PICKED)
@@ -395,6 +403,8 @@ extern unsigned int player_hit_time;
 
 extern signed   int  game_gravity;
 extern unsigned char game_world;
+extern unsigned char game_boss;
+
 extern unsigned char game_worldup;
 extern unsigned char game_respawn_curr_time;
 extern unsigned int fps;
@@ -505,6 +515,14 @@ extern unsigned char bullet_dir[8];
 extern unsigned char bullet_colint[8];
 extern unsigned char bullet_frames[8];
 extern signed char bullet_vel[8];
+
+extern unsigned char boss_lin;
+extern unsigned char boss_col;
+extern unsigned char boss_inc;
+extern unsigned char boss_tile;
+extern unsigned int  boss_time;
+extern unsigned char boss_stat;
+
 
 extern unsigned char bullet_count;
 

@@ -70,6 +70,71 @@ void enemy_turn(void) {
     }
     ++sprite;
   }
+
+  if (game_boss) {
+    if (game_check_time(boss_time, 5)) {
+      boss_time = zx_clock();
+      s_col1 = boss_col;
+      s_lin1 = boss_lin;
+
+      //MOVE
+      if (BIT_CHK(boss_stat, STAT_JUMP)) {
+        boss_lin = boss_lin - 2;
+        if (boss_lin < 16) {
+          BIT_CLR(boss_stat, STAT_JUMP);
+          BIT_SET(boss_stat, STAT_FALL);
+        }
+      } else {
+        boss_lin = boss_lin + 2;
+        if (boss_lin > (GAME_LIN_FLOOR-32) ) {
+          BIT_CLR(boss_stat, STAT_FALL);
+          BIT_SET(boss_stat, STAT_JUMP);
+        }
+      }
+      if ( boss_col < col[SPR_P1]) {
+          boss_col++;
+          if (boss_col > 30) {
+            boss_col = 30;
+          }
+      }
+
+      if ( boss_col > col[SPR_P1]) {
+          boss_col--;
+          if (boss_col > 30) {
+            boss_col = 0;
+          }
+      }
+      if (boss_inc) {
+        NIRVANAP_spriteT(0,boss_tile, boss_lin, boss_col);
+        NIRVANAP_spriteT(1,boss_tile + 12, boss_lin + 16, boss_col);
+        NIRVANAP_spriteT(2,0,0,0);
+        NIRVANAP_spriteT(3,0,0,0);
+
+        boss_inc = 0;
+        s_col0 = s_col1-1;
+        s_lin0 = s_lin1;
+        spr_back_repaint();
+        s_col0 = s_col1+2;
+        spr_back_repaint();
+        s_col0 = s_col1-1;
+        s_lin0 = s_lin1+16;
+        spr_back_repaint();
+        s_col0 = s_col1+2;
+        spr_back_repaint();
+      } else {
+        boss_inc = 1;
+        s_col1 = boss_col-1;
+        NIRVANAP_spriteT(0,boss_tile + 1 , boss_lin     , s_col1);
+        NIRVANAP_spriteT(1,boss_tile + 2 , boss_lin     , s_col1+2);
+        NIRVANAP_spriteT(2,boss_tile + 13, boss_lin + 16, s_col1);
+        NIRVANAP_spriteT(3,boss_tile + 14, boss_lin + 16, s_col1+2);
+      }
+
+
+
+      intrinsic_ei();
+    }
+  }
 }
 
 void enemy_move(void) {
