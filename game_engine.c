@@ -221,7 +221,6 @@ void game_add_enemy(unsigned char enemy_tile_index) {
       boss_lin = s_lin1;
       boss_col = s_col1;
       zx_print_ink(INK_WHITE);
-      zx_print_chr(23,8,boss_col);
       z80_delay_ms(200);
       boss_tile = TILE_ENEMY_BOSS1;
       boss_stat = 0;
@@ -607,6 +606,52 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
       if (col[f_sprite] > 29)
         return 1;
       bullet_col[f_sprite] = col[f_sprite];
+      bullet_tile[f_sprite] = f_tile;
+      bullet_dir[f_sprite] = 0xFF;
+      bullet_colint[f_sprite] = 0xFF;
+    }
+  }
+  return 0;
+}
+
+unsigned char game_shoot_fire_boss(unsigned char f_tile, unsigned char f_dir) {
+
+  unsigned char f_sprite;
+
+  f_sprite = 0;
+  while (f_sprite < SPR_P1) {
+    if (bullet_col[f_sprite] == 0xFF) {
+      break;
+    }
+    ++f_sprite;
+  }
+  if (f_sprite == SPR_P1) {
+    return 0;
+  }
+
+  if (bullet_col[f_sprite] == 0xFF) {
+    ++bullet_count;
+    bullet_dir[f_sprite] = 0;
+    bullet_lin0[f_sprite] = boss_lin;
+    bullet_col0[f_sprite] = boss_col;
+    bullet_lin[f_sprite] = boss_lin;
+    bullet_frames[f_sprite] = 2;
+    bullet_class[f_sprite] = BULLET_FIREBALL_UP;
+    bullet_max[f_sprite] = 8;
+    index1 = spr_calc_index(boss_lin, boss_col);
+    if (f_dir) {
+      // Left
+      if (boss_col < 1)
+        return 1;
+      bullet_col[f_sprite] = boss_col;
+      bullet_tile[f_sprite] = f_tile + 2;
+      bullet_dir[f_sprite] = 0x01;
+      bullet_colint[f_sprite] = 2;
+    } else {
+      // Right n default
+      if (boss_col > 29)
+        return 1;
+      bullet_col[f_sprite] = boss_col;
       bullet_tile[f_sprite] = f_tile;
       bullet_dir[f_sprite] = 0xFF;
       bullet_colint[f_sprite] = 0xFF;

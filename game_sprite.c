@@ -545,10 +545,11 @@ unsigned char spr_calc_hor(unsigned char f_sprite) {
 
 void spr_back_repaint(void) {
   unsigned char s_row;
-
-  NIRVANAP_halt();
-
-  intrinsic_di();
+  // TODO VSYNC - BY DISABLING NIRVANAP_halt, YOU CAN GAIN PERFORMANCE AND FLICKERING ALSO, WHAT'S THE MAGIC FORMULA?
+  if (!spr_hack) {
+    NIRVANAP_halt();
+    intrinsic_di();
+  }
   sprite_curr_index = spr_calc_index(s_lin0, s_col0);
   if ((s_col0 & 1) == 0) { // Par
     if ((s_lin0 & 15) == 0) {
@@ -590,7 +591,9 @@ void spr_back_repaint(void) {
         spr_tile_paint(scr_map[sprite_curr_index], s_row, s_col0 + 1);
       }
     }
-  intrinsic_ei();
+  if (!spr_hack) {
+    intrinsic_ei();
+  }
 }
 
 void spr_tile_paint(unsigned char f_tile, unsigned char f_lin,
@@ -853,8 +856,8 @@ void spr_play_bullets(void) {
             game_respawn_time[tmp0] = zx_clock();
             spr_destroy(tmp0);
             if (bullet_col[tmp0] != 0xFF) {
-              s_lin0 = bullet_lin[f_bullet];
-              s_col0 = bullet_col[f_bullet];
+              s_lin0 = bullet_lin[tmp0];
+              s_col0 = bullet_col[tmp0];
               spr_back_repaint(); // restore background
               bullet_col[tmp0] = 0xFF;
             };
@@ -862,6 +865,13 @@ void spr_play_bullets(void) {
             bullet_col[f_bullet] = s_col0;
             spr_explode_bullet(f_bullet);
             break;
+          }
+        }
+        if (game_boss) {
+          f_lin1 = f_lin1 + 16;
+          if ( boss_lin >= f_lin0 && boss_lin <= f_lin1 &&
+               boss_col >= f_col0 && boss_col <= f_col1) {
+                 spr_explode_bullet(f_bullet);
           }
         }
       } else {

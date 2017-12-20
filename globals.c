@@ -183,7 +183,10 @@ unsigned char boss_col;
 unsigned char boss_inc;
 unsigned char boss_tile;
 unsigned int  boss_time;
-unsigned char boss_stat;
+unsigned int  boss_time_fire;
+unsigned char  boss_stat;
+
+unsigned char spr_hack;
 
 //###############################################################################################
 //# # # GAME VARIABLES

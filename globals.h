@@ -521,7 +521,9 @@ extern unsigned char boss_col;
 extern unsigned char boss_inc;
 extern unsigned char boss_tile;
 extern unsigned int  boss_time;
+extern unsigned int  boss_time_fire;
 extern unsigned char boss_stat;
+extern unsigned char spr_hack;
 
 
 extern unsigned char bullet_count;
