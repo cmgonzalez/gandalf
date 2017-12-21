@@ -55,6 +55,7 @@ void enemy_turn(void) {
                 class[sprite] == MUSHROOM_MANA ||
                 class[sprite] == MUSHROOM_EXTRA) {
               spr_destroy(sprite);
+              --game_mush_count;
             }
           }
         }
@@ -86,7 +87,7 @@ void enemy_turn(void) {
           }
         } else {
           boss_lin = boss_lin + 2;
-          if (boss_lin >= (GAME_LIN_FLOOR - 32)) {
+          if (boss_lin >= (GAME_LIN_FLOOR - 48)) {
             BIT_CLR(boss_stat, STAT_FALL);
             BIT_SET(boss_stat, STAT_JUMP);
           }

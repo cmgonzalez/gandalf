@@ -405,6 +405,9 @@ extern signed   int  game_gravity;
 extern unsigned char game_world;
 extern unsigned char game_boss;
 
+extern unsigned char game_boss_hit;
+extern unsigned char game_mush_count;
+
 extern unsigned char game_worldup;
 extern unsigned char game_respawn_curr_time;
 extern unsigned int fps;

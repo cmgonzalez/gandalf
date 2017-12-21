@@ -111,6 +111,9 @@ unsigned int player_hit_time;
 signed   int  game_gravity;
 unsigned char game_world;
 unsigned char game_boss;
+unsigned char game_boss_hit;
+unsigned char game_mush_count;
+
 unsigned char game_worldup;
 unsigned char game_respawn_curr_time;
 unsigned int fps;

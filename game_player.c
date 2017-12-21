@@ -91,6 +91,7 @@ unsigned char player_collision(void) {
               player_score_add(1);
               game_update_stats();
               spr_destroy(sprite);
+              --game_mush_count;
               return 0;
             }
             if (class[sprite] == MUSHROOM_MANA) {
@@ -101,6 +102,7 @@ unsigned char player_collision(void) {
               player_score_add(1);
               game_update_stats();
               spr_destroy(sprite);
+              --game_mush_count;
               return 0;
             }
             if (class[sprite] == MUSHROOM_EXTRA) {
@@ -108,6 +110,7 @@ unsigned char player_collision(void) {
               player_score_add(1);
               game_update_stats();
               spr_destroy(sprite);
+              --game_mush_count;
               return 0;
             }
             zx_border(INK_RED);
@@ -522,13 +525,19 @@ unsigned char player_hit_platform(void) {
       // Destroy Bricks
       scr_map[index1] = TILE_EMPTY;
       game_obj_set(index0);
-      spr_add_anim((index1 >> 4) << 4, (index1 & 15) << 1, TILE_ANIM_FIRE, 3, 0, 0);
+      spr_add_anim((index1 >> 4) << 4, (index1 & 15) << 1, TILE_ANIM_FIRE, 3, 0,
+                   0);
       return 1;
     }
     if (scr_map[index1] == TILE_SPECIAL ||
         scr_map[index1] == TILE_HIDDEN_BRICK) {
 
       tmp0 = 0;
+
+      if (game_boss && game_mush_count > 0) {
+        return 0;
+      }
+
       while (tmp0 < SPR_P1) {
         if (mush_index[tmp0] == index1) {
           s_lin1 = ((lin[sprite] >> 4) << 4) - 32;
@@ -566,16 +575,19 @@ unsigned char player_hit_platform(void) {
             enemy_init(s_lin1, s_col1, MUSHROOM_EXTRA, DIR_LEFT);
             break;
           }
+          ++game_mush_count;
+          if (!game_boss) {
+            // Only restore to no special brick if not boos on the map
+            scr_map[index1 - 16] = TILE_EMPTY;
+            if (scr_map[index1] == TILE_SPECIAL) {
+              scr_map[index1] = TILE_NOSPECIAL;
+            } else {
+              scr_map[index1] = TILE_NORMAL_BRICK;
+            }
 
-          scr_map[index1 - 16] = TILE_EMPTY;
-          if (scr_map[index1] == TILE_SPECIAL) {
-            scr_map[index1] = TILE_NOSPECIAL;
-          } else {
-            scr_map[index1] = TILE_NORMAL_BRICK;
+            game_obj_set(index1 - 16);
+            NIRVANAP_drawT(TILE_NOSPECIAL, s_lin1 + 16, s_col1);
           }
-
-          game_obj_set(index1 - 16);
-          NIRVANAP_drawT(TILE_NOSPECIAL, s_lin1 + 16, s_col1);
         }
         ++tmp0;
       }
@@ -817,11 +829,11 @@ void player_lost_life() {
   anim_count = 0;
   NIRVANAP_halt();
   // Player Explode
-  spr_add_anim(s_lin0 - 16, s_col0    , TILE_ANIM_FIRE, 3, 0, 0);
-  spr_add_anim(s_lin0     , s_col0 - 2, TILE_ANIM_FIRE, 3, 0, 0);
-  spr_add_anim(s_lin0     , s_col0    , TILE_ANIM_FIRE, 3, 0, 0);
-  spr_add_anim(s_lin0     , s_col0 + 2, TILE_ANIM_FIRE, 3, 0, 0);
-  spr_add_anim(s_lin0 + 16, s_col0    , TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(s_lin0 - 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(s_lin0, s_col0 - 2, TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(s_lin0, s_col0 + 2, TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(s_lin0 + 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
   zx_border(INK_BLACK);
   f_anim = 1;
   anim_time = zx_clock();
@@ -840,9 +852,9 @@ void player_lost_life() {
       NIRVANAP_spriteT(sprite, tile[sprite] + colint[sprite], lin[sprite],
                        col[sprite]);
     }
-    //Clean Sprites
+    // Clean Sprites
     class[sprite] = 0;
-    //Clean Bullets
+    // Clean Bullets
     bullet_col[sprite] = 0xFF;
   }
 

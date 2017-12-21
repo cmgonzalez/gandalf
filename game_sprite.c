@@ -218,7 +218,7 @@ unsigned char spr_move_left(void) {
 
 unsigned char spr_page_right() {
 
-  if (scr_curr < map_width) {
+  if (scr_curr < map_width && class[sprite] == PLAYER && !game_boss) {
     ++scr_curr;
     spr_page_map();
     game_draw_screen();
@@ -228,10 +228,8 @@ unsigned char spr_page_right() {
 }
 
 unsigned char spr_page_left() {
-  if (class[sprite] != PLAYER)
-    return 0;
 
-  if (scr_curr > 0) {
+  if (scr_curr > 0 && class[sprite] == PLAYER && !game_boss) {
     --scr_curr;
     spr_page_map();
     game_draw_screen();
@@ -868,10 +866,20 @@ void spr_play_bullets(void) {
           }
         }
         if (game_boss) {
-          f_lin1 = f_lin1 + 16;
-          if ( boss_lin >= f_lin0 && boss_lin <= f_lin1 &&
+
+          if ( ( (boss_lin >= f_lin0 && boss_lin <= f_lin1) ||
+               (boss_lin+16 >= f_lin0 && boss_lin+16 <= f_lin1) ) &&
                boss_col >= f_col0 && boss_col <= f_col1) {
                  spr_explode_bullet(f_bullet);
+                 --game_boss_hit;
+                 game_update_stats();
+                 if (game_boss_hit == 0) {
+                   game_boss = 0;
+                   spr_add_anim(boss_lin, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
+                   spr_add_anim(boss_lin, boss_col+2, TILE_ANIM_FIRE, 3, 0, 0);
+                   spr_add_anim(boss_lin + 16, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
+                   spr_add_anim(boss_lin + 16, boss_col+2, TILE_ANIM_FIRE, 3, 0, 0);
+                 }
           }
         }
       } else {

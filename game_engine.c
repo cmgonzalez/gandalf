@@ -226,6 +226,7 @@ void game_add_enemy(unsigned char enemy_tile_index) {
       boss_stat = 0;
       BIT_SET(boss_stat, STAT_JUMP);
       game_boss = 1;
+      game_boss_hit = 8;
     };
     break;
   }
@@ -281,6 +282,10 @@ void game_update_stats(void) {
   zx_print_chr(20, 9, player_vita);
   zx_print_ink(INK_BLUE);
   zx_print_chr(20, 15, player_mana);
+  if (game_boss) {
+    zx_print_ink(INK_MAGENTA);
+    zx_print_chr(20, 22, game_boss_hit);
+  }
 }
 
 void game_tick(void) {
