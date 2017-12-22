@@ -103,6 +103,8 @@ void game_draw_screen(void) {
   unsigned char f_mush;
   NIRVANAP_halt();
   game_boss = 0;
+  game_boss_fix = 0;
+
   f_mush = 0;
   spr_count = 0;
   while (spr_count < SPR_P1) {
@@ -138,10 +140,12 @@ void game_draw_screen(void) {
     } else {
       if (scr_map[index1] < INDEX_MUSH_VITA_L) {
         // ENEMIES
-        if (spr_count < 8) {
+        if (spr_count < 8 && game_boss_alive) {
           game_respawn_index[spr_count] = index1;
           game_respawn_tile[spr_count] = scr_map[index1];
           game_add_enemy(scr_map[index1]);
+        } else {
+          NIRVANAP_drawT_raw(TILE_EMPTY, s_lin1, s_col1);
         }
       } else {
         if (!game_obj_chk(index1)) {
@@ -158,6 +162,9 @@ void game_draw_screen(void) {
     ++index1;
   }
   intrinsic_ei();
+  if (game_boss_fix) {
+    game_boss_clear();
+  }
 }
 
 void game_add_enemy(unsigned char enemy_tile_index) {
@@ -217,7 +224,7 @@ void game_add_enemy(unsigned char enemy_tile_index) {
     enemy_init(s_lin1, s_col1, BAT_H, DIR_RIGHT);
     break;
   case INDEX_ENEMY_BOSS1:
-    if (game_boss == 0) {
+    if (game_boss == 0 && game_boss_alive) {
       boss_lin = s_lin1;
       boss_col = s_col1;
       zx_print_ink(INK_WHITE);
@@ -227,6 +234,8 @@ void game_add_enemy(unsigned char enemy_tile_index) {
       BIT_SET(boss_stat, STAT_JUMP);
       game_boss = 1;
       game_boss_hit = 8;
+    } else {
+      if (!game_boss) game_boss_fix = 1;
     };
     break;
   }
@@ -696,4 +705,19 @@ void game_obj_clear() {
   player_keys[1] = 0;
   player_keys[2] = 0;
   player_keys[3] = 0;
+}
+
+void game_boss_clear() {
+  unsigned int f_index;
+  if (game_world == 0) {
+    for (f_index = 0; f_index < GAME_SCR_MAX_INDEX; ++f_index) {
+      intrinsic_di();
+      if (scr_map[f_index] == 55) {
+        scr_map[f_index] = TILE_EMPTY;
+        NIRVANAP_drawT_raw(TILE_EMPTY, (f_index >> 4) << 4,
+                           (f_index & 15) << 1);
+      }
+      intrinsic_ei();
+    }
+  }
 }

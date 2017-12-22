@@ -543,7 +543,8 @@ unsigned char spr_calc_hor(unsigned char f_sprite) {
 
 void spr_back_repaint(void) {
   unsigned char s_row;
-  // TODO VSYNC - BY DISABLING NIRVANAP_halt, YOU CAN GAIN PERFORMANCE AND FLICKERING ALSO, WHAT'S THE MAGIC FORMULA?
+  // TODO VSYNC - BY DISABLING NIRVANAP_halt, YOU CAN GAIN PERFORMANCE AND
+  // FLICKERING ALSO, WHAT'S THE MAGIC FORMULA?
   if (!spr_hack) {
     NIRVANAP_halt();
     intrinsic_di();
@@ -867,19 +868,31 @@ void spr_play_bullets(void) {
         }
         if (game_boss) {
 
-          if ( ( (boss_lin >= f_lin0 && boss_lin <= f_lin1) ||
-               (boss_lin+16 >= f_lin0 && boss_lin+16 <= f_lin1) ) &&
-               boss_col >= f_col0 && boss_col <= f_col1) {
-                 spr_explode_bullet(f_bullet);
-                 --game_boss_hit;
-                 game_update_stats();
-                 if (game_boss_hit == 0) {
-                   game_boss = 0;
-                   spr_add_anim(boss_lin, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
-                   spr_add_anim(boss_lin, boss_col+2, TILE_ANIM_FIRE, 3, 0, 0);
-                   spr_add_anim(boss_lin + 16, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
-                   spr_add_anim(boss_lin + 16, boss_col+2, TILE_ANIM_FIRE, 3, 0, 0);
-                 }
+          if (((boss_lin >= f_lin0 && boss_lin <= f_lin1) ||
+               (boss_lin + 16 >= f_lin0 && boss_lin + 16 <= f_lin1)) &&
+              boss_col >= f_col0 && boss_col <= f_col1) {
+            spr_explode_bullet(f_bullet);
+            --game_boss_hit;
+            game_update_stats();
+            if (game_boss_hit == 0) {
+              game_boss = 0;
+              game_boss_alive = 0;
+              spr_add_anim(boss_lin, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
+              spr_add_anim(boss_lin, boss_col + 2, TILE_ANIM_FIRE, 3, 0, 0);
+              spr_add_anim(boss_lin + 16, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
+              spr_add_anim(boss_lin + 16, boss_col + 2, TILE_ANIM_FIRE, 3, 0,
+                           0);
+              for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
+                spr_destroy(tmp0);
+                game_respawn_time[tmp0] = 0;
+                s_lin0 = bullet_lin[tmp0];
+                s_col0 = bullet_col[tmp0];
+                spr_back_repaint(); // restore background
+                bullet_col[tmp0] = 0xFF;
+              }
+
+              game_boss_clear();
+            }
           }
         }
       } else {

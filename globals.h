@@ -404,8 +404,9 @@ extern unsigned int player_hit_time;
 extern signed   int  game_gravity;
 extern unsigned char game_world;
 extern unsigned char game_boss;
-
+extern unsigned char game_boss_alive;
 extern unsigned char game_boss_hit;
+extern unsigned char game_boss_fix;
 extern unsigned char game_mush_count;
 
 extern unsigned char game_worldup;

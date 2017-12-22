@@ -123,6 +123,7 @@ void main(void) {
     game_worldup = 0;
     game_respawn_curr_time = 255;
     game_mush_count = 0;
+    game_boss_alive = 1;
     /* phase init */
     game_over = 0;
     scr_curr = 255; // 255 equals read default screen from map

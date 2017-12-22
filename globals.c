@@ -112,6 +112,9 @@ signed   int  game_gravity;
 unsigned char game_world;
 unsigned char game_boss;
 unsigned char game_boss_hit;
+unsigned char game_boss_alive;
+unsigned char game_boss_fix;
+
 unsigned char game_mush_count;
 
 unsigned char game_worldup;
