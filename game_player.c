@@ -655,28 +655,45 @@ void player_check_floor(void) {
     BIT_SET(s_state, STAT_FALL);
     player_check_stairs(0);
   } else {
-    if (game_check_time(player_brick_time,16)) {
+    if (game_check_time(player_brick_time, 16)) {
       player_brick_time = zx_clock();
       if (v1 == TILE_BRICK3) {
         scr_map[index_d] = TILE_EMPTY;
-        s_lin0 = lin[sprite] + 16;
-        s_col0 = col[sprite];
-        spr_back_repaint(); // restore background
+        player_gasta_brick();
       }
       if (v1 == TILE_BRICK2) {
         scr_map[index_d] = TILE_BRICK3;
-        s_lin0 = lin[sprite] + 16;
-        s_col0 = col[sprite];
-        spr_back_repaint(); // restore background
+        player_gasta_brick();
       }
       if (v1 == TILE_BRICK1) {
         scr_map[index_d] = TILE_BRICK2;
-        s_lin0 = lin[sprite] + 16;
-        s_col0 = col[sprite];
-        spr_back_repaint(); // restore background
+        player_gasta_brick();
+      }
+
+      if (v2 == TILE_BRICK3) {
+        scr_map[index_d + 1] = TILE_EMPTY;
+        player_gasta_brick();
+      }
+      if (v2 == TILE_BRICK2) {
+        scr_map[index_d + 1] = TILE_BRICK3;
+        player_gasta_brick();
+      }
+      if (v2 == TILE_BRICK1) {
+        scr_map[index_d + 1] = TILE_BRICK2;
+        player_gasta_brick();
       }
     }
   }
+}
+
+void player_gasta_brick() {
+  s_lin1 = s_lin0;
+  s_col1 = s_col0;
+  s_lin0 = lin[sprite] + 16;
+  s_col0 = col[sprite];
+  spr_back_repaint(); // restore background
+  s_lin0 = s_lin1;
+  s_col0 = s_col1;
 }
 
 unsigned char player_move_jump(void) {
