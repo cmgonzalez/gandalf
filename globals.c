@@ -92,6 +92,7 @@ signed char   player_vel_y1;
 signed char   player_vel_inc;
 unsigned char player_keys[4];
 unsigned char player_hit_count;
+unsigned int  player_brick_time;
 // PLAYER ATTRIBUTES
 unsigned char player_mana;
 unsigned char player_vita;

@@ -114,7 +114,7 @@ void main(void) {
     player_mana = player_max_mana;
     player_vita = player_max_vita;
     player_str = 0;
-    player_lvl = 20;
+    player_lvl = 0;
     player_int = 0;
     player_score = 0;
     player_lin_scr = GAME_LIN_FLOOR - 16;

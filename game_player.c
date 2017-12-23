@@ -654,6 +654,28 @@ void player_check_floor(void) {
     sprite_speed_alt[sprite] = PLAYER_FALL_SPEED;
     BIT_SET(s_state, STAT_FALL);
     player_check_stairs(0);
+  } else {
+    if (game_check_time(player_brick_time,16)) {
+      player_brick_time = zx_clock();
+      if (v1 == TILE_BRICK3) {
+        scr_map[index_d] = TILE_EMPTY;
+        s_lin0 = lin[sprite] + 16;
+        s_col0 = col[sprite];
+        spr_back_repaint(); // restore background
+      }
+      if (v1 == TILE_BRICK2) {
+        scr_map[index_d] = TILE_BRICK3;
+        s_lin0 = lin[sprite] + 16;
+        s_col0 = col[sprite];
+        spr_back_repaint(); // restore background
+      }
+      if (v1 == TILE_BRICK1) {
+        scr_map[index_d] = TILE_BRICK2;
+        s_lin0 = lin[sprite] + 16;
+        s_col0 = col[sprite];
+        spr_back_repaint(); // restore background
+      }
+    }
   }
 }
 

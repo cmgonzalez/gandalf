@@ -59,6 +59,11 @@
 #define TILE_HIT                      69 //UP FROM THIS CAN BE HIT BY PLAYER JUMP
 #define TILE_STOPPER                  35 //TURN ENEMY DIRECTION
 
+
+#define TILE_BRICK1                   62
+#define TILE_BRICK2                   63
+#define TILE_BRICK3                   64
+
 /* Enemies Class indexes */
 #define PLAYER                        0
 #define GOTA                          1 //VERTICAL
@@ -419,6 +424,7 @@ extern unsigned char sprite_on_air;
 extern unsigned char sprite_horizontal_check;
 
 extern unsigned char player_hit_count;
+extern unsigned int  player_brick_time;
 extern unsigned char s_tile0;
 extern unsigned char s_tile1;
 extern unsigned char s_lin0;

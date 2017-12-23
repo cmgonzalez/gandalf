@@ -104,6 +104,8 @@ void game_draw_screen(void) {
   NIRVANAP_halt();
   game_boss = 0;
   game_boss_fix = 0;
+  player_brick_time = zx_clock();
+
 
   f_mush = 0;
   spr_count = 0;
