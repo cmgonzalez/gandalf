@@ -106,7 +106,6 @@ void game_draw_screen(void) {
   game_boss_fix = 0;
   player_brick_time = zx_clock();
 
-
   f_mush = 0;
   spr_count = 0;
   while (spr_count < SPR_P1) {
@@ -237,7 +236,8 @@ void game_add_enemy(unsigned char enemy_tile_index) {
       game_boss = 1;
       game_boss_hit = 8;
     } else {
-      if (!game_boss) game_boss_fix = 1;
+      if (!game_boss)
+        game_boss_fix = 1;
     };
     break;
   }
@@ -297,6 +297,23 @@ void game_update_stats(void) {
     zx_print_ink(INK_MAGENTA);
     zx_print_chr(20, 22, game_boss_hit);
   }
+
+  if (player_keys[0]) {
+    zx_print_ink(INK_WHITE);
+    zx_print_str(20, 20, "]");
+  }
+  if (player_keys[1]) {
+    zx_print_ink(INK_RED);
+    zx_print_str(20, 21, "]");
+  }
+  if (player_keys[2]) {
+    zx_print_ink(INK_GREEN);
+    zx_print_str(20, 22, "]");
+  }
+  if (player_keys[3]) {
+    zx_print_ink(INK_CYAN);
+    zx_print_str(20, 23, "]");
+  }
 }
 
 void game_tick(void) {
@@ -334,9 +351,16 @@ void game_round_init(void) {
   game_print_header();
   game_print_footer();
   z80_delay_ms(50);
-  zx_print_str(12, 6, "WORLD 1 THE SHIRE"); // TODO WORLD NAMES ARRAY
-  game_colour_message(12, 6, 6 + 17, 25, 0);
-
+  switch (game_world) {
+  case 0:
+    zx_print_str(12, 6, "WORLD 1 THE SHIRE"); // TODO WORLD NAMES ARRAY
+    game_colour_message(12, 6, 6 + 17, 25, 0);
+    break;
+  case 1:
+    zx_print_str(12, 6, "WORLD 2 MORIA"); // TODO WORLD NAMES ARRAY
+    game_colour_message(12, 6, 6 + 13, 25, 0);
+    break;
+  }
   /* Player(s) init */
   if (!game_over) {
 

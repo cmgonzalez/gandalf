@@ -92,18 +92,11 @@ void main(void) {
   // Init Nirvana
   NIRVANAP_tiles(_btiles);
   NIRVANAP_start();
-  map_paper_last = PAPER_BLUE;
-  map_paper = PAPER_BLUE;
-  map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
 
-  spr_btile_paint_back();
   // Init Screen
   frame_time = zx_clock();
-  // GAME MENU
-  // game_menu();
 
-  map_width = 16 - 1; // OJO!
-  map_heigth = 1;
+
 
   game_obj_clear();
   while (1) {
@@ -120,6 +113,7 @@ void main(void) {
     player_lin_scr = GAME_LIN_FLOOR - 16;
     player_col_scr = 2;
     fps = 0;
+    game_world = 0;
     game_worldup = 0;
     game_respawn_curr_time = 255;
     game_mush_count = 0;

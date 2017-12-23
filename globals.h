@@ -492,8 +492,17 @@ extern unsigned char scr_obj1[];
  */
 extern const unsigned char start_scr0;
 extern const unsigned char lenght0[];
+extern const unsigned char paper0[];
 extern const unsigned char world0[];
+extern const unsigned char world0_w;
+extern const unsigned char world0_h;
 
+extern const unsigned char start_scr1;
+extern const unsigned char lenght1[];
+extern const unsigned char paper1[];
+extern const unsigned char world1[];
+extern const unsigned char world1_w;
+extern const unsigned char world1_h;
 
 extern unsigned char scr_curr;
 extern unsigned char map_width;

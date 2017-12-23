@@ -281,7 +281,7 @@ unsigned char player_move_input(void) {
     }
 
     /* New jump */
-    if (dirs & IN_STICK_FIRE) {
+    if ( (dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP) ) {
       player_vel_inc = 1;
       if (ay_is_playing() != AY_PLAYING_MUSIC) {
         ay_fx_play(ay_effect_03);
@@ -358,7 +358,8 @@ unsigned char player_move_input(void) {
 }
 
 unsigned char player_fire() {
-  if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_DOWN)) {
+  //if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_DOWN)) {
+  if ((dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP) ) {
     /*Fireball*/
     if (player_mana > 0 && (bullet_col[SPR_P1] == 0xFF)) {
       if (player_mana > 5) {
@@ -425,23 +426,19 @@ void player_pick_item(void) {
     switch (v0) {
     case TILE_KEY_WHITE:
       player_keys[0] = 1;
-      zx_print_ink(INK_WHITE);
-      zx_print_str(20, 20, "]");
+      game_update_stats();
       break;
     case TILE_KEY_RED:
       player_keys[1] = 1;
-      zx_print_ink(INK_RED);
-      zx_print_str(20, 21, "]");
+      game_update_stats();
       break;
     case TILE_KEY_GREEN:
       player_keys[2] = 1;
-      zx_print_ink(INK_GREEN);
-      zx_print_str(20, 22, "]");
+      game_update_stats();
       break;
     case TILE_KEY_CYAN:
       player_keys[3] = 1;
-      zx_print_ink(INK_CYAN);
-      zx_print_str(20, 23, "]");
+      game_update_stats();
       break;
     case TILE_MONEY:
       player_score_add(1);
@@ -705,7 +702,7 @@ unsigned char player_move_jump(void) {
   // JUMP BOOST
 
   if ((player_vel_inc)) {
-    if (!(dirs & IN_STICK_FIRE) && (player_vel_y > player_vel_y1) &&
+    if (!( (dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP) ) && (player_vel_y > player_vel_y1) &&
         (player_vel_y < 0)) {
       player_vel_y = 0; // TODO FIX WHEN FALLING!
       player_vel_inc = 0;

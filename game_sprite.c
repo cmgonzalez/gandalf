@@ -90,10 +90,22 @@ unsigned char spr_move_up(void) {
     }
   }
 
-  if (s_lin1 > GAME_LIN_FLOOR) {
-    lin[sprite] = 0;
-    // NIRVANAP_fillT(18, s_lin0, s_col0);
-    return 1;
+  if (s_lin1 < 16) { //}> GAME_LIN_FLOOR) {
+    if (sprite == SPR_P1) {
+      if (spr_page_up()) {
+        lin[sprite] = GAME_LIN_FLOOR;
+        player_lin_scr = 0;
+        player_col_scr = col[SPR_P1];
+        return 1;
+      } else {
+        lin[sprite] = 0;
+        return 1;
+      }
+    } else {
+      lin[sprite] = 0;
+      return 1;
+    }
+
   } else {
     lin[sprite] = s_lin1;
     return 0;
@@ -112,8 +124,22 @@ unsigned char spr_move_down(void) {
   }
 
   if (s_lin1 > GAME_LIN_FLOOR) {
-    lin[sprite] = GAME_LIN_FLOOR;
-    return 1;
+
+    if (sprite == SPR_P1) {
+      if (spr_page_down()) {
+        lin[sprite] = 0;
+        player_lin_scr = 0;
+        player_col_scr = col[SPR_P1];
+        return 1;
+      } else {
+        lin[sprite] = GAME_LIN_FLOOR;
+        return 1;
+      }
+    } else {
+      lin[sprite] = GAME_LIN_FLOOR;
+      return 1;
+    }
+
   } else {
     lin[sprite] = s_lin1 - 14;
     return 0;
@@ -218,7 +244,7 @@ unsigned char spr_move_left(void) {
 
 unsigned char spr_page_right() {
 
-  if (scr_curr < map_width && class[sprite] == PLAYER && !game_boss) {
+  if (scr_curr <= map_width && !game_boss) {
     ++scr_curr;
     spr_page_map();
     game_draw_screen();
@@ -229,7 +255,7 @@ unsigned char spr_page_right() {
 
 unsigned char spr_page_left() {
 
-  if (scr_curr > 0 && class[sprite] == PLAYER && !game_boss) {
+  if (scr_curr > 0 && !game_boss) {
     --scr_curr;
     spr_page_map();
     game_draw_screen();
@@ -238,6 +264,27 @@ unsigned char spr_page_left() {
   return 0;
 }
 
+unsigned char spr_page_down() {
+
+  if ((scr_curr + map_width) < 16 && !game_boss) {
+    scr_curr = scr_curr + map_width;
+    spr_page_map();
+    game_draw_screen();
+    return 1;
+  }
+  return 0;
+}
+
+unsigned char spr_page_up() {
+
+  if ((scr_curr - map_width) < 16 && !game_boss) {
+    scr_curr = scr_curr - map_width;
+    spr_page_map();
+    game_draw_screen();
+    return 1;
+  }
+  return 0;
+}
 void spr_page_map(void) {
 
   unsigned char v0;
@@ -248,16 +295,34 @@ void spr_page_map(void) {
   unsigned char k;
   unsigned int add_index;
   unsigned int start_index;
+  unsigned char l_world;
+  unsigned char l_world_w;
+  unsigned char l_world_h;
+  unsigned char l_paper;
+
+  l_world = game_world;
 
   k = 16;
+  j = scr_curr;
   intrinsic_di();
   // Read Player start screen on world map
   GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
   IO_7FFD = 0x10 + 6;
-  v0 = start_scr0; // TODO n LEVELS
+  if (l_world == 0) {
+    v0 = start_scr0;
+    l_paper = paper0[j];
+    l_world_w = world0_w;
+    l_world_h = world0_h;
+  } else {
+    v0 = start_scr1;
+    l_paper = paper0[j];
+    l_world_w = world1_w;
+    l_world_h = world1_h;
+  }
   GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
   IO_7FFD = 0x10 + 0;
   game_start_scr = v0;
+
   // Calculate the current screen start index in the world map
   j = 0;
   start_index = 0;
@@ -268,7 +333,11 @@ void spr_page_map(void) {
   while (j < scr_curr) {
     GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
     IO_7FFD = 0x10 + 6;
-    add_index = lenght0[j]; // TODO n LEVELS
+    if (l_world == 0) {
+      add_index = lenght0[j]; // TODO n LEVELS
+    } else {
+      add_index = lenght1[j]; // TODO n LEVELS
+    }
     GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
     IO_7FFD = 0x10 + 0;
     start_index = start_index + add_index;
@@ -282,9 +351,13 @@ void spr_page_map(void) {
     // Page in BANK 06 - Note that global variables are in page 0
     GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
     IO_7FFD = 0x10 + 6;
-    v0 = world0[start_index + i];     // TODO n LEVELS
-    v1 = world0[start_index + i + 1]; // TODO n LEVELS
-
+    if (l_world == 0) {
+      v0 = world0[start_index + i];     // TODO n LEVELS
+      v1 = world0[start_index + i + 1]; // TODO n LEVELS
+    } else {
+      v0 = world1[start_index + i];     // TODO n LEVELS
+      v1 = world1[start_index + i + 1]; // TODO n LEVELS
+    }
     // Page in BANK 00
     GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
     IO_7FFD = 0x10 + 0;
@@ -319,6 +392,16 @@ void spr_page_map(void) {
     }
   }
   spr_init_anim_bullets();
+
+  map_width = l_world_w;
+  map_heigth = l_world_h;
+  map_paper = l_paper;
+
+  if (map_paper_last != map_paper) {
+    spr_btile_paint_back();
+  }
+  map_paper_last = map_paper;
+
   intrinsic_ei();
   NIRVANAP_start();
 
@@ -820,7 +903,7 @@ void spr_play_bullets(void) {
         continue;
       }
 
-      if ((scr_map[index0] >= TILE_FLOOR && scr_map[index0] != 0xFF)) {
+      if ((scr_map[index0] >= TILE_CEIL && scr_map[index0] != 0xFF)) {
         // Explode Bullet
         spr_explode_bullet(f_bullet);
         continue;
@@ -946,6 +1029,7 @@ void spr_turn_horizontal(void) {
 void spr_btile_paint_back() {
 
   tmp_ui = 32;
+  map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
 
   while (tmp_ui < (32 + (48 * 12 * 18))) {
     tmp0 = 0;
