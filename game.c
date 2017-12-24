@@ -35,8 +35,8 @@
 void main(void) {
   unsigned int counter;
 
-  game_god_mode = 0;//GAME_GOD_MODE;
-  game_inmune = 0;//GAME_INMUNE;
+  game_god_mode = 1;//GAME_GOD_MODE;
+  game_inmune = 1;//GAME_INMUNE;
   // INTERRUPTS ARE DISABLED
 
   // RESET AY CHIP
@@ -95,6 +95,10 @@ void main(void) {
 
   // Init Screen
   frame_time = zx_clock();
+  map_paper_last = PAPER_BLUE;
+  map_paper = PAPER_BLUE;
+  map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
+
 
 
 

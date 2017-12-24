@@ -281,7 +281,7 @@ unsigned char player_move_input(void) {
     }
 
     /* New jump */
-    if ( (dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP) ) {
+    if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP)) {
       player_vel_inc = 1;
       if (ay_is_playing() != AY_PLAYING_MUSIC) {
         ay_fx_play(ay_effect_03);
@@ -358,8 +358,8 @@ unsigned char player_move_input(void) {
 }
 
 unsigned char player_fire() {
-  //if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_DOWN)) {
-  if ((dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP) ) {
+  // if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_DOWN)) {
+  if ((dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP)) {
     /*Fireball*/
     if (player_mana > 0 && (bullet_col[SPR_P1] == 0xFF)) {
       if (player_mana > 5) {
@@ -702,8 +702,8 @@ unsigned char player_move_jump(void) {
   // JUMP BOOST
 
   if ((player_vel_inc)) {
-    if (!( (dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP) ) && (player_vel_y > player_vel_y1) &&
-        (player_vel_y < 0)) {
+    if (!((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP)) &&
+        (player_vel_y > player_vel_y1) && (player_vel_y < 0)) {
       player_vel_y = 0; // TODO FIX WHEN FALLING!
       player_vel_inc = 0;
     }
@@ -733,9 +733,17 @@ unsigned char player_move_jump(void) {
 
   if (s_lin1 > GAME_LIN_FLOOR) {
     if (s_lin1 > GAME_LIN_FLOOR + 56) {
-      s_lin1 = 0;
+      if (spr_page_up()) {
+        s_lin1 = GAME_LIN_FLOOR;
+      } else {
+        s_lin1 = 0;
+      }
     } else {
-      s_lin1 = GAME_LIN_FLOOR;
+      if (spr_page_down()) {
+        s_lin1 = 16;
+      } else {
+        s_lin1 = GAME_LIN_FLOOR;
+      }
     }
   }
 

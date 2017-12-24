@@ -126,6 +126,7 @@ unsigned char spr_move_down(void) {
   if (s_lin1 > GAME_LIN_FLOOR) {
 
     if (sprite == SPR_P1) {
+      zx_border(INK_YELLOW);
       if (spr_page_down()) {
         lin[sprite] = 0;
         player_lin_scr = 0;
@@ -243,8 +244,8 @@ unsigned char spr_move_left(void) {
 }
 
 unsigned char spr_page_right() {
-
-  if (scr_curr <= map_width && !game_boss) {
+  tmp1 = 1 + ( scr_curr % map_width );
+  if (tmp1 < map_width && !game_boss) {
     ++scr_curr;
     spr_page_map();
     game_draw_screen();
@@ -254,8 +255,8 @@ unsigned char spr_page_right() {
 }
 
 unsigned char spr_page_left() {
-
-  if (scr_curr > 0 && !game_boss) {
+  tmp1 = scr_curr % map_width;
+  if (tmp1 > 0 && !game_boss) {
     --scr_curr;
     spr_page_map();
     game_draw_screen();
@@ -265,8 +266,8 @@ unsigned char spr_page_left() {
 }
 
 unsigned char spr_page_down() {
-
-  if ((scr_curr + map_width) < 16 && !game_boss) {
+  tmp1 = 1+(scr_curr / map_heigth);
+  if (tmp1 < map_heigth && !game_boss) {
     scr_curr = scr_curr + map_width;
     spr_page_map();
     game_draw_screen();
@@ -276,8 +277,8 @@ unsigned char spr_page_down() {
 }
 
 unsigned char spr_page_up() {
-
-  if ((scr_curr - map_width) < 16 && !game_boss) {
+  tmp1 = scr_curr / map_heigth;
+  if (tmp1 > 0 && !game_boss) {
     scr_curr = scr_curr - map_width;
     spr_page_map();
     game_draw_screen();
@@ -299,38 +300,41 @@ void spr_page_map(void) {
   unsigned char l_world_w;
   unsigned char l_world_h;
   unsigned char l_paper;
+  unsigned char l_scr;
 
   l_world = game_world;
+  l_scr = scr_curr;
 
   k = 16;
-  j = scr_curr;
+
   intrinsic_di();
   // Read Player start screen on world map
   GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
   IO_7FFD = 0x10 + 6;
   if (l_world == 0) {
-    v0 = start_scr0;
-    l_paper = paper0[j];
+    if (l_scr == 255) {
+      l_scr = start_scr0;
+    }
+    l_paper = paper0[l_scr];
     l_world_w = world0_w;
     l_world_h = world0_h;
   } else {
-    v0 = start_scr1;
-    l_paper = paper0[j];
+    if (l_scr == 255) {
+      l_scr = start_scr1;
+    }
+    l_paper = paper1[l_scr];
     l_world_w = world1_w;
     l_world_h = world1_h;
   }
   GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
   IO_7FFD = 0x10 + 0;
-  game_start_scr = v0;
 
   // Calculate the current screen start index in the world map
   j = 0;
   start_index = 0;
   add_index = 0;
-  if (scr_curr == 255) {
-    scr_curr = game_start_scr;
-  }
-  while (j < scr_curr) {
+
+  while (j < l_scr) {
     GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
     IO_7FFD = 0x10 + 6;
     if (l_world == 0) {
@@ -392,7 +396,7 @@ void spr_page_map(void) {
     }
   }
   spr_init_anim_bullets();
-
+  scr_curr = l_scr;
   map_width = l_world_w;
   map_heigth = l_world_h;
   map_paper = l_paper;
