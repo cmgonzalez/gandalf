@@ -1038,16 +1038,67 @@
 1037  0009  00          	DEFB 0x00
 1038  000A              	SECTION code_compiler
 1039  0169              ;	---------------------------------
-1040  0169              ; Function test_proc is a stub
+1040  0169              ; Function test_proc
 1041  0169              ; ---------------------------------
-1042  0169              EXTERN l_ret
-1043  0169              defc _test_proc = l_ret
-1044  0169              	SECTION code_compiler
-1045  0169              ;	---------------------------------
-1046  0169              ; Function test_func
-1047  0169              ; ---------------------------------
-1048  0169              _test_func:
-1049  0169  2E 00       	ld	l,0x00
-1050  016B  C9          	ret
-1051  016C              	SECTION IGNORE
-1052  0000              
+1042  0169              _test_proc:
+1043  0169  06 00       	ld	b,0x00
+1044  016B              l_test_proc_00104:
+1045  016B  C5          	push	bc
+1046  016C  21 00 00    	ld	hl,0x0000
+1047  016F  E5          	push	hl
+1048  0170  AF          	xor	a, a
+1049  0171  48          	ld	c,b
+1050  0172  47          	ld	b,a
+1051  0173  C5          	push	bc
+1052  0174  CD 00 00    	call	_NIRVANAP_spriteT_callee
+1053  0177  C1          	pop	bc
+1054  0178  04          	inc	b
+1055  0179  78          	ld	a, b
+1056  017A  D6 08       	sub	a,0x08
+1057  017C  38 ED       	jr	C,l_test_proc_00104
+1058  017E  76          	halt
+1059  017F  F3          	di
+1060  0180  0E 00       	ld	c,0x00
+1061  0182              l_test_proc_00114:
+1062  0182  79          	ld	a, c
+1063  0183  87          	add	a, a
+1064  0184  47          	ld	b, a
+1065  0185  1E 01       	ld	e,0x01
+1066  0187              l_test_proc_00106:
+1067  0187  7B          	ld	a, e
+1068  0188  07          	rlca
+1069  0189  07          	rlca
+1070  018A  07          	rlca
+1071  018B  07          	rlca
+1072  018C  E6 F0       	and	a,0xf0
+1073  018E  57          	ld	d, a
+1074  018F  C5          	push	bc
+1075  0190  D5          	push	de
+1076  0191  4A          	ld	c, d
+1077  0192  C5          	push	bc
+1078  0193  AF          	xor	a, a
+1079  0194  F5          	push	af
+1080  0195  33          	inc	sp
+1081  0196  CD 00 00    	call	_NIRVANAP_fillT_raw_callee
+1082  0199  D1          	pop	de
+1083  019A  C1          	pop	bc
+1084  019B  1C          	inc	e
+1085  019C  7B          	ld	a, e
+1086  019D  D6 0A       	sub	a,0x0a
+1087  019F  38 E6       	jr	C,l_test_proc_00106
+1088  01A1  0C          	inc	c
+1089  01A2  79          	ld	a, c
+1090  01A3  D6 10       	sub	a,0x10
+1091  01A5  38 DB       	jr	C,l_test_proc_00114
+1092  01A7  FB          	ei
+1093  01A8  76          	halt
+1094  01A9  C9          	ret
+1095  01AA              	SECTION code_compiler
+1096  01AA              ;	---------------------------------
+1097  01AA              ; Function test_func
+1098  01AA              ; ---------------------------------
+1099  01AA              _test_func:
+1100  01AA  2E 00       	ld	l,0x00
+1101  01AC  C9          	ret
+1102  01AD              	SECTION IGNORE
+1103  0000              

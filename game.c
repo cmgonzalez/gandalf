@@ -35,8 +35,8 @@
 void main(void) {
   unsigned int counter;
 
-  game_god_mode = 1;//GAME_GOD_MODE;
-  game_inmune = 1;//GAME_INMUNE;
+  game_god_mode = 1; // GAME_GOD_MODE;
+  game_inmune = 1;   // GAME_INMUNE;
   // INTERRUPTS ARE DISABLED
 
   // RESET AY CHIP
@@ -99,11 +99,10 @@ void main(void) {
   map_paper = PAPER_BLUE;
   map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
 
-
-
-
-  game_obj_clear();
   while (1) {
+    /*Init Objects*/
+    game_obj_clear();
+    
     /*Player Init*/
     player_max_mana = GAME_START_MAX_MANA;
     player_max_vita = GAME_START_MAX_VITA;
@@ -139,6 +138,26 @@ void main(void) {
   }
 }
 
-void test_proc() {}
+void test_proc() {
+
+  // 768 byte colour attribute data, immediately after the bitmap data at
+  // address &5800 (22528d)
+  unsigned char i;
+  unsigned char j;
+
+  for (i = 0; i < 8; ++i) {
+    NIRVANAP_spriteT(i,TILE_EMPTY, 0,0) ;
+  }
+  NIRVANAP_halt();
+
+  intrinsic_di();
+  for (i = 0; i < 16; ++i) {
+    for (j = 1; j < 10; ++j) {
+      NIRVANAP_fillT_raw(INK_BLACK || PAPER_BLACK, j * 16, i * 2) ;
+    }
+  }
+  intrinsic_ei();
+  NIRVANAP_halt();
+}
 
 unsigned char test_func() { return 0; }

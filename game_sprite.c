@@ -244,7 +244,7 @@ unsigned char spr_move_left(void) {
 }
 
 unsigned char spr_page_right() {
-  tmp1 = 1 + ( scr_curr % map_width );
+  tmp1 = 1 + (scr_curr % map_width);
   if (tmp1 < map_width && !game_boss) {
     ++scr_curr;
     spr_page_map();
@@ -266,7 +266,7 @@ unsigned char spr_page_left() {
 }
 
 unsigned char spr_page_down() {
-  tmp1 = 1+(scr_curr / map_heigth);
+  tmp1 = 1 + (scr_curr / map_heigth);
   if (tmp1 < map_heigth && !game_boss) {
     scr_curr = scr_curr + map_width;
     spr_page_map();
@@ -307,7 +307,29 @@ void spr_page_map(void) {
 
   k = 16;
 
+  for (i = 0; i < 8; ++i) {
+    NIRVANAP_spriteT(i,TILE_EMPTY, 0,0) ;
+  }
+  NIRVANAP_halt();
+
   intrinsic_di();
+  for (i = 0; i < 8; ++i) {
+
+    for (j = 1; j < 10; ++j) {
+      NIRVANAP_fillT_raw(INK_BLACK || PAPER_BLACK, j * 16, i * 2) ;
+    }
+
+    for (j = 1; j < 10; ++j) {
+      NIRVANAP_fillT_raw(INK_BLACK || PAPER_BLACK, j * 16, 30 - ( i * 2 ) ) ;
+    }
+
+
+      intrinsic_ei();
+      NIRVANAP_halt();
+      intrinsic_di();
+
+  }
+
   // Read Player start screen on world map
   GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
   IO_7FFD = 0x10 + 6;
@@ -409,12 +431,6 @@ void spr_page_map(void) {
   intrinsic_ei();
   NIRVANAP_start();
 
-  // NIRVANAP_start();
-  // Remove all enemies fast
-  for (i = 0; i < SPR_P1; ++i) {
-    class[i] = 0;
-    NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
-  }
 }
 
 unsigned char spr_redraw(void) {
