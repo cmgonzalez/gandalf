@@ -35,26 +35,12 @@
 void main(void) {
   unsigned int counter;
 
-  game_god_mode = 1; // GAME_GOD_MODE;
-  game_inmune = 1;   // GAME_INMUNE;
+  game_god_mode = 0; // GAME_GOD_MODE;
+  game_inmune = 0;   // GAME_INMUNE;
   // INTERRUPTS ARE DISABLED
 
   // RESET AY CHIP
   ay_reset();
-
-  // ATTRIB NORMAL
-
-  attrib[0] = BRIGHT | PAPER_BLACK | INK_WHITE;
-  attrib[1] = BRIGHT | PAPER_BLACK | INK_YELLOW;
-  attrib[2] = PAPER_BLACK | INK_YELLOW;
-  attrib[3] = PAPER_BLACK | INK_WHITE;
-
-  // ATTRIB HIGHLIGHT
-  attrib_hl[0] = PAPER_BLACK | INK_RED;
-  attrib_hl[1] = PAPER_BLACK | INK_YELLOW;
-  attrib_hl[2] = PAPER_BLACK | INK_GREEN;
-  attrib_hl[3] = PAPER_BLACK | INK_CYAN;
-
   // GAME OPTIONS
 
   // ENABLE SOUND BASED ON DETECTED MODEL
@@ -98,7 +84,7 @@ void main(void) {
   map_paper_last = PAPER_BLUE;
   map_paper = PAPER_BLUE;
   map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
-
+  game_attribs();
   while (1) {
     /*Init Objects*/
     game_obj_clear();

@@ -154,13 +154,13 @@
 
 #define TILE_ENEMY_PLANT              178
 #define FRAMES_ENEMY_PLANT            2
-#define SPEED_ENEMY_PLANT             6
+#define SPEED_ENEMY_PLANT             8
 #define DIRINC_ENEMY_PLANT            0
 #define INDEX_PLANT                   111
 
 #define TILE_ENEMY_SNAKE              180
 #define FRAMES_ENEMY_SNAKE            2
-#define SPEED_ENEMY_SNAKE             6
+#define SPEED_ENEMY_SNAKE             8
 #define DIRINC_ENEMY_SNAKE            0
 #define INDEX_SNAKE                   112
 

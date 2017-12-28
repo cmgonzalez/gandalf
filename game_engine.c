@@ -759,3 +759,18 @@ void game_boss_clear() {
     }
   }
 }
+
+void game_attribs() {
+  // ATTRIB NORMAL
+  attrib[0] = BRIGHT | map_paper | INK_WHITE;
+  attrib[1] = BRIGHT | map_paper | INK_YELLOW;
+  attrib[2] = map_paper | INK_YELLOW;
+  attrib[3] = map_paper | INK_WHITE;
+
+  // ATTRIB HIGHLIGHT
+  attrib_hl[0] = map_paper | INK_WHITE | BRIGHT;
+  attrib_hl[1] = map_paper | INK_WHITE;
+  attrib_hl[2] = map_paper | INK_WHITE | BRIGHT;
+  attrib_hl[3] = map_paper | INK_WHITE;
+
+}

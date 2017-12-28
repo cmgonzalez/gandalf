@@ -432,21 +432,18 @@ void spr_page_map(void) {
 
 unsigned char spr_redraw(void) {
   unsigned char f_lin8;
-
   s_tile1 = tile[sprite] + colint[sprite];
   s_col1 = col[sprite];
   s_lin1 = lin[sprite];
 
   if ((s_lin1 != s_lin0) || (s_col1 != s_col0)) {
-    /* Column Movement */
+    /* Column or lin Movement */
+    // Speed UP hack
     if (sprite == SPR_P1) {
       /*Stair Anim*/
       if (player_over_stair && ((lin[sprite] & 3) == 0)) {
         s_tile1 = s_tile1 + 4;
       }
-    }
-    // Speed UP hack
-    if (sprite == SPR_P1) {
       spr_back_repaint();
     } else {
       if ((s_lin1 & 7) == 0) {
@@ -465,10 +462,12 @@ unsigned char spr_redraw(void) {
     // End hack
     NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
     return 1;
-  } else if (s_tile1 != s_tile0) {
-    /* Internal Movement, no clean needed */
-    NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
-    return 0;
+  } else {
+    if (s_tile1 != s_tile0) {
+      /* Internal Movement, no clean needed */
+      NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
+      return 0;
+    }
   }
   return 0;
 }
@@ -1053,6 +1052,7 @@ void spr_btile_paint_back() {
 
   while (tmp_ui < (32 + (48 * 12 * 18))) {
     tmp0 = 0;
+
     while (tmp0 < 16) {
       tmp = PEEK(&btiles + tmp_ui + tmp0);
 
@@ -1065,6 +1065,8 @@ void spr_btile_paint_back() {
 
       ++tmp0;
     }
+
     tmp_ui = tmp_ui + 48;
   }
+  game_attribs();
 }

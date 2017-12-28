@@ -56,4 +56,6 @@ extern void          game_obj_set( unsigned int f_index );
 extern unsigned char game_obj_chk( unsigned int f_index );
 extern void          game_obj_clear( );
 extern void          game_boss_clear( );
+extern void          game_attribs( );
+
 #endif
