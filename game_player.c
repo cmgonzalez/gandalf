@@ -227,8 +227,13 @@ void player_check_stairs_down(void) {
   sprite_curr_index = spr_calc_index(lin[sprite] + 16, col[sprite]);
   v0 = scr_map[sprite_curr_index];
   v0 = (v0 >= TILE_STAIR_S && v0 <= TILE_STAIR_E);
-  if (v0)
+  if (v0) {
+    if (player_over_stair) {
+      colint[sprite] = 0;
+    }
     player_over_stair = 1;
+  }
+
 }
 
 void player_check_stairs(unsigned char f_inc) __z88dk_fastcall {
@@ -247,6 +252,7 @@ void player_check_stairs(unsigned char f_inc) __z88dk_fastcall {
     // OVER STAIR
     if (!player_over_stair) {
       player_over_stair = 1;
+      colint[sprite] = 0;
       player_tile(TILE_P1_STAIR);
     }
   } else {
@@ -258,10 +264,9 @@ void player_check_stairs(unsigned char f_inc) __z88dk_fastcall {
 }
 
 void player_tile(unsigned char f_tile) __z88dk_fastcall {
-  if (player_over_stair)
-     { tile[sprite] = TILE_P1_STAIR; }
-  else
-     {
+  if (player_over_stair) {
+     tile[sprite] = TILE_P1_STAIR;
+  } else {
       if (f_tile == TILE_P1_STANR) {
         tile[sprite] = spr_tile_dir(f_tile, sprite, 1);
       } else {

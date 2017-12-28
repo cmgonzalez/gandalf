@@ -35,7 +35,7 @@
 void main(void) {
   unsigned int counter;
 
-  game_god_mode = 0; // GAME_GOD_MODE;
+  game_god_mode = 1; // GAME_GOD_MODE;
   game_inmune = 0;   // GAME_INMUNE;
   // INTERRUPTS ARE DISABLED
 
