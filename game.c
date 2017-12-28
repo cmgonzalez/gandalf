@@ -102,7 +102,7 @@ void main(void) {
   while (1) {
     /*Init Objects*/
     game_obj_clear();
-    
+
     /*Player Init*/
     player_max_mana = GAME_START_MAX_MANA;
     player_max_vita = GAME_START_MAX_VITA;

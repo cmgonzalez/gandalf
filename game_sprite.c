@@ -245,7 +245,7 @@ unsigned char spr_move_left(void) {
 
 unsigned char spr_page_right() {
   tmp1 = 1 + (scr_curr % map_width);
-  if (tmp1 < map_width && !game_boss) {
+  if (tmp1 < map_width && (!game_boss || game_god_mode)) {
     ++scr_curr;
     spr_page_map();
     game_draw_screen();
@@ -256,7 +256,7 @@ unsigned char spr_page_right() {
 
 unsigned char spr_page_left() {
   tmp1 = scr_curr % map_width;
-  if (tmp1 > 0 && !game_boss) {
+  if (tmp1 > 0 && (!game_boss || game_god_mode)) {
     --scr_curr;
     spr_page_map();
     game_draw_screen();
@@ -267,7 +267,7 @@ unsigned char spr_page_left() {
 
 unsigned char spr_page_down() {
   tmp1 = 1 + (scr_curr / map_heigth);
-  if (tmp1 < map_heigth && !game_boss) {
+  if (tmp1 < map_heigth && (!game_boss || game_god_mode)) {
     scr_curr = scr_curr + map_width;
     spr_page_map();
     game_draw_screen();
@@ -278,7 +278,7 @@ unsigned char spr_page_down() {
 
 unsigned char spr_page_up() {
   tmp1 = scr_curr / map_heigth;
-  if (tmp1 > 0 && !game_boss) {
+  if (tmp1 > 0 && (!game_boss || game_god_mode)) {
     scr_curr = scr_curr - map_width;
     spr_page_map();
     game_draw_screen();
@@ -308,7 +308,7 @@ void spr_page_map(void) {
   k = 16;
 
   for (i = 0; i < 8; ++i) {
-    NIRVANAP_spriteT(i,TILE_EMPTY, 0,0) ;
+    NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
   }
   NIRVANAP_halt();
 
@@ -316,18 +316,16 @@ void spr_page_map(void) {
   for (i = 0; i < 8; ++i) {
 
     for (j = 1; j < 10; ++j) {
-      NIRVANAP_fillT_raw(INK_BLACK || PAPER_BLACK, j * 16, i * 2) ;
+      NIRVANAP_fillT_raw(INK_BLACK || PAPER_BLACK, j << 4, i << 1);
     }
 
     for (j = 1; j < 10; ++j) {
-      NIRVANAP_fillT_raw(INK_BLACK || PAPER_BLACK, j * 16, 30 - ( i * 2 ) ) ;
+      NIRVANAP_fillT_raw(INK_BLACK || PAPER_BLACK, j << 4, 30 - (i << 1));
     }
 
-
-      intrinsic_ei();
-      NIRVANAP_halt();
-      intrinsic_di();
-
+    intrinsic_ei();
+    NIRVANAP_halt();
+    intrinsic_di();
   }
 
   // Read Player start screen on world map
@@ -430,7 +428,6 @@ void spr_page_map(void) {
 
   intrinsic_ei();
   NIRVANAP_start();
-
 }
 
 unsigned char spr_redraw(void) {
@@ -563,8 +560,7 @@ unsigned char spr_tile_dir(unsigned char f_tile, unsigned char f_sprite,
   }
   return f_tile;
 }
-
-void spr_draw_clear(void) {
+/* void spr_draw_clear(void) {
   intrinsic_di();
   zx_paper_fill(INK_BLACK);
   // todo an asm routine to clear the screen fast (nirvana)
@@ -574,7 +570,7 @@ void spr_draw_clear(void) {
     }
   }
   intrinsic_ei();
-}
+} */
 
 void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
   unsigned char v1;
@@ -729,7 +725,7 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
   unsigned char f_anim;
   if (f_col < 31 && f_lin < SCR_LINS) {
     for (f_anim = 0; f_anim < 8; f_anim++) {
-      if (anim_lin[f_anim] == 0XFF) {
+      if (anim_lin[f_anim] == 0xFF) {
         ++anim_count;
         anim_lin[f_anim] = f_lin;
         anim_col[f_anim] = f_col;
@@ -961,7 +957,6 @@ void spr_play_bullets(void) {
               s_lin0 = bullet_lin[tmp0];
               s_col0 = bullet_col[tmp0];
               spr_back_repaint(); // restore background
-              bullet_col[tmp0] = 0xFF;
             };
 
             bullet_col[f_bullet] = s_col0;
@@ -986,12 +981,17 @@ void spr_play_bullets(void) {
               spr_add_anim(boss_lin + 16, boss_col + 2, TILE_ANIM_FIRE, 3, 0,
                            0);
               for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
+
+                if (bullet_col[tmp0] != 0xFF) {
+                  s_lin0 = bullet_lin[tmp0];
+                  s_col0 = bullet_col[tmp0];
+                  spr_back_repaint(); // restore background
+                }
+
+                bullet_col[tmp0] = 0xFF;
+
                 spr_destroy(tmp0);
                 game_respawn_time[tmp0] = 0;
-                s_lin0 = bullet_lin[tmp0];
-                s_col0 = bullet_col[tmp0];
-                spr_back_repaint(); // restore background
-                bullet_col[tmp0] = 0xFF;
               }
 
               game_boss_clear();

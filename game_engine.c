@@ -61,6 +61,9 @@ void game_loop(void) {
       }
       /*Enemies turn*/
       enemy_turn();
+      if (game_boss) {
+        boss_turn();
+      }
       /*Player 1 turn*/
       sprite = SPR_P1;
       player_turn();
@@ -123,7 +126,7 @@ void game_draw_screen(void) {
   // intrinsic_ei();
   spr_count = 0;
   intrinsic_di();
-  while (index1 < ((GAME_ROWS - 1) * 16)) {
+  while (index1 < ((GAME_ROWS - 1) << 4)) {
 
     if ((index1 & 15) == 0) {
       s_lin1 = s_lin1 + 16;
@@ -145,8 +148,6 @@ void game_draw_screen(void) {
           game_respawn_index[spr_count] = index1;
           game_respawn_tile[spr_count] = scr_map[index1];
           game_add_enemy(scr_map[index1]);
-        } else {
-          NIRVANAP_drawT_raw(TILE_EMPTY, s_lin1, s_col1);
         }
       } else {
         if (!game_obj_chk(index1)) {
@@ -155,8 +156,8 @@ void game_draw_screen(void) {
           mush_class[f_mush] = scr_map[index1];
           ++f_mush;
         }
-        NIRVANAP_drawT_raw(TILE_EMPTY, s_lin1, s_col1);
       }
+      NIRVANAP_drawT_raw(TILE_EMPTY, s_lin1, s_col1);
       scr_map[index1] = TILE_EMPTY;
     }
     s_col1 = s_col1 + 2;
@@ -295,24 +296,25 @@ void game_update_stats(void) {
   zx_print_chr(20, 15, player_mana);
   if (game_boss) {
     zx_print_ink(INK_MAGENTA);
-    zx_print_chr(20, 22, game_boss_hit);
+    zx_print_str(20, 24, "*");
+    zx_print_chr(20, 26, game_boss_hit);
   }
 
   if (player_keys[0]) {
     zx_print_ink(INK_WHITE);
-    zx_print_str(20, 20, "]");
+    zx_print_str(20, 19, "]");
   }
   if (player_keys[1]) {
     zx_print_ink(INK_RED);
-    zx_print_str(20, 21, "]");
+    zx_print_str(20, 20, "]");
   }
   if (player_keys[2]) {
     zx_print_ink(INK_GREEN);
-    zx_print_str(20, 22, "]");
+    zx_print_str(20, 21, "]");
   }
   if (player_keys[3]) {
     zx_print_ink(INK_CYAN);
-    zx_print_str(20, 23, "]");
+    zx_print_str(20, 22, "]");
   }
 }
 
@@ -327,11 +329,9 @@ void game_start_timer(void) {
 }
 
 void game_round_init(void) {
+  ay_reset();
   ay_fx_play(ay_effect_10);
   sound_coin();
-  z80_delay_ms(200);
-  ay_reset();
-
   /* screen init */
   /*PHASE INIT*/
   loop_count = 0;
@@ -339,14 +339,11 @@ void game_round_init(void) {
   zx_set_clock(0);
   frame_time = 0;
 
-  /* Phase Tune */
-  ay_reset();
+
   /* Phase Draw Start */
-  spr_draw_clear();
+  //spr_draw_clear();
   /*Draw Platforms*/
-  // zx_paper_fill(INK_BLACK | PAPER_BLACK);
   spr_page_map();
-  // scr_curr = game_start_scr;
   game_draw_screen();
   game_print_header();
   game_print_footer();
@@ -411,26 +408,34 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
   f_tile = scr_map[f_index];
 
   if (sprite != SPR_P1) {
+    if (f_tile == 0xFF) {
+      //Animation
+      f_tile = TILE_EMPTY;
+    }
+    if (f_tile == TILE_STOPPER) {
+      //Stopper Tile only afect enemies
+      f_tile = 0xFF;
+    }
     if (class[sprite] <= SPIDER) {
       // VERTICAL ENEMIES
-      if (f_tile <= TILE_ITEM_E && f_tile != TILE_STOPPER) {
+      if (f_tile <= TILE_ITEM_E) {
         return 0;
       } else {
-        return 1;
+        return f_tile;
       }
     } else {
       // HORIZONTAL ENEMIES
       if (sprite_horizontal_check) {
-        if (f_tile < TILE_CEIL && f_tile != TILE_STOPPER) {
+        if (f_tile < TILE_CEIL) {
           return 0;
         } else {
-          return 1;
+          return f_tile;
         }
       } else {
-        if (f_tile <= TILE_ITEM_E && f_tile != TILE_STOPPER) {
+        if (f_tile <= TILE_FLOOR) {
           return 0;
         } else {
-          return 1;
+          return f_tile;
         }
       }
     }
@@ -528,7 +533,9 @@ void game_joystick_set_menu(void) {
 
 void game_joystick_set(void) { joyfunc1 = control_method[player_joy]; }
 
-void game_end(void) { spr_draw_clear(); }
+void game_end(void) {
+  //spr_draw_clear();
+}
 
 void game_rotate_attrib(void) {
   // OUT OF MEMORY
@@ -727,10 +734,15 @@ void game_obj_clear() {
     scr_obj0[tmp] = 0;
     scr_obj1[tmp] = 0;
   }
-  player_keys[0] = 0;
-  player_keys[1] = 0;
-  player_keys[2] = 0;
-  player_keys[3] = 0;
+  if (game_god_mode) {
+    tmp = 1;
+  } else {
+    tmp = 0;
+  }
+  player_keys[0] = tmp;
+  player_keys[1] = tmp;
+  player_keys[2] = tmp;
+  player_keys[3] = tmp;
 }
 
 void game_boss_clear() {
