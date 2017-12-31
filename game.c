@@ -35,7 +35,7 @@
 void main(void) {
   unsigned int counter;
 
-  game_god_mode = 1; // GAME_GOD_MODE;
+  game_god_mode = 0; // GAME_GOD_MODE;
   game_inmune = 0;   // GAME_INMUNE;
   // INTERRUPTS ARE DISABLED
 
@@ -81,10 +81,7 @@ void main(void) {
 
   // Init Screen
   frame_time = zx_clock();
-  map_paper_last = PAPER_BLUE;
-  map_paper = PAPER_BLUE;
-  map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
-  game_attribs();
+
   while (1) {
     /*Init Objects*/
     game_obj_clear();
@@ -112,7 +109,18 @@ void main(void) {
     scr_curr = 255; // 255 equals read default screen from map
     /* game loop start */
     dirs = 0x00;
+    //MENU
     game_joystick_set();
+    map_paper = PAPER_BLACK;
+    game_attribs();
+    zx_print_ink(INK_WHITE);
+    zx_print_str(12, 12, "GANDALF");
+    game_colour_message(12, 12, 12 + 7, 250, 0);
+    map_paper_last = PAPER_BLUE;
+    map_paper = PAPER_BLUE;
+    map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
+    game_attribs();
+    //END MENU
     game_loop();
     for (sprite = 0; sprite < 8; ++sprite) {
       NIRVANAP_spriteT(sprite, TILE_EMPTY, 0, 0);
