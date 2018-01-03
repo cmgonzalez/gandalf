@@ -401,7 +401,7 @@ unsigned int game_check_map(unsigned char f_lin, unsigned char f_col) {
 
 unsigned char game_check_cell(int f_index) __z88dk_fastcall {
   unsigned char f_tile;
-
+  unsigned char f_check;
   // OUT OFF SCREEN
   if (f_index > GAME_SCR_MAX_INDEX) {
     return 1;
@@ -427,18 +427,16 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
       }
     } else {
       // HORIZONTAL ENEMIES
-      if (sprite_horizontal_check) {
-        if (f_tile < TILE_CEIL) {
-          return 0;
-        } else {
-          return f_tile;
-        }
+      if ( sprite_horizontal_check || BIT_CHK(s_state,STAT_JUMP) ) {
+        f_check = TILE_CEIL;
       } else {
-        if (f_tile <= TILE_FLOOR) {
-          return 0;
-        } else {
-          return f_tile;
-        }
+        f_check = TILE_FLOOR;
+      }
+
+      if (f_tile <= f_check) {
+        return 0;
+      } else {
+        return f_tile;
       }
     }
   }

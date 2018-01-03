@@ -93,9 +93,6 @@ unsigned char spr_move_up(void) {
   if (s_lin1 < 16) { //}> GAME_LIN_FLOOR) {
     if (sprite == SPR_P1) {
       if (spr_page_up()) {
-        lin[sprite] = GAME_LIN_FLOOR;
-        player_lin_scr = 0;
-        player_col_scr = col[SPR_P1];
         return 1;
       } else {
         lin[sprite] = 0;
@@ -128,9 +125,6 @@ unsigned char spr_move_down(void) {
     if (sprite == SPR_P1) {
       zx_border(INK_YELLOW);
       if (spr_page_down()) {
-        lin[sprite] = 0;
-        player_lin_scr = 0;
-        player_col_scr = col[SPR_P1];
         return 1;
       } else {
         lin[sprite] = GAME_LIN_FLOOR;
@@ -271,6 +265,9 @@ unsigned char spr_page_down() {
     scr_curr = scr_curr + map_width;
     spr_page_map();
     game_draw_screen();
+    lin[sprite] = 0;
+    player_lin_scr = 0;
+    player_col_scr = col[SPR_P1];
     return 1;
   }
   return 0;
@@ -282,6 +279,9 @@ unsigned char spr_page_up() {
     scr_curr = scr_curr - map_width;
     spr_page_map();
     game_draw_screen();
+    lin[sprite] = GAME_LIN_FLOOR - 4;
+    player_lin_scr = GAME_LIN_FLOOR;
+    player_col_scr = col[SPR_P1];
     return 1;
   }
   return 0;
