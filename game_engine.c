@@ -343,10 +343,12 @@ void game_round_init(void) {
   /* Phase Draw Start */
   //spr_draw_clear();
   /*Draw Platforms*/
-  spr_page_map();
-  game_draw_screen();
+
+
   game_print_header();
   game_print_footer();
+  spr_page_map();
+  game_draw_screen();
   z80_delay_ms(50);
   switch (game_world) {
   case 0:

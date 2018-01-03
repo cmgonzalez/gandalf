@@ -428,6 +428,9 @@ void spr_page_map(void) {
 
   intrinsic_ei();
   NIRVANAP_start();
+  zx_print_ink(INK_YELLOW);
+  zx_print_str(23, 12, "SCR:");
+  zx_print_chr(23, 12+4, scr_curr);
 }
 
 unsigned char spr_redraw(void) {

@@ -197,7 +197,7 @@ void enemy_vertical() {
   }
 
   ++colint[sprite];
-  if (colint[sprite] == sprite_frames[class[sprite]]) {
+  if (colint[sprite] >= sprite_frames[class[sprite]]) {
     colint[sprite] = 0;
   }
 }

@@ -35,8 +35,8 @@
 void main(void) {
   unsigned int counter;
 
-  game_god_mode = 0; // GAME_GOD_MODE;
-  game_inmune = 0;   // GAME_INMUNE;
+  game_god_mode = 1; // GAME_GOD_MODE;
+  game_inmune = 1;   // GAME_INMUNE;
   // INTERRUPTS ARE DISABLED
 
   // RESET AY CHIP
@@ -99,7 +99,7 @@ void main(void) {
     player_lin_scr = GAME_LIN_FLOOR - 16;
     player_col_scr = 2;
     fps = 0;
-    game_world = 0;
+    game_world = 1;
     game_worldup = 0;
     game_respawn_curr_time = 255;
     game_mush_count = 0;
@@ -115,7 +115,7 @@ void main(void) {
     game_attribs();
     zx_print_ink(INK_WHITE);
     zx_print_str(12, 12, "GANDALF");
-    game_colour_message(12, 12, 12 + 7, 250, 0);
+    game_colour_message(12, 12, 12 + 7, 25, 0);
     map_paper_last = PAPER_BLUE;
     map_paper = PAPER_BLUE;
     map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
