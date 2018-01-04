@@ -82,8 +82,9 @@ void game_fps(void) {
   zx_print_int(23, 24, fps);
   fps = 0;
 }
+
 void game_respawn(void) {
-  // Enemy Respawn
+  // Enemy Respawn, add animatios on the screen that at the end will Respawn an enemy
   sprite = 0;
   while (sprite < SPR_P1) {
     if (game_respawn_time[sprite] > 0) {
@@ -93,9 +94,11 @@ void game_respawn(void) {
         s_lin1 = index1;
         s_lin1 = (s_lin1 >> 4) << 4;
         scr_map[index1] = 0xFF;
+        game_respawn_time[sprite] = 0;
+        
         spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 4,
                      game_respawn_tile[sprite]);
-        game_respawn_time[sprite] = 0;
+
         break;
       }
     }
@@ -112,6 +115,7 @@ void game_draw_screen(void) {
   f_mush = 0;
   spr_count = 0;
   while (spr_count < SPR_P1) {
+    //Clear enemies related tables
     game_respawn_index[spr_count] = 0;
     game_respawn_tile[spr_count] = 0;
     game_respawn_time[spr_count] = 0;
@@ -427,7 +431,7 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
       }
     } else {
       // HORIZONTAL ENEMIES
-      if ( sprite_horizontal_check || BIT_CHK(s_state,STAT_JUMP) ) {
+      if ( sprite_horizontal_check ) {
         f_check = TILE_CEIL;
       } else {
         f_check = TILE_FLOOR;

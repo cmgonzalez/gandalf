@@ -120,7 +120,7 @@ unsigned char spr_move_down(void) {
     }
   }
 
-  if (s_lin1 > GAME_LIN_FLOOR + 8 ) {
+  if (s_lin1 > GAME_LIN_FLOOR + 8) {
 
     if (sprite == SPR_P1) {
       if (spr_page_down()) {
@@ -430,7 +430,7 @@ void spr_page_map(void) {
   NIRVANAP_start();
   zx_print_ink(INK_YELLOW);
   zx_print_str(23, 12, "SCR:");
-  zx_print_chr(23, 12+4, scr_curr);
+  zx_print_chr(23, 12 + 4, scr_curr);
 }
 
 unsigned char spr_redraw(void) {
@@ -447,11 +447,10 @@ unsigned char spr_redraw(void) {
       if (player_over_stair && ((lin[SPR_P1] & 3) == 0)) {
         ++player_anim_stair;
 
-        if ( player_anim_stair > 1 ) {
+        if (player_anim_stair > 1) {
           player_anim_stair = 0;
         }
         s_tile1 = tile[SPR_P1] + player_anim_stair + 4;
-
       }
       spr_back_repaint();
     } else {
@@ -952,7 +951,8 @@ void spr_play_bullets(void) {
       if (f_bullet == SPR_P1) {
         // PLAYER BULLETS
         for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
-          if (class[tmp0] != 0 && lin[tmp0] >= f_lin0 && lin[tmp0] <= f_lin1 &&
+          if (class[tmp0] != 0 && bullet_col[SPR_P1] != 0XFF &&
+              lin[tmp0] >= f_lin0 && lin[tmp0] <= f_lin1 &&
               col[tmp0] >= f_col0 && col[tmp0] <= f_col1) {
 
             // PLAYER KILL
@@ -967,9 +967,8 @@ void spr_play_bullets(void) {
               spr_back_repaint(); // restore background
             };
 
-            bullet_col[f_bullet] = s_col0;
-            spr_explode_bullet(f_bullet);
-            break;
+            bullet_col[SPR_P1] = s_col0;
+            spr_explode_bullet(SPR_P1);
           }
         }
         if (game_boss) {

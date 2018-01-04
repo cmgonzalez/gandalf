@@ -13,7 +13,7 @@
 //THE SHIRE
 const unsigned char world0_w = 16;
 const unsigned char world0_h = 0;
-const unsigned char start_scr0 = 0;
+const unsigned char start_scr0 = 11;
 const unsigned char paper0[] = {PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLACK,PAPER_BLUE,PAPER_BLUE};
 const unsigned char lenght0[] = {67,83,85,73,90,96,86,81,78,84,88,57,103,109,81,78};
 const unsigned char world0[] = {
