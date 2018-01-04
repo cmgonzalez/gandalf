@@ -363,7 +363,7 @@ void game_round_init(void) {
   /* Player(s) init */
   if (!game_over) {
 
-    player_init(SPR_P1, player_lin_scr, player_col_scr, TILE_P1_STANR);
+    player_init(player_lin_scr, player_col_scr, TILE_P1_STANR);
   }
 }
 

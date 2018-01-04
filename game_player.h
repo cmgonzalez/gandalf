@@ -17,11 +17,10 @@
 #ifndef GAME_PLAYER_H
 #define GAME_PLAYER_H
 
-extern void          player_init(unsigned char f_sprite, unsigned char f_lin, unsigned char f_col, unsigned char f_tile);
+extern void          player_init(unsigned char f_lin, unsigned char f_col, unsigned char f_tile);
 extern unsigned char player_collision(void);
 extern unsigned char player_check_input(void);
 extern void          player_kill(void);
-extern void          player_restart(unsigned char f_sprite) __z88dk_fastcall;
 extern unsigned char player_move(void);
 extern void          player_turn(void);
 extern unsigned char player_move_input(void);
