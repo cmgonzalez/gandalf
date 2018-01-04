@@ -93,6 +93,7 @@ signed char   player_vel_inc;
 unsigned char player_keys[4];
 unsigned char player_hit_count;
 unsigned int  player_brick_time;
+unsigned int  player_anim_stair;
 // PLAYER ATTRIBUTES
 unsigned char player_mana;
 unsigned char player_vita;

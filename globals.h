@@ -404,6 +404,8 @@ extern unsigned char player_col_scr;
 extern unsigned char player_lin_scr;
 
 extern unsigned int player_hit_time;
+extern unsigned int  player_anim_stair;
+
 
 
 extern signed   int  game_gravity;
