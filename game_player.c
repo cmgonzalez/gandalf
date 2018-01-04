@@ -640,8 +640,6 @@ void player_check_floor(void) {
   index_d = spr_calc_index(lin[sprite] + 16, col[sprite]);
   v1 = scr_map[index_d];
 
-  zx_print_chr(23, 5, lin[sprite]);
-  zx_print_chr(22, 5, s_lin0);
   if (s_lin0 == GAME_LIN_FLOOR) {
     tmp1 = 1 + (scr_curr / map_heigth);
     if (tmp1 < map_heigth) {
@@ -662,7 +660,7 @@ void player_check_floor(void) {
     sprite_speed_alt[sprite] = PLAYER_FALL_SPEED;
     BIT_SET(s_state, STAT_FALL);
     player_check_stairs(0);
-    if (s_lin0 == GAME_LIN_FLOOR) {
+    if (!player_over_stair && s_lin0 == GAME_LIN_FLOOR) {
       spr_page_down();
     }
 
@@ -750,7 +748,7 @@ unsigned char player_move_jump(void) {
     if (s_lin1 > GAME_LIN_FLOOR + 56) {
       if (spr_page_up()) {
         return 0;
-        s_lin1 = GAME_LIN_FLOOR;
+        //s_lin1 = GAME_LIN_FLOOR;
       } else {
         s_lin1 = 0;
       }

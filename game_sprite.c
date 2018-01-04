@@ -265,8 +265,8 @@ unsigned char spr_page_down() {
     scr_curr = scr_curr + map_width;
     spr_page_map();
     game_draw_screen();
-    lin[sprite] = 0;
-    player_lin_scr = 0;
+    player_lin_scr = 8;
+    lin[sprite] = 8;
     player_col_scr = col[SPR_P1];
     return 1;
   }
@@ -279,7 +279,8 @@ unsigned char spr_page_up() {
     scr_curr = scr_curr - map_width;
     spr_page_map();
     game_draw_screen();
-    lin[sprite] = GAME_LIN_FLOOR - 4;
+    player_lin_scr = GAME_LIN_FLOOR - 4;
+    lin[sprite] = player_lin_scr;
     player_lin_scr = GAME_LIN_FLOOR;
     player_col_scr = col[SPR_P1];
     return 1;

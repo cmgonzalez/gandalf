@@ -11,7 +11,7 @@
 
 
 //THE SHIRE
-const unsigned char world0_w = 16;
+const unsigned char world0_w = 11;
 const unsigned char world0_h = 0;
 const unsigned char start_scr0 = 0;
 const unsigned char paper0[] = {PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLUE,PAPER_BLACK,PAPER_BLUE,PAPER_BLUE};
@@ -38,7 +38,7 @@ const unsigned char world0[] = {
 //MORIA
 const unsigned char world1_w = 4;
 const unsigned char world1_h = 4;
-const unsigned char start_scr1 = 14;
+const unsigned char start_scr1 = 11;
 const unsigned char paper1[] = {PAPER_BLUE,PAPER_BLACK,PAPER_BLACK,PAPER_BLUE,PAPER_BLACK,PAPER_BLACK,PAPER_BLACK,PAPER_BLACK,PAPER_BLACK,PAPER_BLACK,PAPER_BLACK,PAPER_BLACK,PAPER_BLACK,PAPER_BLACK,PAPER_BLACK,PAPER_BLACK};
 const unsigned char lenght1[] = {74,84,59,76,58,68,66,42,89,73,87,82,42,37,64,47};
 const unsigned char world1[] = {
