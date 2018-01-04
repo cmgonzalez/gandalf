@@ -28,7 +28,8 @@
 #include <input.h>
 #include <stdlib.h>
 
-void player_init(unsigned char f_lin, unsigned char f_col, unsigned char f_tile) {
+void player_init(unsigned char f_lin, unsigned char f_col,
+                 unsigned char f_tile) {
   // COMMON SPRITE VARIABLES
   class[SPR_P1] = PLAYER;
   tile[SPR_P1] = f_tile;
@@ -156,9 +157,9 @@ void player_turn(void) {
 }
 
 unsigned char player_move(void) {
-  zx_print_chr(23,0,player_over_stair);
-  zx_print_chr(23,4,tile[SPR_P1] );
-  zx_print_chr(23,8,colint[SPR_P1]);
+  zx_print_chr(23, 0, player_over_stair);
+  zx_print_chr(23, 4, tile[SPR_P1]);
+  zx_print_chr(23, 8, colint[SPR_P1]);
   /* Player initial Values */
   s_lin0 = lin[SPR_P1];
   s_col0 = col[SPR_P1];
@@ -184,7 +185,7 @@ unsigned char player_move(void) {
     if (player_move_jump()) {
       // Jump Ends
       if (!player_over_stair) {
-        player_tile(TILE_P1_RIGHT);
+        player_tile(TILE_P1_RIGHT, TILE_P1_LEN);
       }
     }
   } else {
@@ -217,7 +218,7 @@ void player_check_stairs_down(void) {
   v0 = (v0 >= TILE_STAIR_S && v0 <= TILE_STAIR_E);
   if (v0) {
     if (!player_over_stair) {
-      colint[SPR_P1] = 0;
+      //colint[SPR_P1] = 0;
       player_over_stair = 1;
     }
   }
@@ -239,25 +240,20 @@ void player_check_stairs(unsigned char f_inc) __z88dk_fastcall {
     // OVER STAIR
     if (!player_over_stair) {
       player_over_stair = 1;
-      colint[SPR_P1] = 0;
-      player_tile(TILE_P1_STAIR);
+      //colint[SPR_P1] = 0;
+      player_tile(TILE_P1_STAIR, 0);
     }
   } else {
     if (player_over_stair) {
       player_over_stair = 0;
-      player_tile(TILE_P1_RIGHT);
+      player_tile(TILE_P1_RIGHT, TILE_P1_LEN);
     }
   }
 }
 
-void player_tile(unsigned char f_tile) __z88dk_fastcall {
+void player_tile(unsigned char f_tile, unsigned char f_inc) {
 
-  if (f_tile == TILE_P1_STANR) {
-    tile[SPR_P1] = spr_tile_dir(f_tile, sprite, 1);
-  } else {
-    tile[SPR_P1] = spr_tile_dir(f_tile, sprite, TILE_P1_LEN);
-  }
-
+  tile[SPR_P1] = spr_tile_dir(f_tile, sprite, f_inc);
 }
 
 unsigned char player_move_input(void) {
@@ -284,7 +280,7 @@ unsigned char player_move_input(void) {
       BIT_CLR(s_state, STAT_FALL);
       jump_lin[SPR_P1] = lin[SPR_P1];
       state[SPR_P1] = s_state; /*TODO FIXME!*/
-      player_tile(TILE_P1_JUMPR);
+      player_tile(TILE_P1_JUMPR, TILE_P1_LEN);
       sprite_speed_alt[SPR_P1] = PLAYER_JUMP_SPEED;
       player_slide = 0;
       player_vel_y = player_vel_y0; // -negative up / positive down
@@ -342,17 +338,17 @@ unsigned char player_move_input(void) {
     /* Set Tile according to current direction */
     state[SPR_P1] = s_state;
     if (player_over_stair) {
-      player_tile(TILE_P1_STAIR);
+      player_tile(TILE_P1_STAIR, 0);
     } else {
-      player_tile(TILE_P1_RIGHT);
+      player_tile(TILE_P1_RIGHT, TILE_P1_LEN);
     }
     return 1;
   } else {
     colint[SPR_P1] = 0;
     if (player_over_stair) {
-      player_tile(TILE_P1_STAIR);
+      player_tile(TILE_P1_STAIR, 0);
     } else {
-      player_tile(TILE_P1_STANR);
+      player_tile(TILE_P1_STANR, 1);
     }
     BIT_CLR(s_state, STAT_DIRL);
     BIT_CLR(s_state, STAT_DIRR);

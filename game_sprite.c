@@ -446,7 +446,11 @@ unsigned char spr_redraw(void) {
     if (sprite == SPR_P1) {
       /*Stair Anim*/
       if (player_over_stair && ((lin[sprite] & 3) == 0)) {
-        s_tile1 = s_tile1 + 4;
+        if ( colint[sprite] > 1 ) {
+          colint[sprite] = 0;
+        }
+        s_tile1 = tile[sprite] + colint[sprite] + 4;
+
       }
       spr_back_repaint();
     } else {
