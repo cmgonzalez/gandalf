@@ -120,10 +120,9 @@ unsigned char spr_move_down(void) {
     }
   }
 
-  if (s_lin1 > GAME_LIN_FLOOR) {
+  if (s_lin1 > GAME_LIN_FLOOR + 8 ) {
 
     if (sprite == SPR_P1) {
-      zx_border(INK_YELLOW);
       if (spr_page_down()) {
         return 1;
       } else {
@@ -445,13 +444,13 @@ unsigned char spr_redraw(void) {
     // Speed UP hack
     if (sprite == SPR_P1) {
       /*Stair Anim*/
-      if (player_over_stair && ((lin[sprite] & 3) == 0)) {
+      if (player_over_stair && ((lin[SPR_P1] & 3) == 0)) {
         ++player_anim_stair;
 
         if ( player_anim_stair > 1 ) {
           player_anim_stair = 0;
         }
-        s_tile1 = tile[sprite] + player_anim_stair + 4;
+        s_tile1 = tile[SPR_P1] + player_anim_stair + 4;
 
       }
       spr_back_repaint();

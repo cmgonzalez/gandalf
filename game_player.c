@@ -287,6 +287,7 @@ unsigned char player_move_input(void) {
 
     /* Move Right */
     if (dirs & IN_STICK_RIGHT) {
+      player_fix_walk_lin();
       BIT_SET(s_state, STAT_DIRR);
       BIT_CLR(s_state, STAT_DIRL);
       BIT_SET(state_a[SPR_P1], STAT_LDIRR);
@@ -299,6 +300,7 @@ unsigned char player_move_input(void) {
 
     /* Move Left */
     if (dirs & IN_STICK_LEFT) {
+      player_fix_walk_lin();
       BIT_SET(s_state, STAT_DIRL);
       BIT_CLR(s_state, STAT_DIRR);
       BIT_SET(state_a[SPR_P1], STAT_LDIRL);
@@ -328,7 +330,7 @@ unsigned char player_move_input(void) {
     if (dirs & IN_STICK_DOWN) {
       player_check_stairs_down(0);
       if (!player_over_stair) {
-        player_check_stairs_down(1);  
+        player_check_stairs_down(1);
       }
       if (player_over_stair) {
         if (spr_move_down()) {
@@ -361,6 +363,14 @@ unsigned char player_move_input(void) {
   return 0;
 }
 
+void player_fix_walk_lin( ) {
+  if (!player_over_stair) {
+    s_lin1 = (s_lin0 >> 4) << 4;
+    if (s_lin0 != s_lin1 ) {
+      lin[SPR_P1]= s_lin1;
+    }
+  }
+}
 unsigned char player_fire() {
   // if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_DOWN)) {
   if ((dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP)) {
