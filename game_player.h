@@ -32,7 +32,7 @@ extern void          player_check_floor(void);
 extern void          player_pick_item(void);
 extern void          player_tile( unsigned char f_tile, unsigned char f_inc );
 extern void          player_check_stairs(unsigned char f_inc) __z88dk_fastcall;
-extern void          player_check_stairs_down(void);
+extern void          player_check_stairs_down(unsigned char f_inc);
 extern unsigned char player_fire(void);
 extern unsigned char player_move_jump(void);
 extern void          player_open_door(unsigned int f_index, unsigned char f_tile);

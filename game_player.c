@@ -157,9 +157,7 @@ void player_turn(void) {
 }
 
 unsigned char player_move(void) {
-  zx_print_chr(23, 0, player_over_stair);
-  zx_print_chr(23, 4, tile[SPR_P1]);
-  zx_print_chr(23, 8, colint[SPR_P1]);
+
   /* Player initial Values */
   s_lin0 = lin[SPR_P1];
   s_col0 = col[SPR_P1];
@@ -211,9 +209,9 @@ unsigned char player_move(void) {
   return 0;
 }
 
-void player_check_stairs_down(void) {
+void player_check_stairs_down(unsigned char f_inc) {
   unsigned char v0;
-  sprite_curr_index = spr_calc_index(lin[SPR_P1] + 16, col[SPR_P1]);
+  sprite_curr_index = spr_calc_index(lin[SPR_P1] + 16, col[SPR_P1] + f_inc);
   v0 = scr_map[sprite_curr_index];
   v0 = (v0 >= TILE_STAIR_S && v0 <= TILE_STAIR_E);
   if (v0) {
@@ -313,6 +311,10 @@ unsigned char player_move_input(void) {
 
     if (dirs & IN_STICK_UP) {
       player_check_stairs(0);
+      if (!player_over_stair) {
+        player_check_stairs(1);
+      }
+
       if (player_over_stair) {
         if (spr_move_up()) {
           player_over_stair = 0;
@@ -324,7 +326,10 @@ unsigned char player_move_input(void) {
     }
 
     if (dirs & IN_STICK_DOWN) {
-      player_check_stairs_down();
+      player_check_stairs_down(0);
+      if (!player_over_stair) {
+        player_check_stairs_down(1);  
+      }
       if (player_over_stair) {
         if (spr_move_down()) {
           player_over_stair = 0;

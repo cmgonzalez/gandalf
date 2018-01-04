@@ -996,7 +996,7 @@
 996   00EA  2E 06       	ld	l,0x06
 997   00EC  CD 00 00    	call	_zx_border_fastcall
 998   00EF  2E 32       	ld	l,0x32
-999   00F1  CD DE 0F    	call	_player_hit
+999   00F1  CD D8 0F    	call	_player_hit
 1000  00F4              l_player_collision_00120:
 1001  00F4  3A 00 00    	ld	a,(_sprite)
 1002  00F7  D6 07       	sub	a,0x07
@@ -1061,7 +1061,7 @@
 1061  015F  32 00 00    	ld	(_player_vita),a
 1062  0162              l_player_collision_00105:
 1063  0162  21 01 00    	ld	hl,0x0001
-1064  0165  CD 35 0A    	call	_player_score_add
+1064  0165  CD 2F 0A    	call	_player_score_add
 1065  0168  CD 00 00    	call	_game_update_stats
 1066  016B  2A 00 00    	ld	hl,(_sprite)
 1067  016E  CD 00 00    	call	_spr_destroy
@@ -1084,7 +1084,7 @@
 1084  0190  32 00 00    	ld	(_player_mana),a
 1085  0193              l_player_collision_00109:
 1086  0193  21 01 00    	ld	hl,0x0001
-1087  0196  CD 35 0A    	call	_player_score_add
+1087  0196  CD 2F 0A    	call	_player_score_add
 1088  0199  CD 00 00    	call	_game_update_stats
 1089  019C  2A 00 00    	ld	hl,(_sprite)
 1090  019F  CD 00 00    	call	_spr_destroy
@@ -1098,7 +1098,7 @@
 1098  01AE  21 00 00    	ld	hl,_player_lives
 1099  01B1  34          	inc	(hl)
 1100  01B2  21 01 00    	ld	hl,0x0001
-1101  01B5  CD 35 0A    	call	_player_score_add
+1101  01B5  CD 2F 0A    	call	_player_score_add
 1102  01B8  CD 00 00    	call	_game_update_stats
 1103  01BB  2A 00 00    	ld	hl,(_sprite)
 1104  01BE  CD 00 00    	call	_spr_destroy
@@ -1110,7 +1110,7 @@
 1110  01C9  2E 02       	ld	l,0x02
 1111  01CB  CD 00 00    	call	_zx_border_fastcall
 1112  01CE  2E 14       	ld	l,0x14
-1113  01D0  CD DE 0F    	call	_player_hit
+1113  01D0  CD D8 0F    	call	_player_hit
 1114  01D3  2E 01       	ld	l,0x01
 1115  01D5  18 09       	jr	l_player_collision_00125
 1116  01D7              l_player_collision_00119:
@@ -1148,7 +1148,7 @@
 1148  0203  21 07 00    	ld	hl, +(_tile + 0x0007)
 1149  0206  36 54       	ld	(hl),0x54
 1150  0208              l_player_kill_00103:
-1151  0208  CD 06 0A    	call	_player_hit_platform_clear
+1151  0208  CD 00 0A    	call	_player_hit_platform_clear
 1152  020B  21 07 00    	ld	hl,+(_col + 0x0007)
 1153  020E  5E          	ld	e, (hl)
 1154  020F  21 07 00    	ld	hl,+(_lin + 0x0007)
@@ -1209,2037 +1209,2037 @@
 1209  0266              ; Function player_move
 1210  0266              ; ---------------------------------
 1211  0266              _player_move:
-1212  0266  3A 00 00    	ld	a,(_player_over_stair)
-1213  0269  F5          	push	af
-1214  026A  33          	inc	sp
-1215  026B  21 17 00    	ld	hl,0x0017
-1216  026E  E5          	push	hl
-1217  026F  CD 00 00    	call	_zx_print_chr
-1218  0272  21 07 00    	ld	hl,+(_tile + 0x0007)
-1219  0275  46          	ld	b, (hl)
-1220  0276  C5          	push	bc
-1221  0277  33          	inc	sp
-1222  0278  21 17 04    	ld	hl,0x0417
-1223  027B  E5          	push	hl
-1224  027C  CD 00 00    	call	_zx_print_chr
-1225  027F  21 07 00    	ld	hl,+(_colint + 0x0007)
-1226  0282  46          	ld	b, (hl)
-1227  0283  C5          	push	bc
-1228  0284  33          	inc	sp
-1229  0285  21 17 08    	ld	hl,0x0817
-1230  0288  E5          	push	hl
-1231  0289  CD 00 00    	call	_zx_print_chr
-1232  028C  3A 07 00    	ld	a,(_lin + 0x0007)
-1233  028F  32 00 00    	ld	(_s_lin0),a
-1234  0292  3A 07 00    	ld	a,(_col + 0x0007)
-1235  0295  32 00 00    	ld	(_s_col0),a
-1236  0298  21 07 00    	ld	hl,+(_tile + 0x0007)
-1237  029B  4E          	ld	c, (hl)
-1238  029C  21 07 00    	ld	hl,+(_colint + 0x0007)
-1239  029F  46          	ld	b, (hl)
-1240  02A0  79          	ld	a, c
-1241  02A1  80          	add	a, b
-1242  02A2  32 00 00    	ld	(_s_tile0),a
-1243  02A5  3A 07 00    	ld	a,(_state + 0x0007)
-1244  02A8  32 00 00    	ld	(_s_state),a
-1245  02AB  21 00 00    	ld	hl,_s_state
-1246  02AE  CB 46       	bit	0, (hl)
-1247  02B0  20 07       	jr	NZ,l_player_move_00111
-1248  02B2  21 00 00    	ld	hl,_s_state
-1249  02B5  CB 4E       	bit	1, (hl)
-1250  02B7  28 49       	jr	Z,l_player_move_00112
-1251  02B9              l_player_move_00111:
-1252  02B9  CD 7E 05    	call	_player_fire
-1253  02BC  3A 00 00    	ld	a,(_player_vel_y)
-1254  02BF  21 00 00    	ld	hl,_player_vel_y1
-1255  02C2  96          	sub	a, (hl)
-1256  02C3  E2 C8 02    	jp	PO, l_player_move_00156
-1257  02C6  EE 80       	xor	a,0x80
-1258  02C8              l_player_move_00156:
-1259  02C8  F2 EB 02    	jp	P, l_player_move_00106
-1260  02CB  21 00 00    	ld	hl,_dirs
-1261  02CE  CB 56       	bit	2, (hl)
-1262  02D0  28 09       	jr	Z,l_player_move_00102
-1263  02D2  21 00 00    	ld	hl,_s_state
-1264  02D5  7E          	ld	a,(hl)
-1265  02D6  F6 08       	or	a,0x08
-1266  02D8  E6 FB       	and	a,0xfb
-1267  02DA  77          	ld	(hl),a
-1268  02DB              l_player_move_00102:
-1269  02DB  21 00 00    	ld	hl,_dirs
-1270  02DE  CB 4E       	bit	1, (hl)
-1271  02E0  28 09       	jr	Z,l_player_move_00106
-1272  02E2  21 00 00    	ld	hl,_s_state
-1273  02E5  7E          	ld	a,(hl)
-1274  02E6  F6 04       	or	a,0x04
-1275  02E8  E6 F7       	and	a,0xf7
-1276  02EA  77          	ld	(hl),a
-1277  02EB              l_player_move_00106:
-1278  02EB  CD F0 0B    	call	_player_move_jump
-1279  02EE  7D          	ld	a, l
-1280  02EF  B7          	or	a, a
-1281  02F0  28 16       	jr	Z,l_player_move_00113
-1282  02F2  3A 00 00    	ld	a,(_player_over_stair)
-1283  02F5  B7          	or	a, a
-1284  02F6  20 10       	jr	NZ,l_player_move_00113
-1285  02F8  21 60 08    	ld	hl,0x0860
-1286  02FB  E5          	push	hl
-1287  02FC  CD F5 03    	call	_player_tile
-1288  02FF  F1          	pop	af
-1289  0300  18 06       	jr	l_player_move_00113
-1290  0302              l_player_move_00112:
-1291  0302  CD 10 04    	call	_player_move_input
-1292  0305  CD 99 0A    	call	_player_check_floor
-1293  0308              l_player_move_00113:
-1294  0308  CD 00 00    	call	_spr_redraw
-1295  030B  7D          	ld	a, l
-1296  030C  B7          	or	a, a
-1297  030D  28 03       	jr	Z,l_player_move_00116
-1298  030F  CD C7 05    	call	_player_check_map
-1299  0312              l_player_move_00116:
-1300  0312  3A 00 00    	ld	a,(_player_hit_lin)
-1301  0315  B7          	or	a, a
-1302  0316  28 03       	jr	Z,l_player_move_00118
-1303  0318  CD 06 0A    	call	_player_hit_platform_clear
-1304  031B              l_player_move_00118:
-1305  031B  3A 00 00    	ld	a,(_s_state)
-1306  031E  32 07 00    	ld	((_state + 0x0007)),a
-1307  0321  2E 00       	ld	l,0x00
-1308  0323  C9          	ret
-1309  0324              	SECTION code_compiler
-1310  0324              ;	---------------------------------
-1311  0324              ; Function player_check_stairs_down
-1312  0324              ; ---------------------------------
-1313  0324              _player_check_stairs_down:
-1314  0324  CD 00 00    	call	___sdcc_enter_ix
-1315  0327  3B          	dec	sp
-1316  0328  21 07 00    	ld	hl,+(_col + 0x0007)
-1317  032B  46          	ld	b, (hl)
-1318  032C  3A 07 00    	ld	a,(_lin + 0x0007)
-1319  032F  C6 10       	add	a,0x10
-1320  0331  4F          	ld	c,a
-1321  0332  C5          	push	bc
-1322  0333  CD 00 00    	call	_spr_calc_index
-1323  0336  F1          	pop	af
-1324  0337  7D          	ld	a,l
-1325  0338  32 00 00    	ld	(_sprite_curr_index),a
-1326  033B  4F          	ld	c,a
-1327  033C  06 00       	ld	b,0x00
-1328  033E  21 00 00    	ld	hl,_scr_map
-1329  0341  09          	add	hl,bc
-1330  0342  7E          	ld	a,(hl)
-1331  0343  4F          	ld	c,a
-1332  0344  D6 44       	sub	a,0x44
-1333  0346  38 05       	jr	C,l_player_check_stairs_down_00107
-1334  0348  3E 47       	ld	a,0x47
-1335  034A  91          	sub	a, c
-1336  034B  30 04       	jr	NC,l_player_check_stairs_down_00108
-1337  034D              l_player_check_stairs_down_00107:
-1338  034D  3E 00       	ld	a,0x00
-1339  034F  18 02       	jr	l_player_check_stairs_down_00109
-1340  0351              l_player_check_stairs_down_00108:
-1341  0351  3E 01       	ld	a,0x01
-1342  0353              l_player_check_stairs_down_00109:
-1343  0353  B7          	or	a, a
-1344  0354  28 09       	jr	Z,l_player_check_stairs_down_00105
-1345  0356  21 00 00    	ld	hl,_player_over_stair
-1346  0359  7E          	ld	a, (hl)
-1347  035A  B7          	or	a, a
-1348  035B  20 02       	jr	NZ,l_player_check_stairs_down_00105
-1349  035D  36 01       	ld	(hl),0x01
-1350  035F              l_player_check_stairs_down_00105:
-1351  035F  33          	inc	sp
-1352  0360  DD E1       	pop	ix
-1353  0362  C9          	ret
-1354  0363              	SECTION code_compiler
-1355  0363              ;	---------------------------------
-1356  0363              ; Function player_check_stairs
-1357  0363              ; ---------------------------------
-1358  0363              _player_check_stairs:
-1359  0363  CD 00 00    	call	___sdcc_enter_ix
-1360  0366  3B          	dec	sp
-1361  0367  5D          	ld	e, l
-1362  0368  3A 07 00    	ld	a,(_col + 0x0007)
-1363  036B  83          	add	a, e
-1364  036C  4F          	ld	c, a
-1365  036D  21 07 00    	ld	hl,+(_lin + 0x0007)
-1366  0370  46          	ld	b, (hl)
-1367  0371  D5          	push	de
-1368  0372  79          	ld	a, c
-1369  0373  48          	ld	c,b
-1370  0374  47          	ld	b,a
-1371  0375  C5          	push	bc
-1372  0376  CD 00 00    	call	_spr_calc_index
-1373  0379  F1          	pop	af
-1374  037A  D1          	pop	de
-1375  037B  7D          	ld	a,l
-1376  037C  32 00 00    	ld	(_sprite_curr_index),a
-1377  037F  4F          	ld	c,a
-1378  0380  06 00       	ld	b,0x00
-1379  0382  21 00 00    	ld	hl,_scr_map
-1380  0385  09          	add	hl,bc
-1381  0386  7E          	ld	a,(hl)
-1382  0387  4F          	ld	c,a
-1383  0388  D6 44       	sub	a,0x44
-1384  038A  38 05       	jr	C,l_player_check_stairs_00111
-1385  038C  3E 47       	ld	a,0x47
-1386  038E  91          	sub	a, c
-1387  038F  30 04       	jr	NC,l_player_check_stairs_00112
-1388  0391              l_player_check_stairs_00111:
-1389  0391  0E 00       	ld	c,0x00
-1390  0393  18 02       	jr	l_player_check_stairs_00113
-1391  0395              l_player_check_stairs_00112:
-1392  0395  0E 01       	ld	c,0x01
-1393  0397              l_player_check_stairs_00113:
-1394  0397  3A 07 00    	ld	a,(_col + 0x0007)
-1395  039A  83          	add	a, e
-1396  039B  57          	ld	d, a
-1397  039C  3A 07 00    	ld	a,(_lin + 0x0007)
-1398  039F  C6 0F       	add	a,0x0f
-1399  03A1  47          	ld	b, a
-1400  03A2  C5          	push	bc
-1401  03A3  58          	ld	e,b
-1402  03A4  D5          	push	de
-1403  03A5  CD 00 00    	call	_spr_calc_index
-1404  03A8  F1          	pop	af
-1405  03A9  C1          	pop	bc
-1406  03AA  7D          	ld	a,l
-1407  03AB  32 00 00    	ld	(_sprite_curr_index),a
-1408  03AE  5F          	ld	e,a
-1409  03AF  16 00       	ld	d,0x00
-1410  03B1  21 00 00    	ld	hl,_scr_map
-1411  03B4  19          	add	hl,de
-1412  03B5  7E          	ld	a,(hl)
-1413  03B6  47          	ld	b,a
-1414  03B7  D6 44       	sub	a,0x44
-1415  03B9  38 05       	jr	C,l_player_check_stairs_00114
-1416  03BB  3E 47       	ld	a,0x47
-1417  03BD  90          	sub	a, b
-1418  03BE  30 04       	jr	NC,l_player_check_stairs_00115
-1419  03C0              l_player_check_stairs_00114:
-1420  03C0  06 00       	ld	b,0x00
-1421  03C2  18 02       	jr	l_player_check_stairs_00116
-1422  03C4              l_player_check_stairs_00115:
-1423  03C4  06 01       	ld	b,0x01
-1424  03C6              l_player_check_stairs_00116:
-1425  03C6  79          	ld	a, c
-1426  03C7  B7          	or	a,a
-1427  03C8  20 03       	jr	NZ,l_player_check_stairs_00105
-1428  03CA  B0          	or	a,b
-1429  03CB  28 13       	jr	Z,l_player_check_stairs_00106
-1430  03CD              l_player_check_stairs_00105:
-1431  03CD  21 00 00    	ld	hl,_player_over_stair
-1432  03D0  7E          	ld	a, (hl)
-1433  03D1  B7          	or	a, a
-1434  03D2  20 1D       	jr	NZ,l_player_check_stairs_00109
-1435  03D4  36 01       	ld	(hl),0x01
-1436  03D6  21 72 00    	ld	hl,0x0072
-1437  03D9  E5          	push	hl
-1438  03DA  CD F5 03    	call	_player_tile
-1439  03DD  F1          	pop	af
-1440  03DE  18 11       	jr	l_player_check_stairs_00109
-1441  03E0              l_player_check_stairs_00106:
-1442  03E0  21 00 00    	ld	hl,_player_over_stair
-1443  03E3  7E          	ld	a, (hl)
-1444  03E4  B7          	or	a, a
-1445  03E5  28 0A       	jr	Z,l_player_check_stairs_00109
-1446  03E7  36 00       	ld	(hl),0x00
-1447  03E9  21 60 08    	ld	hl,0x0860
-1448  03EC  E5          	push	hl
-1449  03ED  CD F5 03    	call	_player_tile
-1450  03F0  F1          	pop	af
-1451  03F1              l_player_check_stairs_00109:
-1452  03F1  33          	inc	sp
-1453  03F2  DD E1       	pop	ix
-1454  03F4  C9          	ret
-1455  03F5              	SECTION code_compiler
-1456  03F5              ;	---------------------------------
-1457  03F5              ; Function player_tile
-1458  03F5              ; ---------------------------------
-1459  03F5              _player_tile:
-1460  03F5  CD 00 00    	call	___sdcc_enter_ix
-1461  03F8  DD 7E 05    	ld	a,(ix+5)
-1462  03FB  F5          	push	af
-1463  03FC  33          	inc	sp
-1464  03FD  2A FF FF    	ld	hl,(_sprite-1)
-1465  0400  DD 6E 04    	ld	l,(ix+4)
-1466  0403  E5          	push	hl
-1467  0404  CD 00 00    	call	_spr_tile_dir
-1468  0407  F1          	pop	af
-1469  0408  33          	inc	sp
-1470  0409  7D          	ld	a,l
-1471  040A  32 07 00    	ld	((_tile + 0x0007)),a
-1472  040D  DD E1       	pop	ix
-1473  040F  C9          	ret
-1474  0410              	SECTION code_compiler
-1475  0410              ;	---------------------------------
-1476  0410              ; Function player_move_input
-1477  0410              ; ---------------------------------
-1478  0410              _player_move_input:
-1479  0410  CD 66 00    	call	_player_check_input
-1480  0413  7D          	ld	a, l
-1481  0414  B7          	or	a, a
-1482  0415  CA 57 05    	jp	Z, l_player_move_input_00143
-1483  0418  CD 7E 05    	call	_player_fire
-1484  041B  7D          	ld	a, l
-1485  041C  B7          	or	a, a
-1486  041D  28 0A       	jr	Z,l_player_move_input_00102
-1487  041F  21 00 00    	ld	hl,_dirs
-1488  0422  36 00       	ld	(hl),0x00
-1489  0424  2E 00       	ld	l,0x00
-1490  0426  C3 7D 05    	jp	l_player_move_input_00145
-1491  0429              l_player_move_input_00102:
-1492  0429  21 00 00    	ld	hl,_dirs
-1493  042C  CB 7E       	bit	7, (hl)
-1494  042E  28 54       	jr	Z,l_player_move_input_00106
-1495  0430  21 00 00    	ld	hl,_dirs
-1496  0433  CB 46       	bit	0, (hl)
-1497  0435  28 4D       	jr	Z,l_player_move_input_00106
-1498  0437  21 00 00    	ld	hl,_player_vel_inc
-1499  043A  36 01       	ld	(hl),0x01
-1500  043C  CD 00 00    	call	_ay_is_playing
-1501  043F  7D          	ld	a, l
-1502  0440  D6 03       	sub	a,0x03
-1503  0442  28 06       	jr	Z,l_player_move_input_00104
-1504  0444  21 00 00    	ld	hl,_ay_effect_03
-1505  0447  CD 00 00    	call	_ay_fx_play
-1506  044A              l_player_move_input_00104:
-1507  044A  21 00 00    	ld	hl,_player_over_stair
-1508  044D  36 00       	ld	(hl),0x00
-1509  044F  CD 00 00    	call	_sound_jump
-1510  0452  21 00 00    	ld	hl,_s_state
-1511  0455  7E          	ld	a,(hl)
-1512  0456  F6 01       	or	a,0x01
-1513  0458  E6 FD       	and	a,0xfd
-1514  045A  77          	ld	(hl),a
-1515  045B  3A 07 00    	ld	a,(_lin + 0x0007)
-1516  045E  32 07 00    	ld	((_jump_lin + 0x0007)),a
-1517  0461  3A 00 00    	ld	a,(_s_state)
-1518  0464  32 07 00    	ld	((_state + 0x0007)),a
-1519  0467  21 64 08    	ld	hl,0x0864
-1520  046A  E5          	push	hl
-1521  046B  CD F5 03    	call	_player_tile
-1522  046E  F1          	pop	af
-1523  046F  21 07 00    	ld	hl, +(_sprite_speed_alt + 0x0007)
-1524  0472  36 02       	ld	(hl),0x02
-1525  0474  21 00 00    	ld	hl,_player_slide
-1526  0477  36 00       	ld	(hl),0x00
-1527  0479  3A 00 00    	ld	a,(_player_vel_y0)
-1528  047C  32 00 00    	ld	(_player_vel_y),a
-1529  047F  2E 01       	ld	l,0x01
-1530  0481  C3 7D 05    	jp	l_player_move_input_00145
-1531  0484              l_player_move_input_00106:
-1532  0484  21 00 00    	ld	hl,_dirs
-1533  0487  CB 5E       	bit	3, (hl)
-1534  0489  28 20       	jr	Z,l_player_move_input_00111
-1535  048B  21 00 00    	ld	hl,_s_state
-1536  048E  7E          	ld	a,(hl)
-1537  048F  F6 04       	or	a,0x04
-1538  0491  E6 F7       	and	a,0xf7
-1539  0493  77          	ld	(hl),a
-1540  0494  01 07 00    	ld	bc,_state_a+7
-1541  0497  0A          	ld	a, (bc)
-1542  0498  F6 10       	or	a,0x10
-1543  049A  E6 F7       	and	a,0xf7
-1544  049C  02          	ld	(bc),a
-1545  049D  3A 00 00    	ld	a,(_player_over_stair)
-1546  04A0  B7          	or	a, a
-1547  04A1  28 05       	jr	Z,l_player_move_input_00109
-1548  04A3  2E 00       	ld	l,0x00
-1549  04A5  CD 63 03    	call	_player_check_stairs
-1550  04A8              l_player_move_input_00109:
-1551  04A8  CD 00 00    	call	_spr_move_horizontal
-1552  04AB              l_player_move_input_00111:
-1553  04AB  21 00 00    	ld	hl,_dirs
-1554  04AE  CB 56       	bit	2, (hl)
-1555  04B0  28 20       	jr	Z,l_player_move_input_00115
-1556  04B2  21 00 00    	ld	hl,_s_state
-1557  04B5  7E          	ld	a,(hl)
-1558  04B6  F6 08       	or	a,0x08
-1559  04B8  E6 FB       	and	a,0xfb
-1560  04BA  77          	ld	(hl),a
-1561  04BB  01 07 00    	ld	bc,_state_a+7
-1562  04BE  0A          	ld	a, (bc)
-1563  04BF  F6 08       	or	a,0x08
-1564  04C1  E6 EF       	and	a,0xef
-1565  04C3  02          	ld	(bc),a
-1566  04C4  3A 00 00    	ld	a,(_player_over_stair)
-1567  04C7  B7          	or	a, a
-1568  04C8  28 05       	jr	Z,l_player_move_input_00113
-1569  04CA  2E 00       	ld	l,0x00
-1570  04CC  CD 63 03    	call	_player_check_stairs
-1571  04CF              l_player_move_input_00113:
-1572  04CF  CD 00 00    	call	_spr_move_horizontal
-1573  04D2              l_player_move_input_00115:
-1574  04D2  21 00 00    	ld	hl,_dirs
-1575  04D5  CB 46       	bit	0, (hl)
-1576  04D7  28 2C       	jr	Z,l_player_move_input_00125
-1577  04D9  2E 00       	ld	l,0x00
-1578  04DB  CD 63 03    	call	_player_check_stairs
-1579  04DE  3A 00 00    	ld	a,(_player_over_stair)
-1580  04E1  B7          	or	a, a
-1581  04E2  28 0E       	jr	Z,l_player_move_input_00122
-1582  04E4  CD 00 00    	call	_spr_move_up
-1583  04E7  7D          	ld	a, l
-1584  04E8  B7          	or	a, a
-1585  04E9  28 1A       	jr	Z,l_player_move_input_00125
-1586  04EB  21 00 00    	ld	hl,_player_over_stair
-1587  04EE  36 00       	ld	(hl),0x00
-1588  04F0  18 13       	jr	l_player_move_input_00125
-1589  04F2              l_player_move_input_00122:
-1590  04F2  21 00 00    	ld	hl,_dirs
-1591  04F5  CB 5E       	bit	3, (hl)
-1592  04F7  20 0C       	jr	NZ,l_player_move_input_00125
-1593  04F9  21 00 00    	ld	hl,_dirs
-1594  04FC  CB 56       	bit	2, (hl)
-1595  04FE  20 05       	jr	NZ,l_player_move_input_00125
-1596  0500  2E 00       	ld	l,0x00
-1597  0502  C3 7D 05    	jp	l_player_move_input_00145
-1598  0505              l_player_move_input_00125:
-1599  0505  21 00 00    	ld	hl,_dirs
-1600  0508  CB 4E       	bit	1, (hl)
-1601  050A  28 29       	jr	Z,l_player_move_input_00135
-1602  050C  CD 24 03    	call	_player_check_stairs_down
-1603  050F  3A 00 00    	ld	a,(_player_over_stair)
-1604  0512  B7          	or	a, a
-1605  0513  28 0E       	jr	Z,l_player_move_input_00132
-1606  0515  CD 00 00    	call	_spr_move_down
-1607  0518  7D          	ld	a, l
-1608  0519  B7          	or	a, a
-1609  051A  28 19       	jr	Z,l_player_move_input_00135
-1610  051C  21 00 00    	ld	hl,_player_over_stair
-1611  051F  36 00       	ld	(hl),0x00
-1612  0521  18 12       	jr	l_player_move_input_00135
-1613  0523              l_player_move_input_00132:
-1614  0523  21 00 00    	ld	hl,_dirs
-1615  0526  CB 5E       	bit	3, (hl)
-1616  0528  20 0B       	jr	NZ,l_player_move_input_00135
-1617  052A  21 00 00    	ld	hl,_dirs
-1618  052D  CB 56       	bit	2, (hl)
-1619  052F  20 04       	jr	NZ,l_player_move_input_00135
-1620  0531  2E 00       	ld	l,0x00
-1621  0533  18 48       	jr	l_player_move_input_00145
-1622  0535              l_player_move_input_00135:
-1623  0535  3A 00 00    	ld	a,(_s_state)
-1624  0538  32 07 00    	ld	((_state + 0x0007)),a
-1625  053B  3A 00 00    	ld	a,(_player_over_stair)
-1626  053E  B7          	or	a, a
-1627  053F  28 0A       	jr	Z,l_player_move_input_00137
-1628  0541  21 72 00    	ld	hl,0x0072
-1629  0544  E5          	push	hl
-1630  0545  CD F5 03    	call	_player_tile
-1631  0548  F1          	pop	af
-1632  0549  18 08       	jr	l_player_move_input_00138
-1633  054B              l_player_move_input_00137:
-1634  054B  21 60 08    	ld	hl,0x0860
-1635  054E  E5          	push	hl
-1636  054F  CD F5 03    	call	_player_tile
-1637  0552  F1          	pop	af
-1638  0553              l_player_move_input_00138:
-1639  0553  2E 01       	ld	l,0x01
-1640  0555  18 26       	jr	l_player_move_input_00145
-1641  0557              l_player_move_input_00143:
-1642  0557  21 07 00    	ld	hl, +(_colint + 0x0007)
-1643  055A  36 00       	ld	(hl),0x00
-1644  055C  3A 00 00    	ld	a,(_player_over_stair)
-1645  055F  B7          	or	a, a
-1646  0560  28 0A       	jr	Z,l_player_move_input_00140
-1647  0562  21 72 00    	ld	hl,0x0072
-1648  0565  E5          	push	hl
-1649  0566  CD F5 03    	call	_player_tile
-1650  0569  F1          	pop	af
-1651  056A  18 08       	jr	l_player_move_input_00141
-1652  056C              l_player_move_input_00140:
-1653  056C  21 70 01    	ld	hl,0x0170
-1654  056F  E5          	push	hl
-1655  0570  CD F5 03    	call	_player_tile
-1656  0573  F1          	pop	af
-1657  0574              l_player_move_input_00141:
-1658  0574  21 00 00    	ld	hl,_s_state
-1659  0577  7E          	ld	a,(hl)
-1660  0578  E6 F3       	and	a,+(0xf7&0xfb)
-1661  057A  77          	ld	(hl),a
-1662  057B  2E 00       	ld	l,0x00
-1663  057D              l_player_move_input_00145:
-1664  057D  C9          	ret
-1665  057E              	SECTION code_compiler
-1666  057E              ;	---------------------------------
-1667  057E              ; Function player_fire
-1668  057E              ; ---------------------------------
-1669  057E              _player_fire:
-1670  057E  21 00 00    	ld	hl,_dirs
-1671  0581  CB 7E       	bit	7, (hl)
-1672  0583  28 3F       	jr	Z,l_player_fire_00110
-1673  0585  21 00 00    	ld	hl,_dirs
-1674  0588  CB 46       	bit	0, (hl)
-1675  058A  20 38       	jr	NZ,l_player_fire_00110
-1676  058C  21 00 00    	ld	hl,_player_mana
-1677  058F  7E          	ld	a, (hl)
-1678  0590  B7          	or	a, a
-1679  0591  28 2D       	jr	Z,l_player_fire_00107
-1680  0593  3A 07 00    	ld	a,(_bullet_col + 0x0007)
-1681  0596  3C          	inc	a
-1682  0597  20 27       	jr	NZ,l_player_fire_00107
-1683  0599  3E 05       	ld	a,0x05
-1684  059B  96          	sub	a, (hl)
-1685  059C  30 12       	jr	NC,l_player_fire_00104
-1686  059E  CD 00 00    	call	_sound_hit_enemy
-1687  05A1  3A 00 00    	ld	a,(_game_god_mode)
-1688  05A4  B7          	or	a, a
-1689  05A5  20 0E       	jr	NZ,l_player_fire_00105
-1690  05A7  21 00 00    	ld	hl,_player_mana
-1691  05AA  7E          	ld	a, (hl)
-1692  05AB  C6 FB       	add	a,0xfb
-1693  05AD  77          	ld	(hl), a
-1694  05AE  18 05       	jr	l_player_fire_00105
-1695  05B0              l_player_fire_00104:
-1696  05B0  21 00 00    	ld	hl,_player_mana
-1697  05B3  36 00       	ld	(hl),0x00
-1698  05B5              l_player_fire_00105:
-1699  05B5  CD 00 00    	call	_game_update_stats
-1700  05B8  21 07 78    	ld	hl,0x7807
-1701  05BB  E5          	push	hl
-1702  05BC  CD 00 00    	call	_game_shoot_fire
-1703  05BF  F1          	pop	af
-1704  05C0              l_player_fire_00107:
-1705  05C0  2E 01       	ld	l,0x01
-1706  05C2  18 02       	jr	l_player_fire_00112
-1707  05C4              l_player_fire_00110:
-1708  05C4  2E 00       	ld	l,0x00
-1709  05C6              l_player_fire_00112:
-1710  05C6  C9          	ret
-1711  05C7              	SECTION code_compiler
-1712  05C7              ;	---------------------------------
-1713  05C7              ; Function player_check_map
-1714  05C7              ; ---------------------------------
-1715  05C7              _player_check_map:
-1716  05C7  21 07 00    	ld	hl,+(_col + 0x0007)
-1717  05CA  46          	ld	b, (hl)
-1718  05CB  21 07 00    	ld	hl,+(_lin + 0x0007)
-1719  05CE  4E          	ld	c, (hl)
-1720  05CF  C5          	push	bc
-1721  05D0  CD 00 00    	call	_spr_calc_index
-1722  05D3  F1          	pop	af
-1723  05D4  7D          	ld	a,l
-1724  05D5  32 00 00    	ld	(_sprite_curr_index),a
-1725  05D8  21 07 00    	ld	hl,+(_col + 0x0007)
-1726  05DB  4E          	ld	c, (hl)
-1727  05DC  3A 07 00    	ld	a,(_lin + 0x0007)
-1728  05DF  E6 0F       	and	a,0x0f
-1729  05E1  CB 41       	bit	0, c
-1730  05E3  20 17       	jr	NZ,l_player_check_map_00108
-1731  05E5  B7          	or	a, a
-1732  05E6  20 05       	jr	NZ,l_player_check_map_00102
-1733  05E8  CD 27 06    	call	_player_pick_item
-1734  05EB  18 39       	jr	l_player_check_map_00110
-1735  05ED              l_player_check_map_00102:
-1736  05ED  CD 27 06    	call	_player_pick_item
-1737  05F0  21 00 00    	ld	hl,_sprite_curr_index
-1738  05F3  7E          	ld	a, (hl)
-1739  05F4  C6 10       	add	a,0x10
-1740  05F6  77          	ld	(hl), a
-1741  05F7  CD 27 06    	call	_player_pick_item
-1742  05FA  18 2A       	jr	l_player_check_map_00110
-1743  05FC              l_player_check_map_00108:
-1744  05FC  B7          	or	a, a
-1745  05FD  20 0C       	jr	NZ,l_player_check_map_00105
-1746  05FF  CD 27 06    	call	_player_pick_item
-1747  0602  21 00 00    	ld	hl,_sprite_curr_index
-1748  0605  34          	inc	(hl)
-1749  0606  CD 27 06    	call	_player_pick_item
-1750  0609  18 1B       	jr	l_player_check_map_00110
-1751  060B              l_player_check_map_00105:
-1752  060B  CD 27 06    	call	_player_pick_item
-1753  060E  21 00 00    	ld	hl,_sprite_curr_index
-1754  0611  34          	inc	(hl)
-1755  0612  CD 27 06    	call	_player_pick_item
-1756  0615  21 00 00    	ld	hl,_sprite_curr_index
-1757  0618  7E          	ld	a, (hl)
-1758  0619  C6 0F       	add	a,0x0f
-1759  061B  77          	ld	(hl), a
-1760  061C  CD 27 06    	call	_player_pick_item
-1761  061F  21 00 00    	ld	hl,_sprite_curr_index
-1762  0622  34          	inc	(hl)
-1763  0623  CD 27 06    	call	_player_pick_item
-1764  0626              l_player_check_map_00110:
-1765  0626  C9          	ret
-1766  0627              	SECTION code_compiler
-1767  0627              ;	---------------------------------
-1768  0627              ; Function player_pick_item
-1769  0627              ; ---------------------------------
-1770  0627              _player_pick_item:
-1771  0627  2A 00 00    	ld	hl,(_sprite_curr_index)
-1772  062A  26 00       	ld	h,0x00
-1773  062C  01 00 00    	ld	bc,_scr_map
-1774  062F  09          	add	hl,bc
-1775  0630  7E          	ld	a,(hl)
-1776  0631  4F          	ld	c,a
-1777  0632  D6 24       	sub	a,0x24
-1778  0634  DA 8C 07    	jp	C,l_player_pick_item_00129
-1779  0637  3E 2F       	ld	a,0x2f
-1780  0639  91          	sub	a,c
-1781  063A  DA 8C 07    	jp	C,l_player_pick_item_00129
-1782  063D  44          	ld	b,h
-1783  063E  CD 00 00    	call	_ay_reset
-1784  0641  21 00 00    	ld	hl,_ay_effect_10
-1785  0644  CD 00 00    	call	_ay_fx_play
-1786  0647  C5          	push	bc
-1787  0648  CD 00 00    	call	_sound_coin
-1788  064B  C1          	pop	bc
-1789  064C  2A 00 00    	ld	hl,(_sprite_curr_index)
-1790  064F  26 00       	ld	h,0x00
-1791  0651  11 00 00    	ld	de,_scr_map
-1792  0654  19          	add	hl,de
-1793  0655  AF          	xor	a,a
-1794  0656  77          	ld	(hl),a
-1795  0657  3A 00 00    	ld	a,(_sprite_curr_index)
-1796  065A  5F          	ld	e,a
-1797  065B  16 00       	ld	d,0x00
-1798  065D  C5          	push	bc
-1799  065E  D5          	push	de
-1800  065F  CD 00 00    	call	_game_obj_set
-1801  0662  F1          	pop	af
-1802  0663  C1          	pop	bc
-1803  0664  3A 00 00    	ld	a,(_sprite_curr_index)
-1804  0667  07          	rlca
-1805  0668  07          	rlca
-1806  0669  07          	rlca
-1807  066A  07          	rlca
-1808  066B  E6 0F       	and	a,0x0f
-1809  066D  07          	rlca
-1810  066E  07          	rlca
-1811  066F  07          	rlca
-1812  0670  07          	rlca
-1813  0671  E6 F0       	and	a,0xf0
-1814  0673  32 00 00    	ld	(_s_lin1),a
-1815  0676  3A 00 00    	ld	a,(_sprite_curr_index)
-1816  0679  E6 0F       	and	a,0x0f
-1817  067B  87          	add	a, a
-1818  067C  32 00 00    	ld	(_s_col1),a
-1819  067F  C5          	push	bc
-1820  0680  21 00 00    	ld	hl,0x0000
-1821  0683  E5          	push	hl
-1822  0684  21 84 03    	ld	hl,0x0384
-1823  0687  E5          	push	hl
-1824  0688  F5          	push	af
-1825  0689  33          	inc	sp
-1826  068A  3A 00 00    	ld	a,(_s_lin1)
-1827  068D  F5          	push	af
-1828  068E  33          	inc	sp
-1829  068F  CD 00 00    	call	_spr_add_anim
-1830  0692  F1          	pop	af
-1831  0693  F1          	pop	af
-1832  0694  F1          	pop	af
-1833  0695  C1          	pop	bc
-1834  0696  79          	ld	a, c
-1835  0697  D6 24       	sub	a,0x24
-1836  0699  DA 8C 07    	jp	C, l_player_pick_item_00129
-1837  069C  3E 2F       	ld	a,0x2f
-1838  069E  91          	sub	a, c
-1839  069F  DA 8C 07    	jp	C, l_player_pick_item_00129
-1840  06A2  79          	ld	a, c
-1841  06A3  C6 DC       	add	a,0xdc
-1842  06A5  4F          	ld	c, a
-1843  06A6  06 00       	ld	b,0x00
-1844  06A8  21 AF 06    	ld	hl,l_player_pick_item_00171
-1845  06AB  09          	add	hl, bc
-1846  06AC  09          	add	hl, bc
-1847  06AD  09          	add	hl, bc
-1848  06AE  E9          	jp	(hl)
-1849  06AF              l_player_pick_item_00171:
-1850  06AF  C3 D3 06    	jp	l_player_pick_item_00101
-1851  06B2  C3 DE 06    	jp	l_player_pick_item_00102
-1852  06B5  C3 E9 06    	jp	l_player_pick_item_00103
-1853  06B8  C3 F4 06    	jp	l_player_pick_item_00104
-1854  06BB  C3 FF 06    	jp	l_player_pick_item_00105
-1855  06BE  C3 11 07    	jp	l_player_pick_item_00107
-1856  06C1  C3 26 07    	jp	l_player_pick_item_00110
-1857  06C4  C3 3B 07    	jp	l_player_pick_item_00113
-1858  06C7  C3 50 07    	jp	l_player_pick_item_00116
-1859  06CA  C3 65 07    	jp	l_player_pick_item_00119
-1860  06CD  C3 7A 07    	jp	l_player_pick_item_00122
-1861  06D0  C3 08 07    	jp	l_player_pick_item_00106
-1862  06D3              l_player_pick_item_00101:
-1863  06D3  21 00 00    	ld	hl,_player_keys
-1864  06D6  36 01       	ld	(hl),0x01
-1865  06D8  CD 00 00    	call	_game_update_stats
-1866  06DB  C3 8C 07    	jp	l_player_pick_item_00129
-1867  06DE              l_player_pick_item_00102:
-1868  06DE  21 01 00    	ld	hl, +(_player_keys + 0x0001)
-1869  06E1  36 01       	ld	(hl),0x01
-1870  06E3  CD 00 00    	call	_game_update_stats
-1871  06E6  C3 8C 07    	jp	l_player_pick_item_00129
-1872  06E9              l_player_pick_item_00103:
-1873  06E9  21 02 00    	ld	hl, +(_player_keys + 0x0002)
-1874  06EC  36 01       	ld	(hl),0x01
-1875  06EE  CD 00 00    	call	_game_update_stats
-1876  06F1  C3 8C 07    	jp	l_player_pick_item_00129
-1877  06F4              l_player_pick_item_00104:
-1878  06F4  21 03 00    	ld	hl, +(_player_keys + 0x0003)
-1879  06F7  36 01       	ld	(hl),0x01
-1880  06F9  CD 00 00    	call	_game_update_stats
-1881  06FC  C3 8C 07    	jp	l_player_pick_item_00129
-1882  06FF              l_player_pick_item_00105:
-1883  06FF  21 01 00    	ld	hl,0x0001
-1884  0702  CD 35 0A    	call	_player_score_add
-1885  0705  C3 8C 07    	jp	l_player_pick_item_00129
-1886  0708              l_player_pick_item_00106:
-1887  0708  21 0A 00    	ld	hl,0x000a
-1888  070B  CD 35 0A    	call	_player_score_add
-1889  070E  C3 8C 07    	jp	l_player_pick_item_00129
-1890  0711              l_player_pick_item_00107:
-1891  0711  21 00 00    	ld	hl,_player_str
-1892  0714  34          	inc	(hl)
-1893  0715  21 00 00    	ld	hl,_player_max_vita
-1894  0718  7E          	ld	a, (hl)
-1895  0719  D6 C8       	sub	a,0xc8
-1896  071B  30 6F       	jr	NC,l_player_pick_item_00129
-1897  071D  7E          	ld	a, (hl)
-1898  071E  C6 0A       	add	a,0x0a
-1899  0720  77          	ld	(hl), a
-1900  0721  CD 00 00    	call	_game_update_stats
-1901  0724  18 66       	jr	l_player_pick_item_00129
-1902  0726              l_player_pick_item_00110:
-1903  0726  21 00 00    	ld	hl,_player_str
-1904  0729  34          	inc	(hl)
-1905  072A  21 00 00    	ld	hl,_player_max_vita
-1906  072D  7E          	ld	a, (hl)
-1907  072E  D6 C8       	sub	a,0xc8
-1908  0730  30 5A       	jr	NC,l_player_pick_item_00129
-1909  0732  7E          	ld	a, (hl)
-1910  0733  C6 0A       	add	a,0x0a
-1911  0735  77          	ld	(hl), a
-1912  0736  CD 00 00    	call	_game_update_stats
-1913  0739  18 51       	jr	l_player_pick_item_00129
-1914  073B              l_player_pick_item_00113:
-1915  073B  21 00 00    	ld	hl,_player_str
-1916  073E  34          	inc	(hl)
-1917  073F  21 00 00    	ld	hl,_player_max_vita
-1918  0742  7E          	ld	a, (hl)
-1919  0743  D6 C8       	sub	a,0xc8
-1920  0745  30 45       	jr	NC,l_player_pick_item_00129
-1921  0747  7E          	ld	a, (hl)
-1922  0748  C6 0A       	add	a,0x0a
-1923  074A  77          	ld	(hl), a
-1924  074B  CD 00 00    	call	_game_update_stats
-1925  074E  18 3C       	jr	l_player_pick_item_00129
-1926  0750              l_player_pick_item_00116:
-1927  0750  21 00 00    	ld	hl,_player_int
-1928  0753  34          	inc	(hl)
-1929  0754  21 00 00    	ld	hl,_player_max_mana
-1930  0757  7E          	ld	a, (hl)
-1931  0758  D6 C8       	sub	a,0xc8
-1932  075A  30 30       	jr	NC,l_player_pick_item_00129
-1933  075C  7E          	ld	a, (hl)
-1934  075D  C6 0A       	add	a,0x0a
-1935  075F  77          	ld	(hl), a
-1936  0760  CD 00 00    	call	_game_update_stats
-1937  0763  18 27       	jr	l_player_pick_item_00129
-1938  0765              l_player_pick_item_00119:
-1939  0765  21 00 00    	ld	hl,_player_int
-1940  0768  34          	inc	(hl)
-1941  0769  21 00 00    	ld	hl,_player_max_mana
-1942  076C  7E          	ld	a, (hl)
-1943  076D  D6 C8       	sub	a,0xc8
-1944  076F  30 1B       	jr	NC,l_player_pick_item_00129
-1945  0771  7E          	ld	a, (hl)
-1946  0772  C6 0A       	add	a,0x0a
-1947  0774  77          	ld	(hl), a
-1948  0775  CD 00 00    	call	_game_update_stats
-1949  0778  18 12       	jr	l_player_pick_item_00129
-1950  077A              l_player_pick_item_00122:
-1951  077A  21 00 00    	ld	hl,_player_int
-1952  077D  34          	inc	(hl)
-1953  077E  21 00 00    	ld	hl,_player_max_mana
-1954  0781  7E          	ld	a, (hl)
-1955  0782  D6 C8       	sub	a,0xc8
-1956  0784  D0          	ret	NC
-1957  0785  7E          	ld	a, (hl)
-1958  0786  C6 0A       	add	a,0x0a
-1959  0788  77          	ld	(hl), a
-1960  0789  CD 00 00    	call	_game_update_stats
-1961  078C              l_player_pick_item_00129:
-1962  078C  C9          	ret
-1963  078D              	SECTION code_compiler
-1964  078D              ;	---------------------------------
-1965  078D              ; Function player_hit_platform
-1966  078D              ; ---------------------------------
-1967  078D              _player_hit_platform:
-1968  078D  CD 00 00    	call	___sdcc_enter_ix
-1969  0790  F5          	push	af
-1970  0791  3A 00 00    	ld	a,(_player_hit_lin)
-1971  0794  B7          	or	a, a
-1972  0795  C2 00 0A    	jp	NZ, l_player_hit_platform_00144
-1973  0798  21 07 00    	ld	hl,+(_lin + 0x0007)
-1974  079B  4E          	ld	c, (hl)
-1975  079C  3E 10       	ld	a,0x10
-1976  079E  91          	sub	a, c
-1977  079F  D2 00 0A    	jp	NC, l_player_hit_platform_00144
-1978  07A2  01 00 00    	ld	bc,_scr_map
-1979  07A5  2A 00 00    	ld	hl,(_index1)
-1980  07A8  09          	add	hl,bc
-1981  07A9  7E          	ld	a,(hl)
-1982  07AA  D6 45       	sub	a,0x45
-1983  07AC  DA 00 0A    	jp	C, l_player_hit_platform_00144
-1984  07AF  2A 00 00    	ld	hl,(_curr_time)
-1985  07B2  22 0E 00    	ld	(_spr_timer + 0x000e),hl
-1986  07B5  2A 07 00    	ld	hl,(_lin + 0x0007)
-1987  07B8  26 00       	ld	h,0x00
-1988  07BA  01 F8 FF    	ld	bc,0xfff8
-1989  07BD  09          	add	hl,bc
-1990  07BE  EB          	ex	de,hl
-1991  07BF  06 04       	ld	b,0x04
-1992  07C1              l_player_hit_platform_00249:
-1993  07C1  CB 2A       	sra	d
-1994  07C3  CB 1B       	rr	e
-1995  07C5  10 FA       	djnz	l_player_hit_platform_00249
-1996  07C7  7B          	ld	a, e
-1997  07C8  07          	rlca
-1998  07C9  07          	rlca
-1999  07CA  07          	rlca
-2000  07CB  07          	rlca
-2001  07CC  E6 F0       	and	a,0xf0
-2002  07CE  C6 08       	add	a,0x08
-2003  07D0  32 00 00    	ld	(_player_hit_lin),a
-2004  07D3  21 07 00    	ld	hl,+(_col + 0x0007)
-2005  07D6  4E          	ld	c, (hl)
-2006  07D7  CB 41       	bit	0, c
-2007  07D9  20 06       	jr	NZ,l_player_hit_platform_00111
-2008  07DB  21 00 00    	ld	hl,_player_hit_col
-2009  07DE  71          	ld	(hl), c
-2010  07DF  18 2D       	jr	l_player_hit_platform_00112
-2011  07E1              l_player_hit_platform_00111:
-2012  07E1  21 07 00    	ld	hl,+(_state + 0x0007)
-2013  07E4  5E          	ld	e, (hl)
-2014  07E5  41          	ld	b, c
-2015  07E6  04          	inc	b
-2016  07E7  0D          	dec	c
-2017  07E8  CB 5B       	bit	3, e
-2018  07EA  28 12       	jr	Z,l_player_hit_platform_00108
-2019  07EC  3A 00 00    	ld	a,(_g_player_hit_right)
-2020  07EF  B7          	or	a, a
-2021  07F0  28 06       	jr	Z,l_player_hit_platform_00102
-2022  07F2  21 00 00    	ld	hl,_player_hit_col
-2023  07F5  70          	ld	(hl), b
-2024  07F6  18 16       	jr	l_player_hit_platform_00112
-2025  07F8              l_player_hit_platform_00102:
-2026  07F8  21 00 00    	ld	hl,_player_hit_col
-2027  07FB  71          	ld	(hl), c
-2028  07FC  18 10       	jr	l_player_hit_platform_00112
-2029  07FE              l_player_hit_platform_00108:
-2030  07FE  3A 00 00    	ld	a,(_g_player_hit_left)
-2031  0801  B7          	or	a, a
-2032  0802  28 06       	jr	Z,l_player_hit_platform_00105
-2033  0804  21 00 00    	ld	hl,_player_hit_col
-2034  0807  71          	ld	(hl), c
-2035  0808  18 04       	jr	l_player_hit_platform_00112
-2036  080A              l_player_hit_platform_00105:
-2037  080A  21 00 00    	ld	hl,_player_hit_col
-2038  080D  70          	ld	(hl), b
-2039  080E              l_player_hit_platform_00112:
-2040  080E  01 00 00    	ld	bc,_scr_map
-2041  0811  2A 00 00    	ld	hl,(_index1)
-2042  0814  09          	add	hl,bc
-2043  0815  7E          	ld	a,(hl)
-2044  0816  FE 4D       	cp	a,0x4d
-2045  0818  20 3B       	jr	NZ,l_player_hit_platform_00114
-2046  081A  AF          	xor	a,a
-2047  081B  77          	ld	(hl),a
-2048  081C  2A 00 00    	ld	hl,(_index0)
-2049  081F  E5          	push	hl
-2050  0820  CD 00 00    	call	_game_obj_set
-2051  0823  F1          	pop	af
-2052  0824  21 00 00    	ld	hl,_index1
-2053  0827  7E          	ld	a, (hl)
-2054  0828  E6 0F       	and	a,0x0f
-2055  082A  87          	add	a, a
-2056  082B  4F          	ld	c, a
-2057  082C  23          	inc	hl
-2058  082D  56          	ld	d,(hl)
-2059  082E  2B          	dec	hl
-2060  082F  7E          	ld	a, (hl)
-2061  0830  06 04       	ld	b,0x04
-2062  0832              l_player_hit_platform_00255:
-2063  0832  CB 3A       	srl	d
-2064  0834  1F          	rra
-2065  0835  10 FB       	djnz	l_player_hit_platform_00255
-2066  0837  07          	rlca
-2067  0838  07          	rlca
-2068  0839  07          	rlca
-2069  083A  07          	rlca
-2070  083B  E6 F0       	and	a,0xf0
-2071  083D  47          	ld	b, a
-2072  083E  21 00 00    	ld	hl,0x0000
-2073  0841  E5          	push	hl
-2074  0842  21 87 03    	ld	hl,0x0387
-2075  0845  E5          	push	hl
-2076  0846  79          	ld	a, c
-2077  0847  48          	ld	c,b
-2078  0848  47          	ld	b,a
-2079  0849  C5          	push	bc
-2080  084A  CD 00 00    	call	_spr_add_anim
-2081  084D  F1          	pop	af
-2082  084E  F1          	pop	af
-2083  084F  F1          	pop	af
-2084  0850  2E 01       	ld	l,0x01
-2085  0852  C3 02 0A    	jp	l_player_hit_platform_00147
-2086  0855              l_player_hit_platform_00114:
-2087  0855  FE 5C       	cp	a,0x5c
-2088  0857  28 05       	jr	Z,l_player_hit_platform_00140
-2089  0859  D6 5D       	sub	a,0x5d
-2090  085B  C2 F4 09    	jp	NZ,l_player_hit_platform_00141
-2091  085E              l_player_hit_platform_00140:
-2092  085E  21 00 00    	ld	hl,_tmp0
-2093  0861  36 00       	ld	(hl),0x00
-2094  0863  3A 00 00    	ld	a,(_game_boss)
-2095  0866  B7          	or	a, a
-2096  0867  28 0B       	jr	Z,l_player_hit_platform_00173
-2097  0869  3A 00 00    	ld	a,(_game_mush_count)
-2098  086C  B7          	or	a, a
-2099  086D  28 05       	jr	Z,l_player_hit_platform_00173
-2100  086F  2E 00       	ld	l,0x00
-2101  0871  C3 02 0A    	jp	l_player_hit_platform_00147
-2102  0874              l_player_hit_platform_00173:
-2103  0874              l_player_hit_platform_00137:
-2104  0874  21 00 00    	ld	hl,_tmp0
-2105  0877  7E          	ld	a, (hl)
-2106  0878  D6 07       	sub	a,0x07
-2107  087A  D2 F4 09    	jp	NC, l_player_hit_platform_00141
-2108  087D  4E          	ld	c,(hl)
-2109  087E  06 00       	ld	b,0x00
-2110  0880  21 00 00    	ld	hl,_mush_index
-2111  0883  09          	add	hl,bc
-2112  0884  4E          	ld	c, (hl)
-2113  0885  06 00       	ld	b,0x00
-2114  0887  2A 00 00    	ld	hl,(_index1)
-2115  088A  AF          	xor	a,a
-2116  088B  ED 42       	sbc	hl,bc
-2117  088D  C2 ED 09    	jp	NZ,l_player_hit_platform_00136
-2118  0890  3A 07 00    	ld	a,(_lin + 0x0007)
-2119  0893  07          	rlca
-2120  0894  07          	rlca
-2121  0895  07          	rlca
-2122  0896  07          	rlca
-2123  0897  E6 0F       	and	a,0x0f
-2124  0899  07          	rlca
-2125  089A  07          	rlca
-2126  089B  07          	rlca
-2127  089C  07          	rlca
-2128  089D  E6 F0       	and	a,0xf0
-2129  089F  C6 E0       	add	a,0xe0
-2130  08A1  32 00 00    	ld	(_s_lin1),a
-2131  08A4  3A 07 00    	ld	a,(_col + 0x0007)
-2132  08A7  CB 3F       	srl	a
-2133  08A9  87          	add	a, a
-2134  08AA  32 00 00    	ld	(_s_col1),a
-2135  08AD  21 00 00    	ld	hl,_tmp
-2136  08B0  36 00       	ld	(hl),0x00
-2137  08B2              l_player_hit_platform_00120:
-2138  08B2  21 00 00    	ld	hl,_tmp
-2139  08B5  7E          	ld	a, (hl)
-2140  08B6  D6 07       	sub	a,0x07
-2141  08B8  30 1C       	jr	NC,l_player_hit_platform_00122
-2142  08BA  4E          	ld	c,(hl)
-2143  08BB  06 00       	ld	b,0x00
-2144  08BD  21 00 00    	ld	hl,_mush_index
-2145  08C0  09          	add	hl,bc
-2146  08C1  4E          	ld	c, (hl)
-2147  08C2  06 00       	ld	b,0x00
-2148  08C4  21 00 00    	ld	hl,_index1
-2149  08C7  7E          	ld	a, (hl)
-2150  08C8  91          	sub	a, c
-2151  08C9  20 05       	jr	NZ,l_player_hit_platform_00261
-2152  08CB  23          	inc	hl
-2153  08CC  7E          	ld	a, (hl)
-2154  08CD  90          	sub	a, b
-2155  08CE  28 06       	jr	Z,l_player_hit_platform_00122
-2156  08D0              l_player_hit_platform_00261:
-2157  08D0  21 00 00    	ld	hl,_tmp
-2158  08D3  34          	inc	(hl)
-2159  08D4  18 DC       	jr	l_player_hit_platform_00120
-2160  08D6              l_player_hit_platform_00122:
-2161  08D6  2A 00 00    	ld	hl,(_tmp)
-2162  08D9  26 00       	ld	h,0x00
-2163  08DB  01 00 00    	ld	bc,_mush_class
-2164  08DE  09          	add	hl,bc
-2165  08DF  7E          	ld	a,(hl)
-2166  08E0  FE 78       	cp	a,0x78
-2167  08E2  28 18       	jr	Z,l_player_hit_platform_00123
-2168  08E4  FE 79       	cp	a,0x79
-2169  08E6  28 2F       	jr	Z,l_player_hit_platform_00124
-2170  08E8  FE 7A       	cp	a,0x7a
-2171  08EA  28 5F       	jr	Z,l_player_hit_platform_00126
-2172  08EC  FE 7B       	cp	a,0x7b
-2173  08EE  28 41       	jr	Z,l_player_hit_platform_00125
-2174  08F0  FE 7C       	cp	a,0x7c
-2175  08F2  CA 7F 09    	jp	Z,l_player_hit_platform_00128
-2176  08F5  D6 7D       	sub	a,0x7d
-2177  08F7  28 6C       	jr	Z,l_player_hit_platform_00127
-2178  08F9  C3 97 09    	jp	l_player_hit_platform_00129
-2179  08FC              l_player_hit_platform_00123:
-2180  08FC  2E 02       	ld	l,0x02
-2181  08FE  CD 00 00    	call	_zx_border_fastcall
-2182  0901  3A 00 00    	ld	a,(_s_col1)
-2183  0904  21 06 FF    	ld	hl,0xff06
-2184  0907  E5          	push	hl
-2185  0908  F5          	push	af
-2186  0909  33          	inc	sp
-2187  090A  3A 00 00    	ld	a,(_s_lin1)
-2188  090D  F5          	push	af
-2189  090E  33          	inc	sp
-2190  090F  CD 00 00    	call	_enemy_init
-2191  0912  F1          	pop	af
-2192  0913  F1          	pop	af
-2193  0914  C3 97 09    	jp	l_player_hit_platform_00129
-2194  0917              l_player_hit_platform_00124:
-2195  0917  2E 02       	ld	l,0x02
-2196  0919  CD 00 00    	call	_zx_border_fastcall
-2197  091C  3A 00 00    	ld	a,(_s_col1)
-2198  091F  21 06 01    	ld	hl,0x0106
-2199  0922  E5          	push	hl
-2200  0923  F5          	push	af
-2201  0924  33          	inc	sp
-2202  0925  3A 00 00    	ld	a,(_s_lin1)
-2203  0928  F5          	push	af
-2204  0929  33          	inc	sp
-2205  092A  CD 00 00    	call	_enemy_init
-2206  092D  F1          	pop	af
-2207  092E  F1          	pop	af
-2208  092F  18 66       	jr	l_player_hit_platform_00129
-2209  0931              l_player_hit_platform_00125:
-2210  0931  2E 01       	ld	l,0x01
-2211  0933  CD 00 00    	call	_zx_border_fastcall
-2212  0936  3A 00 00    	ld	a,(_s_col1)
-2213  0939  21 07 01    	ld	hl,0x0107
-2214  093C  E5          	push	hl
-2215  093D  F5          	push	af
-2216  093E  33          	inc	sp
-2217  093F  3A 00 00    	ld	a,(_s_lin1)
-2218  0942  F5          	push	af
-2219  0943  33          	inc	sp
-2220  0944  CD 00 00    	call	_enemy_init
-2221  0947  F1          	pop	af
-2222  0948  F1          	pop	af
-2223  0949  18 4C       	jr	l_player_hit_platform_00129
-2224  094B              l_player_hit_platform_00126:
-2225  094B  2E 01       	ld	l,0x01
-2226  094D  CD 00 00    	call	_zx_border_fastcall
-2227  0950  3A 00 00    	ld	a,(_s_col1)
-2228  0953  21 07 FF    	ld	hl,0xff07
-2229  0956  E5          	push	hl
-2230  0957  F5          	push	af
-2231  0958  33          	inc	sp
-2232  0959  3A 00 00    	ld	a,(_s_lin1)
-2233  095C  F5          	push	af
-2234  095D  33          	inc	sp
-2235  095E  CD 00 00    	call	_enemy_init
-2236  0961  F1          	pop	af
-2237  0962  F1          	pop	af
-2238  0963  18 32       	jr	l_player_hit_platform_00129
-2239  0965              l_player_hit_platform_00127:
-2240  0965  2E 04       	ld	l,0x04
-2241  0967  CD 00 00    	call	_zx_border_fastcall
-2242  096A  3A 00 00    	ld	a,(_s_col1)
-2243  096D  21 08 01    	ld	hl,0x0108
-2244  0970  E5          	push	hl
-2245  0971  F5          	push	af
-2246  0972  33          	inc	sp
-2247  0973  3A 00 00    	ld	a,(_s_lin1)
-2248  0976  F5          	push	af
-2249  0977  33          	inc	sp
-2250  0978  CD 00 00    	call	_enemy_init
-2251  097B  F1          	pop	af
-2252  097C  F1          	pop	af
-2253  097D  18 18       	jr	l_player_hit_platform_00129
-2254  097F              l_player_hit_platform_00128:
-2255  097F  2E 04       	ld	l,0x04
-2256  0981  CD 00 00    	call	_zx_border_fastcall
-2257  0984  3A 00 00    	ld	a,(_s_col1)
-2258  0987  21 08 FF    	ld	hl,0xff08
-2259  098A  E5          	push	hl
-2260  098B  F5          	push	af
-2261  098C  33          	inc	sp
-2262  098D  3A 00 00    	ld	a,(_s_lin1)
-2263  0990  F5          	push	af
-2264  0991  33          	inc	sp
-2265  0992  CD 00 00    	call	_enemy_init
-2266  0995  F1          	pop	af
-2267  0996  F1          	pop	af
-2268  0997              l_player_hit_platform_00129:
-2269  0997  21 00 00    	ld	hl,_game_mush_count
-2270  099A  34          	inc	(hl)
-2271  099B  3A 00 00    	ld	a,(_game_boss)
-2272  099E  B7          	or	a, a
-2273  099F  20 4C       	jr	NZ,l_player_hit_platform_00136
-2274  09A1  2A 00 00    	ld	hl,(_index1)
-2275  09A4  01 F0 FF    	ld	bc,0xfff0
-2276  09A7  09          	add	hl,bc
-2277  09A8  01 00 00    	ld	bc,_scr_map
-2278  09AB  09          	add	hl,bc
-2279  09AC  36 00       	ld	(hl),0x00
-2280  09AE  3E 00       	ld	a, +((_scr_map) & 0xFF)
-2281  09B0  21 00 00    	ld	hl,_index1
-2282  09B3  86          	add	a, (hl)
-2283  09B4  DD 77 FE    	ld	(ix-2),a
-2284  09B7  3E 00       	ld	a, +((_scr_map) / 256)
-2285  09B9  23          	inc	hl
-2286  09BA  8E          	adc	a, (hl)
-2287  09BB  DD 77 FF    	ld	(ix-1),a
-2288  09BE  E1          	pop	hl
-2289  09BF  7E          	ld	a,(hl)
-2290  09C0  E5          	push	hl
-2291  09C1  D6 5C       	sub	a,0x5c
-2292  09C3  20 06       	jr	NZ,l_player_hit_platform_00131
-2293  09C5  E1          	pop	hl
-2294  09C6  E5          	push	hl
-2295  09C7  36 4F       	ld	(hl),0x4f
-2296  09C9  18 04       	jr	l_player_hit_platform_00132
-2297  09CB              l_player_hit_platform_00131:
-2298  09CB  E1          	pop	hl
-2299  09CC  E5          	push	hl
-2300  09CD  36 54       	ld	(hl),0x54
-2301  09CF              l_player_hit_platform_00132:
-2302  09CF  2A 00 00    	ld	hl,(_index1)
-2303  09D2  01 F0 FF    	ld	bc,0xfff0
-2304  09D5  09          	add	hl,bc
-2305  09D6  E5          	push	hl
-2306  09D7  CD 00 00    	call	_game_obj_set
-2307  09DA  F1          	pop	af
-2308  09DB  3A 00 00    	ld	a,(_s_lin1)
-2309  09DE  C6 10       	add	a,0x10
-2310  09E0  4F          	ld	c, a
-2311  09E1  3A 00 00    	ld	a, (_s_col1)
-2312  09E4  47          	ld	b,a
-2313  09E5  C5          	push	bc
-2314  09E6  3E 4F       	ld	a,0x4f
-2315  09E8  F5          	push	af
-2316  09E9  33          	inc	sp
-2317  09EA  CD 00 00    	call	_NIRVANAP_drawT_callee
-2318  09ED              l_player_hit_platform_00136:
-2319  09ED  21 00 00    	ld	hl,_tmp0
-2320  09F0  34          	inc	(hl)
-2321  09F1  C3 74 08    	jp	l_player_hit_platform_00137
-2322  09F4              l_player_hit_platform_00141:
-2323  09F4  2E 01       	ld	l,0x01
-2324  09F6  CD 00 00    	call	_spr_brick_anim
-2325  09F9  CD 00 00    	call	_sound_hit_brick
-2326  09FC  2E 01       	ld	l,0x01
-2327  09FE  18 02       	jr	l_player_hit_platform_00147
-2328  0A00              l_player_hit_platform_00144:
-2329  0A00  2E 00       	ld	l,0x00
-2330  0A02              l_player_hit_platform_00147:
-2331  0A02  F1          	pop	af
-2332  0A03  DD E1       	pop	ix
-2333  0A05  C9          	ret
-2334  0A06              	SECTION code_compiler
-2335  0A06              ;	---------------------------------
-2336  0A06              ; Function player_hit_platform_clear
-2337  0A06              ; ---------------------------------
-2338  0A06              _player_hit_platform_clear:
-2339  0A06  01 04 00    	ld	bc,0x0004
-2340  0A09  C5          	push	bc
-2341  0A0A  2A 0E 00    	ld	hl,(_spr_timer + 0x000e)
-2342  0A0D  E5          	push	hl
-2343  0A0E  CD 00 00    	call	_game_check_time
-2344  0A11  F1          	pop	af
-2345  0A12  F1          	pop	af
-2346  0A13  7D          	ld	a, l
-2347  0A14  B7          	or	a, a
-2348  0A15  C8          	ret	Z
-2349  0A16  2A FF FF    	ld	hl,(_player_hit_col - 1)
-2350  0A19  3A 00 00    	ld	a,(_player_hit_lin)
-2351  0A1C  6F          	ld	l,a
-2352  0A1D  E5          	push	hl
-2353  0A1E  CD 00 00    	call	_spr_calc_index
-2354  0A21  F1          	pop	af
-2355  0A22  22 00 00    	ld	(_index1),hl
-2356  0A25  2E 00       	ld	l,0x00
-2357  0A27  CD 00 00    	call	_spr_brick_anim
-2358  0A2A  21 00 00    	ld	hl,_player_hit_lin
-2359  0A2D  36 00       	ld	(hl),0x00
-2360  0A2F  21 00 00    	ld	hl,_player_hit_col
-2361  0A32  36 00       	ld	(hl),0x00
-2362  0A34  C9          	ret
-2363  0A35              	SECTION code_compiler
-2364  0A35              ;	---------------------------------
-2365  0A35              ; Function player_score_add
-2366  0A35              ; ---------------------------------
-2367  0A35              _player_score_add:
-2368  0A35  ED 4B 00 00 	ld	bc,(_player_score)
-2369  0A39  09          	add	hl,bc
-2370  0A3A  22 00 00    	ld	(_player_score),hl
-2371  0A3D  21 00 00    	ld	hl,_player_lvl
-2372  0A40  7E          	ld	a, (hl)
-2373  0A41  D6 14       	sub	a,0x14
-2374  0A43  30 3C       	jr	NC,l_player_score_add_00104
-2375  0A45  01 00 00    	ld	bc,_player_lvl_table+0
-2376  0A48  6E          	ld	l,(hl)
-2377  0A49  26 00       	ld	h,0x00
-2378  0A4B  29          	add	hl, hl
-2379  0A4C  09          	add	hl, bc
-2380  0A4D  4E          	ld	c, (hl)
-2381  0A4E  23          	inc	hl
-2382  0A4F  46          	ld	b, (hl)
-2383  0A50  21 00 00    	ld	hl,_player_score
-2384  0A53  7E          	ld	a, (hl)
-2385  0A54  91          	sub	a, c
-2386  0A55  23          	inc	hl
-2387  0A56  7E          	ld	a, (hl)
-2388  0A57  98          	sbc	a, b
-2389  0A58  38 27       	jr	C,l_player_score_add_00104
-2390  0A5A  21 00 00    	ld	hl,_player_lvl
-2391  0A5D  34          	inc	(hl)
-2392  0A5E  21 00 00    	ld	hl,___str_0
-2393  0A61  E5          	push	hl
-2394  0A62  21 0C 0C    	ld	hl,0x0c0c
-2395  0A65  E5          	push	hl
-2396  0A66  CD 00 00    	call	_zx_print_str
-2397  0A69  AF          	xor	a, a
-2398  0A6A  F5          	push	af
-2399  0A6B  33          	inc	sp
-2400  0A6C  21 19 00    	ld	hl,0x0019
-2401  0A6F  E5          	push	hl
-2402  0A70  21 0C 15    	ld	hl,0x150c
-2403  0A73  E5          	push	hl
-2404  0A74  3E 0C       	ld	a,0x0c
-2405  0A76  F5          	push	af
-2406  0A77  33          	inc	sp
-2407  0A78  CD 00 00    	call	_game_colour_message
-2408  0A7B  F1          	pop	af
-2409  0A7C  F1          	pop	af
-2410  0A7D  F1          	pop	af
-2411  0A7E  CD 00 00    	call	_game_update_stats
-2412  0A81              l_player_score_add_00104:
-2413  0A81  3A 00 00    	ld	a,(_game_score_top)
-2414  0A84  21 00 00    	ld	hl,_player_score
-2415  0A87  96          	sub	a, (hl)
-2416  0A88  3A 01 00    	ld	a,(_game_score_top + 1)
-2417  0A8B  23          	inc	hl
-2418  0A8C  9E          	sbc	a, (hl)
-2419  0A8D  30 06       	jr	NC,l_player_score_add_00106
-2420  0A8F  2A 00 00    	ld	hl,(_player_score)
-2421  0A92  22 00 00    	ld	(_game_score_top),hl
-2422  0A95              l_player_score_add_00106:
-2423  0A95  CD 00 00    	call	_game_print_score
-2424  0A98  C9          	ret
-2425  0A99              	SECTION rodata_compiler
+1212  0266  3A 07 00    	ld	a,(_lin + 0x0007)
+1213  0269  32 00 00    	ld	(_s_lin0),a
+1214  026C  3A 07 00    	ld	a,(_col + 0x0007)
+1215  026F  32 00 00    	ld	(_s_col0),a
+1216  0272  21 07 00    	ld	hl,+(_tile + 0x0007)
+1217  0275  4E          	ld	c, (hl)
+1218  0276  21 07 00    	ld	hl,+(_colint + 0x0007)
+1219  0279  46          	ld	b, (hl)
+1220  027A  79          	ld	a, c
+1221  027B  80          	add	a, b
+1222  027C  32 00 00    	ld	(_s_tile0),a
+1223  027F  3A 07 00    	ld	a,(_state + 0x0007)
+1224  0282  32 00 00    	ld	(_s_state),a
+1225  0285  21 00 00    	ld	hl,_s_state
+1226  0288  CB 46       	bit	0, (hl)
+1227  028A  20 07       	jr	NZ,l_player_move_00111
+1228  028C  21 00 00    	ld	hl,_s_state
+1229  028F  CB 4E       	bit	1, (hl)
+1230  0291  28 49       	jr	Z,l_player_move_00112
+1231  0293              l_player_move_00111:
+1232  0293  CD 78 05    	call	_player_fire
+1233  0296  3A 00 00    	ld	a,(_player_vel_y)
+1234  0299  21 00 00    	ld	hl,_player_vel_y1
+1235  029C  96          	sub	a, (hl)
+1236  029D  E2 A2 02    	jp	PO, l_player_move_00156
+1237  02A0  EE 80       	xor	a,0x80
+1238  02A2              l_player_move_00156:
+1239  02A2  F2 C5 02    	jp	P, l_player_move_00106
+1240  02A5  21 00 00    	ld	hl,_dirs
+1241  02A8  CB 56       	bit	2, (hl)
+1242  02AA  28 09       	jr	Z,l_player_move_00102
+1243  02AC  21 00 00    	ld	hl,_s_state
+1244  02AF  7E          	ld	a,(hl)
+1245  02B0  F6 08       	or	a,0x08
+1246  02B2  E6 FB       	and	a,0xfb
+1247  02B4  77          	ld	(hl),a
+1248  02B5              l_player_move_00102:
+1249  02B5  21 00 00    	ld	hl,_dirs
+1250  02B8  CB 4E       	bit	1, (hl)
+1251  02BA  28 09       	jr	Z,l_player_move_00106
+1252  02BC  21 00 00    	ld	hl,_s_state
+1253  02BF  7E          	ld	a,(hl)
+1254  02C0  F6 04       	or	a,0x04
+1255  02C2  E6 F7       	and	a,0xf7
+1256  02C4  77          	ld	(hl),a
+1257  02C5              l_player_move_00106:
+1258  02C5  CD EA 0B    	call	_player_move_jump
+1259  02C8  7D          	ld	a, l
+1260  02C9  B7          	or	a, a
+1261  02CA  28 16       	jr	Z,l_player_move_00113
+1262  02CC  3A 00 00    	ld	a,(_player_over_stair)
+1263  02CF  B7          	or	a, a
+1264  02D0  20 10       	jr	NZ,l_player_move_00113
+1265  02D2  21 60 08    	ld	hl,0x0860
+1266  02D5  E5          	push	hl
+1267  02D6  CD D2 03    	call	_player_tile
+1268  02D9  F1          	pop	af
+1269  02DA  18 06       	jr	l_player_move_00113
+1270  02DC              l_player_move_00112:
+1271  02DC  CD ED 03    	call	_player_move_input
+1272  02DF  CD 93 0A    	call	_player_check_floor
+1273  02E2              l_player_move_00113:
+1274  02E2  CD 00 00    	call	_spr_redraw
+1275  02E5  7D          	ld	a, l
+1276  02E6  B7          	or	a, a
+1277  02E7  28 03       	jr	Z,l_player_move_00116
+1278  02E9  CD C1 05    	call	_player_check_map
+1279  02EC              l_player_move_00116:
+1280  02EC  3A 00 00    	ld	a,(_player_hit_lin)
+1281  02EF  B7          	or	a, a
+1282  02F0  28 03       	jr	Z,l_player_move_00118
+1283  02F2  CD 00 0A    	call	_player_hit_platform_clear
+1284  02F5              l_player_move_00118:
+1285  02F5  3A 00 00    	ld	a,(_s_state)
+1286  02F8  32 07 00    	ld	((_state + 0x0007)),a
+1287  02FB  2E 00       	ld	l,0x00
+1288  02FD  C9          	ret
+1289  02FE              	SECTION code_compiler
+1290  02FE              ;	---------------------------------
+1291  02FE              ; Function player_check_stairs_down
+1292  02FE              ; ---------------------------------
+1293  02FE              _player_check_stairs_down:
+1294  02FE  CD 00 00    	call	___sdcc_enter_ix
+1295  0301  3B          	dec	sp
+1296  0302  3A 07 00    	ld	a,(_col + 0x0007)
+1297  0305  DD 86 04    	add	a,(ix+4)
+1298  0308  47          	ld	b, a
+1299  0309  3A 07 00    	ld	a,(_lin + 0x0007)
+1300  030C  C6 10       	add	a,0x10
+1301  030E  4F          	ld	c,a
+1302  030F  C5          	push	bc
+1303  0310  CD 00 00    	call	_spr_calc_index
+1304  0313  F1          	pop	af
+1305  0314  7D          	ld	a,l
+1306  0315  32 00 00    	ld	(_sprite_curr_index),a
+1307  0318  4F          	ld	c,a
+1308  0319  06 00       	ld	b,0x00
+1309  031B  21 00 00    	ld	hl,_scr_map
+1310  031E  09          	add	hl,bc
+1311  031F  7E          	ld	a,(hl)
+1312  0320  4F          	ld	c,a
+1313  0321  D6 44       	sub	a,0x44
+1314  0323  38 05       	jr	C,l_player_check_stairs_down_00107
+1315  0325  3E 47       	ld	a,0x47
+1316  0327  91          	sub	a, c
+1317  0328  30 04       	jr	NC,l_player_check_stairs_down_00108
+1318  032A              l_player_check_stairs_down_00107:
+1319  032A  3E 00       	ld	a,0x00
+1320  032C  18 02       	jr	l_player_check_stairs_down_00109
+1321  032E              l_player_check_stairs_down_00108:
+1322  032E  3E 01       	ld	a,0x01
+1323  0330              l_player_check_stairs_down_00109:
+1324  0330  B7          	or	a, a
+1325  0331  28 09       	jr	Z,l_player_check_stairs_down_00105
+1326  0333  21 00 00    	ld	hl,_player_over_stair
+1327  0336  7E          	ld	a, (hl)
+1328  0337  B7          	or	a, a
+1329  0338  20 02       	jr	NZ,l_player_check_stairs_down_00105
+1330  033A  36 01       	ld	(hl),0x01
+1331  033C              l_player_check_stairs_down_00105:
+1332  033C  33          	inc	sp
+1333  033D  DD E1       	pop	ix
+1334  033F  C9          	ret
+1335  0340              	SECTION code_compiler
+1336  0340              ;	---------------------------------
+1337  0340              ; Function player_check_stairs
+1338  0340              ; ---------------------------------
+1339  0340              _player_check_stairs:
+1340  0340  CD 00 00    	call	___sdcc_enter_ix
+1341  0343  3B          	dec	sp
+1342  0344  5D          	ld	e, l
+1343  0345  3A 07 00    	ld	a,(_col + 0x0007)
+1344  0348  83          	add	a, e
+1345  0349  4F          	ld	c, a
+1346  034A  21 07 00    	ld	hl,+(_lin + 0x0007)
+1347  034D  46          	ld	b, (hl)
+1348  034E  D5          	push	de
+1349  034F  79          	ld	a, c
+1350  0350  48          	ld	c,b
+1351  0351  47          	ld	b,a
+1352  0352  C5          	push	bc
+1353  0353  CD 00 00    	call	_spr_calc_index
+1354  0356  F1          	pop	af
+1355  0357  D1          	pop	de
+1356  0358  7D          	ld	a,l
+1357  0359  32 00 00    	ld	(_sprite_curr_index),a
+1358  035C  4F          	ld	c,a
+1359  035D  06 00       	ld	b,0x00
+1360  035F  21 00 00    	ld	hl,_scr_map
+1361  0362  09          	add	hl,bc
+1362  0363  7E          	ld	a,(hl)
+1363  0364  4F          	ld	c,a
+1364  0365  D6 44       	sub	a,0x44
+1365  0367  38 05       	jr	C,l_player_check_stairs_00111
+1366  0369  3E 47       	ld	a,0x47
+1367  036B  91          	sub	a, c
+1368  036C  30 04       	jr	NC,l_player_check_stairs_00112
+1369  036E              l_player_check_stairs_00111:
+1370  036E  0E 00       	ld	c,0x00
+1371  0370  18 02       	jr	l_player_check_stairs_00113
+1372  0372              l_player_check_stairs_00112:
+1373  0372  0E 01       	ld	c,0x01
+1374  0374              l_player_check_stairs_00113:
+1375  0374  3A 07 00    	ld	a,(_col + 0x0007)
+1376  0377  83          	add	a, e
+1377  0378  57          	ld	d, a
+1378  0379  3A 07 00    	ld	a,(_lin + 0x0007)
+1379  037C  C6 0F       	add	a,0x0f
+1380  037E  47          	ld	b, a
+1381  037F  C5          	push	bc
+1382  0380  58          	ld	e,b
+1383  0381  D5          	push	de
+1384  0382  CD 00 00    	call	_spr_calc_index
+1385  0385  F1          	pop	af
+1386  0386  C1          	pop	bc
+1387  0387  7D          	ld	a,l
+1388  0388  32 00 00    	ld	(_sprite_curr_index),a
+1389  038B  5F          	ld	e,a
+1390  038C  16 00       	ld	d,0x00
+1391  038E  21 00 00    	ld	hl,_scr_map
+1392  0391  19          	add	hl,de
+1393  0392  7E          	ld	a,(hl)
+1394  0393  47          	ld	b,a
+1395  0394  D6 44       	sub	a,0x44
+1396  0396  38 05       	jr	C,l_player_check_stairs_00114
+1397  0398  3E 47       	ld	a,0x47
+1398  039A  90          	sub	a, b
+1399  039B  30 04       	jr	NC,l_player_check_stairs_00115
+1400  039D              l_player_check_stairs_00114:
+1401  039D  06 00       	ld	b,0x00
+1402  039F  18 02       	jr	l_player_check_stairs_00116
+1403  03A1              l_player_check_stairs_00115:
+1404  03A1  06 01       	ld	b,0x01
+1405  03A3              l_player_check_stairs_00116:
+1406  03A3  79          	ld	a, c
+1407  03A4  B7          	or	a,a
+1408  03A5  20 03       	jr	NZ,l_player_check_stairs_00105
+1409  03A7  B0          	or	a,b
+1410  03A8  28 13       	jr	Z,l_player_check_stairs_00106
+1411  03AA              l_player_check_stairs_00105:
+1412  03AA  21 00 00    	ld	hl,_player_over_stair
+1413  03AD  7E          	ld	a, (hl)
+1414  03AE  B7          	or	a, a
+1415  03AF  20 1D       	jr	NZ,l_player_check_stairs_00109
+1416  03B1  36 01       	ld	(hl),0x01
+1417  03B3  21 72 00    	ld	hl,0x0072
+1418  03B6  E5          	push	hl
+1419  03B7  CD D2 03    	call	_player_tile
+1420  03BA  F1          	pop	af
+1421  03BB  18 11       	jr	l_player_check_stairs_00109
+1422  03BD              l_player_check_stairs_00106:
+1423  03BD  21 00 00    	ld	hl,_player_over_stair
+1424  03C0  7E          	ld	a, (hl)
+1425  03C1  B7          	or	a, a
+1426  03C2  28 0A       	jr	Z,l_player_check_stairs_00109
+1427  03C4  36 00       	ld	(hl),0x00
+1428  03C6  21 60 08    	ld	hl,0x0860
+1429  03C9  E5          	push	hl
+1430  03CA  CD D2 03    	call	_player_tile
+1431  03CD  F1          	pop	af
+1432  03CE              l_player_check_stairs_00109:
+1433  03CE  33          	inc	sp
+1434  03CF  DD E1       	pop	ix
+1435  03D1  C9          	ret
+1436  03D2              	SECTION code_compiler
+1437  03D2              ;	---------------------------------
+1438  03D2              ; Function player_tile
+1439  03D2              ; ---------------------------------
+1440  03D2              _player_tile:
+1441  03D2  CD 00 00    	call	___sdcc_enter_ix
+1442  03D5  DD 7E 05    	ld	a,(ix+5)
+1443  03D8  F5          	push	af
+1444  03D9  33          	inc	sp
+1445  03DA  2A FF FF    	ld	hl,(_sprite-1)
+1446  03DD  DD 6E 04    	ld	l,(ix+4)
+1447  03E0  E5          	push	hl
+1448  03E1  CD 00 00    	call	_spr_tile_dir
+1449  03E4  F1          	pop	af
+1450  03E5  33          	inc	sp
+1451  03E6  7D          	ld	a,l
+1452  03E7  32 07 00    	ld	((_tile + 0x0007)),a
+1453  03EA  DD E1       	pop	ix
+1454  03EC  C9          	ret
+1455  03ED              	SECTION code_compiler
+1456  03ED              ;	---------------------------------
+1457  03ED              ; Function player_move_input
+1458  03ED              ; ---------------------------------
+1459  03ED              _player_move_input:
+1460  03ED  CD 66 00    	call	_player_check_input
+1461  03F0  7D          	ld	a, l
+1462  03F1  B7          	or	a, a
+1463  03F2  CA 51 05    	jp	Z, l_player_move_input_00147
+1464  03F5  CD 78 05    	call	_player_fire
+1465  03F8  7D          	ld	a, l
+1466  03F9  B7          	or	a, a
+1467  03FA  28 0A       	jr	Z,l_player_move_input_00102
+1468  03FC  21 00 00    	ld	hl,_dirs
+1469  03FF  36 00       	ld	(hl),0x00
+1470  0401  2E 00       	ld	l,0x00
+1471  0403  C3 77 05    	jp	l_player_move_input_00149
+1472  0406              l_player_move_input_00102:
+1473  0406  21 00 00    	ld	hl,_dirs
+1474  0409  CB 7E       	bit	7, (hl)
+1475  040B  28 54       	jr	Z,l_player_move_input_00106
+1476  040D  21 00 00    	ld	hl,_dirs
+1477  0410  CB 46       	bit	0, (hl)
+1478  0412  28 4D       	jr	Z,l_player_move_input_00106
+1479  0414  21 00 00    	ld	hl,_player_vel_inc
+1480  0417  36 01       	ld	(hl),0x01
+1481  0419  CD 00 00    	call	_ay_is_playing
+1482  041C  7D          	ld	a, l
+1483  041D  D6 03       	sub	a,0x03
+1484  041F  28 06       	jr	Z,l_player_move_input_00104
+1485  0421  21 00 00    	ld	hl,_ay_effect_03
+1486  0424  CD 00 00    	call	_ay_fx_play
+1487  0427              l_player_move_input_00104:
+1488  0427  21 00 00    	ld	hl,_player_over_stair
+1489  042A  36 00       	ld	(hl),0x00
+1490  042C  CD 00 00    	call	_sound_jump
+1491  042F  21 00 00    	ld	hl,_s_state
+1492  0432  7E          	ld	a,(hl)
+1493  0433  F6 01       	or	a,0x01
+1494  0435  E6 FD       	and	a,0xfd
+1495  0437  77          	ld	(hl),a
+1496  0438  3A 07 00    	ld	a,(_lin + 0x0007)
+1497  043B  32 07 00    	ld	((_jump_lin + 0x0007)),a
+1498  043E  3A 00 00    	ld	a,(_s_state)
+1499  0441  32 07 00    	ld	((_state + 0x0007)),a
+1500  0444  21 64 08    	ld	hl,0x0864
+1501  0447  E5          	push	hl
+1502  0448  CD D2 03    	call	_player_tile
+1503  044B  F1          	pop	af
+1504  044C  21 07 00    	ld	hl, +(_sprite_speed_alt + 0x0007)
+1505  044F  36 02       	ld	(hl),0x02
+1506  0451  21 00 00    	ld	hl,_player_slide
+1507  0454  36 00       	ld	(hl),0x00
+1508  0456  3A 00 00    	ld	a,(_player_vel_y0)
+1509  0459  32 00 00    	ld	(_player_vel_y),a
+1510  045C  2E 01       	ld	l,0x01
+1511  045E  C3 77 05    	jp	l_player_move_input_00149
+1512  0461              l_player_move_input_00106:
+1513  0461  21 00 00    	ld	hl,_dirs
+1514  0464  CB 5E       	bit	3, (hl)
+1515  0466  28 20       	jr	Z,l_player_move_input_00111
+1516  0468  21 00 00    	ld	hl,_s_state
+1517  046B  7E          	ld	a,(hl)
+1518  046C  F6 04       	or	a,0x04
+1519  046E  E6 F7       	and	a,0xf7
+1520  0470  77          	ld	(hl),a
+1521  0471  01 07 00    	ld	bc,_state_a+7
+1522  0474  0A          	ld	a, (bc)
+1523  0475  F6 10       	or	a,0x10
+1524  0477  E6 F7       	and	a,0xf7
+1525  0479  02          	ld	(bc),a
+1526  047A  3A 00 00    	ld	a,(_player_over_stair)
+1527  047D  B7          	or	a, a
+1528  047E  28 05       	jr	Z,l_player_move_input_00109
+1529  0480  2E 00       	ld	l,0x00
+1530  0482  CD 40 03    	call	_player_check_stairs
+1531  0485              l_player_move_input_00109:
+1532  0485  CD 00 00    	call	_spr_move_horizontal
+1533  0488              l_player_move_input_00111:
+1534  0488  21 00 00    	ld	hl,_dirs
+1535  048B  CB 56       	bit	2, (hl)
+1536  048D  28 20       	jr	Z,l_player_move_input_00115
+1537  048F  21 00 00    	ld	hl,_s_state
+1538  0492  7E          	ld	a,(hl)
+1539  0493  F6 08       	or	a,0x08
+1540  0495  E6 FB       	and	a,0xfb
+1541  0497  77          	ld	(hl),a
+1542  0498  01 07 00    	ld	bc,_state_a+7
+1543  049B  0A          	ld	a, (bc)
+1544  049C  F6 08       	or	a,0x08
+1545  049E  E6 EF       	and	a,0xef
+1546  04A0  02          	ld	(bc),a
+1547  04A1  3A 00 00    	ld	a,(_player_over_stair)
+1548  04A4  B7          	or	a, a
+1549  04A5  28 05       	jr	Z,l_player_move_input_00113
+1550  04A7  2E 00       	ld	l,0x00
+1551  04A9  CD 40 03    	call	_player_check_stairs
+1552  04AC              l_player_move_input_00113:
+1553  04AC  CD 00 00    	call	_spr_move_horizontal
+1554  04AF              l_player_move_input_00115:
+1555  04AF  21 00 00    	ld	hl,_dirs
+1556  04B2  CB 46       	bit	0, (hl)
+1557  04B4  28 37       	jr	Z,l_player_move_input_00127
+1558  04B6  2E 00       	ld	l,0x00
+1559  04B8  CD 40 03    	call	_player_check_stairs
+1560  04BB  3A 00 00    	ld	a,(_player_over_stair)
+1561  04BE  B7          	or	a, a
+1562  04BF  20 05       	jr	NZ,l_player_move_input_00117
+1563  04C1  2E 01       	ld	l,0x01
+1564  04C3  CD 40 03    	call	_player_check_stairs
+1565  04C6              l_player_move_input_00117:
+1566  04C6  3A 00 00    	ld	a,(_player_over_stair)
+1567  04C9  B7          	or	a, a
+1568  04CA  28 0E       	jr	Z,l_player_move_input_00124
+1569  04CC  CD 00 00    	call	_spr_move_up
+1570  04CF  7D          	ld	a, l
+1571  04D0  B7          	or	a, a
+1572  04D1  28 1A       	jr	Z,l_player_move_input_00127
+1573  04D3  21 00 00    	ld	hl,_player_over_stair
+1574  04D6  36 00       	ld	(hl),0x00
+1575  04D8  18 13       	jr	l_player_move_input_00127
+1576  04DA              l_player_move_input_00124:
+1577  04DA  21 00 00    	ld	hl,_dirs
+1578  04DD  CB 5E       	bit	3, (hl)
+1579  04DF  20 0C       	jr	NZ,l_player_move_input_00127
+1580  04E1  21 00 00    	ld	hl,_dirs
+1581  04E4  CB 56       	bit	2, (hl)
+1582  04E6  20 05       	jr	NZ,l_player_move_input_00127
+1583  04E8  2E 00       	ld	l,0x00
+1584  04EA  C3 77 05    	jp	l_player_move_input_00149
+1585  04ED              l_player_move_input_00127:
+1586  04ED  21 00 00    	ld	hl,_dirs
+1587  04F0  CB 4E       	bit	1, (hl)
+1588  04F2  28 3B       	jr	Z,l_player_move_input_00139
+1589  04F4  AF          	xor	a, a
+1590  04F5  F5          	push	af
+1591  04F6  33          	inc	sp
+1592  04F7  CD FE 02    	call	_player_check_stairs_down
+1593  04FA  33          	inc	sp
+1594  04FB  3A 00 00    	ld	a,(_player_over_stair)
+1595  04FE  B7          	or	a, a
+1596  04FF  20 08       	jr	NZ,l_player_move_input_00129
+1597  0501  3E 01       	ld	a,0x01
+1598  0503  F5          	push	af
+1599  0504  33          	inc	sp
+1600  0505  CD FE 02    	call	_player_check_stairs_down
+1601  0508  33          	inc	sp
+1602  0509              l_player_move_input_00129:
+1603  0509  3A 00 00    	ld	a,(_player_over_stair)
+1604  050C  B7          	or	a, a
+1605  050D  28 0E       	jr	Z,l_player_move_input_00136
+1606  050F  CD 00 00    	call	_spr_move_down
+1607  0512  7D          	ld	a, l
+1608  0513  B7          	or	a, a
+1609  0514  28 19       	jr	Z,l_player_move_input_00139
+1610  0516  21 00 00    	ld	hl,_player_over_stair
+1611  0519  36 00       	ld	(hl),0x00
+1612  051B  18 12       	jr	l_player_move_input_00139
+1613  051D              l_player_move_input_00136:
+1614  051D  21 00 00    	ld	hl,_dirs
+1615  0520  CB 5E       	bit	3, (hl)
+1616  0522  20 0B       	jr	NZ,l_player_move_input_00139
+1617  0524  21 00 00    	ld	hl,_dirs
+1618  0527  CB 56       	bit	2, (hl)
+1619  0529  20 04       	jr	NZ,l_player_move_input_00139
+1620  052B  2E 00       	ld	l,0x00
+1621  052D  18 48       	jr	l_player_move_input_00149
+1622  052F              l_player_move_input_00139:
+1623  052F  3A 00 00    	ld	a,(_s_state)
+1624  0532  32 07 00    	ld	((_state + 0x0007)),a
+1625  0535  3A 00 00    	ld	a,(_player_over_stair)
+1626  0538  B7          	or	a, a
+1627  0539  28 0A       	jr	Z,l_player_move_input_00141
+1628  053B  21 72 00    	ld	hl,0x0072
+1629  053E  E5          	push	hl
+1630  053F  CD D2 03    	call	_player_tile
+1631  0542  F1          	pop	af
+1632  0543  18 08       	jr	l_player_move_input_00142
+1633  0545              l_player_move_input_00141:
+1634  0545  21 60 08    	ld	hl,0x0860
+1635  0548  E5          	push	hl
+1636  0549  CD D2 03    	call	_player_tile
+1637  054C  F1          	pop	af
+1638  054D              l_player_move_input_00142:
+1639  054D  2E 01       	ld	l,0x01
+1640  054F  18 26       	jr	l_player_move_input_00149
+1641  0551              l_player_move_input_00147:
+1642  0551  21 07 00    	ld	hl, +(_colint + 0x0007)
+1643  0554  36 00       	ld	(hl),0x00
+1644  0556  3A 00 00    	ld	a,(_player_over_stair)
+1645  0559  B7          	or	a, a
+1646  055A  28 0A       	jr	Z,l_player_move_input_00144
+1647  055C  21 72 00    	ld	hl,0x0072
+1648  055F  E5          	push	hl
+1649  0560  CD D2 03    	call	_player_tile
+1650  0563  F1          	pop	af
+1651  0564  18 08       	jr	l_player_move_input_00145
+1652  0566              l_player_move_input_00144:
+1653  0566  21 70 01    	ld	hl,0x0170
+1654  0569  E5          	push	hl
+1655  056A  CD D2 03    	call	_player_tile
+1656  056D  F1          	pop	af
+1657  056E              l_player_move_input_00145:
+1658  056E  21 00 00    	ld	hl,_s_state
+1659  0571  7E          	ld	a,(hl)
+1660  0572  E6 F3       	and	a,+(0xf7&0xfb)
+1661  0574  77          	ld	(hl),a
+1662  0575  2E 00       	ld	l,0x00
+1663  0577              l_player_move_input_00149:
+1664  0577  C9          	ret
+1665  0578              	SECTION code_compiler
+1666  0578              ;	---------------------------------
+1667  0578              ; Function player_fire
+1668  0578              ; ---------------------------------
+1669  0578              _player_fire:
+1670  0578  21 00 00    	ld	hl,_dirs
+1671  057B  CB 7E       	bit	7, (hl)
+1672  057D  28 3F       	jr	Z,l_player_fire_00110
+1673  057F  21 00 00    	ld	hl,_dirs
+1674  0582  CB 46       	bit	0, (hl)
+1675  0584  20 38       	jr	NZ,l_player_fire_00110
+1676  0586  21 00 00    	ld	hl,_player_mana
+1677  0589  7E          	ld	a, (hl)
+1678  058A  B7          	or	a, a
+1679  058B  28 2D       	jr	Z,l_player_fire_00107
+1680  058D  3A 07 00    	ld	a,(_bullet_col + 0x0007)
+1681  0590  3C          	inc	a
+1682  0591  20 27       	jr	NZ,l_player_fire_00107
+1683  0593  3E 05       	ld	a,0x05
+1684  0595  96          	sub	a, (hl)
+1685  0596  30 12       	jr	NC,l_player_fire_00104
+1686  0598  CD 00 00    	call	_sound_hit_enemy
+1687  059B  3A 00 00    	ld	a,(_game_god_mode)
+1688  059E  B7          	or	a, a
+1689  059F  20 0E       	jr	NZ,l_player_fire_00105
+1690  05A1  21 00 00    	ld	hl,_player_mana
+1691  05A4  7E          	ld	a, (hl)
+1692  05A5  C6 FB       	add	a,0xfb
+1693  05A7  77          	ld	(hl), a
+1694  05A8  18 05       	jr	l_player_fire_00105
+1695  05AA              l_player_fire_00104:
+1696  05AA  21 00 00    	ld	hl,_player_mana
+1697  05AD  36 00       	ld	(hl),0x00
+1698  05AF              l_player_fire_00105:
+1699  05AF  CD 00 00    	call	_game_update_stats
+1700  05B2  21 07 78    	ld	hl,0x7807
+1701  05B5  E5          	push	hl
+1702  05B6  CD 00 00    	call	_game_shoot_fire
+1703  05B9  F1          	pop	af
+1704  05BA              l_player_fire_00107:
+1705  05BA  2E 01       	ld	l,0x01
+1706  05BC  18 02       	jr	l_player_fire_00112
+1707  05BE              l_player_fire_00110:
+1708  05BE  2E 00       	ld	l,0x00
+1709  05C0              l_player_fire_00112:
+1710  05C0  C9          	ret
+1711  05C1              	SECTION code_compiler
+1712  05C1              ;	---------------------------------
+1713  05C1              ; Function player_check_map
+1714  05C1              ; ---------------------------------
+1715  05C1              _player_check_map:
+1716  05C1  21 07 00    	ld	hl,+(_col + 0x0007)
+1717  05C4  46          	ld	b, (hl)
+1718  05C5  21 07 00    	ld	hl,+(_lin + 0x0007)
+1719  05C8  4E          	ld	c, (hl)
+1720  05C9  C5          	push	bc
+1721  05CA  CD 00 00    	call	_spr_calc_index
+1722  05CD  F1          	pop	af
+1723  05CE  7D          	ld	a,l
+1724  05CF  32 00 00    	ld	(_sprite_curr_index),a
+1725  05D2  21 07 00    	ld	hl,+(_col + 0x0007)
+1726  05D5  4E          	ld	c, (hl)
+1727  05D6  3A 07 00    	ld	a,(_lin + 0x0007)
+1728  05D9  E6 0F       	and	a,0x0f
+1729  05DB  CB 41       	bit	0, c
+1730  05DD  20 17       	jr	NZ,l_player_check_map_00108
+1731  05DF  B7          	or	a, a
+1732  05E0  20 05       	jr	NZ,l_player_check_map_00102
+1733  05E2  CD 21 06    	call	_player_pick_item
+1734  05E5  18 39       	jr	l_player_check_map_00110
+1735  05E7              l_player_check_map_00102:
+1736  05E7  CD 21 06    	call	_player_pick_item
+1737  05EA  21 00 00    	ld	hl,_sprite_curr_index
+1738  05ED  7E          	ld	a, (hl)
+1739  05EE  C6 10       	add	a,0x10
+1740  05F0  77          	ld	(hl), a
+1741  05F1  CD 21 06    	call	_player_pick_item
+1742  05F4  18 2A       	jr	l_player_check_map_00110
+1743  05F6              l_player_check_map_00108:
+1744  05F6  B7          	or	a, a
+1745  05F7  20 0C       	jr	NZ,l_player_check_map_00105
+1746  05F9  CD 21 06    	call	_player_pick_item
+1747  05FC  21 00 00    	ld	hl,_sprite_curr_index
+1748  05FF  34          	inc	(hl)
+1749  0600  CD 21 06    	call	_player_pick_item
+1750  0603  18 1B       	jr	l_player_check_map_00110
+1751  0605              l_player_check_map_00105:
+1752  0605  CD 21 06    	call	_player_pick_item
+1753  0608  21 00 00    	ld	hl,_sprite_curr_index
+1754  060B  34          	inc	(hl)
+1755  060C  CD 21 06    	call	_player_pick_item
+1756  060F  21 00 00    	ld	hl,_sprite_curr_index
+1757  0612  7E          	ld	a, (hl)
+1758  0613  C6 0F       	add	a,0x0f
+1759  0615  77          	ld	(hl), a
+1760  0616  CD 21 06    	call	_player_pick_item
+1761  0619  21 00 00    	ld	hl,_sprite_curr_index
+1762  061C  34          	inc	(hl)
+1763  061D  CD 21 06    	call	_player_pick_item
+1764  0620              l_player_check_map_00110:
+1765  0620  C9          	ret
+1766  0621              	SECTION code_compiler
+1767  0621              ;	---------------------------------
+1768  0621              ; Function player_pick_item
+1769  0621              ; ---------------------------------
+1770  0621              _player_pick_item:
+1771  0621  2A 00 00    	ld	hl,(_sprite_curr_index)
+1772  0624  26 00       	ld	h,0x00
+1773  0626  01 00 00    	ld	bc,_scr_map
+1774  0629  09          	add	hl,bc
+1775  062A  7E          	ld	a,(hl)
+1776  062B  4F          	ld	c,a
+1777  062C  D6 24       	sub	a,0x24
+1778  062E  DA 86 07    	jp	C,l_player_pick_item_00129
+1779  0631  3E 2F       	ld	a,0x2f
+1780  0633  91          	sub	a,c
+1781  0634  DA 86 07    	jp	C,l_player_pick_item_00129
+1782  0637  44          	ld	b,h
+1783  0638  CD 00 00    	call	_ay_reset
+1784  063B  21 00 00    	ld	hl,_ay_effect_10
+1785  063E  CD 00 00    	call	_ay_fx_play
+1786  0641  C5          	push	bc
+1787  0642  CD 00 00    	call	_sound_coin
+1788  0645  C1          	pop	bc
+1789  0646  2A 00 00    	ld	hl,(_sprite_curr_index)
+1790  0649  26 00       	ld	h,0x00
+1791  064B  11 00 00    	ld	de,_scr_map
+1792  064E  19          	add	hl,de
+1793  064F  AF          	xor	a,a
+1794  0650  77          	ld	(hl),a
+1795  0651  3A 00 00    	ld	a,(_sprite_curr_index)
+1796  0654  5F          	ld	e,a
+1797  0655  16 00       	ld	d,0x00
+1798  0657  C5          	push	bc
+1799  0658  D5          	push	de
+1800  0659  CD 00 00    	call	_game_obj_set
+1801  065C  F1          	pop	af
+1802  065D  C1          	pop	bc
+1803  065E  3A 00 00    	ld	a,(_sprite_curr_index)
+1804  0661  07          	rlca
+1805  0662  07          	rlca
+1806  0663  07          	rlca
+1807  0664  07          	rlca
+1808  0665  E6 0F       	and	a,0x0f
+1809  0667  07          	rlca
+1810  0668  07          	rlca
+1811  0669  07          	rlca
+1812  066A  07          	rlca
+1813  066B  E6 F0       	and	a,0xf0
+1814  066D  32 00 00    	ld	(_s_lin1),a
+1815  0670  3A 00 00    	ld	a,(_sprite_curr_index)
+1816  0673  E6 0F       	and	a,0x0f
+1817  0675  87          	add	a, a
+1818  0676  32 00 00    	ld	(_s_col1),a
+1819  0679  C5          	push	bc
+1820  067A  21 00 00    	ld	hl,0x0000
+1821  067D  E5          	push	hl
+1822  067E  21 84 03    	ld	hl,0x0384
+1823  0681  E5          	push	hl
+1824  0682  F5          	push	af
+1825  0683  33          	inc	sp
+1826  0684  3A 00 00    	ld	a,(_s_lin1)
+1827  0687  F5          	push	af
+1828  0688  33          	inc	sp
+1829  0689  CD 00 00    	call	_spr_add_anim
+1830  068C  F1          	pop	af
+1831  068D  F1          	pop	af
+1832  068E  F1          	pop	af
+1833  068F  C1          	pop	bc
+1834  0690  79          	ld	a, c
+1835  0691  D6 24       	sub	a,0x24
+1836  0693  DA 86 07    	jp	C, l_player_pick_item_00129
+1837  0696  3E 2F       	ld	a,0x2f
+1838  0698  91          	sub	a, c
+1839  0699  DA 86 07    	jp	C, l_player_pick_item_00129
+1840  069C  79          	ld	a, c
+1841  069D  C6 DC       	add	a,0xdc
+1842  069F  4F          	ld	c, a
+1843  06A0  06 00       	ld	b,0x00
+1844  06A2  21 A9 06    	ld	hl,l_player_pick_item_00171
+1845  06A5  09          	add	hl, bc
+1846  06A6  09          	add	hl, bc
+1847  06A7  09          	add	hl, bc
+1848  06A8  E9          	jp	(hl)
+1849  06A9              l_player_pick_item_00171:
+1850  06A9  C3 CD 06    	jp	l_player_pick_item_00101
+1851  06AC  C3 D8 06    	jp	l_player_pick_item_00102
+1852  06AF  C3 E3 06    	jp	l_player_pick_item_00103
+1853  06B2  C3 EE 06    	jp	l_player_pick_item_00104
+1854  06B5  C3 F9 06    	jp	l_player_pick_item_00105
+1855  06B8  C3 0B 07    	jp	l_player_pick_item_00107
+1856  06BB  C3 20 07    	jp	l_player_pick_item_00110
+1857  06BE  C3 35 07    	jp	l_player_pick_item_00113
+1858  06C1  C3 4A 07    	jp	l_player_pick_item_00116
+1859  06C4  C3 5F 07    	jp	l_player_pick_item_00119
+1860  06C7  C3 74 07    	jp	l_player_pick_item_00122
+1861  06CA  C3 02 07    	jp	l_player_pick_item_00106
+1862  06CD              l_player_pick_item_00101:
+1863  06CD  21 00 00    	ld	hl,_player_keys
+1864  06D0  36 01       	ld	(hl),0x01
+1865  06D2  CD 00 00    	call	_game_update_stats
+1866  06D5  C3 86 07    	jp	l_player_pick_item_00129
+1867  06D8              l_player_pick_item_00102:
+1868  06D8  21 01 00    	ld	hl, +(_player_keys + 0x0001)
+1869  06DB  36 01       	ld	(hl),0x01
+1870  06DD  CD 00 00    	call	_game_update_stats
+1871  06E0  C3 86 07    	jp	l_player_pick_item_00129
+1872  06E3              l_player_pick_item_00103:
+1873  06E3  21 02 00    	ld	hl, +(_player_keys + 0x0002)
+1874  06E6  36 01       	ld	(hl),0x01
+1875  06E8  CD 00 00    	call	_game_update_stats
+1876  06EB  C3 86 07    	jp	l_player_pick_item_00129
+1877  06EE              l_player_pick_item_00104:
+1878  06EE  21 03 00    	ld	hl, +(_player_keys + 0x0003)
+1879  06F1  36 01       	ld	(hl),0x01
+1880  06F3  CD 00 00    	call	_game_update_stats
+1881  06F6  C3 86 07    	jp	l_player_pick_item_00129
+1882  06F9              l_player_pick_item_00105:
+1883  06F9  21 01 00    	ld	hl,0x0001
+1884  06FC  CD 2F 0A    	call	_player_score_add
+1885  06FF  C3 86 07    	jp	l_player_pick_item_00129
+1886  0702              l_player_pick_item_00106:
+1887  0702  21 0A 00    	ld	hl,0x000a
+1888  0705  CD 2F 0A    	call	_player_score_add
+1889  0708  C3 86 07    	jp	l_player_pick_item_00129
+1890  070B              l_player_pick_item_00107:
+1891  070B  21 00 00    	ld	hl,_player_str
+1892  070E  34          	inc	(hl)
+1893  070F  21 00 00    	ld	hl,_player_max_vita
+1894  0712  7E          	ld	a, (hl)
+1895  0713  D6 C8       	sub	a,0xc8
+1896  0715  30 6F       	jr	NC,l_player_pick_item_00129
+1897  0717  7E          	ld	a, (hl)
+1898  0718  C6 0A       	add	a,0x0a
+1899  071A  77          	ld	(hl), a
+1900  071B  CD 00 00    	call	_game_update_stats
+1901  071E  18 66       	jr	l_player_pick_item_00129
+1902  0720              l_player_pick_item_00110:
+1903  0720  21 00 00    	ld	hl,_player_str
+1904  0723  34          	inc	(hl)
+1905  0724  21 00 00    	ld	hl,_player_max_vita
+1906  0727  7E          	ld	a, (hl)
+1907  0728  D6 C8       	sub	a,0xc8
+1908  072A  30 5A       	jr	NC,l_player_pick_item_00129
+1909  072C  7E          	ld	a, (hl)
+1910  072D  C6 0A       	add	a,0x0a
+1911  072F  77          	ld	(hl), a
+1912  0730  CD 00 00    	call	_game_update_stats
+1913  0733  18 51       	jr	l_player_pick_item_00129
+1914  0735              l_player_pick_item_00113:
+1915  0735  21 00 00    	ld	hl,_player_str
+1916  0738  34          	inc	(hl)
+1917  0739  21 00 00    	ld	hl,_player_max_vita
+1918  073C  7E          	ld	a, (hl)
+1919  073D  D6 C8       	sub	a,0xc8
+1920  073F  30 45       	jr	NC,l_player_pick_item_00129
+1921  0741  7E          	ld	a, (hl)
+1922  0742  C6 0A       	add	a,0x0a
+1923  0744  77          	ld	(hl), a
+1924  0745  CD 00 00    	call	_game_update_stats
+1925  0748  18 3C       	jr	l_player_pick_item_00129
+1926  074A              l_player_pick_item_00116:
+1927  074A  21 00 00    	ld	hl,_player_int
+1928  074D  34          	inc	(hl)
+1929  074E  21 00 00    	ld	hl,_player_max_mana
+1930  0751  7E          	ld	a, (hl)
+1931  0752  D6 C8       	sub	a,0xc8
+1932  0754  30 30       	jr	NC,l_player_pick_item_00129
+1933  0756  7E          	ld	a, (hl)
+1934  0757  C6 0A       	add	a,0x0a
+1935  0759  77          	ld	(hl), a
+1936  075A  CD 00 00    	call	_game_update_stats
+1937  075D  18 27       	jr	l_player_pick_item_00129
+1938  075F              l_player_pick_item_00119:
+1939  075F  21 00 00    	ld	hl,_player_int
+1940  0762  34          	inc	(hl)
+1941  0763  21 00 00    	ld	hl,_player_max_mana
+1942  0766  7E          	ld	a, (hl)
+1943  0767  D6 C8       	sub	a,0xc8
+1944  0769  30 1B       	jr	NC,l_player_pick_item_00129
+1945  076B  7E          	ld	a, (hl)
+1946  076C  C6 0A       	add	a,0x0a
+1947  076E  77          	ld	(hl), a
+1948  076F  CD 00 00    	call	_game_update_stats
+1949  0772  18 12       	jr	l_player_pick_item_00129
+1950  0774              l_player_pick_item_00122:
+1951  0774  21 00 00    	ld	hl,_player_int
+1952  0777  34          	inc	(hl)
+1953  0778  21 00 00    	ld	hl,_player_max_mana
+1954  077B  7E          	ld	a, (hl)
+1955  077C  D6 C8       	sub	a,0xc8
+1956  077E  D0          	ret	NC
+1957  077F  7E          	ld	a, (hl)
+1958  0780  C6 0A       	add	a,0x0a
+1959  0782  77          	ld	(hl), a
+1960  0783  CD 00 00    	call	_game_update_stats
+1961  0786              l_player_pick_item_00129:
+1962  0786  C9          	ret
+1963  0787              	SECTION code_compiler
+1964  0787              ;	---------------------------------
+1965  0787              ; Function player_hit_platform
+1966  0787              ; ---------------------------------
+1967  0787              _player_hit_platform:
+1968  0787  CD 00 00    	call	___sdcc_enter_ix
+1969  078A  F5          	push	af
+1970  078B  3A 00 00    	ld	a,(_player_hit_lin)
+1971  078E  B7          	or	a, a
+1972  078F  C2 FA 09    	jp	NZ, l_player_hit_platform_00144
+1973  0792  21 07 00    	ld	hl,+(_lin + 0x0007)
+1974  0795  4E          	ld	c, (hl)
+1975  0796  3E 10       	ld	a,0x10
+1976  0798  91          	sub	a, c
+1977  0799  D2 FA 09    	jp	NC, l_player_hit_platform_00144
+1978  079C  01 00 00    	ld	bc,_scr_map
+1979  079F  2A 00 00    	ld	hl,(_index1)
+1980  07A2  09          	add	hl,bc
+1981  07A3  7E          	ld	a,(hl)
+1982  07A4  D6 45       	sub	a,0x45
+1983  07A6  DA FA 09    	jp	C, l_player_hit_platform_00144
+1984  07A9  2A 00 00    	ld	hl,(_curr_time)
+1985  07AC  22 0E 00    	ld	(_spr_timer + 0x000e),hl
+1986  07AF  2A 07 00    	ld	hl,(_lin + 0x0007)
+1987  07B2  26 00       	ld	h,0x00
+1988  07B4  01 F8 FF    	ld	bc,0xfff8
+1989  07B7  09          	add	hl,bc
+1990  07B8  EB          	ex	de,hl
+1991  07B9  06 04       	ld	b,0x04
+1992  07BB              l_player_hit_platform_00249:
+1993  07BB  CB 2A       	sra	d
+1994  07BD  CB 1B       	rr	e
+1995  07BF  10 FA       	djnz	l_player_hit_platform_00249
+1996  07C1  7B          	ld	a, e
+1997  07C2  07          	rlca
+1998  07C3  07          	rlca
+1999  07C4  07          	rlca
+2000  07C5  07          	rlca
+2001  07C6  E6 F0       	and	a,0xf0
+2002  07C8  C6 08       	add	a,0x08
+2003  07CA  32 00 00    	ld	(_player_hit_lin),a
+2004  07CD  21 07 00    	ld	hl,+(_col + 0x0007)
+2005  07D0  4E          	ld	c, (hl)
+2006  07D1  CB 41       	bit	0, c
+2007  07D3  20 06       	jr	NZ,l_player_hit_platform_00111
+2008  07D5  21 00 00    	ld	hl,_player_hit_col
+2009  07D8  71          	ld	(hl), c
+2010  07D9  18 2D       	jr	l_player_hit_platform_00112
+2011  07DB              l_player_hit_platform_00111:
+2012  07DB  21 07 00    	ld	hl,+(_state + 0x0007)
+2013  07DE  5E          	ld	e, (hl)
+2014  07DF  41          	ld	b, c
+2015  07E0  04          	inc	b
+2016  07E1  0D          	dec	c
+2017  07E2  CB 5B       	bit	3, e
+2018  07E4  28 12       	jr	Z,l_player_hit_platform_00108
+2019  07E6  3A 00 00    	ld	a,(_g_player_hit_right)
+2020  07E9  B7          	or	a, a
+2021  07EA  28 06       	jr	Z,l_player_hit_platform_00102
+2022  07EC  21 00 00    	ld	hl,_player_hit_col
+2023  07EF  70          	ld	(hl), b
+2024  07F0  18 16       	jr	l_player_hit_platform_00112
+2025  07F2              l_player_hit_platform_00102:
+2026  07F2  21 00 00    	ld	hl,_player_hit_col
+2027  07F5  71          	ld	(hl), c
+2028  07F6  18 10       	jr	l_player_hit_platform_00112
+2029  07F8              l_player_hit_platform_00108:
+2030  07F8  3A 00 00    	ld	a,(_g_player_hit_left)
+2031  07FB  B7          	or	a, a
+2032  07FC  28 06       	jr	Z,l_player_hit_platform_00105
+2033  07FE  21 00 00    	ld	hl,_player_hit_col
+2034  0801  71          	ld	(hl), c
+2035  0802  18 04       	jr	l_player_hit_platform_00112
+2036  0804              l_player_hit_platform_00105:
+2037  0804  21 00 00    	ld	hl,_player_hit_col
+2038  0807  70          	ld	(hl), b
+2039  0808              l_player_hit_platform_00112:
+2040  0808  01 00 00    	ld	bc,_scr_map
+2041  080B  2A 00 00    	ld	hl,(_index1)
+2042  080E  09          	add	hl,bc
+2043  080F  7E          	ld	a,(hl)
+2044  0810  FE 4D       	cp	a,0x4d
+2045  0812  20 3B       	jr	NZ,l_player_hit_platform_00114
+2046  0814  AF          	xor	a,a
+2047  0815  77          	ld	(hl),a
+2048  0816  2A 00 00    	ld	hl,(_index0)
+2049  0819  E5          	push	hl
+2050  081A  CD 00 00    	call	_game_obj_set
+2051  081D  F1          	pop	af
+2052  081E  21 00 00    	ld	hl,_index1
+2053  0821  7E          	ld	a, (hl)
+2054  0822  E6 0F       	and	a,0x0f
+2055  0824  87          	add	a, a
+2056  0825  4F          	ld	c, a
+2057  0826  23          	inc	hl
+2058  0827  56          	ld	d,(hl)
+2059  0828  2B          	dec	hl
+2060  0829  7E          	ld	a, (hl)
+2061  082A  06 04       	ld	b,0x04
+2062  082C              l_player_hit_platform_00255:
+2063  082C  CB 3A       	srl	d
+2064  082E  1F          	rra
+2065  082F  10 FB       	djnz	l_player_hit_platform_00255
+2066  0831  07          	rlca
+2067  0832  07          	rlca
+2068  0833  07          	rlca
+2069  0834  07          	rlca
+2070  0835  E6 F0       	and	a,0xf0
+2071  0837  47          	ld	b, a
+2072  0838  21 00 00    	ld	hl,0x0000
+2073  083B  E5          	push	hl
+2074  083C  21 87 03    	ld	hl,0x0387
+2075  083F  E5          	push	hl
+2076  0840  79          	ld	a, c
+2077  0841  48          	ld	c,b
+2078  0842  47          	ld	b,a
+2079  0843  C5          	push	bc
+2080  0844  CD 00 00    	call	_spr_add_anim
+2081  0847  F1          	pop	af
+2082  0848  F1          	pop	af
+2083  0849  F1          	pop	af
+2084  084A  2E 01       	ld	l,0x01
+2085  084C  C3 FC 09    	jp	l_player_hit_platform_00147
+2086  084F              l_player_hit_platform_00114:
+2087  084F  FE 5C       	cp	a,0x5c
+2088  0851  28 05       	jr	Z,l_player_hit_platform_00140
+2089  0853  D6 5D       	sub	a,0x5d
+2090  0855  C2 EE 09    	jp	NZ,l_player_hit_platform_00141
+2091  0858              l_player_hit_platform_00140:
+2092  0858  21 00 00    	ld	hl,_tmp0
+2093  085B  36 00       	ld	(hl),0x00
+2094  085D  3A 00 00    	ld	a,(_game_boss)
+2095  0860  B7          	or	a, a
+2096  0861  28 0B       	jr	Z,l_player_hit_platform_00173
+2097  0863  3A 00 00    	ld	a,(_game_mush_count)
+2098  0866  B7          	or	a, a
+2099  0867  28 05       	jr	Z,l_player_hit_platform_00173
+2100  0869  2E 00       	ld	l,0x00
+2101  086B  C3 FC 09    	jp	l_player_hit_platform_00147
+2102  086E              l_player_hit_platform_00173:
+2103  086E              l_player_hit_platform_00137:
+2104  086E  21 00 00    	ld	hl,_tmp0
+2105  0871  7E          	ld	a, (hl)
+2106  0872  D6 07       	sub	a,0x07
+2107  0874  D2 EE 09    	jp	NC, l_player_hit_platform_00141
+2108  0877  4E          	ld	c,(hl)
+2109  0878  06 00       	ld	b,0x00
+2110  087A  21 00 00    	ld	hl,_mush_index
+2111  087D  09          	add	hl,bc
+2112  087E  4E          	ld	c, (hl)
+2113  087F  06 00       	ld	b,0x00
+2114  0881  2A 00 00    	ld	hl,(_index1)
+2115  0884  AF          	xor	a,a
+2116  0885  ED 42       	sbc	hl,bc
+2117  0887  C2 E7 09    	jp	NZ,l_player_hit_platform_00136
+2118  088A  3A 07 00    	ld	a,(_lin + 0x0007)
+2119  088D  07          	rlca
+2120  088E  07          	rlca
+2121  088F  07          	rlca
+2122  0890  07          	rlca
+2123  0891  E6 0F       	and	a,0x0f
+2124  0893  07          	rlca
+2125  0894  07          	rlca
+2126  0895  07          	rlca
+2127  0896  07          	rlca
+2128  0897  E6 F0       	and	a,0xf0
+2129  0899  C6 E0       	add	a,0xe0
+2130  089B  32 00 00    	ld	(_s_lin1),a
+2131  089E  3A 07 00    	ld	a,(_col + 0x0007)
+2132  08A1  CB 3F       	srl	a
+2133  08A3  87          	add	a, a
+2134  08A4  32 00 00    	ld	(_s_col1),a
+2135  08A7  21 00 00    	ld	hl,_tmp
+2136  08AA  36 00       	ld	(hl),0x00
+2137  08AC              l_player_hit_platform_00120:
+2138  08AC  21 00 00    	ld	hl,_tmp
+2139  08AF  7E          	ld	a, (hl)
+2140  08B0  D6 07       	sub	a,0x07
+2141  08B2  30 1C       	jr	NC,l_player_hit_platform_00122
+2142  08B4  4E          	ld	c,(hl)
+2143  08B5  06 00       	ld	b,0x00
+2144  08B7  21 00 00    	ld	hl,_mush_index
+2145  08BA  09          	add	hl,bc
+2146  08BB  4E          	ld	c, (hl)
+2147  08BC  06 00       	ld	b,0x00
+2148  08BE  21 00 00    	ld	hl,_index1
+2149  08C1  7E          	ld	a, (hl)
+2150  08C2  91          	sub	a, c
+2151  08C3  20 05       	jr	NZ,l_player_hit_platform_00261
+2152  08C5  23          	inc	hl
+2153  08C6  7E          	ld	a, (hl)
+2154  08C7  90          	sub	a, b
+2155  08C8  28 06       	jr	Z,l_player_hit_platform_00122
+2156  08CA              l_player_hit_platform_00261:
+2157  08CA  21 00 00    	ld	hl,_tmp
+2158  08CD  34          	inc	(hl)
+2159  08CE  18 DC       	jr	l_player_hit_platform_00120
+2160  08D0              l_player_hit_platform_00122:
+2161  08D0  2A 00 00    	ld	hl,(_tmp)
+2162  08D3  26 00       	ld	h,0x00
+2163  08D5  01 00 00    	ld	bc,_mush_class
+2164  08D8  09          	add	hl,bc
+2165  08D9  7E          	ld	a,(hl)
+2166  08DA  FE 78       	cp	a,0x78
+2167  08DC  28 18       	jr	Z,l_player_hit_platform_00123
+2168  08DE  FE 79       	cp	a,0x79
+2169  08E0  28 2F       	jr	Z,l_player_hit_platform_00124
+2170  08E2  FE 7A       	cp	a,0x7a
+2171  08E4  28 5F       	jr	Z,l_player_hit_platform_00126
+2172  08E6  FE 7B       	cp	a,0x7b
+2173  08E8  28 41       	jr	Z,l_player_hit_platform_00125
+2174  08EA  FE 7C       	cp	a,0x7c
+2175  08EC  CA 79 09    	jp	Z,l_player_hit_platform_00128
+2176  08EF  D6 7D       	sub	a,0x7d
+2177  08F1  28 6C       	jr	Z,l_player_hit_platform_00127
+2178  08F3  C3 91 09    	jp	l_player_hit_platform_00129
+2179  08F6              l_player_hit_platform_00123:
+2180  08F6  2E 02       	ld	l,0x02
+2181  08F8  CD 00 00    	call	_zx_border_fastcall
+2182  08FB  3A 00 00    	ld	a,(_s_col1)
+2183  08FE  21 06 FF    	ld	hl,0xff06
+2184  0901  E5          	push	hl
+2185  0902  F5          	push	af
+2186  0903  33          	inc	sp
+2187  0904  3A 00 00    	ld	a,(_s_lin1)
+2188  0907  F5          	push	af
+2189  0908  33          	inc	sp
+2190  0909  CD 00 00    	call	_enemy_init
+2191  090C  F1          	pop	af
+2192  090D  F1          	pop	af
+2193  090E  C3 91 09    	jp	l_player_hit_platform_00129
+2194  0911              l_player_hit_platform_00124:
+2195  0911  2E 02       	ld	l,0x02
+2196  0913  CD 00 00    	call	_zx_border_fastcall
+2197  0916  3A 00 00    	ld	a,(_s_col1)
+2198  0919  21 06 01    	ld	hl,0x0106
+2199  091C  E5          	push	hl
+2200  091D  F5          	push	af
+2201  091E  33          	inc	sp
+2202  091F  3A 00 00    	ld	a,(_s_lin1)
+2203  0922  F5          	push	af
+2204  0923  33          	inc	sp
+2205  0924  CD 00 00    	call	_enemy_init
+2206  0927  F1          	pop	af
+2207  0928  F1          	pop	af
+2208  0929  18 66       	jr	l_player_hit_platform_00129
+2209  092B              l_player_hit_platform_00125:
+2210  092B  2E 01       	ld	l,0x01
+2211  092D  CD 00 00    	call	_zx_border_fastcall
+2212  0930  3A 00 00    	ld	a,(_s_col1)
+2213  0933  21 07 01    	ld	hl,0x0107
+2214  0936  E5          	push	hl
+2215  0937  F5          	push	af
+2216  0938  33          	inc	sp
+2217  0939  3A 00 00    	ld	a,(_s_lin1)
+2218  093C  F5          	push	af
+2219  093D  33          	inc	sp
+2220  093E  CD 00 00    	call	_enemy_init
+2221  0941  F1          	pop	af
+2222  0942  F1          	pop	af
+2223  0943  18 4C       	jr	l_player_hit_platform_00129
+2224  0945              l_player_hit_platform_00126:
+2225  0945  2E 01       	ld	l,0x01
+2226  0947  CD 00 00    	call	_zx_border_fastcall
+2227  094A  3A 00 00    	ld	a,(_s_col1)
+2228  094D  21 07 FF    	ld	hl,0xff07
+2229  0950  E5          	push	hl
+2230  0951  F5          	push	af
+2231  0952  33          	inc	sp
+2232  0953  3A 00 00    	ld	a,(_s_lin1)
+2233  0956  F5          	push	af
+2234  0957  33          	inc	sp
+2235  0958  CD 00 00    	call	_enemy_init
+2236  095B  F1          	pop	af
+2237  095C  F1          	pop	af
+2238  095D  18 32       	jr	l_player_hit_platform_00129
+2239  095F              l_player_hit_platform_00127:
+2240  095F  2E 04       	ld	l,0x04
+2241  0961  CD 00 00    	call	_zx_border_fastcall
+2242  0964  3A 00 00    	ld	a,(_s_col1)
+2243  0967  21 08 01    	ld	hl,0x0108
+2244  096A  E5          	push	hl
+2245  096B  F5          	push	af
+2246  096C  33          	inc	sp
+2247  096D  3A 00 00    	ld	a,(_s_lin1)
+2248  0970  F5          	push	af
+2249  0971  33          	inc	sp
+2250  0972  CD 00 00    	call	_enemy_init
+2251  0975  F1          	pop	af
+2252  0976  F1          	pop	af
+2253  0977  18 18       	jr	l_player_hit_platform_00129
+2254  0979              l_player_hit_platform_00128:
+2255  0979  2E 04       	ld	l,0x04
+2256  097B  CD 00 00    	call	_zx_border_fastcall
+2257  097E  3A 00 00    	ld	a,(_s_col1)
+2258  0981  21 08 FF    	ld	hl,0xff08
+2259  0984  E5          	push	hl
+2260  0985  F5          	push	af
+2261  0986  33          	inc	sp
+2262  0987  3A 00 00    	ld	a,(_s_lin1)
+2263  098A  F5          	push	af
+2264  098B  33          	inc	sp
+2265  098C  CD 00 00    	call	_enemy_init
+2266  098F  F1          	pop	af
+2267  0990  F1          	pop	af
+2268  0991              l_player_hit_platform_00129:
+2269  0991  21 00 00    	ld	hl,_game_mush_count
+2270  0994  34          	inc	(hl)
+2271  0995  3A 00 00    	ld	a,(_game_boss)
+2272  0998  B7          	or	a, a
+2273  0999  20 4C       	jr	NZ,l_player_hit_platform_00136
+2274  099B  2A 00 00    	ld	hl,(_index1)
+2275  099E  01 F0 FF    	ld	bc,0xfff0
+2276  09A1  09          	add	hl,bc
+2277  09A2  01 00 00    	ld	bc,_scr_map
+2278  09A5  09          	add	hl,bc
+2279  09A6  36 00       	ld	(hl),0x00
+2280  09A8  3E 00       	ld	a, +((_scr_map) & 0xFF)
+2281  09AA  21 00 00    	ld	hl,_index1
+2282  09AD  86          	add	a, (hl)
+2283  09AE  DD 77 FE    	ld	(ix-2),a
+2284  09B1  3E 00       	ld	a, +((_scr_map) / 256)
+2285  09B3  23          	inc	hl
+2286  09B4  8E          	adc	a, (hl)
+2287  09B5  DD 77 FF    	ld	(ix-1),a
+2288  09B8  E1          	pop	hl
+2289  09B9  7E          	ld	a,(hl)
+2290  09BA  E5          	push	hl
+2291  09BB  D6 5C       	sub	a,0x5c
+2292  09BD  20 06       	jr	NZ,l_player_hit_platform_00131
+2293  09BF  E1          	pop	hl
+2294  09C0  E5          	push	hl
+2295  09C1  36 4F       	ld	(hl),0x4f
+2296  09C3  18 04       	jr	l_player_hit_platform_00132
+2297  09C5              l_player_hit_platform_00131:
+2298  09C5  E1          	pop	hl
+2299  09C6  E5          	push	hl
+2300  09C7  36 54       	ld	(hl),0x54
+2301  09C9              l_player_hit_platform_00132:
+2302  09C9  2A 00 00    	ld	hl,(_index1)
+2303  09CC  01 F0 FF    	ld	bc,0xfff0
+2304  09CF  09          	add	hl,bc
+2305  09D0  E5          	push	hl
+2306  09D1  CD 00 00    	call	_game_obj_set
+2307  09D4  F1          	pop	af
+2308  09D5  3A 00 00    	ld	a,(_s_lin1)
+2309  09D8  C6 10       	add	a,0x10
+2310  09DA  4F          	ld	c, a
+2311  09DB  3A 00 00    	ld	a, (_s_col1)
+2312  09DE  47          	ld	b,a
+2313  09DF  C5          	push	bc
+2314  09E0  3E 4F       	ld	a,0x4f
+2315  09E2  F5          	push	af
+2316  09E3  33          	inc	sp
+2317  09E4  CD 00 00    	call	_NIRVANAP_drawT_callee
+2318  09E7              l_player_hit_platform_00136:
+2319  09E7  21 00 00    	ld	hl,_tmp0
+2320  09EA  34          	inc	(hl)
+2321  09EB  C3 6E 08    	jp	l_player_hit_platform_00137
+2322  09EE              l_player_hit_platform_00141:
+2323  09EE  2E 01       	ld	l,0x01
+2324  09F0  CD 00 00    	call	_spr_brick_anim
+2325  09F3  CD 00 00    	call	_sound_hit_brick
+2326  09F6  2E 01       	ld	l,0x01
+2327  09F8  18 02       	jr	l_player_hit_platform_00147
+2328  09FA              l_player_hit_platform_00144:
+2329  09FA  2E 00       	ld	l,0x00
+2330  09FC              l_player_hit_platform_00147:
+2331  09FC  F1          	pop	af
+2332  09FD  DD E1       	pop	ix
+2333  09FF  C9          	ret
+2334  0A00              	SECTION code_compiler
+2335  0A00              ;	---------------------------------
+2336  0A00              ; Function player_hit_platform_clear
+2337  0A00              ; ---------------------------------
+2338  0A00              _player_hit_platform_clear:
+2339  0A00  01 04 00    	ld	bc,0x0004
+2340  0A03  C5          	push	bc
+2341  0A04  2A 0E 00    	ld	hl,(_spr_timer + 0x000e)
+2342  0A07  E5          	push	hl
+2343  0A08  CD 00 00    	call	_game_check_time
+2344  0A0B  F1          	pop	af
+2345  0A0C  F1          	pop	af
+2346  0A0D  7D          	ld	a, l
+2347  0A0E  B7          	or	a, a
+2348  0A0F  C8          	ret	Z
+2349  0A10  2A FF FF    	ld	hl,(_player_hit_col - 1)
+2350  0A13  3A 00 00    	ld	a,(_player_hit_lin)
+2351  0A16  6F          	ld	l,a
+2352  0A17  E5          	push	hl
+2353  0A18  CD 00 00    	call	_spr_calc_index
+2354  0A1B  F1          	pop	af
+2355  0A1C  22 00 00    	ld	(_index1),hl
+2356  0A1F  2E 00       	ld	l,0x00
+2357  0A21  CD 00 00    	call	_spr_brick_anim
+2358  0A24  21 00 00    	ld	hl,_player_hit_lin
+2359  0A27  36 00       	ld	(hl),0x00
+2360  0A29  21 00 00    	ld	hl,_player_hit_col
+2361  0A2C  36 00       	ld	(hl),0x00
+2362  0A2E  C9          	ret
+2363  0A2F              	SECTION code_compiler
+2364  0A2F              ;	---------------------------------
+2365  0A2F              ; Function player_score_add
+2366  0A2F              ; ---------------------------------
+2367  0A2F              _player_score_add:
+2368  0A2F  ED 4B 00 00 	ld	bc,(_player_score)
+2369  0A33  09          	add	hl,bc
+2370  0A34  22 00 00    	ld	(_player_score),hl
+2371  0A37  21 00 00    	ld	hl,_player_lvl
+2372  0A3A  7E          	ld	a, (hl)
+2373  0A3B  D6 14       	sub	a,0x14
+2374  0A3D  30 3C       	jr	NC,l_player_score_add_00104
+2375  0A3F  01 00 00    	ld	bc,_player_lvl_table+0
+2376  0A42  6E          	ld	l,(hl)
+2377  0A43  26 00       	ld	h,0x00
+2378  0A45  29          	add	hl, hl
+2379  0A46  09          	add	hl, bc
+2380  0A47  4E          	ld	c, (hl)
+2381  0A48  23          	inc	hl
+2382  0A49  46          	ld	b, (hl)
+2383  0A4A  21 00 00    	ld	hl,_player_score
+2384  0A4D  7E          	ld	a, (hl)
+2385  0A4E  91          	sub	a, c
+2386  0A4F  23          	inc	hl
+2387  0A50  7E          	ld	a, (hl)
+2388  0A51  98          	sbc	a, b
+2389  0A52  38 27       	jr	C,l_player_score_add_00104
+2390  0A54  21 00 00    	ld	hl,_player_lvl
+2391  0A57  34          	inc	(hl)
+2392  0A58  21 00 00    	ld	hl,___str_0
+2393  0A5B  E5          	push	hl
+2394  0A5C  21 0C 0C    	ld	hl,0x0c0c
+2395  0A5F  E5          	push	hl
+2396  0A60  CD 00 00    	call	_zx_print_str
+2397  0A63  AF          	xor	a, a
+2398  0A64  F5          	push	af
+2399  0A65  33          	inc	sp
+2400  0A66  21 19 00    	ld	hl,0x0019
+2401  0A69  E5          	push	hl
+2402  0A6A  21 0C 15    	ld	hl,0x150c
+2403  0A6D  E5          	push	hl
+2404  0A6E  3E 0C       	ld	a,0x0c
+2405  0A70  F5          	push	af
+2406  0A71  33          	inc	sp
+2407  0A72  CD 00 00    	call	_game_colour_message
+2408  0A75  F1          	pop	af
+2409  0A76  F1          	pop	af
+2410  0A77  F1          	pop	af
+2411  0A78  CD 00 00    	call	_game_update_stats
+2412  0A7B              l_player_score_add_00104:
+2413  0A7B  3A 00 00    	ld	a,(_game_score_top)
+2414  0A7E  21 00 00    	ld	hl,_player_score
+2415  0A81  96          	sub	a, (hl)
+2416  0A82  3A 01 00    	ld	a,(_game_score_top + 1)
+2417  0A85  23          	inc	hl
+2418  0A86  9E          	sbc	a, (hl)
+2419  0A87  30 06       	jr	NC,l_player_score_add_00106
+2420  0A89  2A 00 00    	ld	hl,(_player_score)
+2421  0A8C  22 00 00    	ld	(_game_score_top),hl
+2422  0A8F              l_player_score_add_00106:
+2423  0A8F  CD 00 00    	call	_game_print_score
+2424  0A92  C9          	ret
+2425  0A93              	SECTION rodata_compiler
 2426  0000              ___str_0:
 2427  0000  4C 45 56 45 4C 20 55 50 21 
                         	DEFM "LEVEL UP!"
 2428  0009  00          	DEFB 0x00
 2429  000A              	SECTION code_compiler
-2430  0A99              ;	---------------------------------
-2431  0A99              ; Function player_check_floor
-2432  0A99              ; ---------------------------------
-2433  0A99              _player_check_floor:
-2434  0A99  CD 00 00    	call	___sdcc_enter_ix
-2435  0A9C  F5          	push	af
-2436  0A9D  F5          	push	af
-2437  0A9E  11 07 00    	ld	de,_col+7
-2438  0AA1  1A          	ld	a, (de)
-2439  0AA2  47          	ld	b, a
-2440  0AA3  3A 07 00    	ld	a,(_lin + 0x0007)
-2441  0AA6  C6 10       	add	a,0x10
-2442  0AA8  D5          	push	de
-2443  0AA9  4F          	ld	c,a
-2444  0AAA  C5          	push	bc
-2445  0AAB  CD 00 00    	call	_spr_calc_index
-2446  0AAE  F1          	pop	af
-2447  0AAF  D1          	pop	de
-2448  0AB0  4D          	ld	c,l
-2449  0AB1  44          	ld	b,h
-2450  0AB2  21 00 00    	ld	hl,_scr_map
-2451  0AB5  09          	add	hl,bc
-2452  0AB6  DD 75 FE    	ld	(ix-2),l
-2453  0AB9  DD 74 FF    	ld	(ix-1),h
-2454  0ABC  7E          	ld	a, (hl)
-2455  0ABD  DD 77 FD    	ld	(ix-3),a
-2456  0AC0  03          	inc	bc
-2457  0AC1  21 00 00    	ld	hl,_scr_map
-2458  0AC4  09          	add	hl,bc
-2459  0AC5  3A 00 00    	ld	a,(_s_lin0)
-2460  0AC8  D6 90       	sub	a,0x90
-2461  0ACA  4D          	ld	c,l
-2462  0ACB  44          	ld	b,h
-2463  0ACC  20 26       	jr	NZ,l_player_check_floor_00108
-2464  0ACE  3A 00 00    	ld	a,(_map_heigth)
-2465  0AD1  C5          	push	bc
-2466  0AD2  F5          	push	af
-2467  0AD3  33          	inc	sp
-2468  0AD4  3A 00 00    	ld	a,(_scr_curr)
-2469  0AD7  F5          	push	af
-2470  0AD8  33          	inc	sp
-2471  0AD9  CD 00 00    	call	__divuchar_callee
-2472  0ADC  C1          	pop	bc
-2473  0ADD  7D          	ld	a,l
-2474  0ADE  3C          	inc	a
-2475  0ADF  32 00 00    	ld	(_tmp1),a
-2476  0AE2  21 00 00    	ld	hl,_map_heigth
-2477  0AE5  96          	sub	a, (hl)
-2478  0AE6  30 06       	jr	NC,l_player_check_floor_00102
-2479  0AE8  DD 36 FD 00 	ld	(ix-3),0x00
-2480  0AEC  18 14       	jr	l_player_check_floor_00109
-2481  0AEE              l_player_check_floor_00102:
-2482  0AEE  DD 36 FD 48 	ld	(ix-3),0x48
-2483  0AF2  18 0E       	jr	l_player_check_floor_00109
-2484  0AF4              l_player_check_floor_00108:
-2485  0AF4  1A          	ld	a, (de)
-2486  0AF5  0F          	rrca
-2487  0AF6  38 06       	jr	C,l_player_check_floor_00105
-2488  0AF8  DD 36 FC 00 	ld	(ix-4),0x00
-2489  0AFC  18 04       	jr	l_player_check_floor_00109
-2490  0AFE              l_player_check_floor_00105:
-2491  0AFE  0A          	ld	a, (bc)
-2492  0AFF  DD 77 FC    	ld	(ix-4),a
-2493  0B02              l_player_check_floor_00109:
-2494  0B02  DD 7E FD    	ld	a,(ix-3)
-2495  0B05  D6 3C       	sub	a,0x3c
-2496  0B07  38 07       	jr	C,l_player_check_floor_00132
-2497  0B09  DD 7E FD    	ld	a,(ix-3)
-2498  0B0C  D6 60       	sub	a,0x60
-2499  0B0E  38 32       	jr	C,l_player_check_floor_00128
-2500  0B10              l_player_check_floor_00132:
-2501  0B10  DD 7E FC    	ld	a,(ix-4)
-2502  0B13  D6 3C       	sub	a,0x3c
-2503  0B15  38 07       	jr	C,l_player_check_floor_00127
-2504  0B17  DD 7E FC    	ld	a,(ix-4)
-2505  0B1A  D6 60       	sub	a,0x60
-2506  0B1C  38 24       	jr	C,l_player_check_floor_00128
-2507  0B1E              l_player_check_floor_00127:
-2508  0B1E  21 07 00    	ld	hl, +(_sprite_speed_alt + 0x0007)
-2509  0B21  36 02       	ld	(hl),0x02
-2510  0B23  21 00 00    	ld	hl,_s_state
-2511  0B26  CB CE       	set	1, (hl)
-2512  0B28  2E 00       	ld	l,0x00
-2513  0B2A  CD 63 03    	call	_player_check_stairs
-2514  0B2D  3A 00 00    	ld	a,(_player_over_stair)
-2515  0B30  B7          	or	a, a
-2516  0B31  C2 C1 0B    	jp	NZ, l_player_check_floor_00133
-2517  0B34  3A 00 00    	ld	a,(_s_lin0)
-2518  0B37  D6 90       	sub	a,0x90
-2519  0B39  C2 C1 0B    	jp	NZ,l_player_check_floor_00133
-2520  0B3C  CD 00 00    	call	_spr_page_down
-2521  0B3F  C3 C1 0B    	jp	l_player_check_floor_00133
-2522  0B42              l_player_check_floor_00128:
-2523  0B42  C5          	push	bc
-2524  0B43  21 10 00    	ld	hl,0x0010
-2525  0B46  E5          	push	hl
-2526  0B47  2A 00 00    	ld	hl,(_player_brick_time)
-2527  0B4A  E5          	push	hl
-2528  0B4B  CD 00 00    	call	_game_check_time
-2529  0B4E  F1          	pop	af
-2530  0B4F  F1          	pop	af
-2531  0B50  C1          	pop	bc
-2532  0B51  7D          	ld	a,l
-2533  0B52  B7          	or	a, a
-2534  0B53  28 6C       	jr	Z,l_player_check_floor_00133
-2535  0B55  2A 00 00    	ld	hl,(_curr_time)
-2536  0B58  22 00 00    	ld	(_player_brick_time),hl
-2537  0B5B  DD 7E FD    	ld	a,(ix-3)
-2538  0B5E  D6 40       	sub	a,0x40
-2539  0B60  20 0D       	jr	NZ,l_player_check_floor_00114
-2540  0B62  DD 6E FE    	ld	l,(ix-2)
-2541  0B65  DD 66 FF    	ld	h,(ix-1)
-2542  0B68  36 00       	ld	(hl),0x00
-2543  0B6A  C5          	push	bc
-2544  0B6B  CD C6 0B    	call	_player_gasta_brick
-2545  0B6E  C1          	pop	bc
-2546  0B6F              l_player_check_floor_00114:
-2547  0B6F  DD 7E FD    	ld	a,(ix-3)
-2548  0B72  D6 3F       	sub	a,0x3f
-2549  0B74  20 0D       	jr	NZ,l_player_check_floor_00116
-2550  0B76  DD 6E FE    	ld	l,(ix-2)
-2551  0B79  DD 66 FF    	ld	h,(ix-1)
-2552  0B7C  36 40       	ld	(hl),0x40
-2553  0B7E  C5          	push	bc
-2554  0B7F  CD C6 0B    	call	_player_gasta_brick
-2555  0B82  C1          	pop	bc
-2556  0B83              l_player_check_floor_00116:
-2557  0B83  DD 7E FD    	ld	a,(ix-3)
-2558  0B86  D6 3E       	sub	a,0x3e
-2559  0B88  20 0D       	jr	NZ,l_player_check_floor_00118
-2560  0B8A  DD 6E FE    	ld	l,(ix-2)
-2561  0B8D  DD 66 FF    	ld	h,(ix-1)
-2562  0B90  36 3F       	ld	(hl),0x3f
-2563  0B92  C5          	push	bc
-2564  0B93  CD C6 0B    	call	_player_gasta_brick
-2565  0B96  C1          	pop	bc
-2566  0B97              l_player_check_floor_00118:
-2567  0B97  DD 7E FC    	ld	a,(ix-4)
-2568  0B9A  D6 40       	sub	a,0x40
-2569  0B9C  20 07       	jr	NZ,l_player_check_floor_00120
-2570  0B9E  AF          	xor	a, a
-2571  0B9F  02          	ld	(bc), a
-2572  0BA0  C5          	push	bc
-2573  0BA1  CD C6 0B    	call	_player_gasta_brick
-2574  0BA4  C1          	pop	bc
-2575  0BA5              l_player_check_floor_00120:
-2576  0BA5  DD 7E FC    	ld	a,(ix-4)
-2577  0BA8  D6 3F       	sub	a,0x3f
-2578  0BAA  20 08       	jr	NZ,l_player_check_floor_00122
-2579  0BAC  3E 40       	ld	a,0x40
-2580  0BAE  02          	ld	(bc), a
-2581  0BAF  C5          	push	bc
-2582  0BB0  CD C6 0B    	call	_player_gasta_brick
-2583  0BB3  C1          	pop	bc
-2584  0BB4              l_player_check_floor_00122:
-2585  0BB4  DD 7E FC    	ld	a,(ix-4)
-2586  0BB7  D6 3E       	sub	a,0x3e
-2587  0BB9  20 06       	jr	NZ,l_player_check_floor_00133
-2588  0BBB  3E 3F       	ld	a,0x3f
-2589  0BBD  02          	ld	(bc), a
-2590  0BBE  CD C6 0B    	call	_player_gasta_brick
-2591  0BC1              l_player_check_floor_00133:
-2592  0BC1  DD F9       	ld	sp, ix
-2593  0BC3  DD E1       	pop	ix
-2594  0BC5  C9          	ret
-2595  0BC6              	SECTION code_compiler
-2596  0BC6              ;	---------------------------------
-2597  0BC6              ; Function player_gasta_brick
-2598  0BC6              ; ---------------------------------
-2599  0BC6              _player_gasta_brick:
-2600  0BC6  3A 00 00    	ld	a,(_s_lin0)
-2601  0BC9  32 00 00    	ld	(_s_lin1),a
-2602  0BCC  3A 00 00    	ld	a,(_s_col0)
-2603  0BCF  32 00 00    	ld	(_s_col1),a
-2604  0BD2  3A 07 00    	ld	a,(_lin + 0x0007)
-2605  0BD5  C6 10       	add	a,0x10
-2606  0BD7  32 00 00    	ld	(_s_lin0),a
-2607  0BDA  3A 07 00    	ld	a,(_col + 0x0007)
-2608  0BDD  32 00 00    	ld	(_s_col0),a
-2609  0BE0  CD 00 00    	call	_spr_back_repaint
-2610  0BE3  3A 00 00    	ld	a,(_s_lin1)
-2611  0BE6  32 00 00    	ld	(_s_lin0),a
-2612  0BE9  3A 00 00    	ld	a,(_s_col1)
-2613  0BEC  32 00 00    	ld	(_s_col0),a
-2614  0BEF  C9          	ret
-2615  0BF0              	SECTION code_compiler
-2616  0BF0              ;	---------------------------------
-2617  0BF0              ; Function player_move_jump
-2618  0BF0              ; ---------------------------------
-2619  0BF0              _player_move_jump:
-2620  0BF0  CD 00 00    	call	___sdcc_enter_ix
-2621  0BF3  F5          	push	af
-2622  0BF4  21 00 00    	ld	hl,_game_gravity
-2623  0BF7  4E          	ld	c, (hl)
-2624  0BF8  21 00 00    	ld	hl,_player_vel_y
-2625  0BFB  7E          	ld	a, (hl)
-2626  0BFC  81          	add	a, c
-2627  0BFD  77          	ld	(hl), a
-2628  0BFE  21 00 00    	ld	hl,_sprite_on_air
-2629  0C01  36 01       	ld	(hl),0x01
-2630  0C03  3A 00 00    	ld	a,(_player_vel_inc)
-2631  0C06  B7          	or	a, a
-2632  0C07  28 2B       	jr	Z,l_player_move_jump_00107
-2633  0C09  21 00 00    	ld	hl,_dirs
-2634  0C0C  CB 7E       	bit	7, (hl)
-2635  0C0E  28 07       	jr	Z,l_player_move_jump_00104
-2636  0C10  21 00 00    	ld	hl,_dirs
-2637  0C13  CB 46       	bit	0, (hl)
-2638  0C15  20 1D       	jr	NZ,l_player_move_jump_00107
-2639  0C17              l_player_move_jump_00104:
-2640  0C17  3A 00 00    	ld	a,(_player_vel_y1)
-2641  0C1A  21 00 00    	ld	hl,_player_vel_y
-2642  0C1D  96          	sub	a, (hl)
-2643  0C1E  E2 23 0C    	jp	PO, l_player_move_jump_00263
-2644  0C21  EE 80       	xor	a,0x80
-2645  0C23              l_player_move_jump_00263:
-2646  0C23  F2 34 0C    	jp	P, l_player_move_jump_00107
-2647  0C26  21 00 00    	ld	hl,_player_vel_y
-2648  0C29  CB 7E       	bit	7,(hl)
-2649  0C2B  28 07       	jr	Z,l_player_move_jump_00107
-2650  0C2D  36 00       	ld	(hl),0x00
-2651  0C2F  21 00 00    	ld	hl,_player_vel_inc
-2652  0C32  36 00       	ld	(hl),0x00
-2653  0C34              l_player_move_jump_00107:
-2654  0C34  3E 78       	ld	a,0x78
-2655  0C36  21 00 00    	ld	hl,_player_vel_y
-2656  0C39  96          	sub	a, (hl)
-2657  0C3A  E2 3F 0C    	jp	PO, l_player_move_jump_00264
-2658  0C3D  EE 80       	xor	a,0x80
-2659  0C3F              l_player_move_jump_00264:
-2660  0C3F  F2 47 0C    	jp	P, l_player_move_jump_00109
-2661  0C42  21 00 00    	ld	hl,_player_vel_y
-2662  0C45  36 78       	ld	(hl),0x78
-2663  0C47              l_player_move_jump_00109:
-2664  0C47  21 00 00    	ld	hl,_player_vel_y
-2665  0C4A  7E          	ld	a, (hl)
-2666  0C4B  EE 80       	xor	a,0x80
-2667  0C4D  D6 08       	sub	a,0x08
-2668  0C4F  30 02       	jr	NC,l_player_move_jump_00111
-2669  0C51  36 88       	ld	(hl),0x88
-2670  0C53              l_player_move_jump_00111:
-2671  0C53  21 00 00    	ld	hl,_player_vel_y
-2672  0C56  7E          	ld	a, (hl)
-2673  0C57  DD 77 FE    	ld	(ix-2),a
-2674  0C5A  7E          	ld	a, (hl)
-2675  0C5B  17          	rla
-2676  0C5C  9F          	sbc	a, a
-2677  0C5D  DD 77 FF    	ld	(ix-1),a
-2678  0C60  DD 7E FE    	ld	a,(ix-2)
-2679  0C63  CB 47       	bit	0,a
-2680  0C65  32 00 00    	ld	(_s_lin1),a
-2681  0C68  28 04       	jr	Z,l_player_move_jump_00113
-2682  0C6A  21 00 00    	ld	hl,_s_lin1
-2683  0C6D  35          	dec	(hl)
-2684  0C6E              l_player_move_jump_00113:
-2685  0C6E  3A 07 00    	ld	a,(_lin + 0x0007)
-2686  0C71  21 00 00    	ld	hl,_s_lin1
-2687  0C74  86          	add	a, (hl)
-2688  0C75  77          	ld	(hl), a
-2689  0C76  3E 90       	ld	a,0x90
-2690  0C78  96          	sub	a, (hl)
-2691  0C79  30 2B       	jr	NC,l_player_move_jump_00124
-2692  0C7B  3E C8       	ld	a,0xc8
-2693  0C7D  96          	sub	a, (hl)
-2694  0C7E  30 13       	jr	NC,l_player_move_jump_00121
-2695  0C80  CD 00 00    	call	_spr_page_up
-2696  0C83  7D          	ld	a, l
-2697  0C84  B7          	or	a, a
-2698  0C85  28 05       	jr	Z,l_player_move_jump_00115
-2699  0C87  2E 00       	ld	l,0x00
-2700  0C89  C3 04 0E    	jp	l_player_move_jump_00158
-2701  0C8C              l_player_move_jump_00115:
-2702  0C8C  21 00 00    	ld	hl,_s_lin1
-2703  0C8F  36 00       	ld	(hl),0x00
-2704  0C91  18 13       	jr	l_player_move_jump_00124
-2705  0C93              l_player_move_jump_00121:
-2706  0C93  CD 00 00    	call	_spr_page_down
-2707  0C96  7D          	ld	a, l
-2708  0C97  B7          	or	a, a
-2709  0C98  28 07       	jr	Z,l_player_move_jump_00118
-2710  0C9A  21 00 00    	ld	hl,_s_lin1
-2711  0C9D  36 10       	ld	(hl),0x10
-2712  0C9F  18 05       	jr	l_player_move_jump_00124
-2713  0CA1              l_player_move_jump_00118:
-2714  0CA1  21 00 00    	ld	hl,_s_lin1
-2715  0CA4  36 90       	ld	(hl),0x90
-2716  0CA6              l_player_move_jump_00124:
-2717  0CA6  3A 00 00    	ld	a,(_s_lin0)
-2718  0CA9  07          	rlca
-2719  0CAA  07          	rlca
-2720  0CAB  07          	rlca
-2721  0CAC  07          	rlca
-2722  0CAD  E6 0F       	and	a,0x0f
-2723  0CAF  4F          	ld	c, a
-2724  0CB0  DD CB FF 7E 	bit	7,(ix-1)
-2725  0CB4  28 62       	jr	Z,l_player_move_jump_00147
-2726  0CB6  21 00 00    	ld	hl,_s_state
-2727  0CB9  7E          	ld	a,(hl)
-2728  0CBA  F6 01       	or	a,0x01
-2729  0CBC  E6 FD       	and	a,0xfd
-2730  0CBE  77          	ld	(hl),a
-2731  0CBF  21 00 00    	ld	hl,_s_lin1
-2732  0CC2  46          	ld	b, (hl)
-2733  0CC3  79          	ld	a, c
-2734  0CC4  90          	sub	a, b
-2735  0CC5  20 04       	jr	NZ,l_player_move_jump_00266
-2736  0CC7  3E 01       	ld	a,0x01
-2737  0CC9  18 01       	jr	l_player_move_jump_00267
-2738  0CCB              l_player_move_jump_00266:
-2739  0CCB  AF          	xor	a,a
-2740  0CCC              l_player_move_jump_00267:
-2741  0CCC  EE 01       	xor	a,0x01
-2742  0CCE  4F          	ld	c,a
-2743  0CCF  B7          	or	a, a
-2744  0CD0  28 3D       	jr	Z,l_player_move_jump_00131
-2745  0CD2  21 07 00    	ld	hl,+(_col + 0x0007)
-2746  0CD5  46          	ld	b, (hl)
-2747  0CD6  C5          	push	bc
-2748  0CD7  33          	inc	sp
-2749  0CD8  3A 00 00    	ld	a,(_s_lin1)
-2750  0CDB  F5          	push	af
-2751  0CDC  33          	inc	sp
-2752  0CDD  CD 00 00    	call	_game_check_map
-2753  0CE0  F1          	pop	af
-2754  0CE1  7C          	ld	a,h
-2755  0CE2  B5          	or	a,l
-2756  0CE3  28 21       	jr	Z,l_player_move_jump_00128
-2757  0CE5  CD 8D 07    	call	_player_hit_platform
-2758  0CE8  7D          	ld	a, l
-2759  0CE9  B7          	or	a, a
-2760  0CEA  28 12       	jr	Z,l_player_move_jump_00126
-2761  0CEC  3A 07 00    	ld	a,(_lin + 0x0007)
-2762  0CEF  07          	rlca
-2763  0CF0  07          	rlca
-2764  0CF1  07          	rlca
-2765  0CF2  07          	rlca
-2766  0CF3  E6 0F       	and	a,0x0f
-2767  0CF5  07          	rlca
-2768  0CF6  07          	rlca
-2769  0CF7  07          	rlca
-2770  0CF8  07          	rlca
-2771  0CF9  E6 F0       	and	a,0xf0
-2772  0CFB  32 07 00    	ld	((_lin + 0x0007)),a
-2773  0CFE              l_player_move_jump_00126:
-2774  0CFE  21 00 00    	ld	hl,_player_vel_y
-2775  0D01  36 00       	ld	(hl),0x00
-2776  0D03  C3 C6 0D    	jp	l_player_move_jump_00148
-2777  0D06              l_player_move_jump_00128:
-2778  0D06  3A 00 00    	ld	a,(_s_lin1)
-2779  0D09  32 07 00    	ld	((_lin + 0x0007)),a
-2780  0D0C  C3 C6 0D    	jp	l_player_move_jump_00148
-2781  0D0F              l_player_move_jump_00131:
-2782  0D0F  3A 00 00    	ld	a,(_s_lin1)
-2783  0D12  32 07 00    	ld	((_lin + 0x0007)),a
-2784  0D15  C3 C6 0D    	jp	l_player_move_jump_00148
-2785  0D18              l_player_move_jump_00147:
-2786  0D18  21 00 00    	ld	hl,_s_state
-2787  0D1B  7E          	ld	a,(hl)
-2788  0D1C  F6 02       	or	a,0x02
-2789  0D1E  E6 FE       	and	a,0xfe
-2790  0D20  77          	ld	(hl),a
-2791  0D21  21 00 00    	ld	hl,_s_lin1
-2792  0D24  7E          	ld	a, (hl)
-2793  0D25  C6 10       	add	a,0x10
-2794  0D27  77          	ld	(hl),a
-2795  0D28  47          	ld	b,a
-2796  0D29  79          	ld	a, c
-2797  0D2A  90          	sub	a, b
-2798  0D2B  20 04       	jr	NZ,l_player_move_jump_00268
-2799  0D2D  3E 01       	ld	a,0x01
-2800  0D2F  18 01       	jr	l_player_move_jump_00269
-2801  0D31              l_player_move_jump_00268:
-2802  0D31  AF          	xor	a,a
-2803  0D32              l_player_move_jump_00269:
-2804  0D32  EE 01       	xor	a,0x01
-2805  0D34  4F          	ld	c,a
-2806  0D35  B7          	or	a, a
-2807  0D36  CA B9 0D    	jp	Z, l_player_move_jump_00144
-2808  0D39  21 07 00    	ld	hl,+(_col + 0x0007)
-2809  0D3C  46          	ld	b, (hl)
-2810  0D3D  C5          	push	bc
-2811  0D3E  33          	inc	sp
-2812  0D3F  3A 00 00    	ld	a,(_s_lin1)
-2813  0D42  F5          	push	af
-2814  0D43  33          	inc	sp
-2815  0D44  CD 00 00    	call	_game_check_map
-2816  0D47  F1          	pop	af
-2817  0D48  45          	ld	b, l
-2818  0D49  5C          	ld	e, h
-2819  0D4A  21 00 00    	ld	hl,_s_lin1
-2820  0D4D  7E          	ld	a, (hl)
-2821  0D4E  C6 F0       	add	a,0xf0
-2822  0D50  4F          	ld	c, a
-2823  0D51  7B          	ld	a, e
-2824  0D52  B0          	or	a,b
-2825  0D53  28 58       	jr	Z,l_player_move_jump_00141
-2826  0D55  71          	ld	(hl), c
-2827  0D56  2E 00       	ld	l,0x00
-2828  0D58  CD 63 03    	call	_player_check_stairs
-2829  0D5B  3A 00 00    	ld	a,(_player_over_stair)
-2830  0D5E  B7          	or	a, a
-2831  0D5F  20 05       	jr	NZ,l_player_move_jump_00134
-2832  0D61  2E 01       	ld	l,0x01
-2833  0D63  CD 63 03    	call	_player_check_stairs
-2834  0D66              l_player_move_jump_00134:
-2835  0D66  3A 00 00    	ld	a,(_player_over_stair)
-2836  0D69  B7          	or	a, a
-2837  0D6A  20 2C       	jr	NZ,l_player_move_jump_00139
-2838  0D6C  21 00 00    	ld	hl,_s_lin1
-2839  0D6F  7E          	ld	a, (hl)
-2840  0D70  07          	rlca
-2841  0D71  07          	rlca
-2842  0D72  07          	rlca
-2843  0D73  07          	rlca
-2844  0D74  E6 0F       	and	a,0x0f
-2845  0D76  07          	rlca
-2846  0D77  07          	rlca
-2847  0D78  07          	rlca
-2848  0D79  07          	rlca
-2849  0D7A  E6 F0       	and	a,0xf0
-2850  0D7C  77          	ld	(hl), a
-2851  0D7D  21 07 00    	ld	hl,+(_lin + 0x0007)
-2852  0D80  4E          	ld	c, (hl)
-2853  0D81  21 00 00    	ld	hl,_s_lin1
-2854  0D84  7E          	ld	a, (hl)
-2855  0D85  91          	sub	a, c
-2856  0D86  30 0A       	jr	NC,l_player_move_jump_00136
-2857  0D88  7E          	ld	a, (hl)
-2858  0D89  C6 10       	add	a,0x10
-2859  0D8B  32 07 00    	ld	((_lin + 0x0007)),a
-2860  0D8E  2E 00       	ld	l,0x00
-2861  0D90  18 72       	jr	l_player_move_jump_00158
-2862  0D92              l_player_move_jump_00136:
-2863  0D92  3A 00 00    	ld	a,(_s_lin1)
-2864  0D95  32 07 00    	ld	((_lin + 0x0007)),a
-2865  0D98              l_player_move_jump_00139:
-2866  0D98  21 00 00    	ld	hl,_player_vel_y
-2867  0D9B  36 00       	ld	(hl),0x00
-2868  0D9D  21 00 00    	ld	hl,_s_state
-2869  0DA0  7E          	ld	a,(hl)
-2870  0DA1  E6 FC       	and	a,+(0xfd&0xfe)
-2871  0DA3  77          	ld	(hl),a
-2872  0DA4  21 07 00    	ld	hl, +(_colint + 0x0007)
-2873  0DA7  36 00       	ld	(hl),0x00
-2874  0DA9  2E 01       	ld	l,0x01
-2875  0DAB  18 57       	jr	l_player_move_jump_00158
-2876  0DAD              l_player_move_jump_00141:
-2877  0DAD  21 00 00    	ld	hl,_s_lin1
-2878  0DB0  71          	ld	(hl), c
-2879  0DB1  3A 00 00    	ld	a,(_s_lin1)
-2880  0DB4  32 07 00    	ld	((_lin + 0x0007)),a
-2881  0DB7  18 0D       	jr	l_player_move_jump_00148
-2882  0DB9              l_player_move_jump_00144:
-2883  0DB9  21 00 00    	ld	hl,_s_lin1
-2884  0DBC  7E          	ld	a, (hl)
-2885  0DBD  C6 F0       	add	a,0xf0
-2886  0DBF  77          	ld	(hl), a
-2887  0DC0  3A 00 00    	ld	a,(_s_lin1)
-2888  0DC3  32 07 00    	ld	((_lin + 0x0007)),a
-2889  0DC6              l_player_move_jump_00148:
-2890  0DC6  21 00 00    	ld	hl,_s_state
-2891  0DC9  CB 5E       	bit	3, (hl)
-2892  0DCB  20 27       	jr	NZ,l_player_move_jump_00154
-2893  0DCD  21 00 00    	ld	hl,_s_state
-2894  0DD0  CB 56       	bit	2, (hl)
-2895  0DD2  20 20       	jr	NZ,l_player_move_jump_00154
-2896  0DD4  21 00 00    	ld	hl,_dirs
-2897  0DD7  CB 56       	bit	2, (hl)
-2898  0DD9  28 09       	jr	Z,l_player_move_jump_00150
-2899  0DDB  21 00 00    	ld	hl,_s_state
-2900  0DDE  7E          	ld	a,(hl)
-2901  0DDF  F6 08       	or	a,0x08
-2902  0DE1  E6 FB       	and	a,0xfb
-2903  0DE3  77          	ld	(hl),a
-2904  0DE4              l_player_move_jump_00150:
-2905  0DE4  21 00 00    	ld	hl,_dirs
-2906  0DE7  CB 5E       	bit	3, (hl)
-2907  0DE9  28 09       	jr	Z,l_player_move_jump_00154
-2908  0DEB  21 00 00    	ld	hl,_s_state
-2909  0DEE  7E          	ld	a,(hl)
-2910  0DEF  F6 04       	or	a,0x04
-2911  0DF1  E6 F7       	and	a,0xf7
-2912  0DF3  77          	ld	(hl),a
-2913  0DF4              l_player_move_jump_00154:
-2914  0DF4  CD 00 00    	call	_spr_move_horizontal
-2915  0DF7  7D          	ld	a, l
-2916  0DF8  B7          	or	a, a
-2917  0DF9  28 07       	jr	Z,l_player_move_jump_00157
-2918  0DFB  21 00 00    	ld	hl,_s_state
-2919  0DFE  7E          	ld	a,(hl)
-2920  0DFF  E6 F3       	and	a,+(0xf7&0xfb)
-2921  0E01  77          	ld	(hl),a
-2922  0E02              l_player_move_jump_00157:
-2923  0E02  2E 00       	ld	l,0x00
-2924  0E04              l_player_move_jump_00158:
-2925  0E04  F1          	pop	af
-2926  0E05  DD E1       	pop	ix
-2927  0E07  C9          	ret
-2928  0E08              	SECTION code_compiler
-2929  0E08              ;	---------------------------------
-2930  0E08              ; Function player_open_door
-2931  0E08              ; ---------------------------------
-2932  0E08              _player_open_door:
-2933  0E08  CD 00 00    	call	___sdcc_enter_ix
-2934  0E0B  0E 00       	ld	c,0x00
-2935  0E0D  DD 7E 06    	ld	a,(ix+6)
-2936  0E10  D6 48       	sub	a,0x48
-2937  0E12  28 17       	jr	Z,l_player_open_door_00101
-2938  0E14  DD 7E 06    	ld	a,(ix+6)
-2939  0E17  D6 49       	sub	a,0x49
-2940  0E19  28 1F       	jr	Z,l_player_open_door_00104
-2941  0E1B  DD 7E 06    	ld	a,(ix+6)
-2942  0E1E  D6 4A       	sub	a,0x4a
-2943  0E20  28 27       	jr	Z,l_player_open_door_00107
-2944  0E22  DD 7E 06    	ld	a,(ix+6)
-2945  0E25  D6 4B       	sub	a,0x4b
-2946  0E27  28 2F       	jr	Z,l_player_open_door_00110
-2947  0E29  18 3A       	jr	l_player_open_door_00113
-2948  0E2B              l_player_open_door_00101:
-2949  0E2B  3A 00 00    	ld	a,(_player_keys)
-2950  0E2E  B7          	or	a, a
-2951  0E2F  28 34       	jr	Z,l_player_open_door_00113
-2952  0E31  2E 07       	ld	l,0x07
-2953  0E33  CD 00 00    	call	_zx_border_fastcall
-2954  0E36  0E 01       	ld	c,0x01
-2955  0E38  18 2B       	jr	l_player_open_door_00113
-2956  0E3A              l_player_open_door_00104:
-2957  0E3A  3A 01 00    	ld	a,(_player_keys + 0x0001)
-2958  0E3D  B7          	or	a, a
-2959  0E3E  28 25       	jr	Z,l_player_open_door_00113
-2960  0E40  2E 02       	ld	l,0x02
-2961  0E42  CD 00 00    	call	_zx_border_fastcall
-2962  0E45  0E 01       	ld	c,0x01
-2963  0E47  18 1C       	jr	l_player_open_door_00113
-2964  0E49              l_player_open_door_00107:
-2965  0E49  3A 02 00    	ld	a,(_player_keys + 0x0002)
-2966  0E4C  B7          	or	a, a
-2967  0E4D  28 16       	jr	Z,l_player_open_door_00113
-2968  0E4F  2E 04       	ld	l,0x04
-2969  0E51  CD 00 00    	call	_zx_border_fastcall
-2970  0E54  0E 01       	ld	c,0x01
-2971  0E56  18 0D       	jr	l_player_open_door_00113
-2972  0E58              l_player_open_door_00110:
-2973  0E58  3A 03 00    	ld	a,(_player_keys + 0x0003)
-2974  0E5B  B7          	or	a, a
-2975  0E5C  28 07       	jr	Z,l_player_open_door_00113
-2976  0E5E  2E 05       	ld	l,0x05
-2977  0E60  CD 00 00    	call	_zx_border_fastcall
-2978  0E63  0E 01       	ld	c,0x01
-2979  0E65              l_player_open_door_00113:
-2980  0E65  79          	ld	a, c
-2981  0E66  B7          	or	a, a
-2982  0E67  20 06       	jr	NZ,l_player_open_door_00114
-2983  0E69  3A 00 00    	ld	a,(_game_inmune)
-2984  0E6C  B7          	or	a, a
-2985  0E6D  28 24       	jr	Z,l_player_open_door_00117
-2986  0E6F              l_player_open_door_00114:
-2987  0E6F  3E 00       	ld	a, +((_scr_map) & 0xFF)
-2988  0E71  DD 86 04    	add	a,(ix+4)
-2989  0E74  4F          	ld	c, a
-2990  0E75  3E 00       	ld	a, +((_scr_map) / 256)
-2991  0E77  DD 8E 05    	adc	a,(ix+5)
-2992  0E7A  47          	ld	b, a
-2993  0E7B  AF          	xor	a, a
-2994  0E7C  02          	ld	(bc), a
-2995  0E7D  DD 6E 04    	ld	l,(ix+4)
-2996  0E80  DD 66 05    	ld	h,(ix+5)
-2997  0E83  E5          	push	hl
-2998  0E84  CD 00 00    	call	_game_obj_set
-2999  0E87  F1          	pop	af
-3000  0E88  DD 6E 04    	ld	l,(ix+4)
-3001  0E8B  DD 66 05    	ld	h,(ix+5)
-3002  0E8E  E5          	push	hl
-3003  0E8F  CD 00 00    	call	_spr_draw_index
-3004  0E92  F1          	pop	af
-3005  0E93              l_player_open_door_00117:
-3006  0E93  DD E1       	pop	ix
-3007  0E95  C9          	ret
-3008  0E96              	SECTION code_compiler
-3009  0E96              ;	---------------------------------
-3010  0E96              ; Function player_lost_life
-3011  0E96              ; ---------------------------------
-3012  0E96              _player_lost_life:
-3013  0E96  CD 00 00    	call	___sdcc_enter_ix
-3014  0E99  3B          	dec	sp
-3015  0E9A  3A 07 00    	ld	a,(_lin + 0x0007)
-3016  0E9D  32 00 00    	ld	(_s_lin0),a
-3017  0EA0  3A 07 00    	ld	a,(_col + 0x0007)
-3018  0EA3  32 00 00    	ld	(_s_col0),a
-3019  0EA6  CD 00 00    	call	_spr_init_anim_bullets
-3020  0EA9  01 00 00    	ld	bc,_anim_lin+0
-3021  0EAC  16 00       	ld	d,0x00
-3022  0EAE              l_player_lost_life_00115:
-3023  0EAE  C5          	push	bc
-3024  0EAF  D5          	push	de
-3025  0EB0  21 00 00    	ld	hl,0x0000
-3026  0EB3  E5          	push	hl
-3027  0EB4  AF          	xor	a, a
-3028  0EB5  5A          	ld	e,d
-3029  0EB6  57          	ld	d,a
-3030  0EB7  D5          	push	de
-3031  0EB8  CD 00 00    	call	_NIRVANAP_spriteT_callee
-3032  0EBB  D1          	pop	de
-3033  0EBC  C1          	pop	bc
-3034  0EBD  6A          	ld	l,d
-3035  0EBE  26 00       	ld	h,0x00
-3036  0EC0  09          	add	hl, bc
-3037  0EC1  36 FF       	ld	(hl),0xff
-3038  0EC3  14          	inc	d
-3039  0EC4  7A          	ld	a, d
-3040  0EC5  D6 08       	sub	a,0x08
-3041  0EC7  38 E5       	jr	C,l_player_lost_life_00115
-3042  0EC9  21 00 00    	ld	hl,_anim_count
-3043  0ECC  36 00       	ld	(hl),0x00
-3044  0ECE  76          	halt
-3045  0ECF  3A 00 00    	ld	a,(_s_lin0)
-3046  0ED2  C6 F0       	add	a,0xf0
-3047  0ED4  47          	ld	b, a
-3048  0ED5  3A 00 00    	ld	a,(_s_col0)
-3049  0ED8  21 00 00    	ld	hl,0x0000
-3050  0EDB  E5          	push	hl
-3051  0EDC  21 87 03    	ld	hl,0x0387
-3052  0EDF  E5          	push	hl
-3053  0EE0  48          	ld	c,b
-3054  0EE1  47          	ld	b,a
-3055  0EE2  C5          	push	bc
-3056  0EE3  CD 00 00    	call	_spr_add_anim
-3057  0EE6  F1          	pop	af
-3058  0EE7  F1          	pop	af
-3059  0EE8  F1          	pop	af
-3060  0EE9  21 00 00    	ld	hl,_s_col0
-3061  0EEC  46          	ld	b, (hl)
-3062  0EED  05          	dec	b
-3063  0EEE  05          	dec	b
-3064  0EEF  21 00 00    	ld	hl,0x0000
-3065  0EF2  E5          	push	hl
-3066  0EF3  21 87 03    	ld	hl,0x0387
-3067  0EF6  E5          	push	hl
-3068  0EF7  C5          	push	bc
-3069  0EF8  33          	inc	sp
-3070  0EF9  3A 00 00    	ld	a,(_s_lin0)
-3071  0EFC  F5          	push	af
-3072  0EFD  33          	inc	sp
-3073  0EFE  CD 00 00    	call	_spr_add_anim
-3074  0F01  F1          	pop	af
-3075  0F02  F1          	pop	af
-3076  0F03  21 00 00    	ld	hl,0x0000
-3077  0F06  E3          	ex	(sp),hl
-3078  0F07  3A 00 00    	ld	a,(_s_col0)
-3079  0F0A  21 87 03    	ld	hl,0x0387
-3080  0F0D  E5          	push	hl
-3081  0F0E  F5          	push	af
-3082  0F0F  33          	inc	sp
-3083  0F10  3A 00 00    	ld	a,(_s_lin0)
-3084  0F13  F5          	push	af
-3085  0F14  33          	inc	sp
-3086  0F15  CD 00 00    	call	_spr_add_anim
-3087  0F18  F1          	pop	af
-3088  0F19  F1          	pop	af
-3089  0F1A  F1          	pop	af
-3090  0F1B  21 00 00    	ld	hl,_s_col0
-3091  0F1E  46          	ld	b, (hl)
-3092  0F1F  04          	inc	b
-3093  0F20  04          	inc	b
-3094  0F21  21 00 00    	ld	hl,0x0000
-3095  0F24  E5          	push	hl
-3096  0F25  21 87 03    	ld	hl,0x0387
-3097  0F28  E5          	push	hl
-3098  0F29  C5          	push	bc
-3099  0F2A  33          	inc	sp
-3100  0F2B  3A 00 00    	ld	a,(_s_lin0)
-3101  0F2E  F5          	push	af
-3102  0F2F  33          	inc	sp
-3103  0F30  CD 00 00    	call	_spr_add_anim
-3104  0F33  F1          	pop	af
-3105  0F34  F1          	pop	af
-3106  0F35  F1          	pop	af
-3107  0F36  3A 00 00    	ld	a,(_s_lin0)
-3108  0F39  C6 10       	add	a,0x10
-3109  0F3B  47          	ld	b, a
-3110  0F3C  3A 00 00    	ld	a,(_s_col0)
-3111  0F3F  21 00 00    	ld	hl,0x0000
-3112  0F42  E5          	push	hl
-3113  0F43  21 87 03    	ld	hl,0x0387
-3114  0F46  E5          	push	hl
-3115  0F47  48          	ld	c,b
-3116  0F48  47          	ld	b,a
-3117  0F49  C5          	push	bc
-3118  0F4A  CD 00 00    	call	_spr_add_anim
-3119  0F4D  F1          	pop	af
-3120  0F4E  F1          	pop	af
-3121  0F4F  F1          	pop	af
-3122  0F50  2E 00       	ld	l,0x00
-3123  0F52  CD 00 00    	call	_zx_border_fastcall
-3124  0F55  DD 36 FF 01 	ld	(ix-1),0x01
-3125  0F59  2A 00 00    	ld	hl,(_curr_time)
-3126  0F5C  22 00 00    	ld	(_anim_time),hl
-3127  0F5F              l_player_lost_life_00107:
-3128  0F5F  DD 7E FF    	ld	a,(ix-1)
-3129  0F62  B7          	or	a, a
-3130  0F63  28 28       	jr	Z,l_player_lost_life_00109
-3131  0F65  21 0C 00    	ld	hl,0x000c
-3132  0F68  E5          	push	hl
-3133  0F69  2A 00 00    	ld	hl,(_anim_time)
-3134  0F6C  E5          	push	hl
-3135  0F6D  CD 00 00    	call	_game_check_time
-3136  0F70  F1          	pop	af
-3137  0F71  F1          	pop	af
-3138  0F72  7D          	ld	a, l
-3139  0F73  B7          	or	a, a
-3140  0F74  28 E9       	jr	Z,l_player_lost_life_00107
-3141  0F76  2A 00 00    	ld	hl,(_curr_time)
-3142  0F79  22 00 00    	ld	(_anim_time),hl
-3143  0F7C  3A 00 00    	ld	a,(_anim_count)
-3144  0F7F  B7          	or	a,a
-3145  0F80  28 05       	jr	Z,l_player_lost_life_00103
-3146  0F82  CD 00 00    	call	_spr_play_anim
-3147  0F85  18 D8       	jr	l_player_lost_life_00107
-3148  0F87              l_player_lost_life_00103:
-3149  0F87  DD 36 FF 00 	ld	(ix-1),0x00
-3150  0F8B  18 D2       	jr	l_player_lost_life_00107
-3151  0F8D              l_player_lost_life_00109:
-3152  0F8D  21 00 00    	ld	hl,_sprite
-3153  0F90  36 00       	ld	(hl),0x00
-3154  0F92              l_player_lost_life_00117:
-3155  0F92  3A 07 00    	ld	a,(_class + 0x0007)
-3156  0F95  B7          	or	a, a
-3157  0F96  28 1F       	jr	Z,l_player_lost_life_00111
-3158  0F98  21 07 00    	ld	hl,+(_col + 0x0007)
-3159  0F9B  4E          	ld	c, (hl)
-3160  0F9C  21 07 00    	ld	hl,+(_lin + 0x0007)
-3161  0F9F  56          	ld	d, (hl)
-3162  0FA0  21 07 00    	ld	hl,+(_tile + 0x0007)
-3163  0FA3  5E          	ld	e, (hl)
-3164  0FA4  21 07 00    	ld	hl,+(_colint + 0x0007)
-3165  0FA7  46          	ld	b, (hl)
-3166  0FA8  7B          	ld	a, e
-3167  0FA9  80          	add	a, b
-3168  0FAA  5F          	ld	e, a
-3169  0FAB  79          	ld	a, c
-3170  0FAC  F5          	push	af
-3171  0FAD  33          	inc	sp
-3172  0FAE  3A 00 00    	ld	a,(_sprite)
-3173  0FB1  D5          	push	de
-3174  0FB2  F5          	push	af
-3175  0FB3  33          	inc	sp
-3176  0FB4  CD 00 00    	call	_NIRVANAP_spriteT_callee
-3177  0FB7              l_player_lost_life_00111:
-3178  0FB7  21 07 00    	ld	hl, +(_class + 0x0007)
-3179  0FBA  36 00       	ld	(hl),0x00
-3180  0FBC  21 07 00    	ld	hl, +(_bullet_col + 0x0007)
-3181  0FBF  36 FF       	ld	(hl),0xff
-3182  0FC1  21 00 00    	ld	hl,_sprite
-3183  0FC4  7E          	ld	a,(hl)
-3184  0FC5  3C          	inc	a
-3185  0FC6  77          	ld	(hl),a
-3186  0FC7  D6 07       	sub	a,0x07
-3187  0FC9  38 C7       	jr	C,l_player_lost_life_00117
-3188  0FCB  3A 00 00    	ld	a,(_player_lives)
-3189  0FCE  B7          	or	a, a
-3190  0FCF  28 09       	jr	Z,l_player_lost_life_00119
-3191  0FD1  21 F4 01    	ld	hl,0x01f4
-3192  0FD4  CD 00 00    	call	_z80_delay_ms_fastcall
-3193  0FD7  CD 00 00    	call	_game_round_init
-3194  0FDA              l_player_lost_life_00119:
-3195  0FDA  33          	inc	sp
-3196  0FDB  DD E1       	pop	ix
-3197  0FDD  C9          	ret
-3198  0FDE              	SECTION code_compiler
-3199  0FDE              ;	---------------------------------
-3200  0FDE              ; Function player_hit
-3201  0FDE              ; ---------------------------------
-3202  0FDE              _player_hit:
-3203  0FDE  7D          	ld	a,l
-3204  0FDF  4D          	ld	c,l
-3205  0FE0  21 00 00    	ld	hl,_player_vita
-3206  0FE3  96          	sub	a, (hl)
-3207  0FE4  30 17       	jr	NC,l_player_hit_00107
-3208  0FE6  3A 00 00    	ld	a,(_game_inmune)
-3209  0FE9  B7          	or	a, a
-3210  0FEA  20 06       	jr	NZ,l_player_hit_00102
-3211  0FEC  21 00 00    	ld	hl,_player_vita
-3212  0FEF  7E          	ld	a, (hl)
-3213  0FF0  91          	sub	a, c
-3214  0FF1  77          	ld	(hl), a
-3215  0FF2              l_player_hit_00102:
-3216  0FF2  2A 00 00    	ld	hl,(_curr_time)
-3217  0FF5  22 00 00    	ld	(_player_hit_time),hl
-3218  0FF8  CD 00 00    	call	_game_update_stats
-3219  0FFB  18 2C       	jr	l_player_hit_00109
-3220  0FFD              l_player_hit_00107:
-3221  0FFD  21 00 00    	ld	hl,_player_vita
-3222  1000  36 00       	ld	(hl),0x00
-3223  1002  CD 00 00    	call	_game_update_stats
-3224  1005  CD 96 0E    	call	_player_lost_life
-3225  1008  21 00 00    	ld	hl,_player_lives
-3226  100B  7E          	ld	a, (hl)
-3227  100C  B7          	or	a, a
-3228  100D  28 10       	jr	Z,l_player_hit_00104
-3229  100F  35          	dec	(hl)
-3230  1010  21 00 00    	ld	hl,_player_mana
-3231  1013  36 64       	ld	(hl),0x64
-3232  1015  21 00 00    	ld	hl,_player_vita
-3233  1018  36 64       	ld	(hl),0x64
-3234  101A  CD 00 00    	call	_game_update_stats
-3235  101D  18 0A       	jr	l_player_hit_00109
-3236  101F              l_player_hit_00104:
-3237  101F  21 00 00    	ld	hl,_player_lives
-3238  1022  36 00       	ld	(hl),0x00
-3239  1024  21 00 00    	ld	hl,_game_over
-3240  1027  36 01       	ld	(hl),0x01
-3241  1029              l_player_hit_00109:
-3242  1029  C9          	ret
-3243  102A              	SECTION IGNORE
+2430  0A93              ;	---------------------------------
+2431  0A93              ; Function player_check_floor
+2432  0A93              ; ---------------------------------
+2433  0A93              _player_check_floor:
+2434  0A93  CD 00 00    	call	___sdcc_enter_ix
+2435  0A96  F5          	push	af
+2436  0A97  F5          	push	af
+2437  0A98  11 07 00    	ld	de,_col+7
+2438  0A9B  1A          	ld	a, (de)
+2439  0A9C  47          	ld	b, a
+2440  0A9D  3A 07 00    	ld	a,(_lin + 0x0007)
+2441  0AA0  C6 10       	add	a,0x10
+2442  0AA2  D5          	push	de
+2443  0AA3  4F          	ld	c,a
+2444  0AA4  C5          	push	bc
+2445  0AA5  CD 00 00    	call	_spr_calc_index
+2446  0AA8  F1          	pop	af
+2447  0AA9  D1          	pop	de
+2448  0AAA  4D          	ld	c,l
+2449  0AAB  44          	ld	b,h
+2450  0AAC  21 00 00    	ld	hl,_scr_map
+2451  0AAF  09          	add	hl,bc
+2452  0AB0  DD 75 FE    	ld	(ix-2),l
+2453  0AB3  DD 74 FF    	ld	(ix-1),h
+2454  0AB6  7E          	ld	a, (hl)
+2455  0AB7  DD 77 FD    	ld	(ix-3),a
+2456  0ABA  03          	inc	bc
+2457  0ABB  21 00 00    	ld	hl,_scr_map
+2458  0ABE  09          	add	hl,bc
+2459  0ABF  3A 00 00    	ld	a,(_s_lin0)
+2460  0AC2  D6 90       	sub	a,0x90
+2461  0AC4  4D          	ld	c,l
+2462  0AC5  44          	ld	b,h
+2463  0AC6  20 26       	jr	NZ,l_player_check_floor_00108
+2464  0AC8  3A 00 00    	ld	a,(_map_heigth)
+2465  0ACB  C5          	push	bc
+2466  0ACC  F5          	push	af
+2467  0ACD  33          	inc	sp
+2468  0ACE  3A 00 00    	ld	a,(_scr_curr)
+2469  0AD1  F5          	push	af
+2470  0AD2  33          	inc	sp
+2471  0AD3  CD 00 00    	call	__divuchar_callee
+2472  0AD6  C1          	pop	bc
+2473  0AD7  7D          	ld	a,l
+2474  0AD8  3C          	inc	a
+2475  0AD9  32 00 00    	ld	(_tmp1),a
+2476  0ADC  21 00 00    	ld	hl,_map_heigth
+2477  0ADF  96          	sub	a, (hl)
+2478  0AE0  30 06       	jr	NC,l_player_check_floor_00102
+2479  0AE2  DD 36 FD 00 	ld	(ix-3),0x00
+2480  0AE6  18 14       	jr	l_player_check_floor_00109
+2481  0AE8              l_player_check_floor_00102:
+2482  0AE8  DD 36 FD 48 	ld	(ix-3),0x48
+2483  0AEC  18 0E       	jr	l_player_check_floor_00109
+2484  0AEE              l_player_check_floor_00108:
+2485  0AEE  1A          	ld	a, (de)
+2486  0AEF  0F          	rrca
+2487  0AF0  38 06       	jr	C,l_player_check_floor_00105
+2488  0AF2  DD 36 FC 00 	ld	(ix-4),0x00
+2489  0AF6  18 04       	jr	l_player_check_floor_00109
+2490  0AF8              l_player_check_floor_00105:
+2491  0AF8  0A          	ld	a, (bc)
+2492  0AF9  DD 77 FC    	ld	(ix-4),a
+2493  0AFC              l_player_check_floor_00109:
+2494  0AFC  DD 7E FD    	ld	a,(ix-3)
+2495  0AFF  D6 3C       	sub	a,0x3c
+2496  0B01  38 07       	jr	C,l_player_check_floor_00132
+2497  0B03  DD 7E FD    	ld	a,(ix-3)
+2498  0B06  D6 60       	sub	a,0x60
+2499  0B08  38 32       	jr	C,l_player_check_floor_00128
+2500  0B0A              l_player_check_floor_00132:
+2501  0B0A  DD 7E FC    	ld	a,(ix-4)
+2502  0B0D  D6 3C       	sub	a,0x3c
+2503  0B0F  38 07       	jr	C,l_player_check_floor_00127
+2504  0B11  DD 7E FC    	ld	a,(ix-4)
+2505  0B14  D6 60       	sub	a,0x60
+2506  0B16  38 24       	jr	C,l_player_check_floor_00128
+2507  0B18              l_player_check_floor_00127:
+2508  0B18  21 07 00    	ld	hl, +(_sprite_speed_alt + 0x0007)
+2509  0B1B  36 02       	ld	(hl),0x02
+2510  0B1D  21 00 00    	ld	hl,_s_state
+2511  0B20  CB CE       	set	1, (hl)
+2512  0B22  2E 00       	ld	l,0x00
+2513  0B24  CD 40 03    	call	_player_check_stairs
+2514  0B27  3A 00 00    	ld	a,(_player_over_stair)
+2515  0B2A  B7          	or	a, a
+2516  0B2B  C2 BB 0B    	jp	NZ, l_player_check_floor_00133
+2517  0B2E  3A 00 00    	ld	a,(_s_lin0)
+2518  0B31  D6 90       	sub	a,0x90
+2519  0B33  C2 BB 0B    	jp	NZ,l_player_check_floor_00133
+2520  0B36  CD 00 00    	call	_spr_page_down
+2521  0B39  C3 BB 0B    	jp	l_player_check_floor_00133
+2522  0B3C              l_player_check_floor_00128:
+2523  0B3C  C5          	push	bc
+2524  0B3D  21 10 00    	ld	hl,0x0010
+2525  0B40  E5          	push	hl
+2526  0B41  2A 00 00    	ld	hl,(_player_brick_time)
+2527  0B44  E5          	push	hl
+2528  0B45  CD 00 00    	call	_game_check_time
+2529  0B48  F1          	pop	af
+2530  0B49  F1          	pop	af
+2531  0B4A  C1          	pop	bc
+2532  0B4B  7D          	ld	a,l
+2533  0B4C  B7          	or	a, a
+2534  0B4D  28 6C       	jr	Z,l_player_check_floor_00133
+2535  0B4F  2A 00 00    	ld	hl,(_curr_time)
+2536  0B52  22 00 00    	ld	(_player_brick_time),hl
+2537  0B55  DD 7E FD    	ld	a,(ix-3)
+2538  0B58  D6 40       	sub	a,0x40
+2539  0B5A  20 0D       	jr	NZ,l_player_check_floor_00114
+2540  0B5C  DD 6E FE    	ld	l,(ix-2)
+2541  0B5F  DD 66 FF    	ld	h,(ix-1)
+2542  0B62  36 00       	ld	(hl),0x00
+2543  0B64  C5          	push	bc
+2544  0B65  CD C0 0B    	call	_player_gasta_brick
+2545  0B68  C1          	pop	bc
+2546  0B69              l_player_check_floor_00114:
+2547  0B69  DD 7E FD    	ld	a,(ix-3)
+2548  0B6C  D6 3F       	sub	a,0x3f
+2549  0B6E  20 0D       	jr	NZ,l_player_check_floor_00116
+2550  0B70  DD 6E FE    	ld	l,(ix-2)
+2551  0B73  DD 66 FF    	ld	h,(ix-1)
+2552  0B76  36 40       	ld	(hl),0x40
+2553  0B78  C5          	push	bc
+2554  0B79  CD C0 0B    	call	_player_gasta_brick
+2555  0B7C  C1          	pop	bc
+2556  0B7D              l_player_check_floor_00116:
+2557  0B7D  DD 7E FD    	ld	a,(ix-3)
+2558  0B80  D6 3E       	sub	a,0x3e
+2559  0B82  20 0D       	jr	NZ,l_player_check_floor_00118
+2560  0B84  DD 6E FE    	ld	l,(ix-2)
+2561  0B87  DD 66 FF    	ld	h,(ix-1)
+2562  0B8A  36 3F       	ld	(hl),0x3f
+2563  0B8C  C5          	push	bc
+2564  0B8D  CD C0 0B    	call	_player_gasta_brick
+2565  0B90  C1          	pop	bc
+2566  0B91              l_player_check_floor_00118:
+2567  0B91  DD 7E FC    	ld	a,(ix-4)
+2568  0B94  D6 40       	sub	a,0x40
+2569  0B96  20 07       	jr	NZ,l_player_check_floor_00120
+2570  0B98  AF          	xor	a, a
+2571  0B99  02          	ld	(bc), a
+2572  0B9A  C5          	push	bc
+2573  0B9B  CD C0 0B    	call	_player_gasta_brick
+2574  0B9E  C1          	pop	bc
+2575  0B9F              l_player_check_floor_00120:
+2576  0B9F  DD 7E FC    	ld	a,(ix-4)
+2577  0BA2  D6 3F       	sub	a,0x3f
+2578  0BA4  20 08       	jr	NZ,l_player_check_floor_00122
+2579  0BA6  3E 40       	ld	a,0x40
+2580  0BA8  02          	ld	(bc), a
+2581  0BA9  C5          	push	bc
+2582  0BAA  CD C0 0B    	call	_player_gasta_brick
+2583  0BAD  C1          	pop	bc
+2584  0BAE              l_player_check_floor_00122:
+2585  0BAE  DD 7E FC    	ld	a,(ix-4)
+2586  0BB1  D6 3E       	sub	a,0x3e
+2587  0BB3  20 06       	jr	NZ,l_player_check_floor_00133
+2588  0BB5  3E 3F       	ld	a,0x3f
+2589  0BB7  02          	ld	(bc), a
+2590  0BB8  CD C0 0B    	call	_player_gasta_brick
+2591  0BBB              l_player_check_floor_00133:
+2592  0BBB  DD F9       	ld	sp, ix
+2593  0BBD  DD E1       	pop	ix
+2594  0BBF  C9          	ret
+2595  0BC0              	SECTION code_compiler
+2596  0BC0              ;	---------------------------------
+2597  0BC0              ; Function player_gasta_brick
+2598  0BC0              ; ---------------------------------
+2599  0BC0              _player_gasta_brick:
+2600  0BC0  3A 00 00    	ld	a,(_s_lin0)
+2601  0BC3  32 00 00    	ld	(_s_lin1),a
+2602  0BC6  3A 00 00    	ld	a,(_s_col0)
+2603  0BC9  32 00 00    	ld	(_s_col1),a
+2604  0BCC  3A 07 00    	ld	a,(_lin + 0x0007)
+2605  0BCF  C6 10       	add	a,0x10
+2606  0BD1  32 00 00    	ld	(_s_lin0),a
+2607  0BD4  3A 07 00    	ld	a,(_col + 0x0007)
+2608  0BD7  32 00 00    	ld	(_s_col0),a
+2609  0BDA  CD 00 00    	call	_spr_back_repaint
+2610  0BDD  3A 00 00    	ld	a,(_s_lin1)
+2611  0BE0  32 00 00    	ld	(_s_lin0),a
+2612  0BE3  3A 00 00    	ld	a,(_s_col1)
+2613  0BE6  32 00 00    	ld	(_s_col0),a
+2614  0BE9  C9          	ret
+2615  0BEA              	SECTION code_compiler
+2616  0BEA              ;	---------------------------------
+2617  0BEA              ; Function player_move_jump
+2618  0BEA              ; ---------------------------------
+2619  0BEA              _player_move_jump:
+2620  0BEA  CD 00 00    	call	___sdcc_enter_ix
+2621  0BED  F5          	push	af
+2622  0BEE  21 00 00    	ld	hl,_game_gravity
+2623  0BF1  4E          	ld	c, (hl)
+2624  0BF2  21 00 00    	ld	hl,_player_vel_y
+2625  0BF5  7E          	ld	a, (hl)
+2626  0BF6  81          	add	a, c
+2627  0BF7  77          	ld	(hl), a
+2628  0BF8  21 00 00    	ld	hl,_sprite_on_air
+2629  0BFB  36 01       	ld	(hl),0x01
+2630  0BFD  3A 00 00    	ld	a,(_player_vel_inc)
+2631  0C00  B7          	or	a, a
+2632  0C01  28 2B       	jr	Z,l_player_move_jump_00107
+2633  0C03  21 00 00    	ld	hl,_dirs
+2634  0C06  CB 7E       	bit	7, (hl)
+2635  0C08  28 07       	jr	Z,l_player_move_jump_00104
+2636  0C0A  21 00 00    	ld	hl,_dirs
+2637  0C0D  CB 46       	bit	0, (hl)
+2638  0C0F  20 1D       	jr	NZ,l_player_move_jump_00107
+2639  0C11              l_player_move_jump_00104:
+2640  0C11  3A 00 00    	ld	a,(_player_vel_y1)
+2641  0C14  21 00 00    	ld	hl,_player_vel_y
+2642  0C17  96          	sub	a, (hl)
+2643  0C18  E2 1D 0C    	jp	PO, l_player_move_jump_00263
+2644  0C1B  EE 80       	xor	a,0x80
+2645  0C1D              l_player_move_jump_00263:
+2646  0C1D  F2 2E 0C    	jp	P, l_player_move_jump_00107
+2647  0C20  21 00 00    	ld	hl,_player_vel_y
+2648  0C23  CB 7E       	bit	7,(hl)
+2649  0C25  28 07       	jr	Z,l_player_move_jump_00107
+2650  0C27  36 00       	ld	(hl),0x00
+2651  0C29  21 00 00    	ld	hl,_player_vel_inc
+2652  0C2C  36 00       	ld	(hl),0x00
+2653  0C2E              l_player_move_jump_00107:
+2654  0C2E  3E 78       	ld	a,0x78
+2655  0C30  21 00 00    	ld	hl,_player_vel_y
+2656  0C33  96          	sub	a, (hl)
+2657  0C34  E2 39 0C    	jp	PO, l_player_move_jump_00264
+2658  0C37  EE 80       	xor	a,0x80
+2659  0C39              l_player_move_jump_00264:
+2660  0C39  F2 41 0C    	jp	P, l_player_move_jump_00109
+2661  0C3C  21 00 00    	ld	hl,_player_vel_y
+2662  0C3F  36 78       	ld	(hl),0x78
+2663  0C41              l_player_move_jump_00109:
+2664  0C41  21 00 00    	ld	hl,_player_vel_y
+2665  0C44  7E          	ld	a, (hl)
+2666  0C45  EE 80       	xor	a,0x80
+2667  0C47  D6 08       	sub	a,0x08
+2668  0C49  30 02       	jr	NC,l_player_move_jump_00111
+2669  0C4B  36 88       	ld	(hl),0x88
+2670  0C4D              l_player_move_jump_00111:
+2671  0C4D  21 00 00    	ld	hl,_player_vel_y
+2672  0C50  7E          	ld	a, (hl)
+2673  0C51  DD 77 FE    	ld	(ix-2),a
+2674  0C54  7E          	ld	a, (hl)
+2675  0C55  17          	rla
+2676  0C56  9F          	sbc	a, a
+2677  0C57  DD 77 FF    	ld	(ix-1),a
+2678  0C5A  DD 7E FE    	ld	a,(ix-2)
+2679  0C5D  CB 47       	bit	0,a
+2680  0C5F  32 00 00    	ld	(_s_lin1),a
+2681  0C62  28 04       	jr	Z,l_player_move_jump_00113
+2682  0C64  21 00 00    	ld	hl,_s_lin1
+2683  0C67  35          	dec	(hl)
+2684  0C68              l_player_move_jump_00113:
+2685  0C68  3A 07 00    	ld	a,(_lin + 0x0007)
+2686  0C6B  21 00 00    	ld	hl,_s_lin1
+2687  0C6E  86          	add	a, (hl)
+2688  0C6F  77          	ld	(hl), a
+2689  0C70  3E 90       	ld	a,0x90
+2690  0C72  96          	sub	a, (hl)
+2691  0C73  30 2B       	jr	NC,l_player_move_jump_00124
+2692  0C75  3E C8       	ld	a,0xc8
+2693  0C77  96          	sub	a, (hl)
+2694  0C78  30 13       	jr	NC,l_player_move_jump_00121
+2695  0C7A  CD 00 00    	call	_spr_page_up
+2696  0C7D  7D          	ld	a, l
+2697  0C7E  B7          	or	a, a
+2698  0C7F  28 05       	jr	Z,l_player_move_jump_00115
+2699  0C81  2E 00       	ld	l,0x00
+2700  0C83  C3 FE 0D    	jp	l_player_move_jump_00158
+2701  0C86              l_player_move_jump_00115:
+2702  0C86  21 00 00    	ld	hl,_s_lin1
+2703  0C89  36 00       	ld	(hl),0x00
+2704  0C8B  18 13       	jr	l_player_move_jump_00124
+2705  0C8D              l_player_move_jump_00121:
+2706  0C8D  CD 00 00    	call	_spr_page_down
+2707  0C90  7D          	ld	a, l
+2708  0C91  B7          	or	a, a
+2709  0C92  28 07       	jr	Z,l_player_move_jump_00118
+2710  0C94  21 00 00    	ld	hl,_s_lin1
+2711  0C97  36 10       	ld	(hl),0x10
+2712  0C99  18 05       	jr	l_player_move_jump_00124
+2713  0C9B              l_player_move_jump_00118:
+2714  0C9B  21 00 00    	ld	hl,_s_lin1
+2715  0C9E  36 90       	ld	(hl),0x90
+2716  0CA0              l_player_move_jump_00124:
+2717  0CA0  3A 00 00    	ld	a,(_s_lin0)
+2718  0CA3  07          	rlca
+2719  0CA4  07          	rlca
+2720  0CA5  07          	rlca
+2721  0CA6  07          	rlca
+2722  0CA7  E6 0F       	and	a,0x0f
+2723  0CA9  4F          	ld	c, a
+2724  0CAA  DD CB FF 7E 	bit	7,(ix-1)
+2725  0CAE  28 62       	jr	Z,l_player_move_jump_00147
+2726  0CB0  21 00 00    	ld	hl,_s_state
+2727  0CB3  7E          	ld	a,(hl)
+2728  0CB4  F6 01       	or	a,0x01
+2729  0CB6  E6 FD       	and	a,0xfd
+2730  0CB8  77          	ld	(hl),a
+2731  0CB9  21 00 00    	ld	hl,_s_lin1
+2732  0CBC  46          	ld	b, (hl)
+2733  0CBD  79          	ld	a, c
+2734  0CBE  90          	sub	a, b
+2735  0CBF  20 04       	jr	NZ,l_player_move_jump_00266
+2736  0CC1  3E 01       	ld	a,0x01
+2737  0CC3  18 01       	jr	l_player_move_jump_00267
+2738  0CC5              l_player_move_jump_00266:
+2739  0CC5  AF          	xor	a,a
+2740  0CC6              l_player_move_jump_00267:
+2741  0CC6  EE 01       	xor	a,0x01
+2742  0CC8  4F          	ld	c,a
+2743  0CC9  B7          	or	a, a
+2744  0CCA  28 3D       	jr	Z,l_player_move_jump_00131
+2745  0CCC  21 07 00    	ld	hl,+(_col + 0x0007)
+2746  0CCF  46          	ld	b, (hl)
+2747  0CD0  C5          	push	bc
+2748  0CD1  33          	inc	sp
+2749  0CD2  3A 00 00    	ld	a,(_s_lin1)
+2750  0CD5  F5          	push	af
+2751  0CD6  33          	inc	sp
+2752  0CD7  CD 00 00    	call	_game_check_map
+2753  0CDA  F1          	pop	af
+2754  0CDB  7C          	ld	a,h
+2755  0CDC  B5          	or	a,l
+2756  0CDD  28 21       	jr	Z,l_player_move_jump_00128
+2757  0CDF  CD 87 07    	call	_player_hit_platform
+2758  0CE2  7D          	ld	a, l
+2759  0CE3  B7          	or	a, a
+2760  0CE4  28 12       	jr	Z,l_player_move_jump_00126
+2761  0CE6  3A 07 00    	ld	a,(_lin + 0x0007)
+2762  0CE9  07          	rlca
+2763  0CEA  07          	rlca
+2764  0CEB  07          	rlca
+2765  0CEC  07          	rlca
+2766  0CED  E6 0F       	and	a,0x0f
+2767  0CEF  07          	rlca
+2768  0CF0  07          	rlca
+2769  0CF1  07          	rlca
+2770  0CF2  07          	rlca
+2771  0CF3  E6 F0       	and	a,0xf0
+2772  0CF5  32 07 00    	ld	((_lin + 0x0007)),a
+2773  0CF8              l_player_move_jump_00126:
+2774  0CF8  21 00 00    	ld	hl,_player_vel_y
+2775  0CFB  36 00       	ld	(hl),0x00
+2776  0CFD  C3 C0 0D    	jp	l_player_move_jump_00148
+2777  0D00              l_player_move_jump_00128:
+2778  0D00  3A 00 00    	ld	a,(_s_lin1)
+2779  0D03  32 07 00    	ld	((_lin + 0x0007)),a
+2780  0D06  C3 C0 0D    	jp	l_player_move_jump_00148
+2781  0D09              l_player_move_jump_00131:
+2782  0D09  3A 00 00    	ld	a,(_s_lin1)
+2783  0D0C  32 07 00    	ld	((_lin + 0x0007)),a
+2784  0D0F  C3 C0 0D    	jp	l_player_move_jump_00148
+2785  0D12              l_player_move_jump_00147:
+2786  0D12  21 00 00    	ld	hl,_s_state
+2787  0D15  7E          	ld	a,(hl)
+2788  0D16  F6 02       	or	a,0x02
+2789  0D18  E6 FE       	and	a,0xfe
+2790  0D1A  77          	ld	(hl),a
+2791  0D1B  21 00 00    	ld	hl,_s_lin1
+2792  0D1E  7E          	ld	a, (hl)
+2793  0D1F  C6 10       	add	a,0x10
+2794  0D21  77          	ld	(hl),a
+2795  0D22  47          	ld	b,a
+2796  0D23  79          	ld	a, c
+2797  0D24  90          	sub	a, b
+2798  0D25  20 04       	jr	NZ,l_player_move_jump_00268
+2799  0D27  3E 01       	ld	a,0x01
+2800  0D29  18 01       	jr	l_player_move_jump_00269
+2801  0D2B              l_player_move_jump_00268:
+2802  0D2B  AF          	xor	a,a
+2803  0D2C              l_player_move_jump_00269:
+2804  0D2C  EE 01       	xor	a,0x01
+2805  0D2E  4F          	ld	c,a
+2806  0D2F  B7          	or	a, a
+2807  0D30  CA B3 0D    	jp	Z, l_player_move_jump_00144
+2808  0D33  21 07 00    	ld	hl,+(_col + 0x0007)
+2809  0D36  46          	ld	b, (hl)
+2810  0D37  C5          	push	bc
+2811  0D38  33          	inc	sp
+2812  0D39  3A 00 00    	ld	a,(_s_lin1)
+2813  0D3C  F5          	push	af
+2814  0D3D  33          	inc	sp
+2815  0D3E  CD 00 00    	call	_game_check_map
+2816  0D41  F1          	pop	af
+2817  0D42  45          	ld	b, l
+2818  0D43  5C          	ld	e, h
+2819  0D44  21 00 00    	ld	hl,_s_lin1
+2820  0D47  7E          	ld	a, (hl)
+2821  0D48  C6 F0       	add	a,0xf0
+2822  0D4A  4F          	ld	c, a
+2823  0D4B  7B          	ld	a, e
+2824  0D4C  B0          	or	a,b
+2825  0D4D  28 58       	jr	Z,l_player_move_jump_00141
+2826  0D4F  71          	ld	(hl), c
+2827  0D50  2E 00       	ld	l,0x00
+2828  0D52  CD 40 03    	call	_player_check_stairs
+2829  0D55  3A 00 00    	ld	a,(_player_over_stair)
+2830  0D58  B7          	or	a, a
+2831  0D59  20 05       	jr	NZ,l_player_move_jump_00134
+2832  0D5B  2E 01       	ld	l,0x01
+2833  0D5D  CD 40 03    	call	_player_check_stairs
+2834  0D60              l_player_move_jump_00134:
+2835  0D60  3A 00 00    	ld	a,(_player_over_stair)
+2836  0D63  B7          	or	a, a
+2837  0D64  20 2C       	jr	NZ,l_player_move_jump_00139
+2838  0D66  21 00 00    	ld	hl,_s_lin1
+2839  0D69  7E          	ld	a, (hl)
+2840  0D6A  07          	rlca
+2841  0D6B  07          	rlca
+2842  0D6C  07          	rlca
+2843  0D6D  07          	rlca
+2844  0D6E  E6 0F       	and	a,0x0f
+2845  0D70  07          	rlca
+2846  0D71  07          	rlca
+2847  0D72  07          	rlca
+2848  0D73  07          	rlca
+2849  0D74  E6 F0       	and	a,0xf0
+2850  0D76  77          	ld	(hl), a
+2851  0D77  21 07 00    	ld	hl,+(_lin + 0x0007)
+2852  0D7A  4E          	ld	c, (hl)
+2853  0D7B  21 00 00    	ld	hl,_s_lin1
+2854  0D7E  7E          	ld	a, (hl)
+2855  0D7F  91          	sub	a, c
+2856  0D80  30 0A       	jr	NC,l_player_move_jump_00136
+2857  0D82  7E          	ld	a, (hl)
+2858  0D83  C6 10       	add	a,0x10
+2859  0D85  32 07 00    	ld	((_lin + 0x0007)),a
+2860  0D88  2E 00       	ld	l,0x00
+2861  0D8A  18 72       	jr	l_player_move_jump_00158
+2862  0D8C              l_player_move_jump_00136:
+2863  0D8C  3A 00 00    	ld	a,(_s_lin1)
+2864  0D8F  32 07 00    	ld	((_lin + 0x0007)),a
+2865  0D92              l_player_move_jump_00139:
+2866  0D92  21 00 00    	ld	hl,_player_vel_y
+2867  0D95  36 00       	ld	(hl),0x00
+2868  0D97  21 00 00    	ld	hl,_s_state
+2869  0D9A  7E          	ld	a,(hl)
+2870  0D9B  E6 FC       	and	a,+(0xfd&0xfe)
+2871  0D9D  77          	ld	(hl),a
+2872  0D9E  21 07 00    	ld	hl, +(_colint + 0x0007)
+2873  0DA1  36 00       	ld	(hl),0x00
+2874  0DA3  2E 01       	ld	l,0x01
+2875  0DA5  18 57       	jr	l_player_move_jump_00158
+2876  0DA7              l_player_move_jump_00141:
+2877  0DA7  21 00 00    	ld	hl,_s_lin1
+2878  0DAA  71          	ld	(hl), c
+2879  0DAB  3A 00 00    	ld	a,(_s_lin1)
+2880  0DAE  32 07 00    	ld	((_lin + 0x0007)),a
+2881  0DB1  18 0D       	jr	l_player_move_jump_00148
+2882  0DB3              l_player_move_jump_00144:
+2883  0DB3  21 00 00    	ld	hl,_s_lin1
+2884  0DB6  7E          	ld	a, (hl)
+2885  0DB7  C6 F0       	add	a,0xf0
+2886  0DB9  77          	ld	(hl), a
+2887  0DBA  3A 00 00    	ld	a,(_s_lin1)
+2888  0DBD  32 07 00    	ld	((_lin + 0x0007)),a
+2889  0DC0              l_player_move_jump_00148:
+2890  0DC0  21 00 00    	ld	hl,_s_state
+2891  0DC3  CB 5E       	bit	3, (hl)
+2892  0DC5  20 27       	jr	NZ,l_player_move_jump_00154
+2893  0DC7  21 00 00    	ld	hl,_s_state
+2894  0DCA  CB 56       	bit	2, (hl)
+2895  0DCC  20 20       	jr	NZ,l_player_move_jump_00154
+2896  0DCE  21 00 00    	ld	hl,_dirs
+2897  0DD1  CB 56       	bit	2, (hl)
+2898  0DD3  28 09       	jr	Z,l_player_move_jump_00150
+2899  0DD5  21 00 00    	ld	hl,_s_state
+2900  0DD8  7E          	ld	a,(hl)
+2901  0DD9  F6 08       	or	a,0x08
+2902  0DDB  E6 FB       	and	a,0xfb
+2903  0DDD  77          	ld	(hl),a
+2904  0DDE              l_player_move_jump_00150:
+2905  0DDE  21 00 00    	ld	hl,_dirs
+2906  0DE1  CB 5E       	bit	3, (hl)
+2907  0DE3  28 09       	jr	Z,l_player_move_jump_00154
+2908  0DE5  21 00 00    	ld	hl,_s_state
+2909  0DE8  7E          	ld	a,(hl)
+2910  0DE9  F6 04       	or	a,0x04
+2911  0DEB  E6 F7       	and	a,0xf7
+2912  0DED  77          	ld	(hl),a
+2913  0DEE              l_player_move_jump_00154:
+2914  0DEE  CD 00 00    	call	_spr_move_horizontal
+2915  0DF1  7D          	ld	a, l
+2916  0DF2  B7          	or	a, a
+2917  0DF3  28 07       	jr	Z,l_player_move_jump_00157
+2918  0DF5  21 00 00    	ld	hl,_s_state
+2919  0DF8  7E          	ld	a,(hl)
+2920  0DF9  E6 F3       	and	a,+(0xf7&0xfb)
+2921  0DFB  77          	ld	(hl),a
+2922  0DFC              l_player_move_jump_00157:
+2923  0DFC  2E 00       	ld	l,0x00
+2924  0DFE              l_player_move_jump_00158:
+2925  0DFE  F1          	pop	af
+2926  0DFF  DD E1       	pop	ix
+2927  0E01  C9          	ret
+2928  0E02              	SECTION code_compiler
+2929  0E02              ;	---------------------------------
+2930  0E02              ; Function player_open_door
+2931  0E02              ; ---------------------------------
+2932  0E02              _player_open_door:
+2933  0E02  CD 00 00    	call	___sdcc_enter_ix
+2934  0E05  0E 00       	ld	c,0x00
+2935  0E07  DD 7E 06    	ld	a,(ix+6)
+2936  0E0A  D6 48       	sub	a,0x48
+2937  0E0C  28 17       	jr	Z,l_player_open_door_00101
+2938  0E0E  DD 7E 06    	ld	a,(ix+6)
+2939  0E11  D6 49       	sub	a,0x49
+2940  0E13  28 1F       	jr	Z,l_player_open_door_00104
+2941  0E15  DD 7E 06    	ld	a,(ix+6)
+2942  0E18  D6 4A       	sub	a,0x4a
+2943  0E1A  28 27       	jr	Z,l_player_open_door_00107
+2944  0E1C  DD 7E 06    	ld	a,(ix+6)
+2945  0E1F  D6 4B       	sub	a,0x4b
+2946  0E21  28 2F       	jr	Z,l_player_open_door_00110
+2947  0E23  18 3A       	jr	l_player_open_door_00113
+2948  0E25              l_player_open_door_00101:
+2949  0E25  3A 00 00    	ld	a,(_player_keys)
+2950  0E28  B7          	or	a, a
+2951  0E29  28 34       	jr	Z,l_player_open_door_00113
+2952  0E2B  2E 07       	ld	l,0x07
+2953  0E2D  CD 00 00    	call	_zx_border_fastcall
+2954  0E30  0E 01       	ld	c,0x01
+2955  0E32  18 2B       	jr	l_player_open_door_00113
+2956  0E34              l_player_open_door_00104:
+2957  0E34  3A 01 00    	ld	a,(_player_keys + 0x0001)
+2958  0E37  B7          	or	a, a
+2959  0E38  28 25       	jr	Z,l_player_open_door_00113
+2960  0E3A  2E 02       	ld	l,0x02
+2961  0E3C  CD 00 00    	call	_zx_border_fastcall
+2962  0E3F  0E 01       	ld	c,0x01
+2963  0E41  18 1C       	jr	l_player_open_door_00113
+2964  0E43              l_player_open_door_00107:
+2965  0E43  3A 02 00    	ld	a,(_player_keys + 0x0002)
+2966  0E46  B7          	or	a, a
+2967  0E47  28 16       	jr	Z,l_player_open_door_00113
+2968  0E49  2E 04       	ld	l,0x04
+2969  0E4B  CD 00 00    	call	_zx_border_fastcall
+2970  0E4E  0E 01       	ld	c,0x01
+2971  0E50  18 0D       	jr	l_player_open_door_00113
+2972  0E52              l_player_open_door_00110:
+2973  0E52  3A 03 00    	ld	a,(_player_keys + 0x0003)
+2974  0E55  B7          	or	a, a
+2975  0E56  28 07       	jr	Z,l_player_open_door_00113
+2976  0E58  2E 05       	ld	l,0x05
+2977  0E5A  CD 00 00    	call	_zx_border_fastcall
+2978  0E5D  0E 01       	ld	c,0x01
+2979  0E5F              l_player_open_door_00113:
+2980  0E5F  79          	ld	a, c
+2981  0E60  B7          	or	a, a
+2982  0E61  20 06       	jr	NZ,l_player_open_door_00114
+2983  0E63  3A 00 00    	ld	a,(_game_inmune)
+2984  0E66  B7          	or	a, a
+2985  0E67  28 24       	jr	Z,l_player_open_door_00117
+2986  0E69              l_player_open_door_00114:
+2987  0E69  3E 00       	ld	a, +((_scr_map) & 0xFF)
+2988  0E6B  DD 86 04    	add	a,(ix+4)
+2989  0E6E  4F          	ld	c, a
+2990  0E6F  3E 00       	ld	a, +((_scr_map) / 256)
+2991  0E71  DD 8E 05    	adc	a,(ix+5)
+2992  0E74  47          	ld	b, a
+2993  0E75  AF          	xor	a, a
+2994  0E76  02          	ld	(bc), a
+2995  0E77  DD 6E 04    	ld	l,(ix+4)
+2996  0E7A  DD 66 05    	ld	h,(ix+5)
+2997  0E7D  E5          	push	hl
+2998  0E7E  CD 00 00    	call	_game_obj_set
+2999  0E81  F1          	pop	af
+3000  0E82  DD 6E 04    	ld	l,(ix+4)
+3001  0E85  DD 66 05    	ld	h,(ix+5)
+3002  0E88  E5          	push	hl
+3003  0E89  CD 00 00    	call	_spr_draw_index
+3004  0E8C  F1          	pop	af
+3005  0E8D              l_player_open_door_00117:
+3006  0E8D  DD E1       	pop	ix
+3007  0E8F  C9          	ret
+3008  0E90              	SECTION code_compiler
+3009  0E90              ;	---------------------------------
+3010  0E90              ; Function player_lost_life
+3011  0E90              ; ---------------------------------
+3012  0E90              _player_lost_life:
+3013  0E90  CD 00 00    	call	___sdcc_enter_ix
+3014  0E93  3B          	dec	sp
+3015  0E94  3A 07 00    	ld	a,(_lin + 0x0007)
+3016  0E97  32 00 00    	ld	(_s_lin0),a
+3017  0E9A  3A 07 00    	ld	a,(_col + 0x0007)
+3018  0E9D  32 00 00    	ld	(_s_col0),a
+3019  0EA0  CD 00 00    	call	_spr_init_anim_bullets
+3020  0EA3  01 00 00    	ld	bc,_anim_lin+0
+3021  0EA6  16 00       	ld	d,0x00
+3022  0EA8              l_player_lost_life_00115:
+3023  0EA8  C5          	push	bc
+3024  0EA9  D5          	push	de
+3025  0EAA  21 00 00    	ld	hl,0x0000
+3026  0EAD  E5          	push	hl
+3027  0EAE  AF          	xor	a, a
+3028  0EAF  5A          	ld	e,d
+3029  0EB0  57          	ld	d,a
+3030  0EB1  D5          	push	de
+3031  0EB2  CD 00 00    	call	_NIRVANAP_spriteT_callee
+3032  0EB5  D1          	pop	de
+3033  0EB6  C1          	pop	bc
+3034  0EB7  6A          	ld	l,d
+3035  0EB8  26 00       	ld	h,0x00
+3036  0EBA  09          	add	hl, bc
+3037  0EBB  36 FF       	ld	(hl),0xff
+3038  0EBD  14          	inc	d
+3039  0EBE  7A          	ld	a, d
+3040  0EBF  D6 08       	sub	a,0x08
+3041  0EC1  38 E5       	jr	C,l_player_lost_life_00115
+3042  0EC3  21 00 00    	ld	hl,_anim_count
+3043  0EC6  36 00       	ld	(hl),0x00
+3044  0EC8  76          	halt
+3045  0EC9  3A 00 00    	ld	a,(_s_lin0)
+3046  0ECC  C6 F0       	add	a,0xf0
+3047  0ECE  47          	ld	b, a
+3048  0ECF  3A 00 00    	ld	a,(_s_col0)
+3049  0ED2  21 00 00    	ld	hl,0x0000
+3050  0ED5  E5          	push	hl
+3051  0ED6  21 87 03    	ld	hl,0x0387
+3052  0ED9  E5          	push	hl
+3053  0EDA  48          	ld	c,b
+3054  0EDB  47          	ld	b,a
+3055  0EDC  C5          	push	bc
+3056  0EDD  CD 00 00    	call	_spr_add_anim
+3057  0EE0  F1          	pop	af
+3058  0EE1  F1          	pop	af
+3059  0EE2  F1          	pop	af
+3060  0EE3  21 00 00    	ld	hl,_s_col0
+3061  0EE6  46          	ld	b, (hl)
+3062  0EE7  05          	dec	b
+3063  0EE8  05          	dec	b
+3064  0EE9  21 00 00    	ld	hl,0x0000
+3065  0EEC  E5          	push	hl
+3066  0EED  21 87 03    	ld	hl,0x0387
+3067  0EF0  E5          	push	hl
+3068  0EF1  C5          	push	bc
+3069  0EF2  33          	inc	sp
+3070  0EF3  3A 00 00    	ld	a,(_s_lin0)
+3071  0EF6  F5          	push	af
+3072  0EF7  33          	inc	sp
+3073  0EF8  CD 00 00    	call	_spr_add_anim
+3074  0EFB  F1          	pop	af
+3075  0EFC  F1          	pop	af
+3076  0EFD  21 00 00    	ld	hl,0x0000
+3077  0F00  E3          	ex	(sp),hl
+3078  0F01  3A 00 00    	ld	a,(_s_col0)
+3079  0F04  21 87 03    	ld	hl,0x0387
+3080  0F07  E5          	push	hl
+3081  0F08  F5          	push	af
+3082  0F09  33          	inc	sp
+3083  0F0A  3A 00 00    	ld	a,(_s_lin0)
+3084  0F0D  F5          	push	af
+3085  0F0E  33          	inc	sp
+3086  0F0F  CD 00 00    	call	_spr_add_anim
+3087  0F12  F1          	pop	af
+3088  0F13  F1          	pop	af
+3089  0F14  F1          	pop	af
+3090  0F15  21 00 00    	ld	hl,_s_col0
+3091  0F18  46          	ld	b, (hl)
+3092  0F19  04          	inc	b
+3093  0F1A  04          	inc	b
+3094  0F1B  21 00 00    	ld	hl,0x0000
+3095  0F1E  E5          	push	hl
+3096  0F1F  21 87 03    	ld	hl,0x0387
+3097  0F22  E5          	push	hl
+3098  0F23  C5          	push	bc
+3099  0F24  33          	inc	sp
+3100  0F25  3A 00 00    	ld	a,(_s_lin0)
+3101  0F28  F5          	push	af
+3102  0F29  33          	inc	sp
+3103  0F2A  CD 00 00    	call	_spr_add_anim
+3104  0F2D  F1          	pop	af
+3105  0F2E  F1          	pop	af
+3106  0F2F  F1          	pop	af
+3107  0F30  3A 00 00    	ld	a,(_s_lin0)
+3108  0F33  C6 10       	add	a,0x10
+3109  0F35  47          	ld	b, a
+3110  0F36  3A 00 00    	ld	a,(_s_col0)
+3111  0F39  21 00 00    	ld	hl,0x0000
+3112  0F3C  E5          	push	hl
+3113  0F3D  21 87 03    	ld	hl,0x0387
+3114  0F40  E5          	push	hl
+3115  0F41  48          	ld	c,b
+3116  0F42  47          	ld	b,a
+3117  0F43  C5          	push	bc
+3118  0F44  CD 00 00    	call	_spr_add_anim
+3119  0F47  F1          	pop	af
+3120  0F48  F1          	pop	af
+3121  0F49  F1          	pop	af
+3122  0F4A  2E 00       	ld	l,0x00
+3123  0F4C  CD 00 00    	call	_zx_border_fastcall
+3124  0F4F  DD 36 FF 01 	ld	(ix-1),0x01
+3125  0F53  2A 00 00    	ld	hl,(_curr_time)
+3126  0F56  22 00 00    	ld	(_anim_time),hl
+3127  0F59              l_player_lost_life_00107:
+3128  0F59  DD 7E FF    	ld	a,(ix-1)
+3129  0F5C  B7          	or	a, a
+3130  0F5D  28 28       	jr	Z,l_player_lost_life_00109
+3131  0F5F  21 0C 00    	ld	hl,0x000c
+3132  0F62  E5          	push	hl
+3133  0F63  2A 00 00    	ld	hl,(_anim_time)
+3134  0F66  E5          	push	hl
+3135  0F67  CD 00 00    	call	_game_check_time
+3136  0F6A  F1          	pop	af
+3137  0F6B  F1          	pop	af
+3138  0F6C  7D          	ld	a, l
+3139  0F6D  B7          	or	a, a
+3140  0F6E  28 E9       	jr	Z,l_player_lost_life_00107
+3141  0F70  2A 00 00    	ld	hl,(_curr_time)
+3142  0F73  22 00 00    	ld	(_anim_time),hl
+3143  0F76  3A 00 00    	ld	a,(_anim_count)
+3144  0F79  B7          	or	a,a
+3145  0F7A  28 05       	jr	Z,l_player_lost_life_00103
+3146  0F7C  CD 00 00    	call	_spr_play_anim
+3147  0F7F  18 D8       	jr	l_player_lost_life_00107
+3148  0F81              l_player_lost_life_00103:
+3149  0F81  DD 36 FF 00 	ld	(ix-1),0x00
+3150  0F85  18 D2       	jr	l_player_lost_life_00107
+3151  0F87              l_player_lost_life_00109:
+3152  0F87  21 00 00    	ld	hl,_sprite
+3153  0F8A  36 00       	ld	(hl),0x00
+3154  0F8C              l_player_lost_life_00117:
+3155  0F8C  3A 07 00    	ld	a,(_class + 0x0007)
+3156  0F8F  B7          	or	a, a
+3157  0F90  28 1F       	jr	Z,l_player_lost_life_00111
+3158  0F92  21 07 00    	ld	hl,+(_col + 0x0007)
+3159  0F95  4E          	ld	c, (hl)
+3160  0F96  21 07 00    	ld	hl,+(_lin + 0x0007)
+3161  0F99  56          	ld	d, (hl)
+3162  0F9A  21 07 00    	ld	hl,+(_tile + 0x0007)
+3163  0F9D  5E          	ld	e, (hl)
+3164  0F9E  21 07 00    	ld	hl,+(_colint + 0x0007)
+3165  0FA1  46          	ld	b, (hl)
+3166  0FA2  7B          	ld	a, e
+3167  0FA3  80          	add	a, b
+3168  0FA4  5F          	ld	e, a
+3169  0FA5  79          	ld	a, c
+3170  0FA6  F5          	push	af
+3171  0FA7  33          	inc	sp
+3172  0FA8  3A 00 00    	ld	a,(_sprite)
+3173  0FAB  D5          	push	de
+3174  0FAC  F5          	push	af
+3175  0FAD  33          	inc	sp
+3176  0FAE  CD 00 00    	call	_NIRVANAP_spriteT_callee
+3177  0FB1              l_player_lost_life_00111:
+3178  0FB1  21 07 00    	ld	hl, +(_class + 0x0007)
+3179  0FB4  36 00       	ld	(hl),0x00
+3180  0FB6  21 07 00    	ld	hl, +(_bullet_col + 0x0007)
+3181  0FB9  36 FF       	ld	(hl),0xff
+3182  0FBB  21 00 00    	ld	hl,_sprite
+3183  0FBE  7E          	ld	a,(hl)
+3184  0FBF  3C          	inc	a
+3185  0FC0  77          	ld	(hl),a
+3186  0FC1  D6 07       	sub	a,0x07
+3187  0FC3  38 C7       	jr	C,l_player_lost_life_00117
+3188  0FC5  3A 00 00    	ld	a,(_player_lives)
+3189  0FC8  B7          	or	a, a
+3190  0FC9  28 09       	jr	Z,l_player_lost_life_00119
+3191  0FCB  21 F4 01    	ld	hl,0x01f4
+3192  0FCE  CD 00 00    	call	_z80_delay_ms_fastcall
+3193  0FD1  CD 00 00    	call	_game_round_init
+3194  0FD4              l_player_lost_life_00119:
+3195  0FD4  33          	inc	sp
+3196  0FD5  DD E1       	pop	ix
+3197  0FD7  C9          	ret
+3198  0FD8              	SECTION code_compiler
+3199  0FD8              ;	---------------------------------
+3200  0FD8              ; Function player_hit
+3201  0FD8              ; ---------------------------------
+3202  0FD8              _player_hit:
+3203  0FD8  7D          	ld	a,l
+3204  0FD9  4D          	ld	c,l
+3205  0FDA  21 00 00    	ld	hl,_player_vita
+3206  0FDD  96          	sub	a, (hl)
+3207  0FDE  30 17       	jr	NC,l_player_hit_00107
+3208  0FE0  3A 00 00    	ld	a,(_game_inmune)
+3209  0FE3  B7          	or	a, a
+3210  0FE4  20 06       	jr	NZ,l_player_hit_00102
+3211  0FE6  21 00 00    	ld	hl,_player_vita
+3212  0FE9  7E          	ld	a, (hl)
+3213  0FEA  91          	sub	a, c
+3214  0FEB  77          	ld	(hl), a
+3215  0FEC              l_player_hit_00102:
+3216  0FEC  2A 00 00    	ld	hl,(_curr_time)
+3217  0FEF  22 00 00    	ld	(_player_hit_time),hl
+3218  0FF2  CD 00 00    	call	_game_update_stats
+3219  0FF5  18 2C       	jr	l_player_hit_00109
+3220  0FF7              l_player_hit_00107:
+3221  0FF7  21 00 00    	ld	hl,_player_vita
+3222  0FFA  36 00       	ld	(hl),0x00
+3223  0FFC  CD 00 00    	call	_game_update_stats
+3224  0FFF  CD 90 0E    	call	_player_lost_life
+3225  1002  21 00 00    	ld	hl,_player_lives
+3226  1005  7E          	ld	a, (hl)
+3227  1006  B7          	or	a, a
+3228  1007  28 10       	jr	Z,l_player_hit_00104
+3229  1009  35          	dec	(hl)
+3230  100A  21 00 00    	ld	hl,_player_mana
+3231  100D  36 64       	ld	(hl),0x64
+3232  100F  21 00 00    	ld	hl,_player_vita
+3233  1012  36 64       	ld	(hl),0x64
+3234  1014  CD 00 00    	call	_game_update_stats
+3235  1017  18 0A       	jr	l_player_hit_00109
+3236  1019              l_player_hit_00104:
+3237  1019  21 00 00    	ld	hl,_player_lives
+3238  101C  36 00       	ld	(hl),0x00
+3239  101E  21 00 00    	ld	hl,_game_over
+3240  1021  36 01       	ld	(hl),0x01
+3241  1023              l_player_hit_00109:
+3242  1023  C9          	ret
+3243  1024              	SECTION IGNORE
 3244  0000              
