@@ -391,7 +391,7 @@ void spr_page_map(void) {
       if (!game_obj_chk(k)) {
         scr_map[k] = v0;
       } else {
-        scr_map[k] = TILE_EMPTY;
+        scr_map[k] = game_match_back(k);//TILE_EMPTY;
       }
       ++k;
     } else {
@@ -401,7 +401,7 @@ void spr_page_map(void) {
         if (!game_obj_chk(k)) {
           scr_map[k] = v1;
         } else {
-          scr_map[k] = TILE_EMPTY;
+          scr_map[k] = game_match_back(k);//TILE_EMPTY;
         }
 
         ++k;
@@ -484,10 +484,13 @@ void spr_destroy(unsigned char f_sprite) __z88dk_fastcall {
   spr_count--;
   s_lin0 = lin[f_sprite];
   s_col0 = col[f_sprite];
-  NIRVANAP_spriteT(f_sprite, TILE_EMPTY, 0, 0);
+  index0 = spr_calc_index(s_lin0, s_col0);
+  s_tile0 = game_match_back(index0);
+  NIRVANAP_spriteT(f_sprite, s_tile0, 0, 0);
   spr_back_repaint();
 
-  tile[f_sprite] = TILE_EMPTY;
+
+  tile[f_sprite] = s_tile0;
   col[f_sprite] = 0;
   lin[f_sprite] = 0;
   class[f_sprite] = 0;
@@ -779,7 +782,8 @@ void spr_play_anim(void) {
           s_lin0 = anim_lin[f_anim];
           f_index = spr_calc_index(s_lin0, s_col0);
           if (scr_map[spr_calc_index(s_lin0, s_col0)] == 0xFF) {
-            scr_map[spr_calc_index(s_lin0, s_col0)] = TILE_EMPTY;
+            index0 = spr_calc_index(s_lin0, s_col0);
+            scr_map[index0] = game_match_back(index0);//TILE_EMPTY;
           }
           spr_back_repaint();
 
@@ -918,7 +922,7 @@ void spr_play_bullets(void) {
 
       if (scr_map[index0] == TILE_DIRT && f_bullet == SPR_P1) {
         // Destroy Bricks
-        scr_map[index0] = TILE_EMPTY;
+        scr_map[index0] = game_match_back(index0);//TILE_EMPTY;
         game_obj_set(index0);
         bullet_lin[f_bullet] = (index0 >> 4) << 4;
         bullet_col[f_bullet] = (index0 & 15) << 1;

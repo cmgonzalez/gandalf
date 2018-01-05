@@ -71,8 +71,11 @@ void game_loop(void) {
       ++fps;
     }
     if (game_worldup) {
+      game_worldup = 0;
       game_respawn_curr_time = game_respawn_curr_time - 32;
       game_world++;
+      scr_curr = 255;
+      game_round_init();
     }
   }
 }
@@ -84,7 +87,8 @@ void game_fps(void) {
 }
 
 void game_respawn(void) {
-  // Enemy Respawn, add animatios on the screen that at the end will Respawn an enemy
+  // Enemy Respawn, add animatios on the screen that at the end will Respawn an
+  // enemy
   sprite = 0;
   while (sprite < SPR_P1) {
     if (game_respawn_time[sprite] > 0) {
@@ -95,7 +99,7 @@ void game_respawn(void) {
         s_lin1 = (s_lin1 >> 4) << 4;
         scr_map[index1] = 0xFF;
         game_respawn_time[sprite] = 0;
-        
+
         spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 4,
                      game_respawn_tile[sprite]);
 
@@ -115,7 +119,7 @@ void game_draw_screen(void) {
   f_mush = 0;
   spr_count = 0;
   while (spr_count < SPR_P1) {
-    //Clear enemies related tables
+    // Clear enemies related tables
     game_respawn_index[spr_count] = 0;
     game_respawn_tile[spr_count] = 0;
     game_respawn_time[spr_count] = 0;
@@ -161,8 +165,9 @@ void game_draw_screen(void) {
           ++f_mush;
         }
       }
-      NIRVANAP_drawT_raw(TILE_EMPTY, s_lin1, s_col1);
-      scr_map[index1] = TILE_EMPTY;
+
+      scr_map[index1] = game_match_back(index1); // TILE_EMPTY;
+      NIRVANAP_drawT_raw(scr_map[index1], s_lin1, s_col1);
     }
     s_col1 = s_col1 + 2;
     ++index1;
@@ -343,11 +348,9 @@ void game_round_init(void) {
   zx_set_clock(0);
   frame_time = 0;
 
-
   /* Phase Draw Start */
-  //spr_draw_clear();
+  // spr_draw_clear();
   /*Draw Platforms*/
-
 
   game_print_header();
   game_print_footer();
@@ -415,11 +418,11 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
 
   if (sprite != SPR_P1) {
     if (f_tile == 0xFF) {
-      //Animation
+      // Animation
       f_tile = TILE_EMPTY;
     }
     if (f_tile == TILE_STOPPER) {
-      //Stopper Tile only afect enemies
+      // Stopper Tile only afect enemies
       f_tile = 0xFF;
     }
     if (class[sprite] <= SPIDER) {
@@ -431,7 +434,7 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
       }
     } else {
       // HORIZONTAL ENEMIES
-      if ( sprite_horizontal_check ) {
+      if (sprite_horizontal_check) {
         f_check = TILE_CEIL;
       } else {
         f_check = TILE_FLOOR;
@@ -538,7 +541,7 @@ void game_joystick_set_menu(void) {
 void game_joystick_set(void) { joyfunc1 = control_method[player_joy]; }
 
 void game_end(void) {
-  //spr_draw_clear();
+  // spr_draw_clear();
 }
 
 void game_rotate_attrib(void) {
@@ -734,7 +737,7 @@ unsigned char game_obj_chk(unsigned int f_index) {
 
 void game_obj_clear() {
   for (tmp = 0; tmp < 160; tmp++) {
-    scr_map[tmp] = TILE_EMPTY;
+    //scr_map[tmp] = game_match_back(tmp); // TILE_EMPTY;
     scr_obj0[tmp] = 0;
     scr_obj1[tmp] = 0;
   }
@@ -776,5 +779,12 @@ void game_attribs() {
   attrib_hl[1] = map_paper | INK_WHITE;
   attrib_hl[2] = map_paper | INK_WHITE | BRIGHT;
   attrib_hl[3] = map_paper | INK_WHITE;
-
+}
+unsigned char game_match_back(unsigned int f_index) {
+  if ((f_index > 1) && (scr_map[f_index - 1] == TILE_EMPTY_DARK)) {
+//if ((f_index > 1) && (scr_map[f_index - 1] == TILE_EMPTY_DARK &&
+//                      scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
+    return TILE_EMPTY_DARK;
+  }
+  return TILE_EMPTY;
 }

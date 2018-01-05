@@ -73,17 +73,22 @@ unsigned char player_collision(void) {
     if (v0 > TILE_ITEM_E && v0 < TILE_FLOOR) {
       // if ((s_lin1  & 3) != 0) {
       // DEADLY BACKGROUNDS
-      zx_border(INK_YELLOW);
-      player_hit(50);
+      if (v0 == TILE_WORLD_EXIT) {
+        game_worldup = 1;
+      } else {
+        zx_border(INK_YELLOW);
+        player_hit(50);
+      }
+
       //}
     }
 
     while (sprite < SPR_P1) {
-      if (class[SPR_P1] > 0) {
-        if (abs(col[SPR_P1] - s_col1) < 2) {
-          if (abs(lin[SPR_P1] - s_lin1) < 14) {
+      if (class[sprite] > 0) {
+        if (abs(col[sprite] - s_col1) < 2) {
+          if (abs(lin[sprite] - s_lin1) < 14) {
             /*MUSHROMS*/
-            if (class[SPR_P1] == MUSHROOM_VITA) {
+            if (class[sprite] == MUSHROOM_VITA) {
               player_vita = player_vita + 25;
               if (player_vita > player_max_vita) {
                 player_vita = player_max_vita;
@@ -94,7 +99,7 @@ unsigned char player_collision(void) {
               --game_mush_count;
               return 0;
             }
-            if (class[SPR_P1] == MUSHROOM_MANA) {
+            if (class[sprite] == MUSHROOM_MANA) {
               player_mana = player_mana + 25;
               if (player_mana > player_max_mana) {
                 player_mana = player_max_mana;
@@ -105,7 +110,7 @@ unsigned char player_collision(void) {
               --game_mush_count;
               return 0;
             }
-            if (class[SPR_P1] == MUSHROOM_EXTRA) {
+            if (class[sprite] == MUSHROOM_EXTRA) {
               player_lives++;
               player_score_add(1);
               game_update_stats();
@@ -432,7 +437,7 @@ void player_pick_item(void) {
     ay_reset();
     ay_fx_play(ay_effect_10);
     sound_coin();
-    scr_map[sprite_curr_index] = TILE_EMPTY;
+    scr_map[sprite_curr_index] = game_match_back(sprite_curr_index);//TILE_EMPTY;
 
     game_obj_set(sprite_curr_index);
     s_lin1 = (sprite_curr_index >> 4) << 4;
@@ -535,7 +540,7 @@ unsigned char player_hit_platform(void) {
 
     if (scr_map[index1] == TILE_DIRT) {
       // Destroy Bricks
-      scr_map[index1] = TILE_EMPTY;
+      scr_map[index1] = game_match_back(index1);//TILE_EMPTY;
       game_obj_set(index0);
       spr_add_anim((index1 >> 4) << 4, (index1 & 15) << 1, TILE_ANIM_FIRE, 3, 0,
                    0);
@@ -590,7 +595,8 @@ unsigned char player_hit_platform(void) {
           ++game_mush_count;
           if (!game_boss) {
             // Only restore to no special brick if not boos on the map
-            scr_map[index1 - 16] = TILE_EMPTY;
+            index0 = index1 - 16;
+            scr_map[index0] = game_match_back(index0);//TILE_EMPTY;
             if (scr_map[index1] == TILE_SPECIAL) {
               scr_map[index1] = TILE_NOSPECIAL;
             } else {
@@ -678,7 +684,7 @@ void player_check_floor(void) {
     if (game_check_time(player_brick_time, 16)) {
       player_brick_time = zx_clock();
       if (v1 == TILE_BRICK3) {
-        scr_map[index_d] = TILE_EMPTY;
+        scr_map[index_d] = game_match_back(index_d);//TILE_EMPTY;
         player_gasta_brick();
       }
       if (v1 == TILE_BRICK2) {
@@ -691,7 +697,7 @@ void player_check_floor(void) {
       }
 
       if (v2 == TILE_BRICK3) {
-        scr_map[index_d + 1] = TILE_EMPTY;
+        scr_map[index_d + 1] = game_match_back(index_d);//TILE_EMPTY;
         player_gasta_brick();
       }
       if (v2 == TILE_BRICK2) {
@@ -877,7 +883,7 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
   }
 
   if (f_open || game_inmune) {
-    scr_map[f_index] = TILE_EMPTY;
+    scr_map[f_index] = game_match_back(f_index);//TILE_EMPTY;
     game_obj_set(f_index);
     spr_draw_index(f_index);
   }
