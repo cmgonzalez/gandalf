@@ -356,7 +356,7 @@ void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,
     }
     if (f_dir == DIR_LEFT) {
       BIT_SET(state[f_sprite], STAT_DIRL);
-      colint[f_sprite] = sprite_frames[class[sprite]];
+      colint[f_sprite] = sprite_frames[f_class] - 1;
     }
     tile[f_sprite] = spr_tile(f_sprite);
     spr_timer[f_sprite] = zx_clock();

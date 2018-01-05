@@ -38,7 +38,6 @@ void main(void) {
   game_god_mode = 0; // GAME_GOD_MODE;
   game_inmune = 0;   // GAME_INMUNE;
   // INTERRUPTS ARE DISABLED
-
   // RESET AY CHIP
   ay_reset();
   // GAME OPTIONS

@@ -109,6 +109,7 @@ void game_respawn(void) {
     ++sprite;
   }
 }
+
 void game_draw_screen(void) {
   unsigned char f_mush;
   NIRVANAP_halt();
@@ -143,7 +144,7 @@ void game_draw_screen(void) {
 
     if (scr_map[index1] < TILE_END) {
 
-      if ((scr_map[index1] == TILE_SPECIAL) && game_obj_chk(index1 - 16)) {
+      if ((scr_map[index1] == TILE_SPECIAL || scr_map[index1] == TILE_HIDDEN_BRICK) && game_obj_chk(index1 - 16)) {
         scr_map[index1] = TILE_NOSPECIAL;
       }
       // NORMAL TILE
@@ -800,10 +801,9 @@ void game_attribs() {
   attrib_hl[2] = map_paper | INK_WHITE | BRIGHT;
   attrib_hl[3] = map_paper | INK_WHITE;
 }
+
 unsigned char game_match_back(unsigned int f_index) {
-  if ((f_index > 1) && (scr_map[f_index - 1] == TILE_EMPTY_DARK)) {
-//if ((f_index > 1) && (scr_map[f_index - 1] == TILE_EMPTY_DARK &&
-//                      scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
+  if ((f_index > 1) && ((f_index & 15) != 0) && (scr_map[f_index - 1] == TILE_EMPTY_DARK)) {
     return TILE_EMPTY_DARK;
   }
   return TILE_EMPTY;

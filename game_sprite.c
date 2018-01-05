@@ -95,11 +95,11 @@ unsigned char spr_move_up(void) {
       if (spr_page_up()) {
         return 1;
       } else {
-        lin[sprite] = 0;
+        //lin[sprite] = 16;
         return 1;
       }
     } else {
-      lin[sprite] = 0;
+      //lin[sprite] = 0;
       return 1;
     }
 

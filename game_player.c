@@ -613,7 +613,7 @@ unsigned char player_hit_platform(void) {
             // Only restore to no special brick if not boos on the map
             index0 = index1 - 16;
             scr_map[index0] = game_match_back(index0);//TILE_EMPTY;
-            if (scr_map[index1] == TILE_SPECIAL) {
+            if (scr_map[index1] == TILE_SPECIAL || scr_map[index1] == TILE_HIDDEN_BRICK ) {
               scr_map[index1] = TILE_NOSPECIAL;
             } else {
               scr_map[index1] = TILE_NORMAL_BRICK;
