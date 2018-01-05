@@ -111,7 +111,8 @@ unsigned char player_collision(void) {
               return 0;
             }
             if (class[sprite] == MUSHROOM_EXTRA) {
-              player_lives++;
+
+              player_1up();
               player_score_add(1);
               game_update_stats();
               spr_destroy(sprite);
@@ -128,6 +129,15 @@ unsigned char player_collision(void) {
     }
   }
   return 0;
+}
+
+void player_1up() {
+  if (player_lives < 255) {
+    ++player_lives;
+    zx_print_str(12, 12, "1 UP!");
+    game_colour_message(12, 12, 12 + 9, 25, 0);
+    game_update_stats();
+  }
 }
 
 void player_kill(void) {
@@ -462,6 +472,12 @@ void player_pick_item(void) {
       break;
     case TILE_MONEY:
       player_score_add(1);
+      ++player_coins;
+      if (player_coins == 100) {
+        player_1up();
+        player_coins = 0;
+      }
+      game_update_stats();
       break;
     case TILE_CHEST:
       player_score_add(10);
@@ -541,7 +557,7 @@ unsigned char player_hit_platform(void) {
     if (scr_map[index1] == TILE_DIRT) {
       // Destroy Bricks
       scr_map[index1] = game_match_back(index1);//TILE_EMPTY;
-      game_obj_set(index0);
+      game_obj_set(index1);
       spr_add_anim((index1 >> 4) << 4, (index1 & 15) << 1, TILE_ANIM_FIRE, 3, 0,
                    0);
       return 1;

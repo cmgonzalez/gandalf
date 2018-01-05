@@ -466,6 +466,7 @@ extern unsigned char game_sound;
 
 extern unsigned char game_over;
 extern unsigned char player_lives;
+extern unsigned char player_coins;
 extern unsigned int game_score_top;
 extern unsigned char game_menu_sel;
 extern unsigned int game_respawn_time[7];

@@ -267,25 +267,50 @@ void game_print_footer(void) {
   game_fill_row(23, 98);
   zx_print_str(23, 0, "f");
   zx_print_str(23, 31, "g");
+  //GANDALF FACE
   zx_print_ink(INK_CYAN);
   zx_print_str(20, 1, "<"); // live p1 hut
   zx_print_ink(INK_YELLOW);
   zx_print_str(21, 1, "\\"); // live p1 face
+  //VITA
+  zx_print_ink(INK_RED | BRIGHT);
+  zx_print_str(20, 8, ">"); // live p1 hut
+  zx_print_ink(INK_RED);
+  zx_print_str(21, 8, "^"); // live p1 face
+  //MANA
+  zx_print_ink(INK_CYAN | BRIGHT);
+  zx_print_str(20,15, "?"); // live p1 hut
+  zx_print_ink(INK_CYAN);
+  zx_print_str(21,15, "_"); // live p1 face
+  //XP
+  zx_print_ink(INK_WHITE | BRIGHT);
+  zx_print_str(20,21, "x"); // live p1 hut
+  zx_print_ink(INK_WHITE);
+  zx_print_str(21,21, "y"); // live p1 face
+
   /* phase osd bottom*/
   zx_print_str(23, 20, "LPS:");
 
-  zx_print_ink(INK_RED);
-  zx_print_str(20, 7, "j");
-  zx_print_ink(INK_BLUE);
-  zx_print_str(20, 13, "k");
+  //zx_print_ink(INK_RED);
+  //zx_print_str(20, 7, "j");
+  //zx_print_ink(INK_BLUE);
+  //zx_print_str(20, 13, "k");
 
-  zx_print_str(22, 3, "XP");
+  //zx_print_str(20, 22, "x"); //XP
   zx_print_ink(INK_YELLOW);
-  zx_print_str(22, 14, "m");
-  zx_print_str(22, 20, "n");
-  zx_print_str(22, 26, "o");
+  zx_print_str(22, 7, "l"); //COIN
+  zx_print_str(22, 13, "m"); //STR
+  zx_print_str(22, 19, "n"); //INT
+  zx_print_str(22, 25, "o"); //LEVEL
 
   game_update_stats();
+}
+
+void game_print_score(void) {
+  zx_print_ink(INK_WHITE);
+  zx_print_paper(PAPER_BLACK);
+  zx_print_int(20, 23, player_score);
+  zx_print_int( 0, 14, game_score_top); // SCORE TOP
 }
 
 void game_phase_print_score_back(void) {
@@ -295,14 +320,15 @@ void game_phase_print_score_back(void) {
 
 void game_update_stats(void) {
   zx_print_ink(INK_WHITE);
-  zx_print_chr(20, 3, player_lives);
-  zx_print_chr(22, 16, player_str);
-  zx_print_chr(22, 22, player_int);
-  zx_print_chr(22, 28, player_lvl);
+  zx_print_chr(20,  3, player_lives);
+  zx_print_chr(22,  9, player_coins);
+  zx_print_chr(22, 15, player_str);
+  zx_print_chr(22, 21, player_int);
+  zx_print_chr(22, 27, player_lvl);
   zx_print_ink(INK_RED);
-  zx_print_chr(20, 9, player_vita);
+  zx_print_chr(20, 10, player_vita);
   zx_print_ink(INK_BLUE);
-  zx_print_chr(20, 15, player_mana);
+  zx_print_chr(20, 17, player_mana);
   if (game_boss) {
     zx_print_ink(INK_MAGENTA);
     zx_print_str(20, 24, "*");
@@ -311,19 +337,19 @@ void game_update_stats(void) {
 
   if (player_keys[0]) {
     zx_print_ink(INK_WHITE);
-    zx_print_str(20, 19, "]");
+    zx_print_str(22, 2, "]");
   }
   if (player_keys[1]) {
     zx_print_ink(INK_RED);
-    zx_print_str(20, 20, "]");
+    zx_print_str(22, 3, "]");
   }
   if (player_keys[2]) {
     zx_print_ink(INK_GREEN);
-    zx_print_str(20, 21, "]");
+    zx_print_str(22, 4, "]");
   }
   if (player_keys[3]) {
     zx_print_ink(INK_CYAN);
-    zx_print_str(20, 22, "]");
+    zx_print_str(22, 5, "]");
   }
 }
 
@@ -500,12 +526,6 @@ game_enemy_add_get_index(unsigned char f_search) __z88dk_fastcall {
   return 255;
 }
 
-void game_print_score(void) {
-  zx_print_ink(INK_WHITE);
-  zx_print_paper(PAPER_BLACK);
-  zx_print_int(22, 6, player_score);
-  zx_print_int(0, 14, game_score_top); // SCORE TOP
-}
 
 void game_paint_attrib(unsigned char e_r1) __z88dk_fastcall {
   for (tmp0 = e_r1; tmp0 <= 19; ++tmp0) {
