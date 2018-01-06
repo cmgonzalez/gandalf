@@ -568,22 +568,6 @@ void game_paint_attrib_lin_osd(unsigned char f_start, unsigned char f_end,
   }
 }
 
-void game_joystick_change(void) {
-  ++player_joy;
-  if (player_joy == 7)
-    player_joy = 0; /* Rotate Joystick*/
-}
-
-void game_joystick_set_menu(void) {
-  /* Default Values for menu */
-  joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
-}
-
-void game_joystick_set(void) { joyfunc1 = control_method[player_joy]; }
-
-void game_end(void) {
-  // spr_draw_clear();
-}
 
 void game_colour_message(unsigned char f_row, unsigned char f_col,
                          unsigned char f_col2, unsigned int f_microsecs,

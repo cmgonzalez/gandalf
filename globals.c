@@ -55,11 +55,6 @@ udk_t k1;
 unsigned char dirs;
 unsigned char tbuffer[7]; // temporary buffer
 
-const JOYFUNC control_method[7] = {
-    (JOYFUNC)(in_stick_sinclair1), (JOYFUNC)(in_stick_sinclair2),
-    (JOYFUNC)(in_stick_keyboard),  (JOYFUNC)(in_stick_keyboard),
-    (JOYFUNC)(in_stick_kempston),  (JOYFUNC)(in_stick_cursor),
-    (JOYFUNC)(in_stick_fuller)};
 
 // SPRITES GAME ARRAYS
 unsigned char class[8];   // CLASS OF SPRITE
@@ -73,28 +68,28 @@ unsigned char lin[8];     // LINE
 
 unsigned char col[8];      // COLUMN
 unsigned char colint[8];   // INTERNAL COLUMN/TILE INCREMENT
-unsigned int  spr_timer[8]; // SPRITE GENERAL TIMER MILISECONDS
-unsigned int  last_time[8]; // LAST TIME OF MOVEMENT FOR ANIMATIONS / SPEED
+unsigned int spr_timer[8]; // SPRITE GENERAL TIMER MILISECONDS
+unsigned int last_time[8]; // LAST TIME OF MOVEMENT FOR ANIMATIONS / SPEED
 unsigned char jump_lin[8]; // START JUMP LINE
 
 // PLAYER ONLY
 unsigned char player_hit_lin; // HIT BRICK LINE
 unsigned char player_hit_col; // HIT BRICK COL
 unsigned char player_slide;   // SLIDING COUNTER
-unsigned int  player_score;    // SCORE
-unsigned int  player_joy;      // JOYSTICK
+unsigned int player_score;    // SCORE
+unsigned int player_joy;      // JOYSTICK
 unsigned char player_lives;
 unsigned char player_coins;
 unsigned char player_over_stair;
-signed char   player_vel_x;
-signed char   player_vel_y;
-signed char   player_vel_y0;
-signed char   player_vel_y1;
-signed char   player_vel_inc;
+signed char player_vel_x;
+signed char player_vel_y;
+signed char player_vel_y0;
+signed char player_vel_y1;
+signed char player_vel_inc;
 unsigned char player_keys[4];
 unsigned char player_hit_count;
-unsigned int  player_brick_time;
-unsigned int  player_anim_stair;
+unsigned int player_brick_time;
+unsigned int player_anim_stair;
 // PLAYER ATTRIBUTES
 unsigned char player_mana;
 unsigned char player_vita;
@@ -111,7 +106,7 @@ unsigned char player_lin_scr;
 
 unsigned int player_hit_time;
 
-signed   int  game_gravity;
+signed int game_gravity;
 unsigned char game_world;
 unsigned char game_boss;
 unsigned char game_boss_hit;
@@ -192,9 +187,9 @@ unsigned char boss_lin;
 unsigned char boss_col;
 unsigned char boss_inc;
 unsigned char boss_tile;
-unsigned int  boss_time;
-unsigned int  boss_time_fire;
-unsigned char  boss_stat;
+unsigned int boss_time;
+unsigned int boss_time_fire;
+unsigned char boss_stat;
 
 unsigned char spr_hack;
 
@@ -217,7 +212,6 @@ unsigned int game_respawn_time[7]; // 8-1=7 Player don't respawn
 unsigned char game_respawn_index[7];
 unsigned char game_respawn_tile[7];
 unsigned char game_start_scr;
-
 
 // PHASE RELATED VARIABLES
 unsigned char screen_paper;
@@ -279,7 +273,6 @@ unsigned char sprite_frames[] = {
     FRAMES_ENEMY_BAT_H,
     0, // DEVIL
 };
-
 
 unsigned int player_lvl_table[] = {
     100,   500,   1000,  2000,  4000,  6000,  7000,  8000,  9000,  10000,

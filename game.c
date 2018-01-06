@@ -61,12 +61,16 @@ void main(void) {
   k1.up = IN_KEY_SCANCODE_q;   // must be defined otherwise up is always true
   k1.down = IN_KEY_SCANCODE_a; // must be defined otherwise down is always true
 
-  game_joystick_set_menu();
+
   zx_print_paper(PAPER_BLACK);
   zx_border(INK_BLACK);
 
   // Wait for Keypress and Randomize
-  game_joystick_set();
+  /* Default Values for menu */
+    joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_sinclair1);
+
+   //joyfunc1 = control_method[player_joy];
+
   in_wait_nokey();
   for (counter = 31416; !in_test_key(); counter += 10061)
     ;
@@ -203,18 +207,27 @@ void game_menu() {
     game_paint_attrib_lin_h(s_col + 1, s_col_e, (s_row << 3) + 8);
     // 48
     c = c - 48;
+
     if (c < 5) {
       switch (c) {
       case 1:
+        joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_sinclair1);
+        game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
         curr_sel = 1;
         break;
       case 2:
+        joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
+        game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
         curr_sel = 2;
         break;
       case 3:
+        joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_kempston);
+        game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
         curr_sel = 3;
         break;
       case 4:
+        joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_cursor);
+        game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
         curr_sel = 4;
         break;
       case 5:
