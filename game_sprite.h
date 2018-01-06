@@ -41,6 +41,7 @@ unsigned char           spr_page_right();
 unsigned char           spr_page_up();
 unsigned char           spr_page_down();
 extern void             spr_page_map(void);
+extern void             spr_clear_scr(void);
 extern void             spr_add_anim( unsigned char f_lin, unsigned char f_col, unsigned char f_tile, unsigned char f_end, unsigned char f_loops, unsigned char f_respawn );
 extern void             spr_play_anim(void);
 extern void             spr_play_bullets(void);

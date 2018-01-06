@@ -147,6 +147,7 @@ unsigned char enemies;
 unsigned char zx_val_asm;
 unsigned char attrib[4];
 unsigned char attrib_hl[4];
+unsigned char attrib_osd[4];
 unsigned char s_state;
 
 unsigned char g_player_hit_left;

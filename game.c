@@ -30,6 +30,7 @@
 #include "nirvana+.h"
 #include <arch/zx.h>
 #include <input.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 void main(void) {
@@ -61,17 +62,19 @@ void main(void) {
   k1.down = IN_KEY_SCANCODE_a; // must be defined otherwise down is always true
 
   game_joystick_set_menu();
+  zx_print_paper(PAPER_BLACK);
   zx_border(INK_BLACK);
 
   // Wait for Keypress and Randomize
-
+  game_joystick_set();
   in_wait_nokey();
   for (counter = 31416; !in_test_key(); counter += 10061)
     ;
   srand(counter);
-
-  zx_paper_fill(INK_BLACK | PAPER_BLACK);
   zx_print_paper(PAPER_BLACK);
+  zx_border(INK_BLACK);
+  zx_paper_fill(INK_BLACK | PAPER_BLACK);
+
   // Init Game
   game_start_timer();
   // Init Nirvana
@@ -108,18 +111,14 @@ void main(void) {
     scr_curr = 255; // 255 equals read default screen from map
     /* game loop start */
     dirs = 0x00;
-    //MENU
-    game_joystick_set();
-    map_paper = PAPER_BLACK;
-    game_attribs();
-    zx_print_ink(INK_WHITE);
-    zx_print_str(12, 12, "GANDALF");
-    game_colour_message(12, 12, 12 + 7, 25, 0);
+    // MENU
+
+    game_menu();
     map_paper_last = PAPER_BLUE;
     map_paper = PAPER_BLUE;
     map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
     game_attribs();
-    //END MENU
+    // END MENU
     game_loop();
     for (sprite = 0; sprite < 8; ++sprite) {
       NIRVANAP_spriteT(sprite, TILE_EMPTY, 0, 0);
@@ -128,9 +127,107 @@ void main(void) {
     game_over = 0; // Hack game_colour_message to render background
     game_colour_message(12, 12, 12 + 9, 250, 0);
     game_obj_clear();
+    spr_clear_scr();
+    NIRVANAP_stop();
+    zx_print_paper(PAPER_BLACK);
+    zx_border(INK_BLACK);
+    zx_paper_fill(INK_BLACK | PAPER_BLACK);
+    NIRVANAP_start();
   }
 }
+void game_menu() {
+  unsigned char c;
+  unsigned char curr_sel;
+  unsigned char f_input;
 
+  unsigned char s_col;
+  unsigned char s_col_e;
+  unsigned char s_row;
+  f_input = 1;
+  s_col = 10;
+  s_col_e = 10 + 10;
+  s_row = 4;
+  c = 0;
+
+  // spr_clear_scr();
+
+  map_paper = PAPER_BLACK;
+  game_attribs();
+
+  zx_print_ink(INK_WHITE);
+  zx_print_str(s_row, s_col + 2, "GANDALF");
+  game_paint_attrib_lin_h(s_col, s_col_e, (s_row << 3) + 8);
+  ++s_row;
+  ++s_row;
+  ++s_row;
+  zx_print_str(s_row, s_col, "1 SINCLAIR");
+  game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+  ++s_row;
+  zx_print_str(s_row, s_col, "2 KEYBOARD");
+  game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+  ++s_row;
+  zx_print_str(s_row, s_col, "3 KEMPSTON");
+  game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+  ++s_row;
+  zx_print_str(s_row, s_col, "4 CURSOR");
+  game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+  ++s_row;
+  zx_print_str(s_row, s_col, "5 DEFINE");
+  game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+  ++s_row;
+  ++s_row;
+  zx_print_str(s_row, s_col, "0 START");
+  game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+  ++s_row;
+  ++s_row;
+  ++s_row;
+  ++s_row;
+  zx_print_str(s_row, 2, "CGONZALEZ/AABRETCH/S9/BEIKER");
+  game_paint_attrib_lin_h(0, 31, (s_row << 3) + 8);
+  ++s_row;
+  ++s_row;
+  zx_print_ink(INK_CYAN);
+  zx_print_str(s_row, 8, "2018 NOENTIENDO");
+  game_paint_attrib_lin(0, 31, (s_row << 3) + 8);
+
+  curr_sel = 1;
+  while (f_input) {
+
+    // in_wait_key();
+    c = in_inkey();
+
+    // in_wait_nokey();
+    z80_delay_ms(40);
+    game_rotate_attrib();
+    s_row = 6 + curr_sel;
+    game_paint_attrib_lin_h(s_col + 1, s_col_e, (s_row << 3) + 8);
+    // 48
+    c = c - 48;
+    if (c < 5) {
+      switch (c) {
+      case 1:
+        curr_sel = 1;
+        break;
+      case 2:
+        curr_sel = 2;
+        break;
+      case 3:
+        curr_sel = 3;
+        break;
+      case 4:
+        curr_sel = 4;
+        break;
+      case 5:
+        curr_sel = 5;
+        break;
+      case 0:
+        f_input = 0; // Exit Loop
+        break;
+      }
+    }
+    // zx_print_chr(23,0,c);
+  }
+}
 void test_proc() {
 
   // 768 byte colour attribute data, immediately after the bitmap data at
@@ -139,14 +236,14 @@ void test_proc() {
   unsigned char j;
 
   for (i = 0; i < 8; ++i) {
-    NIRVANAP_spriteT(i,TILE_EMPTY, 0,0) ;
+    NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
   }
   NIRVANAP_halt();
 
   intrinsic_di();
   for (i = 0; i < 16; ++i) {
     for (j = 1; j < 10; ++j) {
-      NIRVANAP_fillT_raw(INK_BLACK || PAPER_BLACK, j * 16, i * 2) ;
+      NIRVANAP_fillT_raw(INK_BLACK || PAPER_BLACK, j * 16, i * 2);
     }
   }
   intrinsic_ei();

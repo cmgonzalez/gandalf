@@ -286,6 +286,32 @@ unsigned char spr_page_up() {
   }
   return 0;
 }
+
+void spr_clear_scr() {
+  unsigned char i;
+  unsigned char j;
+  for (i = 0; i < 8; ++i) {
+    NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
+  }
+  NIRVANAP_halt();
+
+  intrinsic_di();
+  for (i = 0; i < 8; ++i) {
+
+    for (j = 1; j < 10; ++j) {
+      NIRVANAP_fillT_raw(INK_BLACK || PAPER_BLACK, j << 4, i << 1);
+    }
+
+    for (j = 1; j < 10; ++j) {
+      NIRVANAP_fillT_raw(INK_BLACK || PAPER_BLACK, j << 4, 30 - (i << 1));
+    }
+
+    intrinsic_ei();
+    NIRVANAP_halt();
+    intrinsic_di();
+  }
+  intrinsic_ei();
+}
 void spr_page_map(void) {
 
   unsigned char v0;
@@ -307,27 +333,9 @@ void spr_page_map(void) {
 
   k = 16;
 
-  for (i = 0; i < 8; ++i) {
-    NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
-  }
-  NIRVANAP_halt();
 
+  spr_clear_scr();
   intrinsic_di();
-  for (i = 0; i < 8; ++i) {
-
-    for (j = 1; j < 10; ++j) {
-      NIRVANAP_fillT_raw(INK_BLACK || PAPER_BLACK, j << 4, i << 1);
-    }
-
-    for (j = 1; j < 10; ++j) {
-      NIRVANAP_fillT_raw(INK_BLACK || PAPER_BLACK, j << 4, 30 - (i << 1));
-    }
-
-    intrinsic_ei();
-    NIRVANAP_halt();
-    intrinsic_di();
-  }
-
   // Read Player start screen on world map
   GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
   IO_7FFD = 0x10 + 6;
