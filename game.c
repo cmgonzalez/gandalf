@@ -182,7 +182,7 @@ void game_menu() {
   ++s_row;
   ++s_row;
   ++s_row;
-  zx_print_str(s_row, 2, "CGONZALEZ/AABRETCH/S9/BEIKER");
+  zx_print_str(s_row, 2, "CGONZALEZ/AALBRECHT/S9/BEIKER");
   game_paint_attrib_lin_h(0, 31, (s_row << 3) + 8);
   ++s_row;
   ++s_row;
