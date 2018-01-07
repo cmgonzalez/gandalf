@@ -385,6 +385,10 @@ void game_round_init(void) {
   game_print_footer();
   spr_page_map();
   game_draw_screen();
+  /* Player(s) init */
+  if (!game_over) {
+    player_init(player_lin_scr, player_col_scr, TILE_P1_STANR);
+  }
   game_update_stats();
   z80_delay_ms(50);
   switch (game_world) {
@@ -408,10 +412,6 @@ void game_round_init(void) {
       zx_print_str(12, 6, "WORLD 2 BARAD DUR"); // TODO WORLD NAMES ARRAY
       game_colour_message(12, 6, 6 + 17, 25, 0);
       break;
-  }
-  /* Player(s) init */
-  if (!game_over) {
-    player_init(player_lin_scr, player_col_scr, TILE_P1_STANR);
   }
 }
 

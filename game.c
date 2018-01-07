@@ -150,7 +150,7 @@ void game_menu() {
   f_input = 1;
   s_col = 10;
   s_col_e = 10 + 10;
-  s_row = 4;
+  s_row = 7;
   c = 0;
 
   // spr_clear_scr();
@@ -159,11 +159,17 @@ void game_menu() {
   game_attribs();
 
   zx_print_ink(INK_WHITE);
-  zx_print_str(s_row, s_col + 2, "GANDALF");
-  game_paint_attrib_lin_h(s_col, s_col_e, (s_row << 3) + 8);
-  ++s_row;
-  ++s_row;
-  ++s_row;
+  //zx_print_str(s_row, s_col + 2, "GANDALF");
+  //game_paint_attrib_lin_h(s_col, s_col_e, (s_row << 3) + 8);
+  //++s_row;
+  //++s_row;
+  //++s_row;
+  NIRVANAP_spriteT(0, TILE_TITLE  , 32, 11);
+  NIRVANAP_spriteT(1, TILE_TITLE+1, 32, 13);
+  NIRVANAP_spriteT(2, TILE_TITLE+2, 32, 15);
+  NIRVANAP_spriteT(3, TILE_TITLE+3, 32, 17);
+
+
   zx_print_str(s_row, s_col, "1 SINCLAIR");
   game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
   ++s_row;
@@ -210,27 +216,27 @@ void game_menu() {
 
     if (c < 5) {
       switch (c) {
-      case 1:
+      case 1: //SINCLAIR
         joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_sinclair1);
         game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
         curr_sel = 1;
         break;
-      case 2:
+      case 2://KEYBOARD
         joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
         game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
         curr_sel = 2;
         break;
-      case 3:
+      case 3://KEMPSTON
         joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_kempston);
         game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
         curr_sel = 3;
         break;
-      case 4:
+      case 4://CURSOR
         joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_cursor);
         game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
         curr_sel = 4;
         break;
-      case 5:
+      case 5://DEFINE
         curr_sel = 5;
         break;
       case 0:

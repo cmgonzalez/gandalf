@@ -231,7 +231,7 @@ void player_check_stairs_down(unsigned char f_inc) {
   v0 = (v0 >= TILE_STAIR_S && v0 <= TILE_STAIR_E);
   if (v0) {
     if (!player_over_stair) {
-      //colint[SPR_P1] = 0;
+      // colint[SPR_P1] = 0;
       player_over_stair = 1;
     }
   }
@@ -253,7 +253,7 @@ void player_check_stairs(unsigned char f_inc) __z88dk_fastcall {
     // OVER STAIR
     if (!player_over_stair) {
       player_over_stair = 1;
-      //colint[SPR_P1] = 0;
+      // colint[SPR_P1] = 0;
       player_tile(TILE_P1_STAIR, 0);
     }
   } else {
@@ -378,11 +378,11 @@ unsigned char player_move_input(void) {
   return 0;
 }
 
-void player_fix_walk_lin( ) {
+void player_fix_walk_lin() {
   if (!player_over_stair) {
     s_lin1 = (s_lin0 >> 4) << 4;
-    if (s_lin0 != s_lin1 ) {
-      lin[SPR_P1]= s_lin1;
+    if (s_lin0 != s_lin1) {
+      lin[SPR_P1] = s_lin1;
     }
   }
 }
@@ -447,7 +447,8 @@ void player_pick_item(void) {
     ay_reset();
     ay_fx_play(ay_effect_10);
     sound_coin();
-    scr_map[sprite_curr_index] = game_match_back(sprite_curr_index);//TILE_EMPTY;
+    scr_map[sprite_curr_index] =
+        game_match_back(sprite_curr_index); // TILE_EMPTY;
 
     game_obj_set(sprite_curr_index);
     s_lin1 = (sprite_curr_index >> 4) << 4;
@@ -556,7 +557,7 @@ unsigned char player_hit_platform(void) {
 
     if (scr_map[index1] == TILE_DIRT) {
       // Destroy Bricks
-      scr_map[index1] = game_match_back(index1);//TILE_EMPTY;
+      scr_map[index1] = game_match_back(index1); // TILE_EMPTY;
       game_obj_set(index1);
       spr_add_anim((index1 >> 4) << 4, (index1 & 15) << 1, TILE_ANIM_FIRE, 3, 0,
                    0);
@@ -612,8 +613,9 @@ unsigned char player_hit_platform(void) {
           if (!game_boss) {
             // Only restore to no special brick if not boos on the map
             index0 = index1 - 16;
-            scr_map[index0] = game_match_back(index0);//TILE_EMPTY;
-            if (scr_map[index1] == TILE_SPECIAL || scr_map[index1] == TILE_HIDDEN_BRICK ) {
+            scr_map[index0] = game_match_back(index0); // TILE_EMPTY;
+            if (scr_map[index1] == TILE_SPECIAL ||
+                scr_map[index1] == TILE_HIDDEN_BRICK) {
               scr_map[index1] = TILE_NOSPECIAL;
             } else {
               scr_map[index1] = TILE_NORMAL_BRICK;
@@ -700,7 +702,7 @@ void player_check_floor(void) {
     if (game_check_time(player_brick_time, 16)) {
       player_brick_time = zx_clock();
       if (v1 == TILE_BRICK3) {
-        scr_map[index_d] = game_match_back(index_d);//TILE_EMPTY;
+        scr_map[index_d] = game_match_back(index_d); // TILE_EMPTY;
         player_gasta_brick();
       }
       if (v1 == TILE_BRICK2) {
@@ -713,7 +715,7 @@ void player_check_floor(void) {
       }
 
       if (v2 == TILE_BRICK3) {
-        scr_map[index_d + 1] = game_match_back(index_d);//TILE_EMPTY;
+        scr_map[index_d + 1] = game_match_back(index_d); // TILE_EMPTY;
         player_gasta_brick();
       }
       if (v2 == TILE_BRICK2) {
@@ -899,7 +901,7 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
   }
 
   if (f_open || game_inmune) {
-    scr_map[f_index] = game_match_back(f_index);//TILE_EMPTY;
+    scr_map[f_index] = game_match_back(f_index); // TILE_EMPTY;
     game_obj_set(f_index);
     spr_draw_index(f_index);
   }
@@ -947,9 +949,19 @@ void player_lost_life() {
     bullet_col[SPR_P1] = 0xFF;
   }
 
+  // Player lost life
+  --player_lives;
+  player_mana = GAME_START_MAX_MANA;
+  player_vita = GAME_START_MAX_VITA;
+  // game_update_stats();
+
   if (player_lives > 0) {
     z80_delay_ms(500);
     game_round_init();
+  } else {
+    // Game End
+    player_lives = 0;
+    game_over = 1;
   }
 }
 
@@ -963,16 +975,5 @@ void player_hit(unsigned char f_val) __z88dk_fastcall {
     player_vita = 0;
     game_update_stats();
     player_lost_life();
-    if (player_lives > 0) {
-      // Player lost life
-      --player_lives;
-      player_mana = GAME_START_MAX_MANA;
-      player_vita = GAME_START_MAX_VITA;
-      game_update_stats();
-    } else {
-      // Game End
-      player_lives = 0;
-      game_over = 1;
-    }
   }
 }

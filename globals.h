@@ -196,6 +196,7 @@
 //BOSSES
 #define INDEX_ENEMY_BOSS1              116
 #define TILE_ENEMY_BOSS1               216
+#define TILE_TITLE                     212
 
 
 
