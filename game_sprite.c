@@ -439,7 +439,7 @@ unsigned char spr_redraw(void) {
     // Speed UP hack
     if (sprite == SPR_P1) {
       /*Stair Anim*/
-      if (player_over_stair && ((lin[SPR_P1] & 3) == 0)) {
+      if (player_onstair && ((lin[SPR_P1] & 3) == 0)) {
         ++player_anim_stair;
 
         if (player_anim_stair > 1) {

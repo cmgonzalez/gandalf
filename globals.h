@@ -475,7 +475,7 @@ extern unsigned char game_respawn_index[7];
 extern unsigned char game_respawn_tile[7];
 extern unsigned char game_start_scr;
 
-extern unsigned char player_over_stair;
+extern unsigned char player_onstair;
 
 
 extern unsigned char screen_paper, screen_ink;

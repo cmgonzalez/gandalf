@@ -80,7 +80,7 @@ unsigned int player_score;    // SCORE
 unsigned int player_joy;      // JOYSTICK
 unsigned char player_lives;
 unsigned char player_coins;
-unsigned char player_over_stair;
+unsigned char player_onstair;
 signed char player_vel_x;
 signed char player_vel_y;
 signed char player_vel_y0;
