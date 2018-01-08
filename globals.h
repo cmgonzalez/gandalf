@@ -410,7 +410,6 @@ extern unsigned int player_hit_time;
 extern unsigned int  player_anim_stair;
 
 
-
 extern signed   int  game_gravity;
 extern unsigned char game_world;
 extern unsigned char game_boss;

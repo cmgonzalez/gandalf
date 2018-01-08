@@ -58,6 +58,7 @@ void game_loop(void) {
         frame_time = zx_clock();
         game_fps();
         game_respawn();
+        
       }
       /*Enemies turn*/
       enemy_turn();
@@ -812,7 +813,7 @@ void game_attribs() {
   // ATTRIB NORMAL
   attrib[0] = BRIGHT | map_paper | INK_WHITE;
   attrib[1] = BRIGHT | map_paper | INK_CYAN;
-  attrib[2] = BRIGHT | map_paper | INK_BLUE;
+  attrib[2] = BRIGHT | map_paper | INK_CYAN;
   attrib[3] = BRIGHT | map_paper | INK_BLUE;
 
   // ATTRIB HIGHLIGHT

@@ -77,31 +77,17 @@ unsigned char spr_move_up(void) {
   s_lin1 = lin[sprite] - SPRITE_LIN_INC;
   f_check = (s_lin1 >> 4) != (s_lin0 >> 4);
 
-  if (f_check) {
-    if (game_check_map(s_lin1, col[sprite])) {
-      /*
-      if (sprite == SPR_P1) {
-        if (!BIT_CHK(state_a[SPR_P1], STAT_HITBRICK)) {
-          player_hit_platform();
-        }
-      }
-      */
-      return 1;
-    }
+  if (f_check && game_check_map(s_lin1, col[sprite])) {
+    return 1;
   }
 
-  if (s_lin1 < 16) { //}> GAME_LIN_FLOOR) {
+  if (s_lin1 < 16) {
     if (sprite == SPR_P1) {
       if (spr_page_up()) {
-        return 1;
-      } else {
-        //lin[sprite] = 16;
-        return 1;
+        return 0;
       }
-    } else {
-      //lin[sprite] = 0;
-      return 1;
     }
+    return 1;
 
   } else {
     lin[sprite] = s_lin1;
@@ -274,6 +260,7 @@ unsigned char spr_page_down() {
 
 unsigned char spr_page_up() {
   tmp1 = scr_curr / map_heigth;
+
   if (tmp1 > 0 && (!game_boss || game_god_mode)) {
     scr_curr = scr_curr - map_width;
     spr_page_map();
@@ -332,7 +319,6 @@ void spr_page_map(void) {
   l_scr = scr_curr;
 
   k = 16;
-
 
   spr_clear_scr();
   intrinsic_di();
@@ -399,7 +385,7 @@ void spr_page_map(void) {
       if (!game_obj_chk(k)) {
         scr_map[k] = v0;
       } else {
-        scr_map[k] = game_match_back(k);//TILE_EMPTY;
+        scr_map[k] = game_match_back(k); // TILE_EMPTY;
       }
       ++k;
     } else {
@@ -409,7 +395,7 @@ void spr_page_map(void) {
         if (!game_obj_chk(k)) {
           scr_map[k] = v1;
         } else {
-          scr_map[k] = game_match_back(k);//TILE_EMPTY;
+          scr_map[k] = game_match_back(k); // TILE_EMPTY;
         }
 
         ++k;
@@ -423,12 +409,13 @@ void spr_page_map(void) {
       break;
     }
   }
-  spr_init_anim_bullets();
+
   scr_curr = l_scr;
   map_width = l_world_w;
   map_heigth = l_world_h;
   map_paper = l_paper;
 
+  spr_init_anim_bullets();
   if (map_paper_last != map_paper) {
     spr_btile_paint_back();
   }
@@ -460,7 +447,10 @@ unsigned char spr_redraw(void) {
         }
         s_tile1 = tile[SPR_P1] + player_anim_stair + 4;
       }
-      spr_back_repaint();
+
+        spr_back_repaint();
+
+
     } else {
       if ((s_lin1 & 7) == 0) {
         spr_back_repaint();
@@ -496,7 +486,6 @@ void spr_destroy(unsigned char f_sprite) __z88dk_fastcall {
   s_tile0 = game_match_back(index0);
   NIRVANAP_spriteT(f_sprite, s_tile0, 0, 0);
   spr_back_repaint();
-
 
   tile[f_sprite] = s_tile0;
   col[f_sprite] = 0;
@@ -791,7 +780,7 @@ void spr_play_anim(void) {
           f_index = spr_calc_index(s_lin0, s_col0);
           if (scr_map[spr_calc_index(s_lin0, s_col0)] == 0xFF) {
             index0 = spr_calc_index(s_lin0, s_col0);
-            scr_map[index0] = game_match_back(index0);//TILE_EMPTY;
+            scr_map[index0] = game_match_back(index0); // TILE_EMPTY;
           }
           spr_back_repaint();
 
@@ -930,7 +919,7 @@ void spr_play_bullets(void) {
 
       if (scr_map[index0] == TILE_DIRT && f_bullet == SPR_P1) {
         // Destroy Bricks
-        scr_map[index0] = game_match_back(index0);//TILE_EMPTY;
+        scr_map[index0] = game_match_back(index0); // TILE_EMPTY;
         game_obj_set(index0);
         bullet_lin[f_bullet] = (index0 >> 4) << 4;
         bullet_col[f_bullet] = (index0 & 15) << 1;

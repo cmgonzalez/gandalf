@@ -63,6 +63,7 @@ unsigned char player_check_input(void) {
 unsigned char player_collision(void) {
   unsigned char v0;
   if (game_check_time(player_hit_time, 25)) { // HACK REPATED ON player_hit
+
     sprite = 0;
     s_col1 = col[SPR_P1];
     s_lin1 = lin[SPR_P1];
@@ -205,7 +206,7 @@ unsigned char player_move(void) {
     /* Read player input */
     player_move_input();
     /* Check if the player have floor, and set fall if not */
-    player_check_floor();
+    if (!player_over_stair) player_check_floor();
   }
   // player_check_stairs(0);
 
@@ -327,30 +328,26 @@ unsigned char player_move_input(void) {
     }
 
     if (dirs & IN_STICK_UP) {
+
       player_check_stairs(0);
       if (!player_over_stair) {
         player_check_stairs(1);
       }
 
       if (player_over_stair) {
-        if (spr_move_up()) {
-          player_over_stair = 0;
-        }
+        spr_move_up();
       } else {
         if (!((dirs & IN_STICK_RIGHT) || (dirs & IN_STICK_LEFT)))
           return 0;
       }
     }
-
     if (dirs & IN_STICK_DOWN) {
       player_check_stairs_down(0);
       if (!player_over_stair) {
         player_check_stairs_down(1);
       }
       if (player_over_stair) {
-        if (spr_move_down()) {
-          player_over_stair = 0;
-        }
+        spr_move_down();
       } else {
         if (!((dirs & IN_STICK_RIGHT) || (dirs & IN_STICK_LEFT)))
           return 0;
