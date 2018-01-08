@@ -55,7 +55,6 @@ void player_turn(void) {
     dirs = (joyfunc1)(&k1);
     player_move();
     player_collision();
-    zx_print_chr(23, 0, player_onstair);
   }
 }
 
@@ -857,6 +856,9 @@ unsigned char player_move_jump(void) {
 
         BIT_CLR(s_state, STAT_FALL);
         BIT_CLR(s_state, STAT_JUMP);
+        if (lin[SPR_P1] >= GAME_LIN_FLOOR) {
+          spr_page_down();
+        }
         colint[SPR_P1] = 0;
         return 1;
       } else {
