@@ -20,12 +20,10 @@
 extern void          player_init(unsigned char f_lin, unsigned char f_col, unsigned char f_tile);
 extern unsigned char player_collision(void);
 extern unsigned char player_check_input(void);
-extern void          player_kill(void);
 extern unsigned char player_move(void);
 extern void          player_turn(void);
 extern unsigned char player_move_input(void);
 extern unsigned char player_hit_platform(void);
-extern unsigned char player_player_hit_pow(void);
 extern void          player_score_add(unsigned int f_score) __z88dk_fastcall;
 extern void          player_hit_platform_clear(void);
 extern void          player_check_floor(void);

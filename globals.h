@@ -451,7 +451,6 @@ extern unsigned char attrib_hl[4];
 extern unsigned char attrib_osd[4];
 extern unsigned char s_state;
 extern unsigned int curr_time;
-extern unsigned int entry_time;
 extern unsigned int frame_time;
 extern unsigned int anim_time;
 extern unsigned int bullet_time;
@@ -459,8 +458,6 @@ extern unsigned char spr_count;
 extern unsigned char sprite_curr_index;
 
 
-extern unsigned char game_brick_tile;
-extern unsigned char game_two_player;
 extern unsigned char game_god_mode;
 extern unsigned char game_inmune;
 extern unsigned char game_sound;
@@ -469,7 +466,6 @@ extern unsigned char game_over;
 extern unsigned char player_lives;
 extern unsigned char player_coins;
 extern unsigned int game_score_top;
-extern unsigned char game_menu_sel;
 extern unsigned int game_respawn_time[7];
 extern unsigned char game_respawn_index[7];
 extern unsigned char game_respawn_tile[7];
@@ -554,8 +550,6 @@ extern unsigned char spr_hack;
 extern unsigned char bullet_count;
 
 extern const JOYFUNC control_method[7];
-extern unsigned char initials[8];
-extern const char *joynames[];
 
 extern unsigned char g_player_hit_left;
 extern unsigned char g_player_hit_right;

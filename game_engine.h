@@ -25,18 +25,13 @@ extern void          game_fps(void);
 extern void          game_fill_row(unsigned char f_row, unsigned char f_asc) __z88dk_callee;
 extern void          game_print_footer(void);
 extern void			     game_update_stats(void);
-extern void			     game_tick(void);
 extern void			     game_start_timer(void);
 extern void			     game_round_init(void);
 extern void			     game_loop(void);
 extern unsigned int  game_check_map(unsigned char f_lin, unsigned char f_col);
 extern unsigned char game_check_cell(int f_index) __z88dk_fastcall;
-extern unsigned char game_enemy_add_get_index(unsigned char f_search) __z88dk_fastcall;
-extern void          game_freeze(unsigned char f_lin, unsigned char f_col);
-extern void          game_freeze_all(void);
-extern void			     game_unfreeze_all(void);
 extern void			     game_print_score(void);
-extern void			     game_paint_attrib(unsigned char e_r1) __z88dk_fastcall;
+//extern void			     game_paint_attrib(unsigned char e_r1) __z88dk_fastcall;
 extern void			     game_paint_attrib_lin(unsigned char f_start,unsigned char f_end,unsigned char f_lin);
 extern void			     game_paint_attrib_lin_h(unsigned char f_start,unsigned char f_end,unsigned char f_lin);
 extern void			     game_paint_attrib_lin_osd(unsigned char f_start,unsigned char f_end,unsigned char f_lin);
@@ -44,18 +39,20 @@ extern void			     game_colour_message( unsigned char f_row, unsigned char f_col
 extern void			     game_rotate_attrib(void);
 extern void			     game_rotate_attrib_osd(void);
 extern unsigned char game_check_time(unsigned int start, unsigned int lapse);
-extern void          game_phase_print_score_back(void);
 extern void          game_print_header(void);
 extern void          game_add_enemy( unsigned char enemy_tile_index);
 extern unsigned char game_shoot_fire( unsigned char f_sprite, unsigned char f_tile);
 extern unsigned char game_shoot_fire_boss( unsigned char f_tile, unsigned char f_dir  );
-
-extern void          game_obj_set( unsigned int f_index );
-extern unsigned char game_obj_chk( unsigned int f_index );
+extern void          game_obj_set( unsigned int f_index ) __z88dk_fastcall;
+extern unsigned char game_obj_chk( unsigned int f_index ) __z88dk_fastcall;
 extern void          game_obj_clear( );
 extern void          game_boss_clear( );
 extern void          game_attribs( );
-unsigned char game_match_back( unsigned int f_index );
-
+unsigned char        game_match_back( unsigned int f_index );
+//Menues
+extern void         menu_main();
+extern void         menu_main_print(unsigned char s_row, unsigned char s_col, unsigned char s_col_e);
+extern void         menu_redefine();
+extern unsigned int menu_define_key();
 
 #endif

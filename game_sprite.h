@@ -18,8 +18,6 @@
 #define GAME_SPRITE_H
 extern unsigned char    spr_chktime(unsigned char *sprite) __z88dk_fastcall;
 extern unsigned int	    spr_calc_index(unsigned char l, unsigned char c);
-//extern unsigned char    spr_move_up_fast(void);
-//extern unsigned char    spr_move_down_fast(void);
 extern unsigned char    spr_move_up(void);
 extern unsigned char    spr_move_down(void);
 extern unsigned char    spr_move_horizontal(void);
@@ -31,9 +29,7 @@ extern void             spr_destroy(unsigned char f_sprite) __z88dk_fastcall;
 extern unsigned char    spr_tile(unsigned char f_sprite) __z88dk_fastcall;
 extern void             spr_back_repaint(void);
 extern void             spr_brick_anim(unsigned char f_hit) __z88dk_fastcall;
-//extern void             spr_draw_clear(void);
 extern void             spr_draw_index(unsigned int f_index);
-extern void             spr_draw_row(unsigned char f_row);
 extern unsigned char    spr_calc_hor(unsigned char f_sprite);
 extern void             spr_tile_paint( unsigned char f_tile, unsigned char f_lin, unsigned char f_col );
 unsigned char           spr_page_left();

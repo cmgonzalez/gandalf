@@ -24,6 +24,8 @@
 #include "game_zx.h"
 #include "macros.h"
 #include "nirvana+.h"
+#include <arch/zx.h>
+#include <input.h>
 #include <stdlib.h>
 
 void enemy_hit(void) {

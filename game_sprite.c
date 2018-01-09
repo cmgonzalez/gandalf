@@ -74,8 +74,6 @@ unsigned char spr_move_down_fast(void) {
 unsigned char spr_move_up(void) {
   unsigned char f_check;
 
-
-
   if (lin[sprite] <= 16) {
     if (sprite == SPR_P1) {
       if (spr_page_up()) {
@@ -100,7 +98,6 @@ unsigned char spr_move_up(void) {
 unsigned char spr_move_down(void) {
   unsigned char f_check;
 
-
   if (lin[sprite] >= GAME_LIN_FLOOR) {
 
     if (sprite == SPR_P1) {
@@ -124,7 +121,6 @@ unsigned char spr_move_down(void) {
         return 1;
       }
     }
-
 
     lin[sprite] = s_lin1 - 14;
     return 0;
@@ -451,10 +447,7 @@ unsigned char spr_redraw(void) {
         }
         s_tile1 = tile[SPR_P1] + player_anim_stair + 4;
       }
-
-        spr_back_repaint();
-
-
+      spr_back_repaint();
     } else {
       if ((s_lin1 & 7) == 0) {
         spr_back_repaint();
@@ -626,17 +619,6 @@ void spr_draw_index(unsigned int f_index) {
   s_lin1 = (s_lin1 >> 4) << 4;
   intrinsic_di();
   NIRVANAP_drawT_raw(scr_map[f_index], s_lin1, s_col1);
-  intrinsic_ei();
-}
-
-void spr_draw_row(unsigned char f_row) {
-  intrinsic_di();
-  tmp = 0;
-  while (tmp < 32) {
-    index1 = (f_row << 5) + tmp;
-    NIRVANAP_drawT_raw(game_brick_tile, f_row << 3, tmp);
-    tmp = tmp + 2;
-  }
   intrinsic_ei();
 }
 
@@ -844,7 +826,7 @@ void spr_play_bullets(void) {
       s_lin0 = bullet_lin[f_bullet];
       s_col0 = bullet_col[f_bullet] - 1;
       if (s_col0 < 32) {
-        spr_back_repaint();
+        spr_back_repaint(); //TODO OPTIMIZE REPAINT
       };
 
       bullet_vel[f_bullet] = bullet_vel[f_bullet] + game_gravity;
@@ -1063,7 +1045,7 @@ void spr_btile_paint_back() {
   tmp_ui = 32;
   map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
 
-  while (tmp_ui < (32 + (48 * 12 * 18))) {
+  while (tmp_ui < (32 + (48 * 12 * 20))) { // 12*20 btiles
     tmp0 = 0;
 
     while (tmp0 < 16) {

@@ -48,7 +48,6 @@ unsigned char map_heigth;
 //#
 //###############################################################################################
 
-const char *joynames[] = {"SJ1", "SJ2", "KB1", "KB2", "KEM", "CUR", "FUL"};
 uint16_t (*joyfunc1)(udk_t *); // pointer to joystick function Player 1
 udk_t k1;
 
@@ -149,7 +148,6 @@ unsigned char g_player_hit_left;
 unsigned char g_player_hit_right;
 
 unsigned int curr_time;
-unsigned int entry_time;
 unsigned int frame_time;
 unsigned int anim_time;
 unsigned int bullet_time;
@@ -199,13 +197,11 @@ unsigned char spr_hack;
 //#
 //###############################################################################################
 
-unsigned char game_brick_tile;
 unsigned char game_god_mode;
 unsigned char game_inmune;
 
 unsigned char game_sound;
 unsigned char game_over;
-unsigned char game_menu_sel;
 
 unsigned int game_score_top;
 unsigned int game_respawn_time[7]; // 8-1=7 Player don't respawn

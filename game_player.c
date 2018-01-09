@@ -342,29 +342,6 @@ void player_1up() {
   }
 }
 
-void player_kill(void) {
-  if (!BIT_CHK(state[SPR_P1], STAT_KILL)) {
-    sound_hit_brick();
-    BIT_SET(state[SPR_P1], STAT_KILL);
-    sprite_speed_alt[SPR_P1] = SPRITE_FALL_SPEED;
-    if (BIT_CHK(state[SPR_P1], STAT_DIRR)) {
-      tile[SPR_P1] = TILE_P1_HITR;
-    } else {
-      tile[SPR_P1] = TILE_P1_HITR + TILE_P1_LEN;
-    }
-    player_hit_platform_clear();
-    NIRVANAP_spriteT(sprite, tile[SPR_P1], lin[SPR_P1], col[SPR_P1]);
-    spr_timer[SPR_P1] = zx_clock();
-    if (sprite == SPR_P1) {
-      BIT_SET(state_a[SPR_P1], STAT_LDIRL);
-      BIT_CLR(state_a[SPR_P1], STAT_LDIRR);
-    } else {
-      BIT_SET(state_a[SPR_P1], STAT_LDIRR);
-      BIT_CLR(state_a[SPR_P1], STAT_LDIRL);
-    }
-  }
-}
-
 void player_check_stairs_vertical(signed char f_inc) {
   unsigned char v0;
   unsigned char v1;

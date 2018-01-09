@@ -18,7 +18,6 @@
 #include "game_ay.h"
 #include "game_enemies.h"
 #include "game_engine.h"
-#include "game_menu.h"
 #include "game_player.h"
 #include "game_sound.h"
 #include "game_sprite.h"
@@ -58,7 +57,7 @@ void game_loop(void) {
         frame_time = zx_clock();
         game_fps();
         game_respawn();
-        
+
       }
       /*Enemies turn*/
       enemy_turn();
@@ -317,10 +316,6 @@ void game_print_score(void) {
   zx_print_int(0, 14, game_score_top); // SCORE TOP
 }
 
-void game_phase_print_score_back(void) {
-  zx_print_ink(INK_RED);
-  zx_print_str(0, 11, "$%|"); // Top
-}
 
 void game_update_stats(void) {
   zx_print_ink(INK_WHITE);
@@ -374,7 +369,6 @@ void game_round_init(void) {
   /* screen init */
   /*PHASE INIT*/
   loop_count = 0;
-  entry_time = 0;
   zx_set_clock(0);
   frame_time = 0;
 
@@ -417,7 +411,9 @@ void game_round_init(void) {
 }
 
 void game_print_header(void) {
-  game_phase_print_score_back();
+
+  zx_print_ink(INK_RED);
+  zx_print_str(0, 11, "$%|");
   zx_print_ink(INK_WHITE);
   /* Print score */
   game_print_score();
@@ -531,22 +527,13 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
   // NOT A TILE f_tile > TILE_END
   return 0;
 }
-
-unsigned char
-game_enemy_add_get_index(unsigned char f_search) __z88dk_fastcall {
-  for (enemies = 0; enemies <= 5; ++enemies) {
-    if (class[enemies] == (unsigned char)f_search) {
-      return enemies;
-    }
-  }
-  return 255;
-}
-
+/*
 void game_paint_attrib(unsigned char e_r1) __z88dk_fastcall {
   for (tmp0 = e_r1; tmp0 <= 19; ++tmp0) {
     game_paint_attrib_lin(1, 31, (tmp0 << 3) + 8);
   }
 }
+*/
 
 void game_paint_attrib_lin(unsigned char f_start, unsigned char f_end,
                            unsigned char f_lin) {
@@ -573,6 +560,8 @@ void game_paint_attrib_lin_osd(unsigned char f_start, unsigned char f_end,
 void game_colour_message(unsigned char f_row, unsigned char f_col,
                          unsigned char f_col2, unsigned int f_microsecs,
                          unsigned char skip) {
+ unsigned int entry_time;
+
   tmp = 1;
   frame_time = zx_clock();
   entry_time = zx_clock();
@@ -731,7 +720,7 @@ unsigned char game_shoot_fire_boss(unsigned char f_tile, unsigned char f_dir) {
   return 0;
 }
 
-void game_obj_set(unsigned int f_index) {
+void game_obj_set(unsigned int f_index)  __z88dk_fastcall {
   unsigned char f_scr_surr1;
   if (scr_curr < 8) {
     BIT_SET(scr_obj0[f_index], scr_curr);
@@ -741,7 +730,7 @@ void game_obj_set(unsigned int f_index) {
   }
 }
 
-unsigned char game_obj_chk(unsigned int f_index) {
+unsigned char game_obj_chk(unsigned int f_index) __z88dk_fastcall {
   unsigned char f_scr_surr1;
 
   if (scr_curr < 8) {
@@ -785,14 +774,7 @@ void game_boss_clear() {
 }
 
 void game_rotate_attrib(void) {
-  // OUT OF MEMORY
-  // UP
-  // tmp_uc = attrib_hl[0];
-  // attrib_hl[0] = attrib_hl[1];
-  // attrib_hl[1] = attrib_hl[2];
-  // attrib_hl[2] = attrib_hl[3];
-  // attrib_hl[3] = tmp_uc;
-  // DOWN
+
   tmp_uc = attrib_hl[3];
   attrib_hl[3] = attrib_hl[2];
   attrib_hl[2] = attrib_hl[1];
@@ -811,22 +793,22 @@ void game_rotate_attrib_osd(void) {
 
 void game_attribs() {
   // ATTRIB NORMAL
-  attrib[0] = BRIGHT | map_paper | INK_WHITE;
-  attrib[1] = BRIGHT | map_paper | INK_CYAN;
-  attrib[2] = BRIGHT | map_paper | INK_CYAN;
-  attrib[3] = BRIGHT | map_paper | INK_BLUE;
+  attrib[0] = map_paper | BRIGHT | INK_WHITE;
+  attrib[1] = map_paper | BRIGHT | INK_CYAN;
+  attrib[2] = map_paper | BRIGHT | INK_CYAN;
+  attrib[3] = map_paper | BRIGHT | INK_BLUE;
 
   // ATTRIB HIGHLIGHT
-  attrib_hl[0] = BRIGHT | map_paper | INK_BLUE;
-  attrib_hl[1] = BRIGHT | map_paper | INK_BLUE;
-  attrib_hl[2] = BRIGHT | map_paper | INK_MAGENTA;
-  attrib_hl[3] = BRIGHT | map_paper | INK_CYAN;
+  attrib_hl[0] = map_paper | BRIGHT |INK_BLUE;
+  attrib_hl[1] = map_paper | BRIGHT | INK_BLUE;
+  attrib_hl[2] = map_paper | BRIGHT | INK_MAGENTA;
+  attrib_hl[3] = map_paper | BRIGHT | INK_CYAN;
 
   // ATTRIB OSD
-  attrib_osd[0] = BRIGHT | map_paper | INK_MAGENTA;
-  attrib_osd[1] = BRIGHT | map_paper | INK_MAGENTA;
-  attrib_osd[2] = BRIGHT | map_paper | INK_CYAN;
-  attrib_osd[3] = BRIGHT | map_paper | INK_CYAN;
+  attrib_osd[0] = map_paper | BRIGHT | INK_MAGENTA;
+  attrib_osd[1] = map_paper | BRIGHT | INK_MAGENTA;
+  attrib_osd[2] = map_paper | BRIGHT | INK_CYAN;
+  attrib_osd[3] = map_paper | BRIGHT | INK_CYAN;
 }
 
 unsigned char game_match_back(unsigned int f_index) {
@@ -835,4 +817,259 @@ unsigned char game_match_back(unsigned int f_index) {
     return TILE_EMPTY_DARK;
   }
   return TILE_EMPTY;
+}
+
+void menu_main() {
+  unsigned char curr_sel;
+  unsigned char f_input;
+  unsigned char s_col;
+  unsigned char s_col_e;
+  unsigned char s_row;
+  unsigned char c;
+
+  f_input = 1;
+  s_col = 10;
+  s_col_e = 10 + 10;
+  s_row = 7;
+  c = 0;
+
+  map_paper = PAPER_BLACK;
+
+  zx_print_ink(INK_WHITE);
+  //Gandalf Log
+  NIRVANAP_spriteT(0, TILE_TITLE, 32, 11);
+  NIRVANAP_spriteT(1, TILE_TITLE + 1, 32, 13);
+  NIRVANAP_spriteT(2, TILE_TITLE + 2, 32, 15);
+  NIRVANAP_spriteT(3, TILE_TITLE + 3, 32, 17);
+
+  menu_main_print(s_row, s_col, s_col_e);
+
+  curr_sel = 1;
+  while (f_input) {
+
+    // in_wait_key();
+    c = in_inkey();
+
+    // in_wait_nokey();
+    z80_delay_ms(40);
+    game_rotate_attrib();
+    s_row = 6 + curr_sel;
+    game_paint_attrib_lin_h(s_col + 1, s_col_e, (s_row << 3) + 8);
+    // 48
+    c = c - 48;
+
+    if (c <= 5) {
+      switch (c) {
+      case 1: // SINCLAIR
+        joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_sinclair1);
+        game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+        curr_sel = 1;
+        break;
+      case 2: // KEYBOARD
+        joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
+        game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+        curr_sel = 2;
+        break;
+      case 3: // KEMPSTON
+        joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_kempston);
+        game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+        curr_sel = 3;
+        break;
+      case 4: // CURSOR
+        joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_cursor);
+        game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+        curr_sel = 4;
+        break;
+      case 5: // DEFINE
+        menu_redefine();
+        joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
+        game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+        curr_sel = 2;
+        break;
+      case 0:
+        f_input = 0; // Exit Loop
+        break;
+      }
+    }
+  }
+}
+
+
+void menu_main_print(unsigned char s_row, unsigned char s_col,
+                     unsigned char s_col_e) {
+  game_attribs();
+  zx_print_str(s_row, s_col, "1 SINCLAIR");
+  game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+  ++s_row;
+  zx_print_str(s_row, s_col, "2 KEYBOARD");
+  game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+  ++s_row;
+  zx_print_str(s_row, s_col, "3 KEMPSTON");
+  game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+  ++s_row;
+  zx_print_str(s_row, s_col, "4 CURSOR");
+  game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+  ++s_row;
+  zx_print_str(s_row, s_col, "5 DEFINE");
+  game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+  ++s_row;
+  ++s_row;
+  zx_print_str(s_row, s_col, "0 START");
+  game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+  ++s_row;
+  ++s_row;
+  ++s_row;
+  ++s_row;
+  zx_print_str(s_row, 2, "CGONZALEZ/AALBRECHT/S9/BEIKER/ABU");
+  game_paint_attrib_lin_h(0, 31, (s_row << 3) + 8);
+  ++s_row;
+  ++s_row;
+  zx_print_ink(INK_CYAN);
+  zx_print_str(s_row, 8, "2018 NOENTIENDO");
+  game_paint_attrib_lin(0, 31, (s_row << 3) + 8);
+}
+
+
+void menu_redefine() {
+
+  zx_paper_fill(INK_BLACK | PAPER_BLACK);
+  for (tmp0 = 8; tmp0 < 14; ++tmp0)
+     game_paint_attrib_lin(10, 16, (tmp0 << 3) + 8);
+
+  zx_print_str(8, 10, "UP");
+  k1.up = menu_define_key();
+  zx_print_str(9, 10, "DOWN");
+  k1.down = menu_define_key();
+  zx_print_str(10, 10, "LEFT");
+  k1.left = menu_define_key();
+  zx_print_str(11, 10, "RIGHT");
+  k1.right = menu_define_key();
+  zx_print_str(12, 10, "FIRE");
+  k1.fire = menu_define_key();
+
+  game_fill_row(12, 32);
+  menu_main_print(7, 10, 20);
+}
+
+
+unsigned int menu_define_key() {
+  unsigned char c;
+  while (1) {
+    in_wait_key();
+    c = in_inkey();
+    in_wait_nokey();
+    switch (c) {
+    case 48:
+      return IN_KEY_SCANCODE_0;
+      break;
+    case 49:
+      return IN_KEY_SCANCODE_1;
+      break;
+    case 50:
+      return IN_KEY_SCANCODE_2;
+      break;
+    case 51:
+      return IN_KEY_SCANCODE_3;
+      break;
+    case 52:
+      return IN_KEY_SCANCODE_4;
+      break;
+    case 53:
+      return IN_KEY_SCANCODE_5;
+      break;
+    case 54:
+      return IN_KEY_SCANCODE_6;
+      break;
+    case 55:
+      return IN_KEY_SCANCODE_7;
+      break;
+    case 56:
+      return IN_KEY_SCANCODE_8;
+      break;
+    case 57:
+      return IN_KEY_SCANCODE_9;
+      break;
+    case 97:
+      return IN_KEY_SCANCODE_a;
+      break;
+    case 98:
+      return IN_KEY_SCANCODE_b;
+      break;
+    case 99:
+      return IN_KEY_SCANCODE_c;
+      break;
+    case 100:
+      return IN_KEY_SCANCODE_d;
+      break;
+    case 101:
+      return IN_KEY_SCANCODE_e;
+      break;
+    case 102:
+      return IN_KEY_SCANCODE_f;
+      break;
+    case 103:
+      return IN_KEY_SCANCODE_g;
+      break;
+    case 104:
+      return IN_KEY_SCANCODE_h;
+      break;
+    case 105:
+      return IN_KEY_SCANCODE_i;
+      break;
+    case 106:
+      return IN_KEY_SCANCODE_j;
+      break;
+    case 107:
+      return IN_KEY_SCANCODE_k;
+      break;
+    case 108:
+      return IN_KEY_SCANCODE_l;
+      break;
+    case 109:
+      return IN_KEY_SCANCODE_m;
+      break;
+    case 110:
+      return IN_KEY_SCANCODE_n;
+      break;
+    case 111:
+      return IN_KEY_SCANCODE_o;
+      break;
+    case 112:
+      return IN_KEY_SCANCODE_p;
+      break;
+    case 113:
+      return IN_KEY_SCANCODE_q;
+      break;
+    case 114:
+      return IN_KEY_SCANCODE_r;
+      break;
+    case 115:
+      return IN_KEY_SCANCODE_s;
+      break;
+    case 116:
+      return IN_KEY_SCANCODE_t;
+      break;
+    case 117:
+      return IN_KEY_SCANCODE_u;
+      break;
+    case 118:
+      return IN_KEY_SCANCODE_v;
+      break;
+    case 119:
+      return IN_KEY_SCANCODE_w;
+      break;
+    case 120:
+      return IN_KEY_SCANCODE_x;
+      break;
+    case 121:
+      return IN_KEY_SCANCODE_y;
+      break;
+    case 122:
+      return IN_KEY_SCANCODE_z;
+      break;
+    }
+
+    return 0;
+  }
+  // return 0;
 }
