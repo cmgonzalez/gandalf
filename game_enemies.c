@@ -38,27 +38,25 @@ void enemy_turn(void) {
   sprite = 0;
 
   while (sprite < SPR_P1) {
-    if (class[sprite] > 0) {
-      if (spr_chktime(&sprite)) {
-        s_lin0 = lin[sprite];
-        s_col0 = col[sprite];
-        s_tile0 = tile[sprite] + colint[sprite];
-        s_state = state[sprite];
-        enemy_move();
-        if ( spr_redraw() ) {
-          //The sprite have moved...
-          index1 = spr_calc_index(lin[sprite], col[sprite]);
-          if (scr_map[index1] > TILE_ITEM_E & scr_map[index1] < TILE_FLOOR) {
-            // Deadly Backgrounds
-            s_lin0 = lin[sprite];
-            s_col0 = col[sprite];
-            spr_destroy(sprite);
-            spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
-          }
+    if (class[sprite] > 0 && spr_chktime(&sprite)) {
+      s_lin0 = lin[sprite];
+      s_col0 = col[sprite];
+      s_tile0 = tile[sprite] + colint[sprite];
+      s_state = state[sprite];
+      enemy_move();
+      if (spr_redraw()) {
+        // The sprite have moved...
+        index1 = spr_calc_index(lin[sprite], col[sprite]);
+        if (scr_map[index1] > TILE_ITEM_E & scr_map[index1] < TILE_FLOOR) {
+          // Deadly Backgrounds
+          s_lin0 = lin[sprite];
+          s_col0 = col[sprite];
+          spr_destroy(sprite);
+          spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
         }
-        state[sprite] = s_state;
-        last_time[sprite] = zx_clock();
       }
+      state[sprite] = s_state;
+      last_time[sprite] = zx_clock();
     }
     ++sprite;
   }
@@ -220,10 +218,12 @@ void enemy_walk(void) {
 
     if ((col[sprite] & 1) == 0) {
 
-      if (class[sprite] == MUSHROOM_MANA || class[sprite] == MUSHROOM_MANA ||
-          class[sprite] == MUSHROOM_MANA) {
-        if (!BIT_CHK(s_state, STAT_FALL)) { // TODO MOVE TO ENEMY WALK
+      if (class[sprite] == MUSHROOM_VITA || class[sprite] == MUSHROOM_MANA ||
+          class[sprite] == MUSHROOM_EXTRA) {
+        if (!BIT_CHK(s_state, STAT_FALL)) {
+
           if (col[sprite] == 0 || col[sprite] == 30) {
+            spr_back_repaint();
             spr_destroy(sprite);
             --game_mush_count;
           }
@@ -348,7 +348,6 @@ void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,
     class[f_sprite] = f_class;
     lin[f_sprite] = f_lin;
     col[f_sprite] = f_col;
-    tmp = 0;
     state[f_sprite] = 0;
     state_a[f_sprite] = 0;
     jump_lin[f_sprite] = 0;

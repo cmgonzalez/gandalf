@@ -19,6 +19,7 @@
 
 extern void          player_init(unsigned char f_lin, unsigned char f_col, unsigned char f_tile);
 extern unsigned char player_collision(void);
+extern void          player_pick_mushroom();
 extern unsigned char player_check_input(void);
 extern unsigned char player_move(void);
 extern void          player_turn(void);
@@ -37,4 +38,6 @@ extern void          player_open_door(unsigned int f_index, unsigned char f_tile
 extern void          player_hit(unsigned char f_val) __z88dk_fastcall;
 extern void          player_lost_life();
 extern void          player_gasta_brick();
+extern void          player_fix_walk_lin();
+
 #endif

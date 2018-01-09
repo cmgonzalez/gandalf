@@ -74,6 +74,8 @@ void game_loop(void) {
       game_worldup = 0;
       game_respawn_curr_time = game_respawn_curr_time - 32;
       game_world++;
+      game_boss_alive = 1;
+      game_boss = 0;
       scr_curr = 255;
       game_round_init();
     }
@@ -330,8 +332,8 @@ void game_update_stats(void) {
   zx_print_chr(20, 17, player_mana);
   if (game_boss) {
     zx_print_ink(INK_MAGENTA);
-    zx_print_str(20, 24, "*");
-    zx_print_chr(20, 26, game_boss_hit);
+    zx_print_str(21, 24, "*");
+    zx_print_chr(21, 26, game_boss_hit);
   }
 
   if (player_keys[0]) {
