@@ -493,8 +493,18 @@ void spr_destroy(unsigned char f_sprite) __z88dk_fastcall {
 }
 
 unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
-  unsigned char f_inc;
-  f_inc = 0;
+
+  tmp0 = 0;
+  while (tmp0 < 16) {
+    tmp1 = tmp0*3;
+    if (spr_map_tile[tmp1] == class[f_sprite]) {
+      return spr_tile_dir(spr_map_tile[tmp1+1], f_sprite, spr_map_tile[tmp1+2]);
+    }
+    ++tmp0;
+  }
+  return 0;
+
+/*
   switch (class[f_sprite]) {
   case SKELETON:
     return spr_tile_dir(TILE_ENEMY_SKELETON, f_sprite, DIRINC_ENEMY_SKELETON);
@@ -545,6 +555,7 @@ unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
     break;
   }
   return 0;
+  */
 }
 
 unsigned char spr_tile_dir(unsigned char f_tile, unsigned char f_sprite,

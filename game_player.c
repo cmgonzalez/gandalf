@@ -678,7 +678,6 @@ void player_score_add(unsigned int f_score) __z88dk_fastcall {
       player_lvl++;
       zx_print_str(12, 12, "LEVEL UP!");
       game_colour_message(12, 12, 12 + 9, 25, 0);
-
       game_update_stats();
     }
   }

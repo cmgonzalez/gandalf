@@ -482,6 +482,8 @@ extern unsigned char player_onstair;
 extern unsigned char screen_paper, screen_ink;
 extern unsigned char sprite_speed[];
 extern unsigned char sprite_frames[];
+extern unsigned char spr_map_tile[];
+
 extern unsigned char sprite_speed_alt[8];
 extern unsigned char scr_map[];
 extern unsigned char scr_obj0[];
