@@ -19,7 +19,7 @@
 #include "game_enemies.h"
 #include "game_engine.h"
 #include "game_player.h"
-#include "game_sound.h"
+//#include "game_sound.h"
 #include "game_sprite.h"
 #include "game_zx.h"
 #include "macros.h"
@@ -27,11 +27,6 @@
 #include <arch/zx.h>
 #include <input.h>
 #include <stdlib.h>
-
-void enemy_hit(void) {
-  // TODO
-  sound_coin();
-}
 
 void enemy_turn(void) {
 
@@ -186,12 +181,13 @@ void enemy_vertical() {
   }
 
   if (class[sprite] == DRAGON) {
-    if (abs(lin[SPR_P1] - lin[sprite]) < 8) {
-      if (BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) {
-        game_shoot_fire(sprite, TILE_FIREBALL);
-      }
-      if (BIT_CHK(s_state, STAT_DIRL) && col[SPR_P1] < col[sprite]) {
-        game_shoot_fire(sprite, TILE_FIREBALL);
+    if (bullet_col[sprite] == 0xFF) {
+      if (abs(lin[SPR_P1] - lin[sprite]) < 8) {
+
+        if ((BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) ||
+            (BIT_CHK(s_state, STAT_DIRL) && col[SPR_P1] < col[sprite])) {
+          game_shoot_fire(sprite, TILE_FIREBALL);
+        }
       }
     }
   }
@@ -245,23 +241,27 @@ void enemy_walk(void) {
 
       if (class[sprite] == ELF) {
         enemy_avoid_fall();
-        if (abs(lin[SPR_P1] - lin[sprite]) < 32) { // TODO VARIABLE
-          if (BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) {
-            game_shoot_fire(sprite, TILE_ARROW);
-          }
-          if (BIT_CHK(s_state, STAT_DIRL) && col[SPR_P1] < col[sprite]) {
-            game_shoot_fire(sprite, TILE_ARROW);
+        if (bullet_col[sprite] == 0xFF) {
+          if (abs(lin[SPR_P1] - lin[sprite]) < 32) { // TODO VARIABLE
+            if ((BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) || (
+                    BIT_CHK(s_state, STAT_DIRL) && col[SPR_P1] < col[sprite])) {
+
+              game_shoot_fire(sprite, TILE_ARROW);
+            }
           }
         }
       }
 
       if (class[sprite] == DWARF) {
         enemy_avoid_fall();
-        s_col1 = abs(col[SPR_P1] - col[sprite]);
-        if (s_col1 < 6) {
-          if ((BIT_CHK(s_state, STAT_DIRL) && (col[sprite] > col[SPR_P1])) ||
-              (BIT_CHK(s_state, STAT_DIRR) && (col[sprite] < col[SPR_P1]))) {
-            game_shoot_fire(sprite, TILE_AXE);
+        if (bullet_col[sprite] == 0xFF) {
+          s_col1 = abs(col[SPR_P1] - col[sprite]);
+          if (s_col1 < 6) {
+            if ((BIT_CHK(s_state, STAT_DIRL) && (col[sprite] > col[SPR_P1])) ||
+                (BIT_CHK(s_state, STAT_DIRR) && (col[sprite] < col[SPR_P1]))) {
+
+              game_shoot_fire(sprite, TILE_AXE);
+            }
           }
         }
       }

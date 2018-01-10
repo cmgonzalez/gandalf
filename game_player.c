@@ -19,7 +19,7 @@
 #include "game_enemies.h"
 #include "game_engine.h"
 #include "game_player.h"
-#include "game_sound.h"
+//#include "game_sound.h"
 #include "game_sprite.h"
 #include "game_zx.h"
 #include "macros.h"
@@ -119,8 +119,9 @@ unsigned char player_check_input(void) {
     dirs = 0;
   }
 
-  return dirs & IN_STICK_FIRE  || dirs & IN_STICK_LEFT ||
-         dirs & IN_STICK_RIGHT || dirs & IN_STICK_UP   || dirs & IN_STICK_DOWN || dirs_alt & IN_STICK_FIRE;
+  return dirs & IN_STICK_FIRE || dirs & IN_STICK_LEFT ||
+         dirs & IN_STICK_RIGHT || dirs & IN_STICK_UP || dirs & IN_STICK_DOWN ||
+         dirs_alt & IN_STICK_FIRE;
 }
 
 unsigned char player_move_input(void) {
@@ -147,8 +148,6 @@ unsigned char player_move_input(void) {
         ay_fx_play(ay_effect_03);
       }
       player_onstair = 0;
-      sound_jump();
-
       // colint[SPR_P1] = FRAMES_PLAYER / 2;
       BIT_SET(s_state, STAT_JUMP);
       BIT_CLR(s_state, STAT_FALL);
@@ -259,15 +258,13 @@ unsigned char player_fire() {
     /*Fireball*/
     if (player_mana > 0 && (bullet_col[SPR_P1] == 0xFF)) {
       if (player_mana > 5) {
-        sound_hit_enemy();
         if (!game_god_mode)
           player_mana = player_mana - 5;
       } else {
         player_mana = 0;
       }
       game_update_stats();
-      
-      sound_enter_enemy();
+      ay_fx_play(ay_effect_05);
       game_shoot_fire(SPR_P1, TILE_FIREBALL);
     }
     return 1;
@@ -292,6 +289,7 @@ unsigned char player_collision(void) {
       if (v0 == TILE_WORLD_EXIT) {
         game_worldup = 1;
       } else {
+        ay_fx_play(ay_effect_06);
         zx_border(INK_YELLOW);
         player_hit(50);
       }
@@ -326,6 +324,7 @@ unsigned char player_collision(void) {
               player_pick_mushroom();
               return 0;
             }
+            ay_fx_play(ay_effect_06);
             zx_border(INK_RED);
             player_hit(20);
             return 1;
@@ -338,6 +337,7 @@ unsigned char player_collision(void) {
   return 0;
 }
 void player_pick_mushroom() {
+  ay_fx_play(ay_effect_12);
   player_score_add(1);
   game_update_stats();
   spr_destroy(sprite);
@@ -450,8 +450,7 @@ void player_pick_item(void) {
   if (v0 >= TILE_ITEM_S && v0 <= TILE_ITEM_E) {
     // PICK ITEM
     ay_reset();
-    ay_fx_play(ay_effect_10);
-    sound_coin();
+
     scr_map[sprite_curr_index] =
         game_match_back(sprite_curr_index); // TILE_EMPTY;
 
@@ -461,22 +460,27 @@ void player_pick_item(void) {
     spr_add_anim(s_lin1, s_col1, TILE_ANIM_PICK, 3, 0, 0);
     switch (v0) {
     case TILE_KEY_WHITE:
+      ay_fx_play(ay_effect_09);
       player_keys[0] = 1;
       game_update_stats();
       break;
     case TILE_KEY_RED:
+      ay_fx_play(ay_effect_09);
       player_keys[1] = 1;
       game_update_stats();
       break;
     case TILE_KEY_GREEN:
+      ay_fx_play(ay_effect_09);
       player_keys[2] = 1;
       game_update_stats();
       break;
     case TILE_KEY_CYAN:
+      ay_fx_play(ay_effect_09);
       player_keys[3] = 1;
       game_update_stats();
       break;
     case TILE_MONEY:
+      ay_fx_play(ay_effect_10);
       player_score_add(1);
       ++player_coins;
       if (player_coins == 100) {
@@ -486,9 +490,11 @@ void player_pick_item(void) {
       game_update_stats();
       break;
     case TILE_CHEST:
+      ay_fx_play(ay_effect_10);
       player_score_add(10);
       break;
     case TILE_SHIELD:
+      ay_fx_play(ay_effect_09);
       player_str++;
       if (player_max_vita < GAME_MAX_VITA) {
         player_max_vita = player_max_vita + 10;
@@ -496,6 +502,7 @@ void player_pick_item(void) {
       }
       break;
     case TILE_HELMET:
+      ay_fx_play(ay_effect_09);
       player_str++;
       if (player_max_vita < GAME_MAX_VITA) {
         player_max_vita = player_max_vita + 10;
@@ -503,6 +510,7 @@ void player_pick_item(void) {
       }
       break;
     case TILE_SWORD:
+      ay_fx_play(ay_effect_09);
       player_str++;
       if (player_max_vita < GAME_MAX_VITA) {
         player_max_vita = player_max_vita + 10;
@@ -510,6 +518,7 @@ void player_pick_item(void) {
       }
       break;
     case TILE_POTION:
+      ay_fx_play(ay_effect_09);
       player_int++;
       if (player_max_mana < GAME_MAX_MANA) {
         player_max_mana = player_max_mana + 10;
@@ -517,6 +526,7 @@ void player_pick_item(void) {
       }
       break;
     case TILE_ORB:
+      ay_fx_play(ay_effect_09);
       player_int++;
       if (player_max_mana < GAME_MAX_MANA) {
         player_max_mana = player_max_mana + 10;
@@ -524,6 +534,7 @@ void player_pick_item(void) {
       }
       break;
     case TILE_SCROLL:
+      ay_fx_play(ay_effect_09);
       player_int++;
       if (player_max_mana < GAME_MAX_MANA) {
         player_max_mana = player_max_mana + 10;
@@ -566,6 +577,7 @@ unsigned char player_hit_platform(void) {
       game_obj_set(index1);
       spr_add_anim((index1 >> 4) << 4, (index1 & 15) << 1, TILE_ANIM_FIRE, 3, 0,
                    0);
+
       return 1;
     }
     if (scr_map[index1] == TILE_SPECIAL ||
@@ -588,30 +600,38 @@ unsigned char player_hit_platform(void) {
             }
             ++tmp;
           }
+          ay_fx_play(ay_effect_07);
+
           switch (mush_class[tmp]) {
           case INDEX_MUSH_VITA_L:
             zx_border(INK_RED);
             enemy_init(s_lin1, s_col1, MUSHROOM_VITA, DIR_LEFT);
+
             break;
           case INDEX_MUSH_VITA_R:
             zx_border(INK_RED);
             enemy_init(s_lin1, s_col1, MUSHROOM_VITA, DIR_RIGHT);
+
             break;
           case INDEX_MUSH_MANA_R:
             zx_border(INK_BLUE);
             enemy_init(s_lin1, s_col1, MUSHROOM_MANA, DIR_RIGHT);
+
             break;
           case INDEX_MUSH_MANA_L:
             zx_border(INK_BLUE);
             enemy_init(s_lin1, s_col1, MUSHROOM_MANA, DIR_LEFT);
+
             break;
           case INDEX_MUSH_EXTRA_R:
             zx_border(INK_GREEN);
             enemy_init(s_lin1, s_col1, MUSHROOM_EXTRA, DIR_RIGHT);
+
             break;
           case INDEX_MUSH_EXTRA_L:
             zx_border(INK_GREEN);
             enemy_init(s_lin1, s_col1, MUSHROOM_EXTRA, DIR_LEFT);
+
             break;
           }
           ++game_mush_count;
@@ -633,9 +653,8 @@ unsigned char player_hit_platform(void) {
         ++tmp0;
       }
     }
-
+    ay_fx_play(ay_effect_02);
     spr_brick_anim(1);
-    sound_hit_brick();
     return 1;
   }
   return 0;
@@ -761,10 +780,7 @@ unsigned char player_move_jump(void) {
       f_check = !((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP));
     }
 
-
-
-    if (f_check &&
-        (player_vel_y > player_vel_y1) && (player_vel_y < 0)) {
+    if (f_check && (player_vel_y > player_vel_y1) && (player_vel_y < 0)) {
       player_vel_y = 0; // TODO FIX WHEN FALLING!
       player_vel_inc = 0;
     }
@@ -869,6 +885,7 @@ unsigned char player_move_jump(void) {
 void player_open_door(unsigned int f_index, unsigned char f_tile) {
   unsigned char f_open;
   f_open = 0;
+  ay_fx_play(ay_effect_05);
   switch (f_tile) {
   case TILE_DOOR_WHITE:
     if (player_keys[0]) {
@@ -905,6 +922,7 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
 
 void player_lost_life() {
   unsigned char f_anim;
+  ay_fx_play(ay_effect_18);
 
   s_lin0 = lin[SPR_P1];
   s_col0 = col[SPR_P1];
@@ -922,7 +940,7 @@ void player_lost_life() {
   spr_add_anim(s_lin0, s_col0 + 2, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(s_lin0 + 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
   zx_border(INK_BLACK);
-  //Animate Explotion
+  // Animate Explotion
   f_anim = 1;
   anim_time = zx_clock();
   while (f_anim) {
@@ -935,7 +953,7 @@ void player_lost_life() {
       }
     }
   }
-  //Clear Sprites
+  // Clear Sprites
   for (sprite = 0; sprite < SPR_P1; ++sprite) {
     if (class[SPR_P1] != 0) {
       NIRVANAP_spriteT(sprite, tile[SPR_P1] + colint[SPR_P1], lin[SPR_P1],

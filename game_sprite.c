@@ -19,7 +19,7 @@
 #include "game_enemies.h"
 #include "game_engine.h"
 #include "game_player.h"
-#include "game_sound.h"
+//#include "game_sound.h"
 #include "game_sprite.h"
 #include "game_zx.h"
 #include "macros.h"
@@ -956,6 +956,7 @@ void spr_play_bullets(void) {
 
             bullet_col[SPR_P1] = s_col0;
             spr_explode_bullet(SPR_P1);
+            ay_fx_play(ay_effect_02);
           }
         }
         if (game_boss) {
@@ -996,9 +997,7 @@ void spr_play_bullets(void) {
         // ENEMY BULLET
         if (lin[SPR_P1] >= f_lin0 && lin[SPR_P1] <= f_lin1 &&
             col[SPR_P1] >= f_col0 && col[SPR_P1] <= f_col1) {
-          // s_lin0 = lin[tmp0];
-          // s_col0 = col[tmp0];
-          // spr_destroy(tmp0);
+          ay_fx_play(ay_effect_06);
           zx_border(INK_MAGENTA);
           player_hit(10);
 
@@ -1026,6 +1025,8 @@ void spr_explode_bullet(unsigned char f_bullet) __z88dk_fastcall {
                0);
   --bullet_count;
   bullet_col[f_bullet] = 0XFF;
+  ay_fx_play(ay_effect_11);
+
 }
 
 void spr_turn_horizontal(void) {

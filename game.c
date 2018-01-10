@@ -23,7 +23,7 @@
 #include "game_enemies.h"
 #include "game_engine.h"
 #include "game_player.h"
-#include "game_sound.h"
+//#include "game_sound.h"
 #include "game_sprite.h"
 #include "game_zx.h"
 #include "macros.h"
@@ -123,7 +123,7 @@ void main(void) {
     /* game loop start */
     dirs = 0x00;
     // MENU
-
+    ay_reset();
     menu_main();
     map_paper_last = PAPER_BLUE;
     map_paper = PAPER_BLUE;

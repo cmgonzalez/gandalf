@@ -21,7 +21,6 @@ extern void          enemy_vertical(void);
 extern void          enemy_horizontal(void);
 extern void          enemy_walk(void);
 extern void          enemy_static(void);
-extern void          enemy_hit(void);
 extern void          enemy_turn(void);
 extern void          enemy_move(void);
 extern void          enemy_init(unsigned char f_lin,unsigned  char f_col,unsigned  char f_class,unsigned  char f_dir);

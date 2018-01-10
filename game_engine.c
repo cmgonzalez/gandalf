@@ -19,7 +19,7 @@
 #include "game_enemies.h"
 #include "game_engine.h"
 #include "game_player.h"
-#include "game_sound.h"
+//#include "game_sound.h"
 #include "game_sprite.h"
 #include "game_zx.h"
 #include "macros.h"
@@ -279,15 +279,15 @@ void game_print_footer(void) {
   // VITA
   zx_print_ink(INK_RED | BRIGHT);
   zx_print_str(20, 8, ">"); // live p1 hut
-  zx_print_ink(INK_RED);
+  zx_print_ink(INK_MAGENTA);
   zx_print_str(21, 8, "^"); // live p1 face
   // MANA
-  zx_print_ink(INK_CYAN | BRIGHT);
+  zx_print_ink(INK_WHITE | BRIGHT);
   zx_print_str(20, 15, "?"); // live p1 hut
   zx_print_ink(INK_CYAN);
   zx_print_str(21, 15, "_"); // live p1 face
   // XP
-  zx_print_ink(INK_WHITE | BRIGHT);
+  zx_print_ink(INK_CYAN | BRIGHT);
   zx_print_str(20, 21, "x"); // live p1 hut
   zx_print_ink(INK_WHITE);
   zx_print_str(21, 21, "y"); // live p1 face
@@ -329,9 +329,17 @@ void game_update_stats(void) {
   zx_print_ink(INK_BLUE);
   zx_print_chr(20, 17, player_mana);
   if (game_boss) {
-    zx_print_ink(INK_MAGENTA);
-    zx_print_str(21, 24, "*");
-    zx_print_chr(21, 26, game_boss_hit);
+    game_paint_attrib_lin_osd(11,11+8, (1 << 3) + 8);
+    // zx_print_ink(INK_MAGENTA);
+    for (tmp0 = 0; tmp0 < 8; ++tmp0) {
+      if (tmp0 < game_boss_hit) {
+        zx_print_str(1, 11 + tmp0, "*");
+      } else {
+        zx_print_str(1, 11 + tmp0, " ");
+      }
+    }
+
+    // zx_print_chr(1, 16, game_boss_hit);
   }
 
   if (player_keys[0]) {
@@ -363,9 +371,7 @@ void game_start_timer(void) {
 }
 
 void game_round_init(void) {
-  ay_reset();
-  ay_fx_play(ay_effect_10);
-  sound_coin();
+
   /* screen init */
   /*PHASE INIT*/
   loop_count = 0;
@@ -380,6 +386,8 @@ void game_round_init(void) {
   game_print_footer();
   spr_page_map();
   game_draw_screen();
+  ay_reset();
+  ay_fx_play(ay_effect_12);
   /* Player(s) init */
   if (!game_over) {
     player_init(player_lin_scr, player_col_scr, TILE_P1_STANR);
@@ -609,6 +617,7 @@ unsigned char game_check_time(unsigned int start, unsigned int lapse) {
 unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
   unsigned char f_dir;
   if (bullet_col[f_sprite] == 0xFF) {
+    ay_fx_play(ay_effect_08);
     ++bullet_count;
     bullet_dir[f_sprite] = 0;
     bullet_lin0[f_sprite] = lin[f_sprite];
@@ -802,9 +811,9 @@ void game_attribs() {
   attrib_hl[3] = map_paper | BRIGHT | INK_CYAN;
 
   // ATTRIB OSD
-  attrib_osd[0] = map_paper | BRIGHT | INK_MAGENTA;
-  attrib_osd[1] = map_paper | BRIGHT | INK_MAGENTA;
-  attrib_osd[2] = map_paper | BRIGHT | INK_CYAN;
+  attrib_osd[0] = map_paper | BRIGHT | INK_CYAN;
+  attrib_osd[1] = map_paper | BRIGHT | INK_WHITE;
+  attrib_osd[2] = map_paper | BRIGHT | INK_WHITE;
   attrib_osd[3] = map_paper | BRIGHT | INK_CYAN;
 }
 
@@ -835,11 +844,11 @@ void menu_main() {
   curr_sel = 1;
   menu_main_print(s_row, s_col, s_col_e);
   while (f_input) {
-
+    z80_delay_ms(40);
     // in_wait_key();
     c = in_inkey();
-    //in_wait_nokey();
-    z80_delay_ms(40);
+    // in_wait_nokey();
+
     game_rotate_attrib();
     s_row = 6 + curr_sel;
     game_paint_attrib_lin_h(s_col + 1, s_col_e, (s_row << 3) + 8);
@@ -873,13 +882,14 @@ void menu_main() {
       game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
       curr_sel = 2;
       break;
-    case 6: //CONTROL
+    case 6: // CONTROL
       if (game_2buttons) {
         game_2buttons = 0;
       } else {
         game_2buttons = 1;
       }
       menu_main_print(s_row, s_col, s_col_e);
+      z80_delay_ms(40);
       break;
     case 0:
       zx_paper_fill(INK_BLACK | PAPER_BLACK);

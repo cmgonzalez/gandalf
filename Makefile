@@ -1,7 +1,7 @@
 
 
 CSRC   = globals.c game.c game_enemies.c game_engine.c game_player.c game_sprite.c game_zx.c
-ASRC   = btiles.asm font.asm game_ay.asm game_ay_res_fx.asm game_ay_res_midi.asm game_engine.asm game_sound.asm game_zx.asm
+ASRC   = btiles.asm font.asm game_ay.asm game_ay_res_fx.asm game_ay_res_midi.asm game_engine.asm game_zx.asm
 
 OBJS = $(CSRC:.c=.o)
 INCL = $(ZCCCFG)/../../include/_DEVELOPMENT/sdcc
