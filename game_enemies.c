@@ -67,13 +67,13 @@ void boss_turn() {
       // MOVE VERTICAL
       if (BIT_CHK(boss_stat, STAT_JUMP)) {
         boss_lin = boss_lin - 2;
-        if (boss_lin < 32) {
+        if (boss_lin < 48) {
           BIT_CLR(boss_stat, STAT_JUMP);
           BIT_SET(boss_stat, STAT_FALL);
         }
       } else {
         boss_lin = boss_lin + 2;
-        if (boss_lin >= (GAME_LIN_FLOOR - 48)) {
+        if (boss_lin >= (GAME_LIN_FLOOR - 64)) {
           BIT_CLR(boss_stat, STAT_FALL);
           BIT_SET(boss_stat, STAT_JUMP);
         }

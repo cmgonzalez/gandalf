@@ -43,7 +43,7 @@
 #define TILE_ITEM_S                   36 //START OF ITEMS
 #define TILE_ITEM_E                   47 //END OF ITEMS
 
-#define TILE_FLOOR                    60 //START FLOOR TILES
+#define TILE_FLOOR                    58 //START FLOOR TILES
 #define TILE_CEIL                     72 //START CEILS TILES
 
 #define TILE_DOOR_E                   76 //END OF DOOR TILES
@@ -565,3 +565,6 @@ extern unsigned char map_paper_clr;
 extern unsigned char map_paper_last;
 
 extern unsigned int player_lvl_table[];
+
+extern unsigned char key_map[];
+extern unsigned int scan_map[];

@@ -901,6 +901,7 @@ void menu_main() {
 
 void menu_main_print(unsigned char s_row, unsigned char s_col,
                      unsigned char s_col_e) {
+  NIRVANAP_halt();
   zx_paper_fill(INK_BLACK | PAPER_BLACK);
   zx_print_ink(INK_WHITE);
   // Gandalf Log
@@ -948,7 +949,7 @@ void menu_main_print(unsigned char s_row, unsigned char s_col,
 }
 
 void menu_redefine() {
-
+  NIRVANAP_halt();
   zx_paper_fill(INK_BLACK | PAPER_BLACK);
   for (tmp0 = 8; tmp0 < 14; ++tmp0)
     game_paint_attrib_lin(10, 16, (tmp0 << 3) + 8);
@@ -975,124 +976,20 @@ void menu_redefine() {
   menu_main_print(7, 10, 20);
 }
 
+
 unsigned int menu_define_key() {
-  unsigned char c;
+
   while (1) {
     in_wait_key();
-    c = in_inkey();
+    tmp1 = in_inkey();
     in_wait_nokey();
-    switch (c) {
-    case 48:
-      return IN_KEY_SCANCODE_0;
-      break;
-    case 49:
-      return IN_KEY_SCANCODE_1;
-      break;
-    case 50:
-      return IN_KEY_SCANCODE_2;
-      break;
-    case 51:
-      return IN_KEY_SCANCODE_3;
-      break;
-    case 52:
-      return IN_KEY_SCANCODE_4;
-      break;
-    case 53:
-      return IN_KEY_SCANCODE_5;
-      break;
-    case 54:
-      return IN_KEY_SCANCODE_6;
-      break;
-    case 55:
-      return IN_KEY_SCANCODE_7;
-      break;
-    case 56:
-      return IN_KEY_SCANCODE_8;
-      break;
-    case 57:
-      return IN_KEY_SCANCODE_9;
-      break;
-    case 97:
-      return IN_KEY_SCANCODE_a;
-      break;
-    case 98:
-      return IN_KEY_SCANCODE_b;
-      break;
-    case 99:
-      return IN_KEY_SCANCODE_c;
-      break;
-    case 100:
-      return IN_KEY_SCANCODE_d;
-      break;
-    case 101:
-      return IN_KEY_SCANCODE_e;
-      break;
-    case 102:
-      return IN_KEY_SCANCODE_f;
-      break;
-    case 103:
-      return IN_KEY_SCANCODE_g;
-      break;
-    case 104:
-      return IN_KEY_SCANCODE_h;
-      break;
-    case 105:
-      return IN_KEY_SCANCODE_i;
-      break;
-    case 106:
-      return IN_KEY_SCANCODE_j;
-      break;
-    case 107:
-      return IN_KEY_SCANCODE_k;
-      break;
-    case 108:
-      return IN_KEY_SCANCODE_l;
-      break;
-    case 109:
-      return IN_KEY_SCANCODE_m;
-      break;
-    case 110:
-      return IN_KEY_SCANCODE_n;
-      break;
-    case 111:
-      return IN_KEY_SCANCODE_o;
-      break;
-    case 112:
-      return IN_KEY_SCANCODE_p;
-      break;
-    case 113:
-      return IN_KEY_SCANCODE_q;
-      break;
-    case 114:
-      return IN_KEY_SCANCODE_r;
-      break;
-    case 115:
-      return IN_KEY_SCANCODE_s;
-      break;
-    case 116:
-      return IN_KEY_SCANCODE_t;
-      break;
-    case 117:
-      return IN_KEY_SCANCODE_u;
-      break;
-    case 118:
-      return IN_KEY_SCANCODE_v;
-      break;
-    case 119:
-      return IN_KEY_SCANCODE_w;
-      break;
-    case 120:
-      return IN_KEY_SCANCODE_x;
-      break;
-    case 121:
-      return IN_KEY_SCANCODE_y;
-      break;
-    case 122:
-      return IN_KEY_SCANCODE_z;
-      break;
+    tmp0 = 0;
+    while (tmp0 < 38) {
+      if (tmp1 == key_map[tmp0]) {
+        return scan_map[tmp0];
+      }
+      ++tmp0;
     }
-
-    return 0;
   }
-  // return 0;
+  return 0;
 }
