@@ -32,6 +32,8 @@
 #define GAME_MAX_LEVEL                20
 #define GAME_MAX_MANA                 200
 #define GAME_MAX_VITA                 200
+#define GAME_TOTAL_CLASSES            16  //Total class of enemies
+#define GAME_TOTAL_INDEX_CLASSES      18  //Total class of enemies index, the same enemy can be left/right etc...
 /* Map foreground tiles */
 
 #define TILE_EMPTY                    0
@@ -483,22 +485,13 @@ extern unsigned char screen_paper, screen_ink;
 extern unsigned char sprite_speed[];
 extern unsigned char sprite_frames[];
 extern unsigned char spr_map_tile[];
+extern unsigned char spr_init[];
 
 extern unsigned char sprite_speed_alt[8];
 extern unsigned char scr_map[];
 extern unsigned char scr_obj0[];
 extern unsigned char scr_obj1[];
 
-/*
-   extern const unsigned char scr_0[];
-   extern const unsigned char scr_1[];
-   extern const unsigned char scr_2[];
-   extern const unsigned char scr_3[];
-   extern const unsigned char scr_4[];
-   extern const unsigned char scr_5[];
-   extern const unsigned char scr_6[];
-   extern const unsigned char scr_7[];
- */
 extern const unsigned char start_scr0;
 extern const unsigned char lenght0[];
 extern const unsigned char paper0[];

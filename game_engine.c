@@ -183,62 +183,19 @@ void game_draw_screen(void) {
 }
 
 void game_add_enemy(unsigned char enemy_tile_index) {
-  switch (enemy_tile_index) {
-  case INDEX_SKELETON_RIGHT:
-    enemy_init(s_lin1, s_col1, SKELETON, DIR_RIGHT);
-    break;
-  case INDEX_SKELETON_LEFT:
-    enemy_init(s_lin1, s_col1, SKELETON, DIR_LEFT);
-    break;
-  case INDEX_ORC_RIGHT:
-    enemy_init(s_lin1, s_col1, ORC, DIR_RIGHT);
-    break;
-  case INDEX_ORC_LEFT:
-    enemy_init(s_lin1, s_col1, ORC, DIR_LEFT);
-    break;
-  case INDEX_WARG_RIGHT:
-    enemy_init(s_lin1, s_col1, WARG, DIR_RIGHT);
-    break;
-  case INDEX_WARG_LEFT:
-    enemy_init(s_lin1, s_col1, WARG, DIR_LEFT);
-    break;
-  case INDEX_DWARF_RIGHT:
-    enemy_init(s_lin1, s_col1, DWARF, DIR_RIGHT);
-    break;
-  case INDEX_DWARF_LEFT:
-    enemy_init(s_lin1, s_col1, DWARF, DIR_LEFT);
-    break;
-  case INDEX_ELF_RIGHT:
-    enemy_init(s_lin1, s_col1, ELF, DIR_RIGHT);
-    break;
-  case INDEX_ELF_LEFT:
-    enemy_init(s_lin1, s_col1, ELF, DIR_LEFT);
-    break;
-  case INDEX_DRAGON_RIGHT:
-    enemy_init(s_lin1, s_col1, DRAGON, DIR_RIGHT);
-    break;
-  case INDEX_DRAGON_LEFT:
-    enemy_init(s_lin1, s_col1, DRAGON, DIR_LEFT);
-    break;
-  case INDEX_BAT:
-    enemy_init(s_lin1, s_col1, BAT, DIR_RIGHT);
-    break;
-  case INDEX_WYVERN:
-    enemy_init(s_lin1, s_col1, WYVERN, DIR_RIGHT);
-    break;
-  case INDEX_SPIDER:
-    enemy_init(s_lin1, s_col1, SPIDER, DIR_RIGHT);
-    break;
-  case INDEX_PLANT:
-    enemy_init(s_lin1, s_col1, PLANT, DIR_RIGHT);
-    break;
-  case INDEX_SNAKE:
-    enemy_init(s_lin1, s_col1, SNAKE, DIR_RIGHT);
-    break;
-  case INDEX_BAT_H:
-    enemy_init(s_lin1, s_col1, BAT_H, DIR_RIGHT);
-    break;
-  case INDEX_ENEMY_BOSS1:
+
+  if (enemy_tile_index != INDEX_ENEMY_BOSS1) {
+    tmp0 = 0;
+    while (tmp0 < GAME_TOTAL_INDEX_CLASSES) {
+      tmp1 = tmp0 * 3;
+      if (spr_init[tmp1] == enemy_tile_index) {
+        enemy_init(s_lin1, s_col1, spr_init[tmp1+1] , spr_init[tmp1+2] );
+        tmp0 = 0xFF;
+      } else {
+        ++tmp0;
+      }
+    }
+  } else {
     if (game_boss == 0 && game_boss_alive) {
       boss_lin = s_lin1;
       boss_col = s_col1;
@@ -253,7 +210,6 @@ void game_add_enemy(unsigned char enemy_tile_index) {
       if (!game_boss)
         game_boss_fix = 1;
     };
-    break;
   }
 }
 
@@ -329,7 +285,7 @@ void game_update_stats(void) {
   zx_print_ink(INK_BLUE);
   zx_print_chr(20, 17, player_mana);
   if (game_boss) {
-    game_paint_attrib_lin_osd(11,11+8, (1 << 3) + 8);
+    game_paint_attrib_lin_osd(11, 11 + 8, (1 << 3) + 8);
     // zx_print_ink(INK_MAGENTA);
     for (tmp0 = 0; tmp0 < 8; ++tmp0) {
       if (tmp0 < game_boss_hit) {
@@ -976,7 +932,6 @@ void menu_redefine() {
   menu_main_print(7, 10, 20);
 }
 
-
 unsigned int menu_define_key() {
 
   while (1) {
@@ -991,5 +946,5 @@ unsigned int menu_define_key() {
       ++tmp0;
     }
   }
-  return 0;
+  //return 0;
 }

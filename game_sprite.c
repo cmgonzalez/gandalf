@@ -495,7 +495,7 @@ void spr_destroy(unsigned char f_sprite) __z88dk_fastcall {
 unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
 
   tmp0 = 0;
-  while (tmp0 < 16) {
+  while (tmp0 < GAME_TOTAL_CLASSES) {
     tmp1 = tmp0*3;
     if (spr_map_tile[tmp1] == class[f_sprite]) {
       return spr_tile_dir(spr_map_tile[tmp1+1], f_sprite, spr_map_tile[tmp1+2]);
@@ -503,59 +503,6 @@ unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
     ++tmp0;
   }
   return 0;
-
-/*
-  switch (class[f_sprite]) {
-  case SKELETON:
-    return spr_tile_dir(TILE_ENEMY_SKELETON, f_sprite, DIRINC_ENEMY_SKELETON);
-    break;
-  case ORC:
-    return spr_tile_dir(TILE_ENEMY_ORC, f_sprite, DIRINC_ENEMY_ORC);
-    break;
-  case WARG:
-    return spr_tile_dir(TILE_ENEMY_WARG, f_sprite, DIRINC_ENEMY_WARG);
-    break;
-  case DWARF:
-    return spr_tile_dir(TILE_ENEMY_DWARF, f_sprite, DIRINC_ENEMY_DWARF);
-    break;
-  case ELF:
-    return spr_tile_dir(TILE_ENEMY_ELF, f_sprite, DIRINC_ENEMY_ELF);
-    break;
-  case DRAGON:
-    return spr_tile_dir(TILE_ENEMY_DRAGON, f_sprite, DIRINC_ENEMY_DRAGON);
-    break;
-  case BAT:
-    return spr_tile_dir(TILE_ENEMY_BAT, f_sprite, DIRINC_ENEMY_BAT);
-    break;
-  case WYVERN:
-    return spr_tile_dir(TILE_ENEMY_WYVERN, f_sprite, DIRINC_ENEMY_WYVERN);
-    break;
-  case SPIDER:
-    return spr_tile_dir(TILE_ENEMY_SPIDER, f_sprite, DIRINC_ENEMY_SPIDER);
-    break;
-  case PLANT:
-    return spr_tile_dir(TILE_ENEMY_PLANT, f_sprite, DIRINC_ENEMY_PLANT);
-    break;
-  case SNAKE:
-    return spr_tile_dir(TILE_ENEMY_SNAKE, f_sprite, DIRINC_ENEMY_SNAKE);
-    break;
-  case BAT_H:
-    return spr_tile_dir(TILE_ENEMY_BAT_H, f_sprite, DIRINC_ENEMY_BAT_H);
-    break;
-  case MUSHROOM_VITA:
-    return spr_tile_dir(TILE_ENEMY_MUSH_VITA, f_sprite,
-                        DIRINC_ENEMY_MUSH_EXTRA);
-    break;
-  case MUSHROOM_MANA:
-    return spr_tile_dir(TILE_ENEMY_MUSH_MANA, f_sprite, DIRINC_ENEMY_MUSH_MANA);
-    break;
-  case MUSHROOM_EXTRA:
-    return spr_tile_dir(TILE_ENEMY_MUSH_EXTRA, f_sprite,
-                        DIRINC_ENEMY_MUSH_MANA);
-    break;
-  }
-  return 0;
-  */
 }
 
 unsigned char spr_tile_dir(unsigned char f_tile, unsigned char f_sprite,
