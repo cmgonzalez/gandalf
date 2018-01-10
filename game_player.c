@@ -53,6 +53,7 @@ void player_init(unsigned char f_lin, unsigned char f_col,
 void player_turn(void) {
   if (spr_chktime(&sprite)) {
     dirs = (joyfunc1)(&k1);
+    dirs_alt = (joyfunc2)(&k2); // for game_2buttons
     player_move();
     player_collision();
   }
@@ -118,13 +119,14 @@ unsigned char player_check_input(void) {
     dirs = 0;
   }
 
-  return dirs & IN_STICK_FIRE || dirs & IN_STICK_LEFT ||
-         dirs & IN_STICK_RIGHT || dirs & IN_STICK_UP || dirs & IN_STICK_DOWN;
+  return dirs & IN_STICK_FIRE  || dirs & IN_STICK_LEFT ||
+         dirs & IN_STICK_RIGHT || dirs & IN_STICK_UP   || dirs & IN_STICK_DOWN || dirs_alt & IN_STICK_FIRE;
 }
 
 unsigned char player_move_input(void) {
   // TODO CLEAN THIS!
   /* User have pressed valid input */
+  unsigned char f_check;
   if (player_check_input()) {
 
     if (player_fire()) {
@@ -133,7 +135,13 @@ unsigned char player_move_input(void) {
     }
 
     /* New jump */
-    if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP)) {
+    if (game_2buttons) {
+      f_check = dirs & IN_STICK_FIRE;
+    } else {
+      f_check = (dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP);
+    }
+
+    if (f_check) {
       player_vel_inc = 1;
       if (ay_is_playing() != AY_PLAYING_MUSIC) {
         ay_fx_play(ay_effect_03);
@@ -240,7 +248,14 @@ void player_fix_walk_lin() {
 
 unsigned char player_fire() {
   // if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_DOWN)) {
-  if ((dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP)) {
+  unsigned char f_check;
+
+  if (game_2buttons) {
+    f_check = dirs_alt & IN_STICK_FIRE;
+  } else {
+    f_check = (dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP);
+  }
+  if (f_check) {
     /*Fireball*/
     if (player_mana > 0 && (bullet_col[SPR_P1] == 0xFF)) {
       if (player_mana > 5) {
@@ -251,6 +266,8 @@ unsigned char player_fire() {
         player_mana = 0;
       }
       game_update_stats();
+      
+      sound_enter_enemy();
       game_shoot_fire(SPR_P1, TILE_FIREBALL);
     }
     return 1;
@@ -731,12 +748,22 @@ void player_gasta_brick() {
 unsigned char player_move_jump(void) {
 
   signed int val_yc;
+  unsigned char f_check;
   player_vel_y = player_vel_y + game_gravity;
   sprite_on_air = 1;
   // JUMP BOOST
 
   if ((player_vel_inc)) {
-    if (!((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP)) &&
+
+    if (game_2buttons) {
+      f_check = !(dirs & IN_STICK_FIRE);
+    } else {
+      f_check = !((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP));
+    }
+
+
+
+    if (f_check &&
         (player_vel_y > player_vel_y1) && (player_vel_y < 0)) {
       player_vel_y = 0; // TODO FIX WHEN FALLING!
       player_vel_inc = 0;

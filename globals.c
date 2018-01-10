@@ -49,9 +49,12 @@ unsigned char map_heigth;
 //###############################################################################################
 
 uint16_t (*joyfunc1)(udk_t *); // pointer to joystick function Player 1
+uint16_t (*joyfunc2)(udk_t *); // pointer to joystick function for game_2buttons
 udk_t k1;
+udk_t k2; //For game_2buttons
 
 unsigned char dirs;
+unsigned char dirs_alt;
 unsigned char tbuffer[7]; // temporary buffer
 
 
@@ -116,6 +119,7 @@ unsigned char game_mush_count;
 
 unsigned char game_worldup;
 unsigned char game_respawn_curr_time;
+unsigned char game_2buttons;
 unsigned int fps;
 
 unsigned char sprite;

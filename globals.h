@@ -363,10 +363,14 @@ typedef uint16_t (*JOYFUNC)(udk_t *);
 extern unsigned char spec128;
 extern unsigned char btiles[];
 extern uint16_t (*joyfunc1)(udk_t *); //TODO REMOVE THIS AS IS PART NOW OF input.h
+extern uint16_t (*joyfunc2)(udk_t *); //TODO REMOVE THIS AS IS PART NOW OF input.h
 extern udk_t k1;
+extern udk_t k2;
 
 
 extern unsigned char dirs;
+extern unsigned char dirs_alt;
+
 extern unsigned char tbuffer[7];
 extern unsigned char class[8];
 extern unsigned char state[8];
@@ -420,6 +424,7 @@ extern unsigned char game_mush_count;
 
 extern unsigned char game_worldup;
 extern unsigned char game_respawn_curr_time;
+extern unsigned char game_2buttons;
 extern unsigned int fps;
 
 

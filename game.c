@@ -61,12 +61,19 @@ void main(void) {
   k1.up = IN_KEY_SCANCODE_q;   // must be defined otherwise up is always true
   k1.down = IN_KEY_SCANCODE_a; // must be defined otherwise down is always true
 
+  k2.left = IN_KEY_SCANCODE_DISABLE;
+  k2.right = IN_KEY_SCANCODE_DISABLE;
+  k2.up = IN_KEY_SCANCODE_DISABLE;
+  k2.down = IN_KEY_SCANCODE_DISABLE;
+  k2.fire = IN_KEY_SCANCODE_SPACE;
+
   zx_print_paper(PAPER_BLACK);
   zx_border(INK_BLACK);
 
-  // Wait for Keypress and Randomize
+  // Wait for Keypress and Randomize //
   /* Default Values for menu */
   joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_sinclair1);
+  joyfunc2 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
 
   // joyfunc1 = control_method[player_joy];
 
@@ -104,11 +111,12 @@ void main(void) {
     player_lin_scr = GAME_LIN_FLOOR - 16;
     player_col_scr = 2;
     fps = 0;
-    game_world = 1;
+    game_world = 0;
     game_worldup = 0;
     game_respawn_curr_time = 255;
     game_mush_count = 0;
     game_boss_alive = 1;
+    game_2buttons = 1; // Two button control - Space default 2 button
     /* phase init */
     game_over = 0;
     scr_curr = 255; // 255 equals read default screen from map
@@ -138,8 +146,6 @@ void main(void) {
     NIRVANAP_start();
   }
 }
-
-
 
 void test_proc() {}
 

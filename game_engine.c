@@ -57,7 +57,6 @@ void game_loop(void) {
         frame_time = zx_clock();
         game_fps();
         game_respawn();
-
       }
       /*Enemies turn*/
       enemy_turn();
@@ -318,7 +317,6 @@ void game_print_score(void) {
   zx_print_int(0, 14, game_score_top); // SCORE TOP
 }
 
-
 void game_update_stats(void) {
   zx_print_ink(INK_WHITE);
   zx_print_chr(20, 3, player_lives);
@@ -390,25 +388,25 @@ void game_round_init(void) {
   z80_delay_ms(50);
   switch (game_world) {
   case 0:
-    game_paint_attrib_lin_osd(6, 6+17, (12 << 3) + 8);
+    game_paint_attrib_lin_osd(6, 6 + 17, (12 << 3) + 8);
     zx_print_str(12, 6, "WORLD 1 THE SHIRE"); // TODO WORLD NAMES ARRAY
     game_colour_message(12, 6, 6 + 17, 25, 0);
     break;
   case 1:
-    game_paint_attrib_lin_osd(6, 6+13, (12 << 3) + 8);
+    game_paint_attrib_lin_osd(6, 6 + 13, (12 << 3) + 8);
     zx_print_str(12, 6, "WORLD 2 MORIA"); // TODO WORLD NAMES ARRAY
     game_colour_message(12, 6, 6 + 13, 25, 0);
     break;
-    case 2:
-      game_paint_attrib_lin_osd(6, 6+14, (12 << 3) + 8);
-      zx_print_str(12, 6, "WORLD 1 MORDOR"); // TODO WORLD NAMES ARRAY
-      game_colour_message(12, 6, 6 + 14, 25, 0);
-      break;
-    case 3:
-      game_paint_attrib_lin_osd(6, 6+17, (12 << 3) + 8);
-      zx_print_str(12, 6, "WORLD 2 BARAD DUR"); // TODO WORLD NAMES ARRAY
-      game_colour_message(12, 6, 6 + 17, 25, 0);
-      break;
+  case 2:
+    game_paint_attrib_lin_osd(6, 6 + 14, (12 << 3) + 8);
+    zx_print_str(12, 6, "WORLD 1 MORDOR"); // TODO WORLD NAMES ARRAY
+    game_colour_message(12, 6, 6 + 14, 25, 0);
+    break;
+  case 3:
+    game_paint_attrib_lin_osd(6, 6 + 17, (12 << 3) + 8);
+    zx_print_str(12, 6, "WORLD 2 BARAD DUR"); // TODO WORLD NAMES ARRAY
+    game_colour_message(12, 6, 6 + 17, 25, 0);
+    break;
   }
 }
 
@@ -558,11 +556,10 @@ void game_paint_attrib_lin_osd(unsigned char f_start, unsigned char f_end,
   }
 }
 
-
 void game_colour_message(unsigned char f_row, unsigned char f_col,
                          unsigned char f_col2, unsigned int f_microsecs,
                          unsigned char skip) {
- unsigned int entry_time;
+  unsigned int entry_time;
 
   tmp = 1;
   frame_time = zx_clock();
@@ -578,8 +575,6 @@ void game_colour_message(unsigned char f_row, unsigned char f_col,
         game_paint_attrib_lin_osd(f_col, f_col2, (f_row << 3) + 8);
         game_rotate_attrib_osd();
       }
-
-
     }
     if (skip) {
       while ((joyfunc1)(&k1) != 0)
@@ -722,7 +717,7 @@ unsigned char game_shoot_fire_boss(unsigned char f_tile, unsigned char f_dir) {
   return 0;
 }
 
-void game_obj_set(unsigned int f_index)  __z88dk_fastcall {
+void game_obj_set(unsigned int f_index) __z88dk_fastcall {
   unsigned char f_scr_surr1;
   if (scr_curr < 8) {
     BIT_SET(scr_obj0[f_index], scr_curr);
@@ -801,7 +796,7 @@ void game_attribs() {
   attrib[3] = map_paper | BRIGHT | INK_BLUE;
 
   // ATTRIB HIGHLIGHT
-  attrib_hl[0] = map_paper | BRIGHT |INK_BLUE;
+  attrib_hl[0] = map_paper | BRIGHT | INK_BLUE;
   attrib_hl[1] = map_paper | BRIGHT | INK_BLUE;
   attrib_hl[2] = map_paper | BRIGHT | INK_MAGENTA;
   attrib_hl[3] = map_paper | BRIGHT | INK_CYAN;
@@ -831,28 +826,19 @@ void menu_main() {
 
   f_input = 1;
   s_col = 10;
-  s_col_e = 10 + 10;
+  s_col_e = 10 + 12;
   s_row = 7;
   c = 0;
 
   map_paper = PAPER_BLACK;
 
-  zx_print_ink(INK_WHITE);
-  //Gandalf Log
-  NIRVANAP_spriteT(0, TILE_TITLE, 32, 11);
-  NIRVANAP_spriteT(1, TILE_TITLE + 1, 32, 13);
-  NIRVANAP_spriteT(2, TILE_TITLE + 2, 32, 15);
-  NIRVANAP_spriteT(3, TILE_TITLE + 3, 32, 17);
-
-  menu_main_print(s_row, s_col, s_col_e);
-
   curr_sel = 1;
+  menu_main_print(s_row, s_col, s_col_e);
   while (f_input) {
 
     // in_wait_key();
     c = in_inkey();
-
-    // in_wait_nokey();
+    //in_wait_nokey();
     z80_delay_ms(40);
     game_rotate_attrib();
     s_row = 6 + curr_sel;
@@ -860,45 +846,58 @@ void menu_main() {
     // 48
     c = c - 48;
 
-    if (c <= 5) {
-      switch (c) {
-      case 1: // SINCLAIR
-        joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_sinclair1);
-        game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
-        curr_sel = 1;
-        break;
-      case 2: // KEYBOARD
-        joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
-        game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
-        curr_sel = 2;
-        break;
-      case 3: // KEMPSTON
-        joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_kempston);
-        game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
-        curr_sel = 3;
-        break;
-      case 4: // CURSOR
-        joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_cursor);
-        game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
-        curr_sel = 4;
-        break;
-      case 5: // DEFINE
-        menu_redefine();
-        joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
-        game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
-        curr_sel = 2;
-        break;
-      case 0:
-        f_input = 0; // Exit Loop
-        break;
+    switch (c) {
+    case 1: // SINCLAIR
+      joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_sinclair1);
+      game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+      curr_sel = 1;
+      break;
+    case 2: // KEYBOARD
+      joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
+      game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+      curr_sel = 2;
+      break;
+    case 3: // KEMPSTON
+      joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_kempston);
+      game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+      curr_sel = 3;
+      break;
+    case 4: // CURSOR
+      joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_cursor);
+      game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+      curr_sel = 4;
+      break;
+    case 5: // DEFINE
+      menu_redefine();
+      joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
+      game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+      curr_sel = 2;
+      break;
+    case 6: //CONTROL
+      if (game_2buttons) {
+        game_2buttons = 0;
+      } else {
+        game_2buttons = 1;
       }
+      menu_main_print(s_row, s_col, s_col_e);
+      break;
+    case 0:
+      zx_paper_fill(INK_BLACK | PAPER_BLACK);
+      f_input = 0; // Exit Loop
+      break;
     }
   }
 }
 
-
 void menu_main_print(unsigned char s_row, unsigned char s_col,
                      unsigned char s_col_e) {
+  zx_paper_fill(INK_BLACK | PAPER_BLACK);
+  zx_print_ink(INK_WHITE);
+  // Gandalf Log
+  NIRVANAP_spriteT(0, TILE_TITLE, 32, 11);
+  NIRVANAP_spriteT(1, TILE_TITLE + 1, 32, 13);
+  NIRVANAP_spriteT(2, TILE_TITLE + 2, 32, 15);
+  NIRVANAP_spriteT(3, TILE_TITLE + 3, 32, 17);
   game_attribs();
   zx_print_str(s_row, s_col, "1 SINCLAIR");
   game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
@@ -915,6 +914,13 @@ void menu_main_print(unsigned char s_row, unsigned char s_col,
   zx_print_str(s_row, s_col, "5 DEFINE");
   game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
   ++s_row;
+  zx_print_str(s_row, s_col, "6 CONTROL");
+  if (game_2buttons) {
+    zx_print_str(s_row, s_col + 10, "2B");
+  } else
+     { zx_print_str(s_row, s_col + 10, "1B"); }
+  game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
+  ++s_row;
   ++s_row;
   zx_print_str(s_row, s_col, "0 START");
   game_paint_attrib_lin(s_col, s_col_e, (s_row << 3) + 8);
@@ -922,7 +928,7 @@ void menu_main_print(unsigned char s_row, unsigned char s_col,
   ++s_row;
   ++s_row;
   ++s_row;
-  zx_print_str(s_row, 2, "CGONZALEZ/AALBRECHT/S9/BEIKER/ABU");
+  zx_print_str(s_row, 2, "CGONZALEZ/AANON/S9/BEIKER/ABU");
   game_paint_attrib_lin_h(0, 31, (s_row << 3) + 8);
   ++s_row;
   ++s_row;
@@ -931,12 +937,11 @@ void menu_main_print(unsigned char s_row, unsigned char s_col,
   game_paint_attrib_lin(0, 31, (s_row << 3) + 8);
 }
 
-
 void menu_redefine() {
 
   zx_paper_fill(INK_BLACK | PAPER_BLACK);
   for (tmp0 = 8; tmp0 < 14; ++tmp0)
-     game_paint_attrib_lin(10, 16, (tmp0 << 3) + 8);
+    game_paint_attrib_lin(10, 16, (tmp0 << 3) + 8);
 
   zx_print_str(8, 10, "UP");
   k1.up = menu_define_key();
@@ -946,13 +951,19 @@ void menu_redefine() {
   k1.left = menu_define_key();
   zx_print_str(11, 10, "RIGHT");
   k1.right = menu_define_key();
-  zx_print_str(12, 10, "FIRE");
-  k1.fire = menu_define_key();
+  if (game_2buttons) {
+    zx_print_str(12, 10, "FIRE");
+    k2.fire = menu_define_key();
+    zx_print_str(13, 10, "JUMP");
+    k1.fire = menu_define_key();
+  } else {
+    zx_print_str(12, 10, "FIRE");
+    k1.fire = menu_define_key();
+  }
 
   game_fill_row(12, 32);
   menu_main_print(7, 10, 20);
 }
-
 
 unsigned int menu_define_key() {
   unsigned char c;
