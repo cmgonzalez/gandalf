@@ -314,9 +314,13 @@ void spr_page_map(void) {
   unsigned char l_world_h;
   unsigned char l_paper;
   unsigned char l_scr;
+  unsigned char l_scr_map;
+
 
   l_world = game_world;
   l_scr = scr_curr;
+  l_scr_map = ( l_world << 4 ) + l_scr;
+
 
   k = 16;
 
@@ -325,21 +329,15 @@ void spr_page_map(void) {
   // Read Player start screen on world map
   GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
   IO_7FFD = 0x10 + 6;
-  if (l_world == 0) {
-    if (l_scr == 255) {
-      l_scr = start_scr0;
-    }
-    l_paper = paper0[l_scr];
-    l_world_w = world0_w;
-    l_world_h = world0_h;
-  } else {
-    if (l_scr == 255) {
-      l_scr = start_scr1;
-    }
-    l_paper = paper1[l_scr];
-    l_world_w = world1_w;
-    l_world_h = world1_h;
+
+  if (l_scr == 255) {
+    l_scr = start_scr0[l_world];
+    l_scr_map = ( l_world << 4 ) + l_scr;
   }
+  l_paper = paper0[l_scr_map];
+  l_world_w = world0_w[l_world];
+  l_world_h = world0_h[l_world];
+
   GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
   IO_7FFD = 0x10 + 0;
 
@@ -348,14 +346,10 @@ void spr_page_map(void) {
   start_index = 0;
   add_index = 0;
 
-  while (j < l_scr) {
+  while (j < l_scr_map) {
     GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
     IO_7FFD = 0x10 + 6;
-    if (l_world == 0) {
-      add_index = lenght0[j]; // TODO n LEVELS
-    } else {
-      add_index = lenght1[j]; // TODO n LEVELS
-    }
+    add_index = lenght0[j]; // TODO n LEVELS
     GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
     IO_7FFD = 0x10 + 0;
     start_index = start_index + add_index;
@@ -369,13 +363,8 @@ void spr_page_map(void) {
     // Page in BANK 06 - Note that global variables are in page 0
     GLOBAL_ZX_PORT_7FFD = 0x10 + 6;
     IO_7FFD = 0x10 + 6;
-    if (l_world == 0) {
-      v0 = world0[start_index + i];     // TODO n LEVELS
-      v1 = world0[start_index + i + 1]; // TODO n LEVELS
-    } else {
-      v0 = world1[start_index + i];     // TODO n LEVELS
-      v1 = world1[start_index + i + 1]; // TODO n LEVELS
-    }
+    v0 = world0[start_index + i];     // TODO n LEVELS
+    v1 = world0[start_index + i + 1]; // TODO n LEVELS
     // Page in BANK 00
     GLOBAL_ZX_PORT_7FFD = 0x10 + 0;
     IO_7FFD = 0x10 + 0;
@@ -894,12 +883,11 @@ void spr_play_bullets(void) {
         f_col1 = f_col0 + 1;
       }
 
-      if ( bullet == SPR_P1 && bullet_col[SPR_P1] != 0xFF ) {
+      if (bullet == SPR_P1 && bullet_col[SPR_P1] != 0xFF) {
         // PLAYER BULLETS
         for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
-          if (class[tmp0] != 0 &&
-              col[tmp0] >= f_col0 && col[tmp0] <= f_col1 &&
-              lin[tmp0] >= f_lin0 && lin[tmp0] <= f_lin1 ) {
+          if (class[tmp0] != 0 && col[tmp0] >= f_col0 && col[tmp0] <= f_col1 &&
+              lin[tmp0] >= f_lin0 && lin[tmp0] <= f_lin1) {
 
             // Player Bullet hit an enemy
             s_lin0 = lin[tmp0];
@@ -952,7 +940,8 @@ void spr_play_bullets(void) {
         }
       } else {
         // Enemy Bullet hit on Player
-        if (col[SPR_P1] >= f_col0 && col[SPR_P1] <= f_col1 && lin[SPR_P1] >= f_lin0 && lin[SPR_P1] <= f_lin1) {
+        if (col[SPR_P1] >= f_col0 && col[SPR_P1] <= f_col1 &&
+            lin[SPR_P1] >= f_lin0 && lin[SPR_P1] <= f_lin1) {
           ay_fx_play(ay_effect_06);
           zx_border(INK_MAGENTA);
           player_hit(10);
