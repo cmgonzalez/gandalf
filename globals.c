@@ -182,6 +182,7 @@ unsigned char bullet_tile[8];
 unsigned char bullet_dir[8];
 unsigned char bullet_colint[8];
 unsigned char bullet_frames[8];
+unsigned char bullet;
 signed char bullet_vel[8];
 
 unsigned char boss_lin;

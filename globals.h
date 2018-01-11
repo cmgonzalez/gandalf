@@ -536,6 +536,7 @@ extern unsigned char bullet_dir[8];
 extern unsigned char bullet_colint[8];
 extern unsigned char bullet_frames[8];
 extern signed char bullet_vel[8];
+extern unsigned char bullet;
 
 extern unsigned char boss_lin;
 extern unsigned char boss_col;

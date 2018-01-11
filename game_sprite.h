@@ -43,7 +43,7 @@ extern void             spr_play_anim(void);
 extern void             spr_play_bullets(void);
 extern void             spr_turn_horizontal(void);
 extern void             spr_init_anim_bullets(void);
-extern void             spr_explode_bullet(unsigned char f_bullet) __z88dk_fastcall;
+extern void             spr_explode_bullet();
 extern void             spr_btile_paint_back(void);
 
 #endif

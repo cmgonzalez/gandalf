@@ -496,9 +496,10 @@ unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
 
   tmp0 = 0;
   while (tmp0 < GAME_TOTAL_CLASSES) {
-    tmp1 = tmp0*3;
+    tmp1 = tmp0 * 3;
     if (spr_map_tile[tmp1] == class[f_sprite]) {
-      return spr_tile_dir(spr_map_tile[tmp1+1], f_sprite, spr_map_tile[tmp1+2]);
+      return spr_tile_dir(spr_map_tile[tmp1 + 1], f_sprite,
+                          spr_map_tile[tmp1 + 2]);
     }
     ++tmp0;
   }
@@ -745,143 +746,143 @@ void spr_play_anim(void) {
   }
 }
 
+void spr_bullet_fireball(signed char f_inc, unsigned char f_tile) {
+  if (abs(s_lin0 - bullet_lin0[bullet]) <= 8) {
+    bullet_lin[bullet] = bullet_lin[bullet] + f_inc;
+    s_lin0 = bullet_lin[bullet];
+  } else {
+    bullet_class[bullet] = f_tile;
+  }
+}
+
+void spr_bullet_axe() {
+  // TODO OPTIMIZE - SLOW DOWNS GAME
+  signed int val_yc;
+  s_lin0 = bullet_lin[bullet];
+  s_col0 = bullet_col[bullet] - 1;
+  if (s_col0 < 32) {
+    spr_back_repaint(); // TODO OPTIMIZE REPAINT
+  };
+
+  bullet_vel[bullet] = bullet_vel[bullet] + game_gravity;
+
+  if (bullet_vel[bullet] > 120) {
+    bullet_vel[bullet] = 120;
+  }
+
+  if (bullet_vel[bullet] < -120) {
+    bullet_vel[bullet] = -120;
+  }
+
+  val_yc = bullet_vel[bullet];
+
+  s_lin1 = (unsigned char)val_yc;
+  // Nirvana don't support odds lines
+  if ((s_lin1 & 1) != 0) {
+    s_lin1--;
+  }
+
+  s_lin0 = bullet_lin[bullet] + s_lin1;
+  if (s_lin0 > GAME_LIN_FLOOR) {
+    --bullet_count;
+    bullet_col[bullet] = 0XFF;
+  } else {
+    bullet_lin[bullet] = s_lin0;
+  }
+}
+
 void spr_play_bullets(void) {
 
-  unsigned char f_bullet;
   unsigned char f_lin0;
   unsigned char f_col0;
   unsigned char f_lin1;
   unsigned char f_col1;
-  signed int val_yc;
 
-  for (f_bullet = 0; f_bullet < 8; ++f_bullet) {
-    if (bullet_col[f_bullet] == 0xFF) // Not active bullet
+  for (bullet = 0; bullet < 8; ++bullet) {
+    if (bullet_col[bullet] == 0xFF) {
       continue;
-
-    s_lin0 = bullet_lin[f_bullet];
-    s_col0 = bullet_col[f_bullet];
+    }
+    s_lin0 = bullet_lin[bullet];
+    s_col0 = bullet_col[bullet];
     f_col0 = s_col0;
 
     spr_back_repaint(); // restore background
-    if (bullet_class[f_bullet] == BULLET_FIREBALL_UP) {
-      if (s_lin0 - bullet_lin0[f_bullet] <= 8) {
-        bullet_lin[f_bullet] = bullet_lin[f_bullet] + 2;
-        s_lin0 = bullet_lin[f_bullet];
-      } else {
-        bullet_class[f_bullet] = BULLET_FIREBALL_DOWN;
-      }
+    if (bullet_class[bullet] == BULLET_FIREBALL_UP) {
+      spr_bullet_fireball(2, BULLET_FIREBALL_DOWN);
     }
-    if (bullet_class[f_bullet] == BULLET_FIREBALL_DOWN) {
-      if (bullet_lin0[f_bullet] - s_lin0 <= 8) {
-        bullet_lin[f_bullet] = bullet_lin[f_bullet] - 2;
-        s_lin0 = bullet_lin[f_bullet];
-      } else {
-        bullet_class[f_bullet] = BULLET_FIREBALL_UP;
-      }
+    if (bullet_class[bullet] == BULLET_FIREBALL_DOWN) {
+      spr_bullet_fireball(2, BULLET_FIREBALL_DOWN);
     }
-    if (bullet_class[f_bullet] == BULLET_AXE) {
-      // FIX CORRUPTION
-      s_lin0 = bullet_lin[f_bullet];
-      s_col0 = bullet_col[f_bullet] - 1;
-      if (s_col0 < 32) {
-        spr_back_repaint(); //TODO OPTIMIZE REPAINT
-      };
-
-      bullet_vel[f_bullet] = bullet_vel[f_bullet] + game_gravity;
-
-      if (bullet_vel[f_bullet] > 120) {
-        bullet_vel[f_bullet] = 120;
-      }
-
-      if (bullet_vel[f_bullet] < -120) {
-        bullet_vel[f_bullet] = -120;
-      }
-
-      val_yc = bullet_vel[f_bullet];
-
-      s_lin1 = (unsigned char)val_yc;
-      // Nirvana don't support odds lines
-      if ((s_lin1 & 1) != 0) {
-        s_lin1--;
-      }
-
-      s_lin0 = bullet_lin[f_bullet] + s_lin1;
-      if (s_lin0 > GAME_LIN_FLOOR) {
-        --bullet_count;
-        bullet_col[f_bullet] = 0XFF;
+    if (bullet_class[bullet] == BULLET_AXE) {
+      spr_bullet_axe();
+      if (bullet_col[bullet] == 0xFF) {
         continue;
-      } else {
-        bullet_lin[f_bullet] = s_lin0;
       }
     }
-    // Move Bullets
-    if (bullet_dir[f_bullet] == 0xFF) {
+    // Move Horizontal Bullets
+    if (bullet_dir[bullet] == 0xFF) {
       // Move Right
-      ++bullet_colint[f_bullet];
-      if (bullet_colint[f_bullet] >= bullet_frames[f_bullet]) {
-        f_col0 = bullet_col[f_bullet] + 1;
-        bullet_colint[f_bullet] = 0;
+      ++bullet_colint[bullet];
+      if (bullet_colint[bullet] >= bullet_frames[bullet]) {
+        f_col0 = bullet_col[bullet] + 1;
+        bullet_colint[bullet] = 0;
         if ((f_col0 & 1) == 1) {
           s_col0 = f_col0 + 1;
         }
       }
     } else {
       // Move Left
-      --bullet_colint[f_bullet];
-      if (bullet_colint[f_bullet] == 0xFF) {
-        f_col0 = bullet_col[f_bullet] - 1;
-        bullet_colint[f_bullet] = bullet_frames[f_bullet] - 1;
+      --bullet_colint[bullet];
+      if (bullet_colint[bullet] == 0xFF) {
+        f_col0 = bullet_col[bullet] - 1;
+        bullet_colint[bullet] = bullet_frames[bullet] - 1;
         if ((f_col0 & 1) == 1) {
           s_col0 = f_col0 - 1;
         }
       }
     }
 
-    tmp1 = 0;
-    if (bullet_max[f_bullet] > 0) {
+    if (bullet_max[bullet] > 0) {
       // Max Fireball
-      tmp0 = abs(f_col0 - bullet_col0[f_bullet]);
-      if (tmp0 > bullet_max[f_bullet]) {
-        tmp1 = 1;
+      tmp0 = abs(f_col0 - bullet_col0[bullet]);
+      if (tmp0 > bullet_max[bullet]) {
+        --bullet_count;
+        bullet_col[bullet] = 0xFF;
+        continue;
       }
     }
     if (f_col0 >= 30) {
       // Out of Screen
-      tmp1 = 1;
-    }
-
-    if (tmp1) {
       --bullet_count;
-      bullet_col[f_bullet] = 0XFF;
+      bullet_col[bullet] = 0xFF;
       continue;
     }
+
     // Colission with map
-    if (f_col0 != bullet_col[f_bullet]) {
+    if (f_col0 != bullet_col[bullet]) {
       // Column Movement
-
       index0 = spr_calc_index(s_lin0 + 8, s_col0);
-
-      if (scr_map[index0] == TILE_DIRT && f_bullet == SPR_P1) {
+      if (scr_map[index0] == TILE_DIRT && bullet == SPR_P1) {
         // Destroy Bricks
         scr_map[index0] = game_match_back(index0); // TILE_EMPTY;
         game_obj_set(index0);
-        bullet_lin[f_bullet] = (index0 >> 4) << 4;
-        bullet_col[f_bullet] = (index0 & 15) << 1;
-        spr_explode_bullet(f_bullet);
+        bullet_lin[bullet] = (index0 >> 4) << 4;
+        bullet_col[bullet] = (index0 & 15) << 1;
+        spr_explode_bullet();
         continue;
       }
 
       if ((scr_map[index0] >= TILE_CEIL && scr_map[index0] != 0xFF)) {
         // Explode Bullet
-        spr_explode_bullet(f_bullet);
+        spr_explode_bullet();
         continue;
       }
 
       // Now we can move
-      bullet_col[f_bullet] = f_col0;
+      bullet_col[bullet] = f_col0;
 
       // Colission with sprites
-      if (bullet_class[f_bullet] == BULLET_AXE) {
+      if (bullet_class[bullet] == BULLET_AXE) {
         f_lin0 = s_lin0 - 16;
         f_lin1 = s_lin0 + 16;
         f_col0 = f_col0 - 1;
@@ -893,14 +894,14 @@ void spr_play_bullets(void) {
         f_col1 = f_col0 + 1;
       }
 
-      if (f_bullet == SPR_P1) {
+      if ( bullet == SPR_P1 && bullet_col[SPR_P1] != 0xFF ) {
         // PLAYER BULLETS
         for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
-          if (class[tmp0] != 0 && bullet_col[SPR_P1] != 0XFF &&
-              lin[tmp0] >= f_lin0 && lin[tmp0] <= f_lin1 &&
-              col[tmp0] >= f_col0 && col[tmp0] <= f_col1) {
+          if (class[tmp0] != 0 &&
+              col[tmp0] >= f_col0 && col[tmp0] <= f_col1 &&
+              lin[tmp0] >= f_lin0 && lin[tmp0] <= f_lin1 ) {
 
-            // PLAYER KILL
+            // Player Bullet hit an enemy
             s_lin0 = lin[tmp0];
             s_col0 = col[tmp0];
             player_score_add(rand() % 6);
@@ -913,16 +914,17 @@ void spr_play_bullets(void) {
             };
 
             bullet_col[SPR_P1] = s_col0;
-            spr_explode_bullet(SPR_P1);
+            spr_explode_bullet();
             ay_fx_play(ay_effect_02);
+            tmp0 = SPR_P1; // Exit Loop
           }
         }
         if (game_boss) {
-
+          // Player Bullet hit the boss
           if (((boss_lin >= f_lin0 && boss_lin <= f_lin1) ||
                (boss_lin + 16 >= f_lin0 && boss_lin + 16 <= f_lin1)) &&
               boss_col >= f_col0 && boss_col <= f_col1) {
-            spr_explode_bullet(f_bullet);
+            spr_explode_bullet();
             --game_boss_hit;
             game_update_stats();
             if (game_boss_hit == 0) {
@@ -940,51 +942,42 @@ void spr_play_bullets(void) {
                   s_col0 = bullet_col[tmp0];
                   spr_back_repaint(); // restore background
                 }
-
                 bullet_col[tmp0] = 0xFF;
-
                 spr_destroy(tmp0);
                 game_respawn_time[tmp0] = 0;
               }
-
               game_boss_clear();
             }
           }
         }
       } else {
-        // ENEMY BULLET
-        if (lin[SPR_P1] >= f_lin0 && lin[SPR_P1] <= f_lin1 &&
-            col[SPR_P1] >= f_col0 && col[SPR_P1] <= f_col1) {
+        // Enemy Bullet hit on Player
+        if (col[SPR_P1] >= f_col0 && col[SPR_P1] <= f_col1 && lin[SPR_P1] >= f_lin0 && lin[SPR_P1] <= f_lin1) {
           ay_fx_play(ay_effect_06);
           zx_border(INK_MAGENTA);
           player_hit(10);
 
-          bullet_col[f_bullet] = s_col0;
-          spr_explode_bullet(f_bullet);
+          bullet_col[bullet] = s_col0;
+          spr_explode_bullet();
           break;
         }
       }
     }
-    if (bullet_col[f_bullet] == 0xFF)
-      continue;
-    // We can draw
-    if (f_col0 < 32) {
+    if (bullet_col[bullet] != 0xFF && f_col0 < 32) {
+      // Draw Bullets
       intrinsic_di();
-
-      NIRVANAP_drawT_raw(bullet_tile[f_bullet] + bullet_colint[f_bullet],
-                         s_lin0, f_col0);
+      NIRVANAP_drawT_raw(bullet_tile[bullet] + bullet_colint[bullet], s_lin0,
+                         f_col0);
       intrinsic_ei();
     }
   }
 }
 
-void spr_explode_bullet(unsigned char f_bullet) __z88dk_fastcall {
-  spr_add_anim(bullet_lin[f_bullet], bullet_col[f_bullet], TILE_ANIM_FIRE, 3, 0,
-               0);
+void spr_explode_bullet() {
+  spr_add_anim(bullet_lin[bullet], bullet_col[bullet], TILE_ANIM_FIRE, 3, 0, 0);
   --bullet_count;
-  bullet_col[f_bullet] = 0XFF;
+  bullet_col[bullet] = 0XFF;
   ay_fx_play(ay_effect_11);
-
 }
 
 void spr_turn_horizontal(void) {
