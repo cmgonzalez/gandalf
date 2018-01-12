@@ -840,7 +840,7 @@ void spr_play_bullets(void) {
         continue;
       }
     }
-    if (f_col0 >= 30) {
+    if (f_col0 > 30) {
       // Out of Screen
       --bullet_count;
       bullet_col[bullet] = 0xFF;
