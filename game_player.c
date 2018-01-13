@@ -247,14 +247,17 @@ void player_fix_walk_lin() {
 
 unsigned char player_fire() {
   // if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_DOWN)) {
-  unsigned char f_check;
 
   if (game_2buttons) {
-    f_check = dirs_alt & IN_STICK_FIRE;
+    player_on_fire = dirs_alt & IN_STICK_FIRE;
   } else {
-    f_check = (dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP);
+    player_on_fire = (dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP);
   }
-  if (f_check) {
+  if (player_on_fire) {
+    if (tile[SPR_P1] == TILE_P1_STANR || tile[SPR_P1] == TILE_P1_STANR + 1) {
+      player_tile(TILE_P1_RIGHT, TILE_P1_LEN);
+      colint[SPR_P1] = 0;
+    }
     /*Fireball*/
     if (player_mana > 0 && (bullet_col[SPR_P1] == 0xFF)) {
       if (player_mana > 5) {

@@ -426,13 +426,23 @@ unsigned char spr_redraw(void) {
     // Speed UP hack
     if (sprite == SPR_P1) {
       /*Stair Anim*/
-      if (player_onstair && ((lin[SPR_P1] & 3) == 0)) {
+
+
+      if (player_onstair){//} && ((lin[SPR_P1] & 3) == 0)) {
         ++player_anim_stair;
 
         if (player_anim_stair > 1) {
           player_anim_stair = 0;
         }
         s_tile1 = tile[SPR_P1] + player_anim_stair + 4;
+      } else {
+        if (player_on_fire) {
+          if (BIT_CHK(s_state, STAT_DIRR)) {
+            s_tile1 = TILE_P1_RIGHT;
+          } else {
+            s_tile1 = TILE_P1_RIGHT + TILE_P1_LEN;
+          }
+        }
       }
       spr_back_repaint();
     } else {
@@ -805,15 +815,18 @@ void spr_play_bullets(void) {
     s_lin0 = bullet_lin[bullet];
     s_col0 = bullet_col[bullet];
     f_col0 = s_col0;
-
     spr_back_repaint(); // restore background
+
     if (bullet_class[bullet] == BULLET_FIREBALL_UP) {
+
       spr_bullet_fireball(2, BULLET_FIREBALL_DOWN);
     }
     if (bullet_class[bullet] == BULLET_FIREBALL_DOWN) {
+
       spr_bullet_fireball(2, BULLET_FIREBALL_DOWN);
     }
     if (bullet_class[bullet] == BULLET_AXE) {
+
       spr_bullet_axe();
       if (bullet_col[bullet] == 0xFF) {
         continue;
@@ -888,6 +901,7 @@ void spr_play_bullets(void) {
         f_col0 = f_col0 - 1;
         f_col1 = f_col0 + 1;
       } else {
+        //TODO BETTER COLLISION CHECK
         f_lin0 = s_lin0 - 8;
         f_lin1 = s_lin0 + 8;
         f_col0 = f_col0 + 0;
@@ -897,9 +911,14 @@ void spr_play_bullets(void) {
       if (bullet == SPR_P1 && bullet_col[SPR_P1] != 0xFF) {
         // PLAYER BULLETS
         for (f_sprite = 0; f_sprite < SPR_P1; ++f_sprite) {
-          if (class[f_sprite] != 0 && col[f_sprite] >= f_col0 &&
-              col[f_sprite] <= f_col1 && lin[f_sprite] >= f_lin0 &&
-              lin[f_sprite] <= f_lin1) {
+
+          if (
+              class[f_sprite] != 0 &&
+              col[f_sprite] >= f_col0 &&
+              col[f_sprite] <= f_col1 &&
+              lin[f_sprite] >= f_lin0 &&
+              lin[f_sprite] <= f_lin1
+            ) {
 
             // Player Bullet hit an enemy
             s_lin0 = lin[f_sprite];
@@ -952,12 +971,12 @@ void spr_play_bullets(void) {
         }
       } else {
         // Enemy Bullet hit on Player
+        //TODO REVIEW FOR AXES
         if (col[SPR_P1] >= f_col0 && col[SPR_P1] <= f_col1 &&
             lin[SPR_P1] >= f_lin0 && lin[SPR_P1] <= f_lin1) {
           ay_fx_play(ay_effect_06);
           zx_border(INK_MAGENTA);
           player_hit(10);
-
           bullet_col[bullet] = s_col0;
           spr_explode_bullet();
           break;
@@ -966,7 +985,9 @@ void spr_play_bullets(void) {
     }
     if (bullet_col[bullet] != 0xFF && f_col0 < 32) {
       // Draw Bullets
+
       intrinsic_di();
+
       NIRVANAP_drawT_raw(bullet_tile[bullet] + bullet_colint[bullet], s_lin0,
                          f_col0);
       intrinsic_ei();

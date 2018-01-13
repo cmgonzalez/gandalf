@@ -391,7 +391,6 @@ extern unsigned int spr_timer[8];
 extern unsigned char player_slide;
 extern unsigned int last_time[8];
 extern unsigned int player_score;
-extern unsigned int player_joy;
 extern signed char  player_vel_x;
 extern signed char  player_vel_y;
 extern signed char  player_vel_y0;
@@ -413,7 +412,8 @@ extern unsigned char player_col_scr;
 extern unsigned char player_lin_scr;
 
 extern unsigned int player_hit_time;
-extern unsigned int  player_anim_stair;
+extern unsigned char player_anim_stair;
+extern unsigned char player_on_fire;
 
 
 extern signed   int  game_gravity;

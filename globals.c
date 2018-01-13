@@ -78,7 +78,6 @@ unsigned char player_hit_lin; // HIT BRICK LINE
 unsigned char player_hit_col; // HIT BRICK COL
 unsigned char player_slide;   // SLIDING COUNTER
 unsigned int player_score;    // SCORE
-unsigned int player_joy;      // JOYSTICK
 unsigned char player_lives;
 unsigned char player_coins;
 unsigned char player_onstair;
@@ -90,7 +89,8 @@ signed char player_vel_inc;
 unsigned char player_keys[4];
 unsigned char player_hit_count;
 unsigned int player_brick_time;
-unsigned int player_anim_stair;
+unsigned char player_anim_stair;
+unsigned char player_on_fire;
 // PLAYER ATTRIBUTES
 unsigned char player_mana;
 unsigned char player_vita;

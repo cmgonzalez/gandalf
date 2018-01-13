@@ -35,8 +35,9 @@
 void game_loop(void) {
 
   // TODO CALL MENU HERE
+  game_round_init();
   while (!game_over) {
-    game_round_init();
+
 
     while (!game_worldup && !game_over) {
       /*Play animatios*/
@@ -76,6 +77,7 @@ void game_loop(void) {
       game_boss_alive = 1;
       game_boss = 0;
       scr_curr = 255;
+      game_obj_clear();
       game_round_init();
     }
   }
@@ -777,7 +779,7 @@ void game_attribs() {
 
 unsigned char game_match_back(unsigned int f_index) {
   if ((f_index > 1) && ((f_index & 15) != 0) &&
-      (scr_map[f_index - 1] == TILE_EMPTY_DARK)) {
+      (scr_map[f_index - 1] == TILE_EMPTY_DARK || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
     return TILE_EMPTY_DARK;
   }
   return TILE_EMPTY;

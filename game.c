@@ -46,7 +46,6 @@ void main(void) {
 
   game_sound = spec128 ? (GAME_SOUND_AY_FX_ON | GAME_SOUND_AY_MUS_ON)
                        : (GAME_SOUND_48_FX_ON | GAME_SOUND_48_MUS_ON);
-  player_joy = 0;              /*KB1*/
   game_gravity = GAME_GRAVITY; // 8;
   // vel_y0 + vel_y1 = -84
   player_vel_y0 = GAME_VELOCITY;     //-88; // Velocity
@@ -75,7 +74,6 @@ void main(void) {
   joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_sinclair1);
   joyfunc2 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
 
-  // joyfunc1 = control_method[player_joy];
 
   in_wait_nokey();
   for (counter = 31416; !in_test_key(); counter += 10061)
@@ -111,7 +109,9 @@ void main(void) {
     player_lin_scr = GAME_LIN_FLOOR - 16;
     player_col_scr = 2;
     fps = 0;
-    game_world = 0;
+    game_world = 1;
+    scr_curr = 255; // 255 equals read default screen from map
+
     game_worldup = 0;
     game_respawn_curr_time = 255;
     game_mush_count = 0;
@@ -119,7 +119,7 @@ void main(void) {
     game_2buttons = 1; // Two button control - Space default 2 button
     /* phase init */
     game_over = 0;
-    scr_curr = 255; // 255 equals read default screen from map
+
     /* game loop start */
     dirs = 0x00;
     // MENU
