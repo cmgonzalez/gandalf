@@ -786,6 +786,7 @@ void spr_play_bullets(void) {
   unsigned char f_col0;
   unsigned char f_lin1;
   unsigned char f_col1;
+  unsigned char f_sprite;
 
   for (bullet = 0; bullet < 8; ++bullet) {
     if (bullet_col[bullet] == 0xFF) {
@@ -885,26 +886,26 @@ void spr_play_bullets(void) {
 
       if (bullet == SPR_P1 && bullet_col[SPR_P1] != 0xFF) {
         // PLAYER BULLETS
-        for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
-          if (class[tmp0] != 0 && col[tmp0] >= f_col0 && col[tmp0] <= f_col1 &&
-              lin[tmp0] >= f_lin0 && lin[tmp0] <= f_lin1) {
+        for (f_sprite = 0; f_sprite < SPR_P1; ++f_sprite) {
+          if (class[f_sprite] != 0 && col[f_sprite] >= f_col0 && col[f_sprite] <= f_col1 &&
+              lin[f_sprite] >= f_lin0 && lin[f_sprite] <= f_lin1) {
 
             // Player Bullet hit an enemy
-            s_lin0 = lin[tmp0];
-            s_col0 = col[tmp0];
+            s_lin0 = lin[f_sprite];
+            s_col0 = col[f_sprite];
             player_score_add(rand() % 6);
-            game_respawn_time[tmp0] = zx_clock();
-            spr_destroy(tmp0);
-            if (bullet_col[tmp0] != 0xFF) {
-              s_lin0 = bullet_lin[tmp0];
-              s_col0 = bullet_col[tmp0];
+            game_respawn_time[f_sprite] = zx_clock();
+            spr_destroy(f_sprite);
+            if (bullet_col[f_sprite] != 0xFF) {
+              s_lin0 = bullet_lin[f_sprite];
+              s_col0 = bullet_col[f_sprite];
               spr_back_repaint(); // restore background
             };
 
             bullet_col[SPR_P1] = s_col0;
             spr_explode_bullet();
             ay_fx_play(ay_effect_02);
-            tmp0 = SPR_P1; // Exit Loop
+            f_sprite = SPR_P1; // Exit Loop
           }
         }
         if (game_boss) {
@@ -1005,4 +1006,11 @@ void spr_btile_paint_back() {
     tmp_ui = tmp_ui + 48;
   }
   game_attribs();
+}
+
+void spr_flatten(void) {
+  unsigned char i;
+  for (i = 0; i <= SPR_P1; ++i) {
+    NIRVANAP_spriteT(i,TILE_EMPTY,0,0);
+  }
 }

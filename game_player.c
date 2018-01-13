@@ -347,6 +347,7 @@ void player_pick_mushroom() {
 void player_1up() {
   if (player_lives < 255) {
     ++player_lives;
+    spr_flatten();
     zx_print_str(12, 12, "1 UP!");
     game_colour_message(12, 12, 12 + 9, 25, 0);
     game_update_stats();
@@ -676,9 +677,10 @@ void player_score_add(unsigned int f_score) __z88dk_fastcall {
   if (player_lvl < GAME_MAX_LEVEL) {
     if (player_score >= player_lvl_table[player_lvl]) {
       player_lvl++;
-      zx_print_str(12, 12, "LEVEL UP!");
-      game_colour_message(12, 12, 12 + 9, 25, 0);
       game_update_stats();
+      spr_flatten();
+      zx_print_str(12, 12, "LEVEL UP!");
+      game_colour_message(12, 12, 12 + 9, 60, 0);
     }
   }
 

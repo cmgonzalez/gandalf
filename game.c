@@ -131,9 +131,7 @@ void main(void) {
     game_attribs();
     // END MENU
     game_loop();
-    for (sprite = 0; sprite < 8; ++sprite) {
-      NIRVANAP_spriteT(sprite, TILE_EMPTY, 0, 0);
-    }
+    spr_flatten();
     zx_print_str(12, 12, "GAME OVER");
     game_over = 0; // Hack game_colour_message to render background
     game_colour_message(12, 12, 12 + 9, 250, 0);

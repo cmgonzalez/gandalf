@@ -45,5 +45,6 @@ extern void             spr_turn_horizontal(void);
 extern void             spr_init_anim_bullets(void);
 extern void             spr_explode_bullet();
 extern void             spr_btile_paint_back(void);
+extern void             spr_flatten(void);
 
 #endif

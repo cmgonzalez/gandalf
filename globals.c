@@ -317,7 +317,7 @@ unsigned char spr_init[] = {
 
 unsigned int player_lvl_table[] = {
     100,   500,   1000,  2000,  4000,  6000,  7000,  8000,  9000,  10000,
-    12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000,
+    12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000
 };
 // TEMPORARY SPEED FOR SPEED UP
 unsigned char sprite_speed_alt[8];
@@ -341,4 +341,5 @@ unsigned int scan_map[] = {
     IN_KEY_SCANCODE_p,     IN_KEY_SCANCODE_q,     IN_KEY_SCANCODE_r,
     IN_KEY_SCANCODE_s,     IN_KEY_SCANCODE_t,     IN_KEY_SCANCODE_u,
     IN_KEY_SCANCODE_v,     IN_KEY_SCANCODE_w,     IN_KEY_SCANCODE_x,
-    IN_KEY_SCANCODE_y,     IN_KEY_SCANCODE_z};
+    IN_KEY_SCANCODE_y,     IN_KEY_SCANCODE_z
+};

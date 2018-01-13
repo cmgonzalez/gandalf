@@ -515,6 +515,8 @@ void game_paint_attrib_lin_h(unsigned char f_start, unsigned char f_end,
 
 void game_paint_attrib_lin_osd(unsigned char f_start, unsigned char f_end,
                                unsigned char f_lin) {
+
+
   for (tmp_uc = f_start; tmp_uc < f_end; ++tmp_uc) {
     NIRVANAP_paintC(attrib_osd, f_lin, tmp_uc);
   }
