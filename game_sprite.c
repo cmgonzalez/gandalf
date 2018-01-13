@@ -316,11 +316,9 @@ void spr_page_map(void) {
   unsigned char l_scr;
   unsigned char l_scr_map;
 
-
   l_world = game_world;
   l_scr = scr_curr;
-  l_scr_map = ( l_world << 4 ) + l_scr;
-
+  l_scr_map = (l_world << 4) + l_scr;
 
   k = 16;
 
@@ -332,7 +330,7 @@ void spr_page_map(void) {
 
   if (l_scr == 255) {
     l_scr = start_scr0[l_world];
-    l_scr_map = ( l_world << 4 ) + l_scr;
+    l_scr_map = (l_world << 4) + l_scr;
   }
   l_paper = paper0[l_scr_map];
   l_world_w = world0_w[l_world];
@@ -637,6 +635,7 @@ void spr_back_repaint(void) {
 
 void spr_tile_paint(unsigned char f_tile, unsigned char f_lin,
                     unsigned char f_col) {
+  unsigned char i;
 
   switch (f_tile) {
   case TILE_EMPTY:
@@ -644,6 +643,17 @@ void spr_tile_paint(unsigned char f_tile, unsigned char f_lin,
     break;
   case 0XFF:
     // ANIM PLAYING
+    for (i = 0; i < 8; ++i) {
+      if ( (anim_col[i] == f_col) && (anim_lin[i] == f_lin) ) {
+        if ( anim_int[i] < anim_end[i] ) {
+          NIRVANAP_drawT_raw(anim_tile[i] + anim_int[i], f_lin, f_col);
+        } else {
+          NIRVANAP_fillT_raw(map_paper_clr, f_lin, f_col);
+        }
+
+        break;
+      }
+    }
     break;
   default:
     NIRVANAP_drawT_raw(f_tile, f_lin, f_col);
@@ -887,8 +897,9 @@ void spr_play_bullets(void) {
       if (bullet == SPR_P1 && bullet_col[SPR_P1] != 0xFF) {
         // PLAYER BULLETS
         for (f_sprite = 0; f_sprite < SPR_P1; ++f_sprite) {
-          if (class[f_sprite] != 0 && col[f_sprite] >= f_col0 && col[f_sprite] <= f_col1 &&
-              lin[f_sprite] >= f_lin0 && lin[f_sprite] <= f_lin1) {
+          if (class[f_sprite] != 0 && col[f_sprite] >= f_col0 &&
+              col[f_sprite] <= f_col1 && lin[f_sprite] >= f_lin0 &&
+              lin[f_sprite] <= f_lin1) {
 
             // Player Bullet hit an enemy
             s_lin0 = lin[f_sprite];
@@ -1011,6 +1022,6 @@ void spr_btile_paint_back() {
 void spr_flatten(void) {
   unsigned char i;
   for (i = 0; i <= SPR_P1; ++i) {
-    NIRVANAP_spriteT(i,TILE_EMPTY,0,0);
+    NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
   }
 }
