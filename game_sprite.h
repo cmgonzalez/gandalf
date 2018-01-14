@@ -43,8 +43,10 @@ extern void             spr_play_anim(void);
 extern void             spr_play_bullets(void);
 extern void             spr_turn_horizontal(void);
 extern void             spr_init_anim_bullets(void);
-extern void             spr_explode_bullet();
+extern void             spr_bullet_explode();
 extern void             spr_btile_paint_back(void);
 extern void             spr_flatten(void);
+extern unsigned char    spr_colision_b( unsigned char f_sprite, unsigned char f_bullet );
+extern unsigned char    spr_colision_b2(void);
 
 #endif

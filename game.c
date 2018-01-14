@@ -35,8 +35,8 @@
 void main(void) {
   unsigned int counter;
 
-  game_god_mode = 1; // GAME_GOD_MODE;
-  game_inmune = 1;   // GAME_INMUNE;
+  game_god_mode = 0; // GAME_GOD_MODE;
+  game_inmune = 0;   // GAME_INMUNE;
   // INTERRUPTS ARE DISABLED
   // RESET AY CHIP
   ay_reset();
@@ -109,8 +109,8 @@ void main(void) {
     player_lin_scr = GAME_LIN_FLOOR - 16;
     player_col_scr = 2;
     fps = 0;
-    game_world = 1;
-    scr_curr = 255; // 255 equals read default screen from map
+    game_world = 0;
+    scr_curr = 0xFF; // 255 equals read default screen from map
 
     game_worldup = 0;
     game_respawn_curr_time = 255;

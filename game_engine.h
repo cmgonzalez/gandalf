@@ -50,9 +50,10 @@ extern void          game_boss_clear( );
 extern void          game_attribs( );
 unsigned char        game_match_back( unsigned int f_index );
 //Menues
-extern void         menu_main();
-extern void         menu_main_print(unsigned char s_row, unsigned char s_col, unsigned char s_col_e);
-extern void         menu_redefine();
-extern unsigned int menu_define_key();
+extern void          menu_main();
+extern void          menu_main_print(unsigned char s_row, unsigned char s_col, unsigned char s_col_e);
+extern void          menu_redefine();
+extern unsigned int  menu_define_key();
+
 
 #endif

@@ -297,7 +297,7 @@
 #define STAT_PUSH                     2
 #define STAT_LDIRL                    3
 #define STAT_LDIRR                    4
-#define STAT_INERT                    5
+#define STAT_STAIR                    5
 #define STAT_RESTART                  6
 #define STAT_HITBRICK                 7
 /* General */
@@ -413,7 +413,7 @@ extern unsigned char player_lin_scr;
 
 extern unsigned int player_hit_time;
 extern unsigned char player_anim_stair;
-extern unsigned char player_on_fire;
+extern unsigned char player_onfire;
 
 
 extern signed   int  game_gravity;

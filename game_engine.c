@@ -779,7 +779,7 @@ void game_attribs() {
 
 unsigned char game_match_back(unsigned int f_index) {
   if ((f_index > 1) && ((f_index & 15) != 0) &&
-      (scr_map[f_index - 1] == TILE_EMPTY_DARK || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
+      (scr_map[f_index - 1] == TILE_EMPTY_DARK )) { // || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
     return TILE_EMPTY_DARK;
   }
   return TILE_EMPTY;
@@ -852,6 +852,7 @@ void menu_main() {
       z80_delay_ms(40);
       break;
     case 0:
+      NIRVANAP_halt();
       zx_paper_fill(INK_BLACK | PAPER_BLACK);
       f_input = 0; // Exit Loop
       break;

@@ -98,9 +98,13 @@ unsigned char spr_move_up(void) {
 unsigned char spr_move_down(void) {
   unsigned char f_check;
 
+
+
   if (lin[sprite] >= GAME_LIN_FLOOR) {
 
     if (sprite == SPR_P1) {
+
+  
       if (spr_page_down()) {
         return 1;
       } else {
@@ -427,8 +431,7 @@ unsigned char spr_redraw(void) {
     if (sprite == SPR_P1) {
       /*Stair Anim*/
 
-
-      if (player_onstair){//} && ((lin[SPR_P1] & 3) == 0)) {
+      if (player_onstair) { //} && ((lin[SPR_P1] & 3) == 0)) {
         ++player_anim_stair;
 
         if (player_anim_stair > 1) {
@@ -436,7 +439,7 @@ unsigned char spr_redraw(void) {
         }
         s_tile1 = tile[SPR_P1] + player_anim_stair + 4;
       } else {
-        if (player_on_fire) {
+        if (player_onfire) {
           if (BIT_CHK(s_state, STAT_DIRR)) {
             s_tile1 = TILE_P1_RIGHT;
           } else {
@@ -654,8 +657,8 @@ void spr_tile_paint(unsigned char f_tile, unsigned char f_lin,
   case 0XFF:
     // ANIM PLAYING
     for (i = 0; i < 8; ++i) {
-      if ( (anim_col[i] == f_col) && (anim_lin[i] == f_lin) ) {
-        if ( anim_int[i] < anim_end[i] ) {
+      if ((anim_col[i] == f_col) && (anim_lin[i] == f_lin)) {
+        if (anim_int[i] < anim_end[i]) {
           NIRVANAP_drawT_raw(anim_tile[i] + anim_int[i], f_lin, f_col);
         } else {
           NIRVANAP_fillT_raw(map_paper_clr, f_lin, f_col);
@@ -800,12 +803,41 @@ void spr_bullet_axe() {
   }
 }
 
+unsigned char spr_colision_b(unsigned char f_sprite, unsigned char f_bullet) {
+  // Colission Sprite -> Bullet
+  if (bullet_class[f_bullet] == BULLET_AXE) {
+    if (abs(lin[f_sprite] - bullet_lin[f_bullet]) < 16) {
+      if (abs(col[f_sprite] - bullet_col[f_bullet]) < 2) {
+        return 1;
+      }
+    }
+  } else { // ARROWS N FIREBALLS
+
+    if (abs(lin[f_sprite] - bullet_lin[f_bullet]) <= 8) {
+      if (abs(col[f_sprite] - bullet_col[f_bullet]) < 2) {
+        return 1;
+      }
+    }
+  }
+
+  return 0;
+}
+
+unsigned char spr_colision_b2(void) {
+  // Colission Boss -> Bullet
+  if (abs(boss_lin - bullet_lin[SPR_P1]) < 32) {
+    if (boss_lin <= bullet_lin[SPR_P1]) {
+      if (abs(boss_col - bullet_col[SPR_P1]) < 2) {
+        return 1;
+      }
+    }
+  }
+  return 0;
+}
+
 void spr_play_bullets(void) {
 
-  unsigned char f_lin0;
   unsigned char f_col0;
-  unsigned char f_lin1;
-  unsigned char f_col1;
   unsigned char f_sprite;
 
   for (bullet = 0; bullet < 8; ++bullet) {
@@ -881,13 +913,13 @@ void spr_play_bullets(void) {
         game_obj_set(index0);
         bullet_lin[bullet] = (index0 >> 4) << 4;
         bullet_col[bullet] = (index0 & 15) << 1;
-        spr_explode_bullet();
+        spr_bullet_explode();
         continue;
       }
 
       if ((scr_map[index0] >= TILE_CEIL && scr_map[index0] != 0xFF)) {
         // Explode Bullet
-        spr_explode_bullet();
+        spr_bullet_explode();
         continue;
       }
 
@@ -895,55 +927,36 @@ void spr_play_bullets(void) {
       bullet_col[bullet] = f_col0;
 
       // Colission with sprites
-      if (bullet_class[bullet] == BULLET_AXE) {
-        f_lin0 = s_lin0 - 16;
-        f_lin1 = s_lin0 + 16;
-        f_col0 = f_col0 - 1;
-        f_col1 = f_col0 + 1;
-      } else {
-        //TODO BETTER COLLISION CHECK
-        f_lin0 = s_lin0 - 8;
-        f_lin1 = s_lin0 + 8;
-        f_col0 = f_col0 + 0;
-        f_col1 = f_col0 + 1;
-      }
 
       if (bullet == SPR_P1 && bullet_col[SPR_P1] != 0xFF) {
         // PLAYER BULLETS
         for (f_sprite = 0; f_sprite < SPR_P1; ++f_sprite) {
 
-          if (
-              class[f_sprite] != 0 &&
-              col[f_sprite] >= f_col0 &&
-              col[f_sprite] <= f_col1 &&
-              lin[f_sprite] >= f_lin0 &&
-              lin[f_sprite] <= f_lin1
-            ) {
-
+          if (spr_colision_b(f_sprite, bullet) && class[f_sprite] != 0) {
             // Player Bullet hit an enemy
             s_lin0 = lin[f_sprite];
             s_col0 = col[f_sprite];
             player_score_add(rand() % 6);
             game_respawn_time[f_sprite] = zx_clock();
             spr_destroy(f_sprite);
+            /*
             if (bullet_col[f_sprite] != 0xFF) {
               s_lin0 = bullet_lin[f_sprite];
               s_col0 = bullet_col[f_sprite];
               spr_back_repaint(); // restore background
             };
-
-            bullet_col[SPR_P1] = s_col0;
-            spr_explode_bullet();
+            */
+            // bullet_col[SPR_P1] = s_col0;
+            // bullet_lin[SPR_P1] = s_lin0;
+            spr_bullet_explode();
             ay_fx_play(ay_effect_02);
             f_sprite = SPR_P1; // Exit Loop
           }
         }
         if (game_boss) {
           // Player Bullet hit the boss
-          if (((boss_lin >= f_lin0 && boss_lin <= f_lin1) ||
-               (boss_lin + 16 >= f_lin0 && boss_lin + 16 <= f_lin1)) &&
-              boss_col >= f_col0 && boss_col <= f_col1) {
-            spr_explode_bullet();
+          if (spr_colision_b2()) {
+            spr_bullet_explode();
             --game_boss_hit;
             game_update_stats();
             if (game_boss_hit == 0) {
@@ -971,14 +984,13 @@ void spr_play_bullets(void) {
         }
       } else {
         // Enemy Bullet hit on Player
-        //TODO REVIEW FOR AXES
-        if (col[SPR_P1] >= f_col0 && col[SPR_P1] <= f_col1 &&
-            lin[SPR_P1] >= f_lin0 && lin[SPR_P1] <= f_lin1) {
+        // TODO REVIEW FOR AXES
+        if (spr_colision_b(SPR_P1, bullet)) {
           ay_fx_play(ay_effect_06);
           zx_border(INK_MAGENTA);
           player_hit(10);
           bullet_col[bullet] = s_col0;
-          spr_explode_bullet();
+          spr_bullet_explode();
           break;
         }
       }
@@ -995,7 +1007,7 @@ void spr_play_bullets(void) {
   }
 }
 
-void spr_explode_bullet() {
+void spr_bullet_explode() {
   spr_add_anim(bullet_lin[bullet], bullet_col[bullet], TILE_ANIM_FIRE, 3, 0, 0);
   --bullet_count;
   bullet_col[bullet] = 0XFF;

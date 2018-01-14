@@ -47,6 +47,8 @@ void player_init(unsigned char f_lin, unsigned char f_col,
   player_hit_col = 0;
   player_hit_lin = 0;
   player_slide = 0;
+  player_onstair = 0; //TODO TO STAT
+  player_onfire = 0;
   NIRVANAP_spriteT(SPR_P1, f_tile, f_lin, f_col);
 }
 
@@ -249,11 +251,11 @@ unsigned char player_fire() {
   // if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_DOWN)) {
 
   if (game_2buttons) {
-    player_on_fire = dirs_alt & IN_STICK_FIRE;
+    player_onfire = dirs_alt & IN_STICK_FIRE;
   } else {
-    player_on_fire = (dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP);
+    player_onfire = (dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP);
   }
-  if (player_on_fire) {
+  if (player_onfire) {
     if (tile[SPR_P1] == TILE_P1_STANR || tile[SPR_P1] == TILE_P1_STANR + 1) {
       player_tile(TILE_P1_RIGHT, TILE_P1_LEN);
       colint[SPR_P1] = 0;
@@ -292,9 +294,15 @@ unsigned char player_collision(void) {
       if (v0 == TILE_WORLD_EXIT) {
         game_worldup = 1;
       } else {
-        ay_fx_play(ay_effect_06);
-        zx_border(INK_YELLOW);
-        player_hit(50);
+        if (!game_god_mode && !game_inmune && s_lin1 > GAME_LIN_FLOOR - 14) {
+          // INSTANT kill
+          player_lost_life();
+          return 0;
+        } else {
+          ay_fx_play(ay_effect_06);
+          zx_border(INK_YELLOW);
+          player_hit(50);
+        }
       }
 
       //}
@@ -339,6 +347,7 @@ unsigned char player_collision(void) {
   }
   return 0;
 }
+
 void player_pick_mushroom() {
   ay_fx_play(ay_effect_12);
   player_score_add(1);
@@ -927,7 +936,8 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
 void player_lost_life() {
   unsigned char f_anim;
   ay_fx_play(ay_effect_18);
-
+  player_vita = 0;
+  game_update_stats();
   s_lin0 = lin[SPR_P1];
   s_col0 = col[SPR_P1];
   spr_init_anim_bullets();
@@ -992,8 +1002,6 @@ void player_hit(unsigned char f_val) __z88dk_fastcall {
     player_hit_time = curr_time;
     game_update_stats();
   } else {
-    player_vita = 0;
-    game_update_stats();
     player_lost_life();
   }
 }

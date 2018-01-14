@@ -90,7 +90,7 @@ unsigned char player_keys[4];
 unsigned char player_hit_count;
 unsigned int player_brick_time;
 unsigned char player_anim_stair;
-unsigned char player_on_fire;
+unsigned char player_onfire;
 // PLAYER ATTRIBUTES
 unsigned char player_mana;
 unsigned char player_vita;
@@ -101,13 +101,11 @@ unsigned char player_max_vita;
 unsigned char player_str;
 unsigned char player_int;
 unsigned char player_lvl;
-
 unsigned char player_col_scr;
 unsigned char player_lin_scr;
+unsigned int  player_hit_time;
 
-unsigned int player_hit_time;
-
-signed int game_gravity;
+signed int    game_gravity;
 unsigned char game_world;
 unsigned char game_boss;
 unsigned char game_boss_hit;
@@ -183,14 +181,14 @@ unsigned char bullet_dir[8];
 unsigned char bullet_colint[8];
 unsigned char bullet_frames[8];
 unsigned char bullet;
-signed char bullet_vel[8];
+signed char   bullet_vel[8];
 
 unsigned char boss_lin;
 unsigned char boss_col;
 unsigned char boss_inc;
 unsigned char boss_tile;
-unsigned int boss_time;
-unsigned int boss_time_fire;
+unsigned int  boss_time;
+unsigned int  boss_time_fire;
 unsigned char boss_stat;
 
 unsigned char spr_hack;
