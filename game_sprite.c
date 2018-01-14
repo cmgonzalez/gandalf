@@ -98,13 +98,10 @@ unsigned char spr_move_up(void) {
 unsigned char spr_move_down(void) {
   unsigned char f_check;
 
-
-
   if (lin[sprite] >= GAME_LIN_FLOOR) {
 
     if (sprite == SPR_P1) {
 
-  
       if (spr_page_down()) {
         return 1;
       } else {
@@ -716,19 +713,22 @@ void spr_play_anim(void) {
   unsigned char f_anim;
   unsigned int f_index;
 
+
   for (f_anim = 0; f_anim < 8; f_anim++) {
     if (anim_lin[f_anim] != 0xFF) {
 
       z80_delay_ms(1); // TODO I don't get that...
       if (anim_int[f_anim] < anim_end[f_anim]) {
-
+        NIRVANAP_halt();
         intrinsic_di();
-
         NIRVANAP_drawT_raw(anim_tile[f_anim] + anim_int[f_anim],
                            anim_lin[f_anim], anim_col[f_anim]);
         intrinsic_ei();
 
         ++anim_int[f_anim];
+
+
+
       } else {
         if (anim_loop[f_anim] == 0) {
           --anim_count;

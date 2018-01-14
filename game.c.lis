@@ -862,9 +862,9 @@
 862   0000              ; ---------------------------------
 863   0000              _main:
 864   0000  21 00 00    	ld	hl,_game_god_mode
-865   0003  36 00       	ld	(hl),0x00
+865   0003  36 01       	ld	(hl),0x01
 866   0005  21 00 00    	ld	hl,_game_inmune
-867   0008  36 00       	ld	(hl),0x00
+867   0008  36 01       	ld	(hl),0x01
 868   000A  CD 00 00    	call	_ay_reset
 869   000D  3A 00 00    	ld	a,(_spec128)
 870   0010  B7          	or	a, a
@@ -938,107 +938,105 @@
 938   00AD  22 00 00    	ld	(_frame_time),hl
 939   00B0              l_main_00103:
 940   00B0  CD 00 00    	call	_game_obj_clear
-941   00B3  21 00 00    	ld	hl,_player_max_mana
-942   00B6  36 64       	ld	(hl),0x64
-943   00B8  21 00 00    	ld	hl,_player_max_vita
-944   00BB  36 64       	ld	(hl),0x64
-945   00BD  21 00 00    	ld	hl,_player_lives
-946   00C0  36 03       	ld	(hl),0x03
-947   00C2  21 00 00    	ld	hl,_player_mana
+941   00B3  21 00 00    	ld	hl,_game_world
+942   00B6  36 00       	ld	(hl),0x00
+943   00B8  21 00 00    	ld	hl,_scr_curr
+944   00BB  36 FF       	ld	(hl),0xff
+945   00BD  21 00 00    	ld	hl,_player_max_mana
+946   00C0  36 64       	ld	(hl),0x64
+947   00C2  21 00 00    	ld	hl,_player_max_vita
 948   00C5  36 64       	ld	(hl),0x64
-949   00C7  21 00 00    	ld	hl,_player_vita
-950   00CA  36 64       	ld	(hl),0x64
-951   00CC  21 00 00    	ld	hl,_player_str
-952   00CF  36 00       	ld	(hl),0x00
-953   00D1  21 00 00    	ld	hl,_player_lvl
-954   00D4  36 00       	ld	(hl),0x00
-955   00D6  21 00 00    	ld	hl,_player_int
+949   00C7  21 00 00    	ld	hl,_player_lives
+950   00CA  36 03       	ld	(hl),0x03
+951   00CC  21 00 00    	ld	hl,_player_mana
+952   00CF  36 64       	ld	(hl),0x64
+953   00D1  21 00 00    	ld	hl,_player_vita
+954   00D4  36 64       	ld	(hl),0x64
+955   00D6  21 00 00    	ld	hl,_player_str
 956   00D9  36 00       	ld	(hl),0x00
-957   00DB  21 00 00    	ld	hl,0x0000
-958   00DE  22 00 00    	ld	(_player_score),hl
-959   00E1  21 00 00    	ld	hl,_player_lin_scr
-960   00E4  36 80       	ld	(hl),0x80
-961   00E6  21 00 00    	ld	hl,_player_col_scr
-962   00E9  36 02       	ld	(hl),0x02
-963   00EB  21 00 00    	ld	hl,0x0000
-964   00EE  22 00 00    	ld	(_fps),hl
-965   00F1  21 00 00    	ld	hl,_game_world
-966   00F4  36 00       	ld	(hl),0x00
-967   00F6  21 00 00    	ld	hl,_scr_curr
-968   00F9  36 FF       	ld	(hl),0xff
-969   00FB  21 00 00    	ld	hl,_game_worldup
-970   00FE  36 00       	ld	(hl),0x00
-971   0100  21 00 00    	ld	hl,_game_respawn_curr_time
-972   0103  36 FF       	ld	(hl),0xff
-973   0105  21 00 00    	ld	hl,_game_mush_count
-974   0108  36 00       	ld	(hl),0x00
-975   010A  21 00 00    	ld	hl,_game_boss_alive
-976   010D  36 01       	ld	(hl),0x01
-977   010F  21 00 00    	ld	hl,_game_2buttons
-978   0112  36 01       	ld	(hl),0x01
-979   0114  21 00 00    	ld	hl,_game_over
-980   0117  36 00       	ld	(hl),0x00
-981   0119  21 00 00    	ld	hl,_dirs
-982   011C  36 00       	ld	(hl),0x00
-983   011E  CD 00 00    	call	_ay_reset
-984   0121  CD 00 00    	call	_menu_main
-985   0124  21 00 00    	ld	hl,_map_paper_last
-986   0127  36 08       	ld	(hl),0x08
-987   0129  21 00 00    	ld	hl,_map_paper
-988   012C  36 08       	ld	(hl),0x08
-989   012E  21 00 00    	ld	hl,_map_paper_clr
-990   0131  36 49       	ld	(hl),0x49
-991   0133  CD 00 00    	call	_game_attribs
-992   0136  CD 00 00    	call	_game_loop
-993   0139  CD 00 00    	call	_spr_flatten
-994   013C  21 00 00    	ld	hl,___str_0
-995   013F  E5          	push	hl
-996   0140  21 0C 0C    	ld	hl,0x0c0c
-997   0143  E5          	push	hl
-998   0144  CD 00 00    	call	_zx_print_str
-999   0147  AF          	xor	a,a
-1000  0148  32 00 00    	ld	(_game_over),a
-1001  014B  F5          	push	af
-1002  014C  33          	inc	sp
-1003  014D  21 FA 00    	ld	hl,0x00fa
-1004  0150  E5          	push	hl
-1005  0151  21 0C 15    	ld	hl,0x150c
-1006  0154  E5          	push	hl
-1007  0155  3E 0C       	ld	a,0x0c
-1008  0157  F5          	push	af
-1009  0158  33          	inc	sp
-1010  0159  CD 00 00    	call	_game_colour_message
-1011  015C  F1          	pop	af
-1012  015D  F1          	pop	af
-1013  015E  F1          	pop	af
-1014  015F  CD 00 00    	call	_game_obj_clear
-1015  0162  CD 00 00    	call	_spr_clear_scr
-1016  0165  CD 00 00    	call	_NIRVANAP_stop
-1017  0168  21 00 00    	ld	hl,_screen_paper
-1018  016B  36 00       	ld	(hl),0x00
-1019  016D  2E 00       	ld	l,0x00
-1020  016F  CD 00 00    	call	_zx_border_fastcall
-1021  0172  2E 00       	ld	l,0x00
-1022  0174  CD 00 00    	call	_zx_cls_fastcall
-1023  0177  CD 00 00    	call	_NIRVANAP_start
-1024  017A  C3 B0 00    	jp	l_main_00103
-1025  017D              	SECTION rodata_compiler
-1026  0000              ___str_0:
-1027  0000  47 41 4D 45 20 4F 56 45 52 
+957   00DB  21 00 00    	ld	hl,_player_lvl
+958   00DE  36 14       	ld	(hl),0x14
+959   00E0  21 00 00    	ld	hl,_player_int
+960   00E3  36 00       	ld	(hl),0x00
+961   00E5  21 00 00    	ld	hl,0x0000
+962   00E8  22 00 00    	ld	(_player_score),hl
+963   00EB  21 00 00    	ld	hl,_player_lin_scr
+964   00EE  36 80       	ld	(hl),0x80
+965   00F0  21 00 00    	ld	hl,_player_col_scr
+966   00F3  36 02       	ld	(hl),0x02
+967   00F5  21 00 00    	ld	hl,_game_worldup
+968   00F8  36 00       	ld	(hl),0x00
+969   00FA  21 00 00    	ld	hl,_game_respawn_curr_time
+970   00FD  36 FF       	ld	(hl),0xff
+971   00FF  21 00 00    	ld	hl,_game_mush_count
+972   0102  36 00       	ld	(hl),0x00
+973   0104  21 00 00    	ld	hl,_game_boss_alive
+974   0107  36 01       	ld	(hl),0x01
+975   0109  21 00 00    	ld	hl,_game_2buttons
+976   010C  36 01       	ld	(hl),0x01
+977   010E  21 00 00    	ld	hl,_game_over
+978   0111  36 00       	ld	(hl),0x00
+979   0113  21 00 00    	ld	hl,_dirs
+980   0116  36 00       	ld	(hl),0x00
+981   0118  CD 00 00    	call	_ay_reset
+982   011B  CD 00 00    	call	_menu_main
+983   011E  21 00 00    	ld	hl,_map_paper_last
+984   0121  36 08       	ld	(hl),0x08
+985   0123  21 00 00    	ld	hl,_map_paper
+986   0126  36 08       	ld	(hl),0x08
+987   0128  21 00 00    	ld	hl,_map_paper_clr
+988   012B  36 49       	ld	(hl),0x49
+989   012D  CD 00 00    	call	_game_attribs
+990   0130  CD 00 00    	call	_game_loop
+991   0133  CD 00 00    	call	_spr_flatten
+992   0136  21 00 00    	ld	hl,___str_0
+993   0139  E5          	push	hl
+994   013A  21 0C 0C    	ld	hl,0x0c0c
+995   013D  E5          	push	hl
+996   013E  CD 00 00    	call	_zx_print_str
+997   0141  AF          	xor	a,a
+998   0142  32 00 00    	ld	(_game_over),a
+999   0145  F5          	push	af
+1000  0146  33          	inc	sp
+1001  0147  21 FA 00    	ld	hl,0x00fa
+1002  014A  E5          	push	hl
+1003  014B  21 0C 15    	ld	hl,0x150c
+1004  014E  E5          	push	hl
+1005  014F  3E 0C       	ld	a,0x0c
+1006  0151  F5          	push	af
+1007  0152  33          	inc	sp
+1008  0153  CD 00 00    	call	_game_colour_message
+1009  0156  F1          	pop	af
+1010  0157  F1          	pop	af
+1011  0158  F1          	pop	af
+1012  0159  CD 00 00    	call	_game_obj_clear
+1013  015C  CD 00 00    	call	_spr_clear_scr
+1014  015F  CD 00 00    	call	_NIRVANAP_stop
+1015  0162  21 00 00    	ld	hl,_screen_paper
+1016  0165  36 00       	ld	(hl),0x00
+1017  0167  2E 00       	ld	l,0x00
+1018  0169  CD 00 00    	call	_zx_border_fastcall
+1019  016C  2E 00       	ld	l,0x00
+1020  016E  CD 00 00    	call	_zx_cls_fastcall
+1021  0171  CD 00 00    	call	_NIRVANAP_start
+1022  0174  C3 B0 00    	jp	l_main_00103
+1023  0177              	SECTION rodata_compiler
+1024  0000              ___str_0:
+1025  0000  47 41 4D 45 20 4F 56 45 52 
                         	DEFM "GAME OVER"
-1028  0009  00          	DEFB 0x00
-1029  000A              	SECTION code_compiler
-1030  017D              ;	---------------------------------
-1031  017D              ; Function test_proc is a stub
-1032  017D              ; ---------------------------------
-1033  017D              EXTERN l_ret
-1034  017D              defc _test_proc = l_ret
-1035  017D              	SECTION code_compiler
-1036  017D              ;	---------------------------------
-1037  017D              ; Function test_func
-1038  017D              ; ---------------------------------
-1039  017D              _test_func:
-1040  017D  2E 00       	ld	l,0x00
-1041  017F  C9          	ret
-1042  0180              	SECTION IGNORE
-1043  0000              
+1026  0009  00          	DEFB 0x00
+1027  000A              	SECTION code_compiler
+1028  0177              ;	---------------------------------
+1029  0177              ; Function test_proc is a stub
+1030  0177              ; ---------------------------------
+1031  0177              EXTERN l_ret
+1032  0177              defc _test_proc = l_ret
+1033  0177              	SECTION code_compiler
+1034  0177              ;	---------------------------------
+1035  0177              ; Function test_func
+1036  0177              ; ---------------------------------
+1037  0177              _test_func:
+1038  0177  2E 00       	ld	l,0x00
+1039  0179  C9          	ret
+1040  017A              	SECTION IGNORE
+1041  0000              
