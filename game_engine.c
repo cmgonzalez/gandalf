@@ -40,6 +40,13 @@ void game_loop(void) {
 
 
     while (!game_worldup && !game_over) {
+      /*Anim Bullets*/
+      if (game_check_time(bullet_time, TIME_BULLETS)) {
+        bullet_time = zx_clock();
+        if (bullet_count)
+          spr_play_bullets();
+      }
+
       /*Play animatios*/
       if (game_check_time(anim_time, TIME_ANIM)) {
         zx_border(INK_BLACK);
@@ -47,17 +54,13 @@ void game_loop(void) {
         if (anim_count)
           spr_play_anim();
       }
-      /*Anim Bullets*/
-      if (game_check_time(bullet_time, TIME_BULLETS)) {
-        bullet_time = zx_clock();
-        if (bullet_count)
-          spr_play_bullets();
-      }
+
       /*Each second aprox - update fps/score/phase left/phase advance*/
       if (game_check_time(frame_time, 100)) {
         frame_time = zx_clock();
         game_fps();
         game_respawn();
+
       }
       /*Enemies turn*/
       enemy_turn();

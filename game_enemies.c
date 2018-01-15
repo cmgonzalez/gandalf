@@ -315,17 +315,17 @@ unsigned char enemy_avoid_dead() {
 }
 
 void enemy_respawn(unsigned char f_anim) {
-
+  unsigned char i;
   s_lin1 = s_lin0;
   s_col1 = s_col0;
   index1 = spr_calc_index(s_lin1, s_col1);
-  sprite = 0;
-  while (sprite < SPR_P1) {
-    if (game_respawn_index[sprite] == index1) {
+  i = 0;
+  while (i < SPR_P1) {
+    if (game_respawn_index[i] == index1) {
       game_add_enemy(anim_respanwn[f_anim]);
       break;
     }
-    ++sprite;
+    ++i;
   }
 }
 
@@ -335,7 +335,7 @@ void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,
   // Get the first available sprite
   f_sprite = 0;
   while (f_sprite < SPR_P1) {
-    if (class[f_sprite] == 0) {
+    if (class[f_sprite] == 0 && game_respawn_time[f_sprite] == 0) {
       break;
     } else {
       f_sprite++;

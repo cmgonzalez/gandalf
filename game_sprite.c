@@ -684,6 +684,7 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
                   unsigned char f_tile, unsigned char f_end,
                   unsigned char f_loops, unsigned char f_respawn) {
   unsigned char f_anim;
+
   if (f_col < 31 && f_lin < SCR_LINS) {
     for (f_anim = 0; f_anim < 8; f_anim++) {
       if (anim_lin[f_anim] == 0xFF) {
@@ -713,7 +714,6 @@ void spr_play_anim(void) {
   unsigned char f_anim;
   unsigned int f_index;
 
-
   for (f_anim = 0; f_anim < 8; f_anim++) {
     if (anim_lin[f_anim] != 0xFF) {
 
@@ -727,8 +727,6 @@ void spr_play_anim(void) {
 
         ++anim_int[f_anim];
 
-
-
       } else {
         if (anim_loop[f_anim] == 0) {
           --anim_count;
@@ -739,10 +737,11 @@ void spr_play_anim(void) {
             index0 = spr_calc_index(s_lin0, s_col0);
             scr_map[index0] = game_match_back(index0); // TILE_EMPTY;
           }
+          NIRVANAP_halt();
           spr_back_repaint();
 
           if (anim_respanwn[f_anim]) {
-            // Respawn an enemy after anim...
+            // Respawn an enemy after an anim...
             enemy_respawn(f_anim);
           }
           // End Animation
@@ -838,7 +837,6 @@ unsigned char spr_colision_b2(void) {
 void spr_play_bullets(void) {
 
   unsigned char f_col0;
-  unsigned char f_sprite;
 
   for (bullet = 0; bullet < 8; ++bullet) {
     if (bullet_col[bullet] == 0xFF) {
@@ -925,88 +923,83 @@ void spr_play_bullets(void) {
 
       // Now we can move
       bullet_col[bullet] = f_col0;
-
       // Colission with sprites
-
       if (bullet == SPR_P1 && bullet_col[SPR_P1] != 0xFF) {
         // PLAYER BULLETS
-        for (f_sprite = 0; f_sprite < SPR_P1; ++f_sprite) {
-
-          if (spr_colision_b(f_sprite, bullet) && class[f_sprite] != 0) {
-            // Player Bullet hit an enemy
-            s_lin0 = lin[f_sprite];
-            s_col0 = col[f_sprite];
-            player_score_add(rand() % 6);
-            game_respawn_time[f_sprite] = zx_clock();
-            spr_destroy(f_sprite);
-            /*
-            if (bullet_col[f_sprite] != 0xFF) {
-              s_lin0 = bullet_lin[f_sprite];
-              s_col0 = bullet_col[f_sprite];
-              spr_back_repaint(); // restore background
-            };
-            */
-            // bullet_col[SPR_P1] = s_col0;
-            // bullet_lin[SPR_P1] = s_lin0;
-            spr_bullet_explode();
-            ay_fx_play(ay_effect_02);
-            f_sprite = SPR_P1; // Exit Loop
-          }
-        }
-        if (game_boss) {
-          // Player Bullet hit the boss
-          if (spr_colision_b2()) {
-            spr_bullet_explode();
-            --game_boss_hit;
-            game_update_stats();
-            if (game_boss_hit == 0) {
-              game_boss = 0;
-              game_boss_alive = 0;
-              spr_add_anim(boss_lin, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
-              spr_add_anim(boss_lin, boss_col + 2, TILE_ANIM_FIRE, 3, 0, 0);
-              spr_add_anim(boss_lin + 16, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
-              spr_add_anim(boss_lin + 16, boss_col + 2, TILE_ANIM_FIRE, 3, 0,
-                           0);
-              for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
-
-                if (bullet_col[tmp0] != 0xFF) {
-                  s_lin0 = bullet_lin[tmp0];
-                  s_col0 = bullet_col[tmp0];
-                  spr_back_repaint(); // restore background
-                }
-                bullet_col[tmp0] = 0xFF;
-                spr_destroy(tmp0);
-                game_respawn_time[tmp0] = 0;
-              }
-              game_boss_clear();
-            }
-          }
-        }
+        spr_bullet_player_colision();
       } else {
-        // Enemy Bullet hit on Player
-        // TODO REVIEW FOR AXES
-        if (spr_colision_b(SPR_P1, bullet)) {
-          ay_fx_play(ay_effect_06);
-          zx_border(INK_MAGENTA);
-          player_hit(10);
-          bullet_col[bullet] = s_col0;
-          spr_bullet_explode();
-          break;
-        }
+        // Enemy Bullet - TODO REVIEW AXES
+        spr_bullet_enemy_colision();
       }
     }
+
     if (bullet_col[bullet] != 0xFF && f_col0 < 32) {
-      // Draw Bullets
-
+      // Draw Bullet
       intrinsic_di();
-
       NIRVANAP_drawT_raw(bullet_tile[bullet] + bullet_colint[bullet], s_lin0,
                          f_col0);
       intrinsic_ei();
     }
   }
 }
+void spr_bullet_enemy_colision() {
+  if (spr_colision_b(SPR_P1, bullet)) {
+    ay_fx_play(ay_effect_06);
+    zx_border(INK_MAGENTA);
+    player_hit(10);
+    bullet_col[bullet] = s_col0;
+    spr_bullet_explode();
+  }
+}
 
+void spr_bullet_player_colision() {
+  unsigned char f_sprite;
+  // TODO BUGGY Respawn!!!!! FIX ME
+  f_sprite = 0;
+  // for (f_sprite = 0; f_sprite < SPR_P1; ++f_sprite) {
+  while (f_sprite < SPR_P1) {
+    if (class[f_sprite] != 0 && spr_colision_b(f_sprite, bullet)) {
+      // Player Bullet hit an enemy
+        game_respawn_time[f_sprite] = zx_clock();
+        s_lin0 = lin[f_sprite];
+        s_col0 = col[f_sprite];
+        player_score_add(rand() % 6);
+        spr_destroy(f_sprite);
+        spr_bullet_explode();
+        ay_fx_play(ay_effect_02);
+        break;
+    }
+    ++f_sprite;
+  }
+  if (game_boss) {
+    // Player Bullet hit the boss
+    if (spr_colision_b2()) {
+      spr_bullet_explode();
+      --game_boss_hit;
+      game_update_stats();
+      if (game_boss_hit == 0) {
+        game_boss = 0;
+        game_boss_alive = 0;
+        spr_add_anim(boss_lin, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
+        spr_add_anim(boss_lin, boss_col + 2, TILE_ANIM_FIRE, 3, 0, 0);
+        spr_add_anim(boss_lin + 16, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
+        spr_add_anim(boss_lin + 16, boss_col + 2, TILE_ANIM_FIRE, 3, 0, 0);
+        for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
+
+          if (bullet_col[tmp0] != 0xFF) {
+            s_lin0 = bullet_lin[tmp0];
+            s_col0 = bullet_col[tmp0];
+            spr_back_repaint(); // restore background
+          }
+          bullet_col[tmp0] = 0xFF;
+          spr_destroy(tmp0);
+          game_respawn_time[tmp0] = 0;
+        }
+        game_boss_clear();
+      }
+    }
+  }
+}
 void spr_bullet_explode() {
   spr_add_anim(bullet_lin[bullet], bullet_col[bullet], TILE_ANIM_FIRE, 3, 0, 0);
   --bullet_count;
