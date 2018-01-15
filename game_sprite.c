@@ -985,7 +985,6 @@ void spr_bullet_player_colision() {
         spr_add_anim(boss_lin + 16, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
         spr_add_anim(boss_lin + 16, boss_col + 2, TILE_ANIM_FIRE, 3, 0, 0);
         for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
-
           if (bullet_col[tmp0] != 0xFF) {
             s_lin0 = bullet_lin[tmp0];
             s_col0 = bullet_col[tmp0];

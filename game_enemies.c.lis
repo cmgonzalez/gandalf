@@ -1855,10 +1855,10 @@
 1855  069B  F1          	pop	af
 1856  069C  22 00 00    	ld	(_index1),hl
 1857  069F  0E 00       	ld	c,0x00
-1858  06A1              l_enemy_respawn_00103:
+1858  06A1              l_enemy_respawn_00105:
 1859  06A1  79          	ld	a, c
 1860  06A2  D6 07       	sub	a,0x07
-1861  06A4  30 2C       	jr	NC,l_enemy_respawn_00106
+1861  06A4  30 32       	jr	NC,l_enemy_respawn_00108
 1862  06A6  06 00       	ld	b,0x00
 1863  06A8  21 00 00    	ld	hl,_game_respawn_index
 1864  06AB  09          	add	hl, bc
@@ -1867,224 +1867,227 @@
 1867  06AF  21 00 00    	ld	hl,_index1
 1868  06B2  7E          	ld	a, (hl)
 1869  06B3  93          	sub	a, e
-1870  06B4  20 19       	jr	NZ,l_enemy_respawn_00102
+1870  06B4  20 1F       	jr	NZ,l_enemy_respawn_00104
 1871  06B6  23          	inc	hl
 1872  06B7  7E          	ld	a, (hl)
 1873  06B8  92          	sub	a, d
-1874  06B9  20 14       	jr	NZ,l_enemy_respawn_00102
-1875  06BB  3E 00       	ld	a, +((_anim_respanwn) & 0xFF)
-1876  06BD  DD 86 04    	add	a,(ix+4)
-1877  06C0  4F          	ld	c, a
-1878  06C1  3E 00       	ld	a, +((_anim_respanwn) / 256)
-1879  06C3  CE 00       	adc	a,0x00
-1880  06C5  47          	ld	b, a
-1881  06C6  0A          	ld	a, (bc)
-1882  06C7  F5          	push	af
-1883  06C8  33          	inc	sp
-1884  06C9  CD 00 00    	call	_game_add_enemy
-1885  06CC  33          	inc	sp
-1886  06CD  18 03       	jr	l_enemy_respawn_00106
-1887  06CF              l_enemy_respawn_00102:
-1888  06CF  0C          	inc	c
-1889  06D0  18 CF       	jr	l_enemy_respawn_00103
-1890  06D2              l_enemy_respawn_00106:
-1891  06D2  DD E1       	pop	ix
-1892  06D4  C9          	ret
-1893  06D5              	SECTION code_compiler
-1894  06D5              ;	---------------------------------
-1895  06D5              ; Function enemy_init
-1896  06D5              ; ---------------------------------
-1897  06D5              _enemy_init:
-1898  06D5  CD 00 00    	call	___sdcc_enter_ix
-1899  06D8  F5          	push	af
-1900  06D9  F5          	push	af
-1901  06DA  3B          	dec	sp
-1902  06DB  DD 36 FB 00 	ld	(ix-5),0x00
-1903  06DF              l_enemy_init_00105:
-1904  06DF  DD 7E FB    	ld	a,(ix-5)
-1905  06E2  D6 07       	sub	a,0x07
-1906  06E4  3E 00       	ld	a,0x00
-1907  06E6  17          	rla
-1908  06E7  5F          	ld	e, a
-1909  06E8  3E 00       	ld	a, +((_class) & 0xFF)
-1910  06EA  DD 86 FB    	add	a,(ix-5)
-1911  06ED  DD 77 FE    	ld	(ix-2),a
-1912  06F0  3E 00       	ld	a, +((_class) / 256)
-1913  06F2  CE 00       	adc	a,0x00
-1914  06F4  DD 77 FF    	ld	(ix-1),a
-1915  06F7  7B          	ld	a, e
-1916  06F8  B7          	or	a, a
-1917  06F9  28 20       	jr	Z,l_enemy_init_00128
-1918  06FB  DD 6E FE    	ld	l,(ix-2)
-1919  06FE  DD 66 FF    	ld	h,(ix-1)
-1920  0701  7E          	ld	a, (hl)
-1921  0702  B7          	or	a, a
-1922  0703  20 11       	jr	NZ,l_enemy_init_00102
-1923  0705  DD 6E FB    	ld	l,(ix-5)
-1924  0708  26 00       	ld	h,0x00
-1925  070A  29          	add	hl, hl
-1926  070B  01 00 00    	ld	bc,_game_respawn_time
-1927  070E  09          	add	hl, bc
-1928  070F  4E          	ld	c, (hl)
-1929  0710  23          	inc	hl
-1930  0711  7E          	ld	a,(hl)
-1931  0712  47          	ld	b,a
-1932  0713  B1          	or	a,c
-1933  0714  28 05       	jr	Z,l_enemy_init_00128
-1934  0716              l_enemy_init_00102:
-1935  0716  DD 34 FB    	inc	(ix-5)
-1936  0719  18 C4       	jr	l_enemy_init_00105
-1937  071B              l_enemy_init_00128:
-1938  071B  DD 4E FB    	ld	c,(ix-5)
-1939  071E  7B          	ld	a, e
-1940  071F  B7          	or	a, a
-1941  0720  CA 33 08    	jp	Z, l_enemy_init_00118
-1942  0723  DD 6E FE    	ld	l,(ix-2)
-1943  0726  DD 66 FF    	ld	h,(ix-1)
-1944  0729  DD 7E 06    	ld	a,(ix+6)
-1945  072C  77          	ld	(hl), a
-1946  072D  3E 00       	ld	a, +((_lin) & 0xFF)
-1947  072F  DD 86 FB    	add	a,(ix-5)
-1948  0732  5F          	ld	e, a
-1949  0733  3E 00       	ld	a, +((_lin) / 256)
-1950  0735  CE 00       	adc	a,0x00
-1951  0737  57          	ld	d, a
-1952  0738  DD 7E 04    	ld	a,(ix+4)
-1953  073B  12          	ld	(de), a
-1954  073C  3E 00       	ld	a, +((_col) & 0xFF)
-1955  073E  DD 86 FB    	add	a,(ix-5)
-1956  0741  5F          	ld	e, a
-1957  0742  3E 00       	ld	a, +((_col) / 256)
-1958  0744  CE 00       	adc	a,0x00
-1959  0746  57          	ld	d, a
-1960  0747  DD 7E 05    	ld	a,(ix+5)
-1961  074A  12          	ld	(de), a
-1962  074B  11 00 00    	ld	de,_state
-1963  074E  DD 6E FB    	ld	l,(ix-5)
-1964  0751  26 00       	ld	h,0x00
-1965  0753  19          	add	hl,de
-1966  0754  DD 75 FE    	ld	(ix-2),l
-1967  0757  DD 74 FF    	ld	(ix-1),h
-1968  075A  36 00       	ld	(hl),0x00
-1969  075C  11 00 00    	ld	de,_state_a+0
-1970  075F  DD 6E FB    	ld	l,(ix-5)
-1971  0762  26 00       	ld	h,0x00
-1972  0764  19          	add	hl, de
-1973  0765  36 00       	ld	(hl),0x00
-1974  0767  11 00 00    	ld	de,_jump_lin+0
-1975  076A  DD 6E FB    	ld	l,(ix-5)
-1976  076D  26 00       	ld	h,0x00
-1977  076F  19          	add	hl, de
-1978  0770  36 00       	ld	(hl),0x00
-1979  0772  11 00 00    	ld	de,_colint
-1980  0775  DD 6E FB    	ld	l,(ix-5)
-1981  0778  26 00       	ld	h,0x00
-1982  077A  19          	add	hl,de
-1983  077B  DD 75 FC    	ld	(ix-4),l
-1984  077E  DD 74 FD    	ld	(ix-3),h
-1985  0781  36 00       	ld	(hl),0x00
-1986  0783  DD 7E 07    	ld	a,(ix+7)
-1987  0786  3D          	dec	a
-1988  0787  20 0A       	jr	NZ,l_enemy_init_00109
-1989  0789  DD 6E FE    	ld	l,(ix-2)
-1990  078C  DD 66 FF    	ld	h,(ix-1)
-1991  078F  7E          	ld	a,(hl)
-1992  0790  F6 04       	or	a,0x04
-1993  0792  77          	ld	(hl), a
-1994  0793              l_enemy_init_00109:
-1995  0793  DD 7E 07    	ld	a,(ix+7)
-1996  0796  3C          	inc	a
-1997  0797  20 1F       	jr	NZ,l_enemy_init_00111
-1998  0799  DD 6E FE    	ld	l,(ix-2)
-1999  079C  DD 66 FF    	ld	h,(ix-1)
-2000  079F  7E          	ld	a,(hl)
-2001  07A0  F6 08       	or	a,0x08
-2002  07A2  77          	ld	(hl), a
-2003  07A3  3E 00       	ld	a, +((_sprite_frames) & 0xFF)
-2004  07A5  DD 86 06    	add	a,(ix+6)
-2005  07A8  5F          	ld	e, a
-2006  07A9  3E 00       	ld	a, +((_sprite_frames) / 256)
-2007  07AB  CE 00       	adc	a,0x00
-2008  07AD  57          	ld	d, a
-2009  07AE  1A          	ld	a, (de)
-2010  07AF  47          	ld	b, a
-2011  07B0  05          	dec	b
-2012  07B1  DD 6E FC    	ld	l,(ix-4)
-2013  07B4  DD 66 FD    	ld	h,(ix-3)
-2014  07B7  70          	ld	(hl), b
-2015  07B8              l_enemy_init_00111:
-2016  07B8  3E 00       	ld	a, +((_tile) & 0xFF)
-2017  07BA  81          	add	a, c
-2018  07BB  5F          	ld	e, a
-2019  07BC  3E 00       	ld	a, +((_tile) / 256)
-2020  07BE  CE 00       	adc	a,0x00
-2021  07C0  57          	ld	d, a
-2022  07C1  C5          	push	bc
-2023  07C2  D5          	push	de
-2024  07C3  69          	ld	l, c
-2025  07C4  CD 00 00    	call	_spr_tile
-2026  07C7  D1          	pop	de
-2027  07C8  C1          	pop	bc
-2028  07C9  7D          	ld	a,l
-2029  07CA  12          	ld	(de), a
-2030  07CB  69          	ld	l, c
-2031  07CC  26 00       	ld	h,0x00
-2032  07CE  29          	add	hl, hl
-2033  07CF  DD 75 FC    	ld	(ix-4),l
-2034  07D2  DD 74 FD    	ld	(ix-3),h
-2035  07D5  3E 00       	ld	a,+((_spr_timer) & 0xFF)
-2036  07D7  85          	add	a,l
-2037  07D8  DD 77 FE    	ld	(ix-2),a
-2038  07DB  3E 00       	ld	a, +((_spr_timer) / 256)
-2039  07DD  DD 8E FD    	adc	a,(ix-3)
-2040  07E0  DD 77 FF    	ld	(ix-1),a
-2041  07E3  ED 5B 00 00 	ld	de,(_curr_time)
-2042  07E7  DD 6E FE    	ld	l,(ix-2)
-2043  07EA  DD 66 FF    	ld	h,(ix-1)
-2044  07ED  73          	ld	(hl), e
-2045  07EE  23          	inc	hl
-2046  07EF  72          	ld	(hl), d
-2047  07F0  11 00 00    	ld	de,_last_time+0
-2048  07F3  DD 6E FC    	ld	l,(ix-4)
-2049  07F6  DD 66 FD    	ld	h,(ix-3)
-2050  07F9  19          	add	hl, de
-2051  07FA  AF          	xor	a, a
-2052  07FB  77          	ld	(hl), a
-2053  07FC  23          	inc	hl
-2054  07FD  77          	ld	(hl), a
-2055  07FE  06 00       	ld	b,0x00
-2056  0800  21 00 00    	ld	hl,_sprite_speed_alt
-2057  0803  09          	add	hl, bc
-2058  0804  36 00       	ld	(hl),0x00
-2059  0806  21 00 00    	ld	hl,_spr_count
-2060  0809  34          	inc	(hl)
-2061  080A  3A 00 00    	ld	a,(_game_boss)
-2062  080D  B7          	or	a, a
-2063  080E  20 23       	jr	NZ,l_enemy_init_00118
-2064  0810  3E 00       	ld	a, +((_bullet_col) & 0xFF)
-2065  0812  81          	add	a, c
-2066  0813  5F          	ld	e, a
-2067  0814  3E 00       	ld	a, +((_bullet_col) / 256)
-2068  0816  CE 00       	adc	a,0x00
-2069  0818  57          	ld	d, a
-2070  0819  1A          	ld	a, (de)
-2071  081A  FE FF       	cp	a,0xff
-2072  081C  28 12       	jr	Z,l_enemy_init_00113
-2073  081E  32 00 00    	ld	(_s_col0),a
-2074  0821  06 00       	ld	b,0x00
-2075  0823  21 00 00    	ld	hl,_bullet_lin
-2076  0826  09          	add	hl, bc
-2077  0827  7E          	ld	a, (hl)
-2078  0828  32 00 00    	ld	(_s_lin0),a
-2079  082B  D5          	push	de
-2080  082C  CD 00 00    	call	_spr_back_repaint
-2081  082F  D1          	pop	de
-2082  0830              l_enemy_init_00113:
-2083  0830  3E FF       	ld	a,0xff
-2084  0832  12          	ld	(de), a
-2085  0833              l_enemy_init_00118:
-2086  0833  DD F9       	ld	sp, ix
-2087  0835  DD E1       	pop	ix
-2088  0837  C9          	ret
-2089  0838              	SECTION IGNORE
-2090  0000              
+1874  06B9  20 1A       	jr	NZ,l_enemy_respawn_00104
+1875  06BB  3A 00 00    	ld	a,(_game_boss_alive)
+1876  06BE  B7          	or	a, a
+1877  06BF  28 17       	jr	Z,l_enemy_respawn_00108
+1878  06C1  3E 00       	ld	a, +((_anim_respanwn) & 0xFF)
+1879  06C3  DD 86 04    	add	a,(ix+4)
+1880  06C6  4F          	ld	c, a
+1881  06C7  3E 00       	ld	a, +((_anim_respanwn) / 256)
+1882  06C9  CE 00       	adc	a,0x00
+1883  06CB  47          	ld	b, a
+1884  06CC  0A          	ld	a, (bc)
+1885  06CD  F5          	push	af
+1886  06CE  33          	inc	sp
+1887  06CF  CD 00 00    	call	_game_add_enemy
+1888  06D2  33          	inc	sp
+1889  06D3  18 03       	jr	l_enemy_respawn_00108
+1890  06D5              l_enemy_respawn_00104:
+1891  06D5  0C          	inc	c
+1892  06D6  18 C9       	jr	l_enemy_respawn_00105
+1893  06D8              l_enemy_respawn_00108:
+1894  06D8  DD E1       	pop	ix
+1895  06DA  C9          	ret
+1896  06DB              	SECTION code_compiler
+1897  06DB              ;	---------------------------------
+1898  06DB              ; Function enemy_init
+1899  06DB              ; ---------------------------------
+1900  06DB              _enemy_init:
+1901  06DB  CD 00 00    	call	___sdcc_enter_ix
+1902  06DE  F5          	push	af
+1903  06DF  F5          	push	af
+1904  06E0  3B          	dec	sp
+1905  06E1  DD 36 FB 00 	ld	(ix-5),0x00
+1906  06E5              l_enemy_init_00105:
+1907  06E5  DD 7E FB    	ld	a,(ix-5)
+1908  06E8  D6 07       	sub	a,0x07
+1909  06EA  3E 00       	ld	a,0x00
+1910  06EC  17          	rla
+1911  06ED  5F          	ld	e, a
+1912  06EE  3E 00       	ld	a, +((_class) & 0xFF)
+1913  06F0  DD 86 FB    	add	a,(ix-5)
+1914  06F3  DD 77 FE    	ld	(ix-2),a
+1915  06F6  3E 00       	ld	a, +((_class) / 256)
+1916  06F8  CE 00       	adc	a,0x00
+1917  06FA  DD 77 FF    	ld	(ix-1),a
+1918  06FD  7B          	ld	a, e
+1919  06FE  B7          	or	a, a
+1920  06FF  28 20       	jr	Z,l_enemy_init_00128
+1921  0701  DD 6E FE    	ld	l,(ix-2)
+1922  0704  DD 66 FF    	ld	h,(ix-1)
+1923  0707  7E          	ld	a, (hl)
+1924  0708  B7          	or	a, a
+1925  0709  20 11       	jr	NZ,l_enemy_init_00102
+1926  070B  DD 6E FB    	ld	l,(ix-5)
+1927  070E  26 00       	ld	h,0x00
+1928  0710  29          	add	hl, hl
+1929  0711  01 00 00    	ld	bc,_game_respawn_time
+1930  0714  09          	add	hl, bc
+1931  0715  4E          	ld	c, (hl)
+1932  0716  23          	inc	hl
+1933  0717  7E          	ld	a,(hl)
+1934  0718  47          	ld	b,a
+1935  0719  B1          	or	a,c
+1936  071A  28 05       	jr	Z,l_enemy_init_00128
+1937  071C              l_enemy_init_00102:
+1938  071C  DD 34 FB    	inc	(ix-5)
+1939  071F  18 C4       	jr	l_enemy_init_00105
+1940  0721              l_enemy_init_00128:
+1941  0721  DD 4E FB    	ld	c,(ix-5)
+1942  0724  7B          	ld	a, e
+1943  0725  B7          	or	a, a
+1944  0726  CA 39 08    	jp	Z, l_enemy_init_00118
+1945  0729  DD 6E FE    	ld	l,(ix-2)
+1946  072C  DD 66 FF    	ld	h,(ix-1)
+1947  072F  DD 7E 06    	ld	a,(ix+6)
+1948  0732  77          	ld	(hl), a
+1949  0733  3E 00       	ld	a, +((_lin) & 0xFF)
+1950  0735  DD 86 FB    	add	a,(ix-5)
+1951  0738  5F          	ld	e, a
+1952  0739  3E 00       	ld	a, +((_lin) / 256)
+1953  073B  CE 00       	adc	a,0x00
+1954  073D  57          	ld	d, a
+1955  073E  DD 7E 04    	ld	a,(ix+4)
+1956  0741  12          	ld	(de), a
+1957  0742  3E 00       	ld	a, +((_col) & 0xFF)
+1958  0744  DD 86 FB    	add	a,(ix-5)
+1959  0747  5F          	ld	e, a
+1960  0748  3E 00       	ld	a, +((_col) / 256)
+1961  074A  CE 00       	adc	a,0x00
+1962  074C  57          	ld	d, a
+1963  074D  DD 7E 05    	ld	a,(ix+5)
+1964  0750  12          	ld	(de), a
+1965  0751  11 00 00    	ld	de,_state
+1966  0754  DD 6E FB    	ld	l,(ix-5)
+1967  0757  26 00       	ld	h,0x00
+1968  0759  19          	add	hl,de
+1969  075A  DD 75 FE    	ld	(ix-2),l
+1970  075D  DD 74 FF    	ld	(ix-1),h
+1971  0760  36 00       	ld	(hl),0x00
+1972  0762  11 00 00    	ld	de,_state_a+0
+1973  0765  DD 6E FB    	ld	l,(ix-5)
+1974  0768  26 00       	ld	h,0x00
+1975  076A  19          	add	hl, de
+1976  076B  36 00       	ld	(hl),0x00
+1977  076D  11 00 00    	ld	de,_jump_lin+0
+1978  0770  DD 6E FB    	ld	l,(ix-5)
+1979  0773  26 00       	ld	h,0x00
+1980  0775  19          	add	hl, de
+1981  0776  36 00       	ld	(hl),0x00
+1982  0778  11 00 00    	ld	de,_colint
+1983  077B  DD 6E FB    	ld	l,(ix-5)
+1984  077E  26 00       	ld	h,0x00
+1985  0780  19          	add	hl,de
+1986  0781  DD 75 FC    	ld	(ix-4),l
+1987  0784  DD 74 FD    	ld	(ix-3),h
+1988  0787  36 00       	ld	(hl),0x00
+1989  0789  DD 7E 07    	ld	a,(ix+7)
+1990  078C  3D          	dec	a
+1991  078D  20 0A       	jr	NZ,l_enemy_init_00109
+1992  078F  DD 6E FE    	ld	l,(ix-2)
+1993  0792  DD 66 FF    	ld	h,(ix-1)
+1994  0795  7E          	ld	a,(hl)
+1995  0796  F6 04       	or	a,0x04
+1996  0798  77          	ld	(hl), a
+1997  0799              l_enemy_init_00109:
+1998  0799  DD 7E 07    	ld	a,(ix+7)
+1999  079C  3C          	inc	a
+2000  079D  20 1F       	jr	NZ,l_enemy_init_00111
+2001  079F  DD 6E FE    	ld	l,(ix-2)
+2002  07A2  DD 66 FF    	ld	h,(ix-1)
+2003  07A5  7E          	ld	a,(hl)
+2004  07A6  F6 08       	or	a,0x08
+2005  07A8  77          	ld	(hl), a
+2006  07A9  3E 00       	ld	a, +((_sprite_frames) & 0xFF)
+2007  07AB  DD 86 06    	add	a,(ix+6)
+2008  07AE  5F          	ld	e, a
+2009  07AF  3E 00       	ld	a, +((_sprite_frames) / 256)
+2010  07B1  CE 00       	adc	a,0x00
+2011  07B3  57          	ld	d, a
+2012  07B4  1A          	ld	a, (de)
+2013  07B5  47          	ld	b, a
+2014  07B6  05          	dec	b
+2015  07B7  DD 6E FC    	ld	l,(ix-4)
+2016  07BA  DD 66 FD    	ld	h,(ix-3)
+2017  07BD  70          	ld	(hl), b
+2018  07BE              l_enemy_init_00111:
+2019  07BE  3E 00       	ld	a, +((_tile) & 0xFF)
+2020  07C0  81          	add	a, c
+2021  07C1  5F          	ld	e, a
+2022  07C2  3E 00       	ld	a, +((_tile) / 256)
+2023  07C4  CE 00       	adc	a,0x00
+2024  07C6  57          	ld	d, a
+2025  07C7  C5          	push	bc
+2026  07C8  D5          	push	de
+2027  07C9  69          	ld	l, c
+2028  07CA  CD 00 00    	call	_spr_tile
+2029  07CD  D1          	pop	de
+2030  07CE  C1          	pop	bc
+2031  07CF  7D          	ld	a,l
+2032  07D0  12          	ld	(de), a
+2033  07D1  69          	ld	l, c
+2034  07D2  26 00       	ld	h,0x00
+2035  07D4  29          	add	hl, hl
+2036  07D5  DD 75 FC    	ld	(ix-4),l
+2037  07D8  DD 74 FD    	ld	(ix-3),h
+2038  07DB  3E 00       	ld	a,+((_spr_timer) & 0xFF)
+2039  07DD  85          	add	a,l
+2040  07DE  DD 77 FE    	ld	(ix-2),a
+2041  07E1  3E 00       	ld	a, +((_spr_timer) / 256)
+2042  07E3  DD 8E FD    	adc	a,(ix-3)
+2043  07E6  DD 77 FF    	ld	(ix-1),a
+2044  07E9  ED 5B 00 00 	ld	de,(_curr_time)
+2045  07ED  DD 6E FE    	ld	l,(ix-2)
+2046  07F0  DD 66 FF    	ld	h,(ix-1)
+2047  07F3  73          	ld	(hl), e
+2048  07F4  23          	inc	hl
+2049  07F5  72          	ld	(hl), d
+2050  07F6  11 00 00    	ld	de,_last_time+0
+2051  07F9  DD 6E FC    	ld	l,(ix-4)
+2052  07FC  DD 66 FD    	ld	h,(ix-3)
+2053  07FF  19          	add	hl, de
+2054  0800  AF          	xor	a, a
+2055  0801  77          	ld	(hl), a
+2056  0802  23          	inc	hl
+2057  0803  77          	ld	(hl), a
+2058  0804  06 00       	ld	b,0x00
+2059  0806  21 00 00    	ld	hl,_sprite_speed_alt
+2060  0809  09          	add	hl, bc
+2061  080A  36 00       	ld	(hl),0x00
+2062  080C  21 00 00    	ld	hl,_spr_count
+2063  080F  34          	inc	(hl)
+2064  0810  3A 00 00    	ld	a,(_game_boss)
+2065  0813  B7          	or	a, a
+2066  0814  20 23       	jr	NZ,l_enemy_init_00118
+2067  0816  3E 00       	ld	a, +((_bullet_col) & 0xFF)
+2068  0818  81          	add	a, c
+2069  0819  5F          	ld	e, a
+2070  081A  3E 00       	ld	a, +((_bullet_col) / 256)
+2071  081C  CE 00       	adc	a,0x00
+2072  081E  57          	ld	d, a
+2073  081F  1A          	ld	a, (de)
+2074  0820  FE FF       	cp	a,0xff
+2075  0822  28 12       	jr	Z,l_enemy_init_00113
+2076  0824  32 00 00    	ld	(_s_col0),a
+2077  0827  06 00       	ld	b,0x00
+2078  0829  21 00 00    	ld	hl,_bullet_lin
+2079  082C  09          	add	hl, bc
+2080  082D  7E          	ld	a, (hl)
+2081  082E  32 00 00    	ld	(_s_lin0),a
+2082  0831  D5          	push	de
+2083  0832  CD 00 00    	call	_spr_back_repaint
+2084  0835  D1          	pop	de
+2085  0836              l_enemy_init_00113:
+2086  0836  3E FF       	ld	a,0xff
+2087  0838  12          	ld	(de), a
+2088  0839              l_enemy_init_00118:
+2089  0839  DD F9       	ld	sp, ix
+2090  083B  DD E1       	pop	ix
+2091  083D  C9          	ret
+2092  083E              	SECTION IGNORE
+2093  0000              

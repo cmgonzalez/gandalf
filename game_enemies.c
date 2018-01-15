@@ -322,7 +322,7 @@ void enemy_respawn(unsigned char f_anim) {
   i = 0;
   while (i < SPR_P1) {
     if (game_respawn_index[i] == index1) {
-      game_add_enemy(anim_respanwn[f_anim]);
+      if (game_boss_alive) game_add_enemy(anim_respanwn[f_anim]);
       break;
     }
     ++i;
