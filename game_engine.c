@@ -187,6 +187,25 @@ void game_draw_screen(void) {
   }
 }
 
+void game_boss_kill(void){
+  game_boss = 0;
+  game_boss_alive = 0;
+  spr_add_anim(boss_lin, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(boss_lin, boss_col + 2, TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(boss_lin + 16, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
+  spr_add_anim(boss_lin + 16, boss_col + 2, TILE_ANIM_FIRE, 3, 0, 0);
+  for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
+    if (bullet_col[tmp0] != 0xFF) {
+      s_lin0 = bullet_lin[tmp0];
+      s_col0 = bullet_col[tmp0];
+      spr_back_repaint(); // restore background
+    }
+    bullet_col[tmp0] = 0xFF;
+    spr_destroy(tmp0);
+    game_respawn_time[tmp0] = 0;
+  }
+  game_boss_clear();
+}
 void game_add_enemy(unsigned char enemy_tile_index) {
 
   if (enemy_tile_index != INDEX_ENEMY_BOSS1) {

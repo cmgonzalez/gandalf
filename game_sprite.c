@@ -759,9 +759,11 @@ void spr_play_anim(void) {
 
 void spr_bullet_fireball(signed char f_inc, unsigned char f_tile) {
   if (abs(s_lin0 - bullet_lin0[bullet]) <= 8) {
-    bullet_lin[bullet] = bullet_lin[bullet] + f_inc;
-    s_lin0 = bullet_lin[bullet];
+    s_lin0 = s_lin0 + f_inc;
+    bullet_lin[bullet] = s_lin0;
   } else {
+    s_lin0 = s_lin0 - f_inc;
+    bullet_lin[bullet] = s_lin0;
     bullet_class[bullet] = f_tile;
   }
 }
@@ -846,22 +848,22 @@ void spr_play_bullets(void) {
     s_col0 = bullet_col[bullet];
     f_col0 = s_col0;
     spr_back_repaint(); // restore background
-
-    if (bullet_class[bullet] == BULLET_FIREBALL_UP) {
-
-      spr_bullet_fireball(2, BULLET_FIREBALL_DOWN);
-    }
-    if (bullet_class[bullet] == BULLET_FIREBALL_DOWN) {
-
-      spr_bullet_fireball(2, BULLET_FIREBALL_DOWN);
-    }
-    if (bullet_class[bullet] == BULLET_AXE) {
-
+    switch (bullet_class[bullet]) {
+      case BULLET_FIREBALL_UP:
+      spr_bullet_fireball(-2, BULLET_FIREBALL_DOWN);
+      break;
+      case BULLET_FIREBALL_DOWN:
+      spr_bullet_fireball(2, BULLET_FIREBALL_UP);
+      break;
+      case BULLET_AXE:
       spr_bullet_axe();
       if (bullet_col[bullet] == 0xFF) {
         continue;
       }
+      break;
     }
+
+
     // Move Horizontal Bullets
     if (bullet_dir[bullet] == 0xFF) {
       // Move Right
@@ -960,14 +962,14 @@ void spr_bullet_player_colision() {
   while (f_sprite < SPR_P1) {
     if (class[f_sprite] != 0 && spr_colision_b(f_sprite, bullet)) {
       // Player Bullet hit an enemy
-        game_respawn_time[f_sprite] = zx_clock();
-        s_lin0 = lin[f_sprite];
-        s_col0 = col[f_sprite];
-        player_score_add(rand() % 6);
-        spr_destroy(f_sprite);
-        spr_bullet_explode();
-        ay_fx_play(ay_effect_02);
-        break;
+      game_respawn_time[f_sprite] = zx_clock();
+      s_lin0 = lin[f_sprite];
+      s_col0 = col[f_sprite];
+      player_score_add(rand() % 6);
+      spr_destroy(f_sprite);
+      spr_bullet_explode();
+      ay_fx_play(ay_effect_02);
+      break;
     }
     ++f_sprite;
   }
@@ -978,23 +980,7 @@ void spr_bullet_player_colision() {
       --game_boss_hit;
       game_update_stats();
       if (game_boss_hit == 0) {
-        game_boss = 0;
-        game_boss_alive = 0;
-        spr_add_anim(boss_lin, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
-        spr_add_anim(boss_lin, boss_col + 2, TILE_ANIM_FIRE, 3, 0, 0);
-        spr_add_anim(boss_lin + 16, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
-        spr_add_anim(boss_lin + 16, boss_col + 2, TILE_ANIM_FIRE, 3, 0, 0);
-        for (tmp0 = 0; tmp0 < SPR_P1; ++tmp0) {
-          if (bullet_col[tmp0] != 0xFF) {
-            s_lin0 = bullet_lin[tmp0];
-            s_col0 = bullet_col[tmp0];
-            spr_back_repaint(); // restore background
-          }
-          bullet_col[tmp0] = 0xFF;
-          spr_destroy(tmp0);
-          game_respawn_time[tmp0] = 0;
-        }
-        game_boss_clear();
+        game_boss_kill();
       }
     }
   }

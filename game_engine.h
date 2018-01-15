@@ -46,6 +46,8 @@ extern unsigned char game_shoot_fire_boss( unsigned char f_tile, unsigned char f
 extern void          game_obj_set( unsigned int f_index ) __z88dk_fastcall;
 extern unsigned char game_obj_chk( unsigned int f_index ) __z88dk_fastcall;
 extern void          game_obj_clear( );
+extern void          game_boss_kill(void);
+
 extern void          game_boss_clear( );
 extern void          game_attribs( );
 unsigned char        game_match_back( unsigned int f_index );
