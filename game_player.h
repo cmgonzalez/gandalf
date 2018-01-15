@@ -29,6 +29,7 @@ extern void          player_score_add(unsigned int f_score) __z88dk_fastcall;
 extern void          player_hit_platform_clear(void);
 extern void          player_check_floor(void);
 extern void          player_pick_item(void);
+extern void          player_anim_tile(void);
 extern void          player_tile( unsigned char f_tile, unsigned char f_inc );
 extern void          player_check_stairs(unsigned char f_inc) __z88dk_fastcall;
 extern void          player_check_stairs_vertical(signed char f_inc);

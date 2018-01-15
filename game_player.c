@@ -330,9 +330,8 @@ unsigned char player_collision(void) {
               return 0;
             }
             if (class[sprite] == MUSHROOM_EXTRA) {
-
-              player_1up();
               player_pick_mushroom();
+              player_1up();
               return 0;
             }
             ay_fx_play(ay_effect_06);
@@ -363,6 +362,7 @@ void player_1up() {
     zx_print_str(12, 12, "1 UP!");
     game_colour_message(12, 12, 12 + 9, 25, 0);
     game_update_stats();
+    spr_unflatten();
   }
 }
 
@@ -419,6 +419,27 @@ void player_check_stairs(unsigned char f_inc) __z88dk_fastcall {
   }
 }
 
+void player_anim_tile(void) {
+  //RETUNS ON S_TILE1!
+  /*Stair Anim*/
+  s_tile1 = tile[SPR_P1] + colint[SPR_P1];
+  if (player_onstair) { //} && ((lin[SPR_P1] & 3) == 0)) {
+    ++player_anim_stair;
+
+    if (player_anim_stair > 1) {
+      player_anim_stair = 0;
+    }
+    s_tile1 = tile[SPR_P1] + player_anim_stair + 4;
+  } else {
+    if (player_onfire) {
+      if (BIT_CHK(s_state, STAT_DIRR)) {
+        s_tile1 = TILE_P1_RIGHT;
+      } else {
+        s_tile1 = TILE_P1_RIGHT + TILE_P1_LEN;
+      }
+    }
+  }
+}
 void player_tile(unsigned char f_tile, unsigned char f_inc) {
 
   tile[SPR_P1] = spr_tile_dir(f_tile, sprite, f_inc);
@@ -693,6 +714,7 @@ void player_score_add(unsigned int f_score) __z88dk_fastcall {
       spr_flatten();
       zx_print_str(12, 12, "LEVEL UP!");
       game_colour_message(12, 12, 12 + 9, 60, 0);
+      spr_unflatten();
     }
   }
 

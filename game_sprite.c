@@ -418,7 +418,7 @@ void spr_page_map(void) {
 
 unsigned char spr_redraw(void) {
   unsigned char f_lin8;
-  s_tile1 = tile[sprite] + colint[sprite];
+
   s_col1 = col[sprite];
   s_lin1 = lin[sprite];
 
@@ -426,26 +426,10 @@ unsigned char spr_redraw(void) {
     /* Column or lin Movement */
     // Speed UP hack
     if (sprite == SPR_P1) {
-      /*Stair Anim*/
-
-      if (player_onstair) { //} && ((lin[SPR_P1] & 3) == 0)) {
-        ++player_anim_stair;
-
-        if (player_anim_stair > 1) {
-          player_anim_stair = 0;
-        }
-        s_tile1 = tile[SPR_P1] + player_anim_stair + 4;
-      } else {
-        if (player_onfire) {
-          if (BIT_CHK(s_state, STAT_DIRR)) {
-            s_tile1 = TILE_P1_RIGHT;
-          } else {
-            s_tile1 = TILE_P1_RIGHT + TILE_P1_LEN;
-          }
-        }
-      }
+      player_anim_tile(); //Returns to s_tile1
       spr_back_repaint();
     } else {
+      s_tile1 = tile[sprite] + colint[sprite];
       if ((s_lin1 & 7) == 0) {
         spr_back_repaint();
       } else {
@@ -463,6 +447,7 @@ unsigned char spr_redraw(void) {
     NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
     return 1;
   } else {
+    s_tile1 = tile[sprite] + colint[sprite];
     if (s_tile1 != s_tile0) {
       /* Internal Movement, no clean needed */
       NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
@@ -1033,6 +1018,19 @@ void spr_btile_paint_back() {
 void spr_flatten(void) {
   unsigned char i;
   for (i = 0; i <= SPR_P1; ++i) {
+
+    s_lin1 = *SPRITELIN(i);
+    s_col1 = *SPRITECOL(i);
+    s_tile1 = *SPRITEVAL(i);
     NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
+    NIRVANAP_drawT(s_tile1, s_lin1, s_col1);
   }
+}
+
+void spr_unflatten(void) {
+  //Only for SPR_P1
+  zx_border(INK_RED);
+  player_anim_tile(); //Returns to s_tile1
+  NIRVANAP_drawT(s_tile1, lin[SPR_P1], col[SPR_P1]);
+
 }
