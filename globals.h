@@ -73,7 +73,7 @@
 #define GOTA                          1 //VERTICAL
 #define DRAGON                        2 //VERTICAL
 #define BAT                           3 //VERTICAL
-#define WYVERN                        4 //VERTICAL
+#define GHOST                        4 //VERTICAL
 #define SPIDER                        5 //VERTICAL
 #define MUSHROOM_VITA                 6  //WALKER
 #define MUSHROOM_MANA                 7  //WALKER
@@ -144,11 +144,11 @@
 #define DIRINC_ENEMY_BAT              0
 #define INDEX_BAT                     108
 
-#define TILE_ENEMY_WYVERN             174
-#define FRAMES_ENEMY_WYVERN           2
-#define SPEED_ENEMY_WYVERN            2
-#define DIRINC_ENEMY_WYVERN           0
-#define INDEX_WYVERN                  109
+#define TILE_ENEMY_GHOST             174
+#define FRAMES_ENEMY_GHOST           2
+#define SPEED_ENEMY_GHOST            2
+#define DIRINC_ENEMY_GHOST           0
+#define INDEX_GHOST                  109
 
 #define TILE_ENEMY_SPIDER             176
 #define FRAMES_ENEMY_SPIDER           2
@@ -174,21 +174,21 @@
 #define DIRINC_ENEMY_BAT_H            0
 #define INDEX_BAT_H                   113
 
-#define TILE_ENEMY_MUSH_VITA          192
+#define TILE_ENEMY_MUSH_VITA          185
 #define FRAMES_ENEMY_MUSH_VITA        2
 #define SPEED_ENEMY_MUSH_VITA         2
 #define DIRINC_ENEMY_MUSH_VITA        0
 #define INDEX_MUSH_VITA_L             120
 #define INDEX_MUSH_VITA_R             121
 
-#define TILE_ENEMY_MUSH_MANA           194
+#define TILE_ENEMY_MUSH_MANA           187
 #define FRAMES_ENEMY_MUSH_MANA         2
 #define SPEED_ENEMY_MUSH_MANA          2
 #define DIRINC_ENEMY_MUSH_MANA         0
 #define INDEX_MUSH_MANA_L              122
 #define INDEX_MUSH_MANA_R              123
 
-#define TILE_ENEMY_MUSH_EXTRA          196
+#define TILE_ENEMY_MUSH_EXTRA          189
 #define FRAMES_ENEMY_MUSH_EXTRA        2
 #define SPEED_ENEMY_MUSH_EXTRA         2
 #define DIRINC_ENEMY_MUSH_EXTRA        0
@@ -197,8 +197,11 @@
 
 //BOSSES
 #define INDEX_ENEMY_BOSS1              116
-#define TILE_ENEMY_BOSS1               216
-#define TILE_TITLE                     212
+#define TILE_ENEMY_BOSS1               200
+
+
+
+#define TILE_TITLE                     204
 
 
 
@@ -222,6 +225,7 @@
 #define TILE_ANIM_PICK                132
 #define TILE_ANIM_FIRE                135
 #define TILE_ANIM_RESPAWN             138
+#define TILE_ANIM_DEAD                141
 #define TILE_P1_KILL                  76
 #define TILE_P1_HITR                  76
 

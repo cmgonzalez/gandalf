@@ -95,8 +95,8 @@ void main(void) {
   while (1) {
     /*Init Objects*/
     game_obj_clear();
-    game_world = 0;
-    scr_curr = 0xFF; // 255 equals read default screen from map
+    game_world = 1;
+    scr_curr = 2;//0xFF; // 255 equals read default screen from map
 
     /*Player Init*/
     player_max_mana = GAME_START_MAX_MANA;

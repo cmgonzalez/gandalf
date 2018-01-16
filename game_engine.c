@@ -223,9 +223,23 @@ void game_add_enemy(unsigned char enemy_tile_index) {
     if (game_boss == 0 && game_boss_alive) {
       boss_lin = s_lin1;
       boss_col = s_col1;
-      zx_print_ink(INK_WHITE);
-      z80_delay_ms(200);
-      boss_tile = TILE_ENEMY_BOSS1;
+      //zx_print_ink(INK_WHITE);
+      //z80_delay_ms(200);
+      switch (game_world) {
+        case 0:
+        boss_tile = TILE_ENEMY_BOSS1;
+        break;
+        case 1:
+        boss_tile = TILE_ENEMY_BOSS1 + 4 + 12;
+        break;
+        case 2:
+        boss_tile = TILE_ENEMY_BOSS1 + 8 + 12;
+        break;
+        case 3:
+        boss_tile = TILE_ENEMY_BOSS1 + 12 + 12;
+        break;
+      }
+      //boss_tile = TILE_ENEMY_BOSS1 + (game_world * 4);
       boss_stat = 0;
       BIT_SET(boss_stat, STAT_JUMP);
       game_boss = 1;
@@ -887,8 +901,8 @@ void menu_main_print(unsigned char s_row, unsigned char s_col,
   NIRVANAP_halt();
   zx_paper_fill(INK_BLACK | PAPER_BLACK);
   zx_print_ink(INK_WHITE);
-  // Gandalf Log
-  NIRVANAP_spriteT(0, TILE_TITLE, 32, 11);
+  // Gandalf Logo
+  NIRVANAP_spriteT(0, TILE_TITLE    , 32, 11);
   NIRVANAP_spriteT(1, TILE_TITLE + 1, 32, 13);
   NIRVANAP_spriteT(2, TILE_TITLE + 2, 32, 15);
   NIRVANAP_spriteT(3, TILE_TITLE + 3, 32, 17);

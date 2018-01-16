@@ -47,7 +47,7 @@ void enemy_turn(void) {
           s_lin0 = lin[sprite];
           s_col0 = col[sprite];
           spr_destroy(sprite);
-          spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
+          spr_add_anim(s_lin0, s_col0, TILE_ANIM_DEAD, 3, 0, 0);
         }
       }
       state[sprite] = s_state;
@@ -62,37 +62,36 @@ void boss_turn() {
   if (game_check_time(boss_time, 6)) {
     s_col1 = boss_col;
     s_lin1 = boss_lin;
-    if (game_world == 0) {
 
-      // MOVE VERTICAL
-      if (BIT_CHK(boss_stat, STAT_JUMP)) {
-        boss_lin = boss_lin - 2;
-        if (boss_lin < 48) {
-          BIT_CLR(boss_stat, STAT_JUMP);
-          BIT_SET(boss_stat, STAT_FALL);
-        }
-      } else {
-        boss_lin = boss_lin + 2;
-        if (boss_lin >= (GAME_LIN_FLOOR - 64)) {
-          BIT_CLR(boss_stat, STAT_FALL);
-          BIT_SET(boss_stat, STAT_JUMP);
-        }
+    // MOVE VERTICAL
+    if (BIT_CHK(boss_stat, STAT_JUMP)) {
+      boss_lin = boss_lin - 2;
+      if (boss_lin < 48) {
+        BIT_CLR(boss_stat, STAT_JUMP);
+        BIT_SET(boss_stat, STAT_FALL);
       }
-      if (game_check_time(boss_time_fire, 64)) {
-        --boss_col;
-        --boss_col;
-        game_shoot_fire_boss(TILE_FIREBALL, 1);
-        boss_time_fire = zx_clock();
-        ++boss_col;
-        ++boss_col;
+    } else {
+      boss_lin = boss_lin + 2;
+      if (boss_lin >= (GAME_LIN_FLOOR - 64)) {
+        BIT_CLR(boss_stat, STAT_FALL);
+        BIT_SET(boss_stat, STAT_JUMP);
       }
     }
+    if (game_check_time(boss_time_fire, 64)) {
+      --boss_col;
+      --boss_col;
+      game_shoot_fire_boss(TILE_FIREBALL, 1);
+      boss_time_fire = zx_clock();
+      ++boss_col;
+      ++boss_col;
+    }
+
     // PAINT
     spr_hack = 1;
     NIRVANAP_halt();
     intrinsic_di();
     if (boss_inc) {
-      boss_inc = 0;
+      /*boss_inc = 0;
       s_col0 = s_col1;
       s_lin0 = s_lin1;
       spr_back_repaint();
@@ -103,10 +102,19 @@ void boss_turn() {
       s_lin0 = s_lin1;
       spr_back_repaint();
       NIRVANAP_drawT_raw(boss_tile, boss_lin, boss_col + 1);
-      NIRVANAP_drawT_raw(boss_tile + 12, boss_lin + 16, boss_col + 1);
+      NIRVANAP_drawT_raw(boss_tile + 12, boss_lin + 16, boss_col + 1);*/
+      boss_inc = 0;
+      NIRVANAP_drawT_raw(boss_tile +  0, boss_lin, s_col1);
+      NIRVANAP_drawT_raw(boss_tile +  1, boss_lin, s_col1 + 2);
+      NIRVANAP_drawT_raw(boss_tile + 12, boss_lin + 16, s_col1);
+      NIRVANAP_drawT_raw(boss_tile + 13, boss_lin + 16, s_col1 + 2);
     } else {
       boss_inc = 1;
-      if (boss_lin > s_lin1) {
+      NIRVANAP_drawT_raw(boss_tile + 2 +  0, boss_lin, s_col1);
+      NIRVANAP_drawT_raw(boss_tile + 2 +  1, boss_lin, s_col1 + 2);
+      NIRVANAP_drawT_raw(boss_tile + 2 + 12, boss_lin + 16, s_col1);
+      NIRVANAP_drawT_raw(boss_tile + 2 + 13, boss_lin + 16, s_col1 + 2);
+      /*if (boss_lin > s_lin1) {
         s_col0 = s_col1 + 1;
         s_lin0 = s_lin1;
         spr_back_repaint();
@@ -120,6 +128,7 @@ void boss_turn() {
       NIRVANAP_drawT_raw(boss_tile + 2, boss_lin, s_col1 + 2);
       NIRVANAP_drawT_raw(boss_tile + 13, boss_lin + 16, s_col1);
       NIRVANAP_drawT_raw(boss_tile + 14, boss_lin + 16, s_col1 + 2);
+      */
     }
     intrinsic_ei();
     spr_hack = 0;
@@ -322,7 +331,8 @@ void enemy_respawn(unsigned char f_anim) {
   i = 0;
   while (i < SPR_P1) {
     if (game_respawn_index[i] == index1) {
-      if (game_boss_alive) game_add_enemy(anim_respanwn[f_anim]);
+      if (game_boss_alive)
+        game_add_enemy(anim_respanwn[f_anim]);
       break;
     }
     ++i;

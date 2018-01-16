@@ -953,6 +953,7 @@ void spr_bullet_player_colision() {
       player_score_add(rand() % 6);
       spr_destroy(f_sprite);
       spr_bullet_explode();
+      spr_add_anim(s_lin0, s_col0, TILE_ANIM_DEAD, 3, 0, 0);
       ay_fx_play(ay_effect_02);
       break;
     }
