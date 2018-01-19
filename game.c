@@ -35,8 +35,8 @@
 void main(void) {
   unsigned int counter;
 
-  game_god_mode = 1; // GAME_GOD_MODE;
-  game_inmune = 1;   // GAME_INMUNE;
+  game_god_mode = 0; // GAME_GOD_MODE;
+  game_inmune = 0;   // GAME_INMUNE;
   // INTERRUPTS ARE DISABLED
   // RESET AY CHIP
   ay_reset();
@@ -95,8 +95,8 @@ void main(void) {
   while (1) {
     /*Init Objects*/
     game_obj_clear();
-    game_world = 1;
-    scr_curr = 2;//0xFF; // 255 equals read default screen from map
+    game_world = 0;//1;//0;
+    scr_curr =   0xff;//2;//14;//0xFF; // 255 equals read default screen from map
 
     /*Player Init*/
     player_max_mana = GAME_START_MAX_MANA;

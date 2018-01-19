@@ -40,11 +40,21 @@ void game_loop(void) {
 
 
     while (!game_worldup && !game_over) {
+
+
+      /*Enemies turn*/
+      enemy_turn();
+      /*Player 1 turn*/
+      //sprite = SPR_P1;
+      player_turn();
+      if (game_boss) {
+        boss_turn();
+      }
       /*Anim Bullets*/
       if (game_check_time(bullet_time, TIME_BULLETS)) {
         bullet_time = zx_clock();
         if (bullet_count)
-          spr_play_bullets();
+          spr_bullets_play();
       }
 
       /*Play animatios*/
@@ -62,14 +72,7 @@ void game_loop(void) {
         game_respawn();
 
       }
-      /*Enemies turn*/
-      enemy_turn();
-      if (game_boss) {
-        boss_turn();
-      }
-      /*Player 1 turn*/
-      sprite = SPR_P1;
-      player_turn();
+
       ++loop_count;
       ++fps;
     }
@@ -125,7 +128,8 @@ void game_draw_screen(void) {
 
   f_mush = 0;
   spr_count = 0;
-  while (spr_count < SPR_P1) {
+  spr_init_effects();
+  while (spr_count < SPR_P1) { //TODO SINGLE CLEAR FUNC
     // Clear enemies related tables
     game_respawn_index[spr_count] = 0;
     game_respawn_tile[spr_count] = 0;
@@ -375,7 +379,7 @@ void game_round_init(void) {
   /* Phase Draw Start */
   // spr_draw_clear();
   /*Draw Platforms*/
-
+  spr_init_effects();
   game_print_header();
   game_print_footer();
   spr_page_map();

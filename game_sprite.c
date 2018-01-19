@@ -403,7 +403,7 @@ void spr_page_map(void) {
   map_heigth = l_world_h;
   map_paper = l_paper;
 
-  spr_init_anim_bullets();
+  spr_init_effects();
   if (map_paper_last != map_paper) {
     spr_btile_paint_back();
   }
@@ -655,9 +655,9 @@ void spr_tile_paint(unsigned char f_tile, unsigned char f_lin,
   }
 }
 
-void spr_init_anim_bullets(void) {
+void spr_init_effects(void) {
   unsigned char f_anim;
-  for (f_anim = 0; f_anim < 8; f_anim++) {
+  for (f_anim = 0; f_anim <= SPR_P1; f_anim++) {
     anim_lin[f_anim] = 0xFF;
     bullet_col[f_anim] = 0xFF;
   }
@@ -821,14 +821,17 @@ unsigned char spr_colision_b2(void) {
   return 0;
 }
 
-void spr_play_bullets(void) {
+
+void spr_bullets_play(void) {
 
   unsigned char f_col0;
+
 
   for (bullet = 0; bullet < 8; ++bullet) {
     if (bullet_col[bullet] == 0xFF) {
       continue;
     }
+    zx_border(INK_CYAN);
     s_lin0 = bullet_lin[bullet];
     s_col0 = bullet_col[bullet];
     f_col0 = s_col0;
@@ -933,9 +936,9 @@ void spr_bullet_enemy_colision() {
   if (spr_colision_b(SPR_P1, bullet)) {
     ay_fx_play(ay_effect_06);
     zx_border(INK_MAGENTA);
-    player_hit(10);
     bullet_col[bullet] = s_col0;
     spr_bullet_explode();
+    player_hit(10);
   }
 }
 
@@ -974,7 +977,7 @@ void spr_bullet_player_colision() {
 void spr_bullet_explode() {
   spr_add_anim(bullet_lin[bullet], bullet_col[bullet], TILE_ANIM_FIRE, 3, 0, 0);
   --bullet_count;
-  bullet_col[bullet] = 0XFF;
+  bullet_col[bullet] = 0xFF;
   ay_fx_play(ay_effect_11);
 }
 

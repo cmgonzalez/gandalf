@@ -47,7 +47,7 @@ void player_init(unsigned char f_lin, unsigned char f_col,
   player_hit_col = 0;
   player_hit_lin = 0;
   player_slide = 0;
-  player_onstair = 0; //TODO TO STAT
+  player_onstair = 0; // TODO TO STAT
   player_onfire = 0;
   NIRVANAP_spriteT(SPR_P1, f_tile, f_lin, f_col);
 }
@@ -420,7 +420,7 @@ void player_check_stairs(unsigned char f_inc) __z88dk_fastcall {
 }
 
 void player_anim_tile(void) {
-  //RETUNS ON S_TILE1!
+  // RETUNS ON S_TILE1!
   /*Stair Anim*/
   s_tile1 = tile[SPR_P1] + colint[SPR_P1];
   if (player_onstair) { //} && ((lin[SPR_P1] & 3) == 0)) {
@@ -956,18 +956,17 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
 }
 
 void player_lost_life() {
-  unsigned char f_anim;
+  unsigned char i;
   ay_fx_play(ay_effect_18);
   player_vita = 0;
   game_update_stats();
   s_lin0 = lin[SPR_P1];
   s_col0 = col[SPR_P1];
-  spr_init_anim_bullets();
-  for (f_anim = 0; f_anim < 8; f_anim++) {
-    NIRVANAP_spriteT(f_anim, TILE_EMPTY, 0, 0);
-    anim_lin[f_anim] = 0xFF;
+  spr_init_effects();
+  for (i = 0; i <= SPR_P1; i++) {
+    NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
   }
-  anim_count = 0;
+
   NIRVANAP_halt();
   // Player Explode
   spr_add_anim(s_lin0 - 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
@@ -977,30 +976,25 @@ void player_lost_life() {
   spr_add_anim(s_lin0 + 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
   zx_border(INK_BLACK);
   // Animate Explotion
-  f_anim = 1;
+  i = 1;
   anim_time = zx_clock();
-  while (f_anim) {
+  while (i) {
     if (game_check_time(anim_time, TIME_ANIM_PLAYER_EXPODE)) {
       anim_time = zx_clock();
       if (anim_count) {
         spr_play_anim();
       } else {
-        f_anim = 0;
+        i = 0;
       }
     }
   }
-  // Clear Sprites
-  for (sprite = 0; sprite < SPR_P1; ++sprite) {
-    if (class[SPR_P1] != 0) {
-      NIRVANAP_spriteT(sprite, tile[SPR_P1] + colint[SPR_P1], lin[SPR_P1],
-                       col[SPR_P1]);
+  // Restore Sprites
+  for (i = 0; i < SPR_P1; ++i) {
+    if (class[i] != 0) {
+      NIRVANAP_spriteT(i, tile[i] + colint[i], lin[i], col[i]);
     }
-    // Clean Sprites
-    class[SPR_P1] = 0;
-    // Clean Bullets
-    bullet_col[SPR_P1] = 0xFF;
-  }
 
+  }
   // Player lost life
   --player_lives;
   player_mana = GAME_START_MAX_MANA;
