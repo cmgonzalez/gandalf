@@ -38,6 +38,7 @@
 
 #define TILE_EMPTY                    0
 #define TILE_EMPTY_DARK               29
+#define TILE_EMPTY_DARK_A             24
 #define TILE_WORLD_EXIT               57
 #define TILE_BACKGROUND_S             0  //START OF BACKGROUND
 #define TILE_BACKGROUND_E             35 //END OF BACKGROUND

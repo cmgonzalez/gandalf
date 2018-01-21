@@ -822,6 +822,11 @@ unsigned char game_match_back(unsigned int f_index) {
       (scr_map[f_index - 1] == TILE_EMPTY_DARK )) { // || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
     return TILE_EMPTY_DARK;
   }
+  if ((f_index > 1) && ((f_index & 15) != 0) &&
+      (scr_map[f_index - 1] == TILE_EMPTY_DARK_A )) { // || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
+    return TILE_EMPTY_DARK_A;
+  }
+
   return TILE_EMPTY;
 }
 

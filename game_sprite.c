@@ -247,7 +247,7 @@ unsigned char spr_page_left() {
 }
 
 unsigned char spr_page_down() {
-  tmp1 = 1 + (scr_curr / map_heigth);
+  tmp1 = 1 + (scr_curr / map_width);
   if (tmp1 < map_heigth && (!game_boss || game_god_mode)) {
     scr_curr = scr_curr + map_width;
     spr_page_map();
@@ -831,7 +831,7 @@ void spr_bullets_play(void) {
     if (bullet_col[bullet] == 0xFF) {
       continue;
     }
-    zx_border(INK_CYAN);
+
     s_lin0 = bullet_lin[bullet];
     s_col0 = bullet_col[bullet];
     f_col0 = s_col0;
