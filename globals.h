@@ -32,8 +32,7 @@
 #define GAME_MAX_LEVEL                20
 #define GAME_MAX_MANA                 200
 #define GAME_MAX_VITA                 200
-#define GAME_TOTAL_CLASSES            16  //Total class of enemies
-#define GAME_TOTAL_INDEX_CLASSES      19  //Total class of enemies index, the same enemy can be left/right etc...
+
 /* Map foreground tiles */
 
 #define TILE_EMPTY                    0
@@ -91,6 +90,8 @@
 #define SNAKE                         18 //
 #define BAT_H                         19 //
 #define DEVIL                         20
+#define GAME_TOTAL_CLASSES            16  //Total class of enemies
+#define GAME_TOTAL_INDEX_CLASSES      21  //Total class of enemies variations, the same enemy can be left/right etc...
 
 #define E_HORIZONTAL                  1
 #define E_VERTICAL                    2

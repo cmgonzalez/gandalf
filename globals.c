@@ -224,52 +224,32 @@ unsigned char map_paper_last;
 //# #
 //#
 //###############################################################################################
-unsigned char sprite_speed[] = {
-    2,// PLAYER
-    3,// GOTA
-    1,// DRAGON
-    2,// BAT
-  10,// GHOST
-    2,// SPIDER
-    2,// MUSHROOM_VITA
-    2,// MUSHROOM_MANA
-    2,// MUSHROOM_EXTRA
-    1,// FIRE
-    1,// PIRANHA
-    4,// SKELETON
-    3,// ORC
-    1,// WARG
-    4,// DWARF
-    6,// ELF
-    8,// PLANT
-    0,// TRAP
-    8,// SNAKE
-    1,// BAT_H
-    0,// DEVIL
-};
 
-unsigned char sprite_frames[] = { //TODO REPLACE CONSTANT WITH FIXED VALUES TO SIMPLIFY
-  4,// PLAYER
-  0,// GOTA
-  2,// DRAGON
-  2,// BAT
-  2,// GHOST
-  2,// SPIDER
-  2,// MUSHROOM_VITA
-  2,// MUSHROOM_MANA
-  2,// MUSHROOM_EXTRA
-  1,// FIRE
-  1,// PIRANHA
-  4,// SKELETON
-  4,// ORC
-  2,// WARG
-  4,// DWARF
-  4,// ELF
-  2,// PLANT
-  0,// TRAP
-  2,// SNAKE
-  3,// BAT_H
-  0,// DEVIL
+//Enemy intialization variables, based on index on map array, used along GAME_TOTAL_INDEX_CLASSES.
+unsigned char spr_init[] = {
+  //TILE INDEX ON MAP FILE, CLASS OF ENEMY TO CREATE, SPRITE DIRECTION IF APLLY
+  96, SKELETON, DIR_LEFT,
+  97, SKELETON, DIR_RIGHT,
+  98, ORC, DIR_LEFT,
+  99, ORC, DIR_RIGHT,
+  100, WARG, DIR_LEFT,
+  101, WARG, DIR_RIGHT,
+  102, DWARF, DIR_LEFT,
+  103, DWARF, DIR_RIGHT,
+  104, ELF, DIR_LEFT,
+  105, ELF, DIR_RIGHT,
+  106, DRAGON, DIR_NONE,
+  107, DRAGON, DIR_NONE,
+  108, BAT, DIR_NONE,
+  109, GHOST, DIR_RIGHT,
+  110, SPIDER, DIR_NONE,
+  111, PLANT, DIR_NONE,
+  112, SNAKE, DIR_NONE,
+  113, BAT_H, DIR_NONE,
+  114, FIRE, DIR_NONE,
+  115, PIRANHA, DIR_NONE,
+  116, GHOST, DIR_LEFT,
+  117, DEVIL, DIR_NONE
 };
 
 unsigned char sprite_kind[] = {
@@ -293,7 +273,31 @@ unsigned char sprite_kind[] = {
   E_STATIC,// TRAP
   E_STATIC,// SNAKE
   E_HORIZONTAL,// BAT_H
-  E_STATIC,// DEVIL
+  E_GHOST,// DEVIL
+};
+
+unsigned char sprite_speed[] = {
+    2,// PLAYER
+    3,// GOTA
+    1,// DRAGON
+    2,// BAT
+   12,// GHOST
+    2,// SPIDER
+    2,// MUSHROOM_VITA
+    2,// MUSHROOM_MANA
+    2,// MUSHROOM_EXTRA
+    1,// FIRE
+    1,// PIRANHA
+    4,// SKELETON
+    3,// ORC
+    1,// WARG
+    4,// DWARF
+    6,// ELF
+    8,// PLANT
+    0,// TRAP
+    8,// SNAKE
+    1,// BAT_H
+    8,// DEVIL
 };
 
 //Sprite tile and animation frames for init, used with GAME_TOTAL_CLASSES
@@ -307,6 +311,7 @@ unsigned char spr_map_tile[] = {
   DRAGON            ,168        ,2,
   BAT               ,172        ,0,
   GHOST             ,192        ,2,
+  DEVIL             ,174        ,0,
   SPIDER            ,176        ,0,
   PLANT             ,178        ,0,
   SNAKE             ,180        ,0,
@@ -318,30 +323,35 @@ unsigned char spr_map_tile[] = {
   MUSHROOM_EXTRA    ,189        ,0
 };
 
-//Enemy intialization variables, based on index on map array, used along GAME_TOTAL_INDEX_CLASSES.
-unsigned char spr_init[] = {
-  //TILE INDEX ON MAP FILE, CLASS OF ENEMY TO CREATE, SPRITE DIRECTION IF APLLY
-  96, SKELETON, DIR_LEFT,
-  97, SKELETON, DIR_RIGHT,
-  98, ORC, DIR_LEFT,
-  99, ORC, DIR_RIGHT,
-  100, WARG, DIR_LEFT,
-  101, WARG, DIR_RIGHT,
-  102, DWARF, DIR_LEFT,
-  103, DWARF, DIR_RIGHT,
-  104, ELF, DIR_LEFT,
-  105, ELF, DIR_RIGHT,
-  106, DRAGON, DIR_NONE,
-  107, DRAGON, DIR_NONE,
-  108, BAT, DIR_NONE,
-  109, GHOST, DIR_NONE,
-  110, SPIDER, DIR_NONE,
-  111, PLANT, DIR_NONE,
-  112, SNAKE, DIR_NONE,
-  113, BAT_H, DIR_NONE,
-  114, FIRE, DIR_NONE,
-  115, PIRANHA, DIR_NONE
+unsigned char sprite_frames[] = { //TODO REPLACE CONSTANT WITH FIXED VALUES TO SIMPLIFY
+  4,// PLAYER
+  0,// GOTA
+  2,// DRAGON
+  2,// BAT
+  2,// GHOST
+  2,// SPIDER
+  2,// MUSHROOM_VITA
+  2,// MUSHROOM_MANA
+  2,// MUSHROOM_EXTRA
+  1,// FIRE
+  1,// PIRANHA
+  4,// SKELETON
+  4,// ORC
+  2,// WARG
+  4,// DWARF
+  4,// ELF
+  2,// PLANT
+  0,// TRAP
+  2,// SNAKE
+  3,// BAT_H
+  2,// DEVIL
 };
+
+
+
+
+
+
 
 unsigned int player_lvl_table[] = {
     100,   500,   1000,  2000,  4000,  6000,  7000,  8000,  9000,  10000,

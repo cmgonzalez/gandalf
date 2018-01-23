@@ -166,34 +166,48 @@ void enemy_move(void) {
   case E_VERTICAL:
     enemy_vertical();
     break;
-    case E_GHOST:
-      enemy_ghost();
-      break;
+  case E_GHOST:
+    enemy_ghost();
+    break;
   }
 }
 
 void enemy_ghost() {
-spr_back_repaint();
+  unsigned char v;
+  v = 0;
+
   if (col[sprite] < col[SPR_P1]) {
     BIT_CLR(s_state, STAT_DIRL);
     BIT_SET(s_state, STAT_DIRR);
     tile[sprite] = spr_tile(sprite);
     spr_move_right();
+    v = 1;
   }
   if (col[sprite] > col[SPR_P1]) {
     BIT_CLR(s_state, STAT_DIRR);
     BIT_SET(s_state, STAT_DIRL);
     tile[sprite] = spr_tile(sprite);
     spr_move_left();
+    v = 1;
   }
 
-  if (lin[sprite] > lin[SPR_P1]) {
-    spr_move_up();
+  if (s_col0 == col[sprite]) {
+    if (lin[sprite] > lin[SPR_P1]) {
+      spr_move_up();
+    }
+    if (lin[sprite] < lin[SPR_P1]) {
+      spr_move_down();
+    }
+    if (v == 0 && s_lin0 != lin[sprite]) {
+      ++colint[sprite];
+      if (colint[sprite] == sprite_frames[class[sprite]]) {
+        colint[sprite] = 0;
+      }
+    }
+  } else {
+    spr_back_repaint();
+    s_col0 = col[sprite];
   }
-  if (lin[sprite] < lin[SPR_P1]) {
-    spr_move_down();
-  }
-
 }
 
 void enemy_static() {
@@ -224,7 +238,7 @@ void enemy_vertical() {
     if (spr_move_up()) {
       BIT_CLR(s_state, STAT_JUMP);
       BIT_SET(s_state, STAT_FALL);
-      if ( class[sprite] == FIRE || class[sprite] == PIRANHA ) {
+      if (class[sprite] == FIRE || class[sprite] == PIRANHA) {
         tile[sprite] = tile[sprite] - 1;
       }
     }
@@ -232,7 +246,7 @@ void enemy_vertical() {
     if (spr_move_down()) {
       BIT_CLR(s_state, STAT_FALL);
       BIT_SET(s_state, STAT_JUMP);
-      if ( class[sprite] == FIRE || class[sprite] == PIRANHA ) {
+      if (class[sprite] == FIRE || class[sprite] == PIRANHA) {
         tile[sprite] = tile[sprite] + 1;
       }
     }
