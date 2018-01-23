@@ -163,6 +163,7 @@ void game_draw_screen(void) {
       NIRVANAP_drawT_raw(scr_map[index1], s_lin1, s_col1);
 
     } else {
+
       if (scr_map[index1] < INDEX_MUSH_VITA_L) {
         // ENEMIES
         if (spr_count < 8 && game_boss_alive) {
@@ -210,11 +211,12 @@ void game_boss_kill(void){
   }
   game_boss_clear();
 }
+
 void game_add_enemy(unsigned char enemy_tile_index) {
 
   if (enemy_tile_index != INDEX_ENEMY_BOSS1) {
     tmp0 = 0;
-    while (tmp0 < GAME_TOTAL_INDEX_CLASSES) {
+    while (tmp0 <= GAME_TOTAL_INDEX_CLASSES) {
       tmp1 = tmp0 * 3;
       if (spr_init[tmp1] == enemy_tile_index) {
         enemy_init(s_lin1, s_col1, spr_init[tmp1+1] , spr_init[tmp1+2] );
@@ -469,14 +471,16 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
       // Stopper Tile only afect enemies
       f_tile = 0xFF;
     }
-    if (class[sprite] <= SPIDER) {
+    if ( sprite_kind[class[sprite]] == E_VERTICAL) {
       // VERTICAL ENEMIES
       if (f_tile <= TILE_ITEM_E) {
         return 0;
       } else {
         return f_tile;
       }
-    } else {
+    }
+
+    if ( sprite_kind[class[sprite]] == E_HORIZONTAL || sprite_kind[class[sprite]] == E_WALK) {
       // HORIZONTAL ENEMIES
       if (sprite_horizontal_check) {
         f_check = TILE_CEIL;
