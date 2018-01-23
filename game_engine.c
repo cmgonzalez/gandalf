@@ -480,7 +480,7 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
       }
     }
 
-    if ( sprite_kind[class[sprite]] == E_HORIZONTAL || sprite_kind[class[sprite]] == E_WALK) {
+    if ( sprite_kind[class[sprite]] == E_HORIZONTAL || sprite_kind[class[sprite]] == E_WALK || sprite_kind[class[sprite]] == E_GOTA) {
       // HORIZONTAL ENEMIES
       if (sprite_horizontal_check) {
         f_check = TILE_CEIL;

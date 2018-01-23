@@ -169,6 +169,25 @@ void enemy_move(void) {
   case E_GHOST:
     enemy_ghost();
     break;
+  case E_GOTA:
+    enemy_gota();
+    break;
+  }
+}
+
+void enemy_gota() {
+
+  if (colint[sprite] == 0) {
+    if (spr_move_down()) {
+      colint[sprite] = 1;
+    }
+  } else {
+    colint[sprite]++;
+    if (colint[sprite] == sprite_frames[class[sprite]]) {
+      // Respawn!
+      lin[sprite] =16*( game_respawn_index[sprite] / 16);
+      colint[sprite] = 0;
+    }
   }
 }
 

@@ -91,13 +91,14 @@
 #define BAT_H                         19 //
 #define DEVIL                         20
 #define GAME_TOTAL_CLASSES            16  //Total class of enemies
-#define GAME_TOTAL_INDEX_CLASSES      21  //Total class of enemies variations, the same enemy can be left/right etc...
+#define GAME_TOTAL_INDEX_CLASSES      22  //Total class of enemies variations, the same enemy can be left/right etc...
 
 #define E_HORIZONTAL                  1
 #define E_VERTICAL                    2
 #define E_WALK                        3
 #define E_STATIC                      4
 #define E_GHOST                       5
+#define E_GOTA                        6
 
 
 //MUSHROM'S INIT
