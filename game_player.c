@@ -580,6 +580,7 @@ void player_pick_item(void) {
 }
 
 unsigned char player_hit_platform(void) {
+ unsigned char i, j;
 
   if ((player_hit_lin == 0) && (lin[SPR_P1] > 16) &&
       (scr_map[index1] >= TILE_HIT)) {
@@ -616,56 +617,51 @@ unsigned char player_hit_platform(void) {
     }
     if (scr_map[index1] == TILE_SPECIAL ||
         scr_map[index1] == TILE_HIDDEN_BRICK) {
-
-      tmp0 = 0;
+      i = 0;
 
       if (game_boss && game_mush_count > 0) {
         return 0;
       }
 
-      while (tmp0 < SPR_P1) {
-        if (mush_index[tmp0] == index1) {
+      while (i < SPR_P1) {
+
+        if (mush_index[i] == index1) {
           s_lin1 = ((lin[SPR_P1] >> 4) << 4) - 32;
           s_col1 = (col[SPR_P1] >> 1) << 1;
-          tmp = 0;
-          while (tmp < SPR_P1) {
-            if (mush_index[tmp] == index1) {
+          j = 0;
+          while (j < SPR_P1) {
+            if (mush_index[j] == index1) {
               break;
             }
-            ++tmp;
+            ++j;
           }
           ay_fx_play(ay_effect_07);
 
-          switch (mush_class[tmp]) {
+
+          switch (mush_class[j]) {
           case INDEX_MUSH_VITA_L:
             zx_border(INK_RED);
             enemy_init(s_lin1, s_col1, MUSHROOM_VITA, DIR_LEFT);
-
             break;
           case INDEX_MUSH_VITA_R:
             zx_border(INK_RED);
             enemy_init(s_lin1, s_col1, MUSHROOM_VITA, DIR_RIGHT);
-
             break;
           case INDEX_MUSH_MANA_R:
             zx_border(INK_BLUE);
             enemy_init(s_lin1, s_col1, MUSHROOM_MANA, DIR_RIGHT);
-
             break;
           case INDEX_MUSH_MANA_L:
             zx_border(INK_BLUE);
             enemy_init(s_lin1, s_col1, MUSHROOM_MANA, DIR_LEFT);
-
             break;
           case INDEX_MUSH_EXTRA_R:
             zx_border(INK_GREEN);
             enemy_init(s_lin1, s_col1, MUSHROOM_EXTRA, DIR_RIGHT);
-
             break;
           case INDEX_MUSH_EXTRA_L:
             zx_border(INK_GREEN);
             enemy_init(s_lin1, s_col1, MUSHROOM_EXTRA, DIR_LEFT);
-
             break;
           }
           ++game_mush_count;
@@ -684,7 +680,7 @@ unsigned char player_hit_platform(void) {
             NIRVANAP_drawT(TILE_NOSPECIAL, s_lin1 + 16, s_col1);
           }
         }
-        ++tmp0;
+        ++i;
       }
     }
     ay_fx_play(ay_effect_02);
@@ -713,7 +709,7 @@ void player_score_add(unsigned int f_score) __z88dk_fastcall {
       game_update_stats();
       spr_flatten();
       zx_print_str(12, 12, "LEVEL UP!");
-      game_colour_message(12, 12, 12 + 9, 60, 0);
+      game_colour_message(12, 12, 12+9, 60, 0);
       spr_unflatten();
     }
   }

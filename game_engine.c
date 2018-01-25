@@ -38,14 +38,12 @@ void game_loop(void) {
   game_round_init();
   while (!game_over) {
 
-
     while (!game_worldup && !game_over) {
-
 
       /*Enemies turn*/
       enemy_turn();
       /*Player 1 turn*/
-      //sprite = SPR_P1;
+      // sprite = SPR_P1;
       player_turn();
       if (game_boss) {
         boss_turn();
@@ -70,7 +68,6 @@ void game_loop(void) {
         frame_time = zx_clock();
         game_fps();
         game_respawn();
-
       }
 
       ++loop_count;
@@ -129,7 +126,7 @@ void game_draw_screen(void) {
   f_mush = 0;
   spr_count = 0;
   spr_init_effects();
-  while (spr_count < SPR_P1) { //TODO SINGLE CLEAR FUNC
+  while (spr_count < SPR_P1) { // TODO SINGLE CLEAR FUNC
     // Clear enemies related tables
     game_respawn_index[spr_count] = 0;
     game_respawn_tile[spr_count] = 0;
@@ -164,7 +161,7 @@ void game_draw_screen(void) {
 
     } else {
 
-      if (scr_map[index1] < INDEX_MUSH_VITA_L) {
+      if (scr_map[index1] <= INDEX_ENEMY_BOSS1) {
         // ENEMIES
         if (spr_count < 8 && game_boss_alive) {
           game_respawn_index[spr_count] = index1;
@@ -192,7 +189,7 @@ void game_draw_screen(void) {
   }
 }
 
-void game_boss_kill(void){
+void game_boss_kill(void) {
   game_boss = 0;
   game_boss_alive = 0;
   spr_add_anim(boss_lin, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
@@ -219,7 +216,7 @@ void game_add_enemy(unsigned char enemy_tile_index) {
     while (tmp0 <= GAME_TOTAL_INDEX_CLASSES) {
       tmp1 = tmp0 * 3;
       if (spr_init[tmp1] == enemy_tile_index) {
-        enemy_init(s_lin1, s_col1, spr_init[tmp1+1] , spr_init[tmp1+2] );
+        enemy_init(s_lin1, s_col1, spr_init[tmp1 + 1], spr_init[tmp1 + 2]);
         tmp0 = 0xFF;
       } else {
         ++tmp0;
@@ -229,23 +226,23 @@ void game_add_enemy(unsigned char enemy_tile_index) {
     if (game_boss == 0 && game_boss_alive) {
       boss_lin = s_lin1;
       boss_col = s_col1;
-      //zx_print_ink(INK_WHITE);
-      //z80_delay_ms(200);
+      // zx_print_ink(INK_WHITE);
+      // z80_delay_ms(200);
       switch (game_world) {
-        case 0:
+      case 0:
         boss_tile = TILE_ENEMY_BOSS1;
         break;
-        case 1:
+      case 1:
         boss_tile = TILE_ENEMY_BOSS1 + 4 + 12;
         break;
-        case 2:
+      case 2:
         boss_tile = TILE_ENEMY_BOSS1 + 8 + 12;
         break;
-        case 3:
+      case 3:
         boss_tile = TILE_ENEMY_BOSS1 + 12 + 12;
         break;
       }
-      //boss_tile = TILE_ENEMY_BOSS1 + (game_world * 4);
+      // boss_tile = TILE_ENEMY_BOSS1 + (game_world * 4);
       boss_stat = 0;
       BIT_SET(boss_stat, STAT_JUMP);
       game_boss = 1;
@@ -455,6 +452,8 @@ unsigned int game_check_map(unsigned char f_lin, unsigned char f_col) {
 unsigned char game_check_cell(int f_index) __z88dk_fastcall {
   unsigned char f_tile;
   unsigned char f_check;
+  unsigned char f_kind;
+  unsigned char f_class;
   // OUT OFF SCREEN
   if (f_index > GAME_SCR_MAX_INDEX) {
     return 1;
@@ -463,24 +462,41 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
   f_tile = scr_map[f_index];
 
   if (sprite != SPR_P1) {
+    f_class = class[sprite];
+    f_kind = sprite_kind[f_class];
+    if (f_kind == E_GHOST  ) {
+      return 0;
+    }
     if (f_tile == 0xFF) {
       // Animation
-      f_tile = TILE_EMPTY;
+      return 0;
     }
     if (f_tile == TILE_STOPPER) {
-      // Stopper Tile only afect enemies
-      f_tile = 0xFF;
+      return 1;
     }
-    if ( sprite_kind[class[sprite]] == E_VERTICAL) {
-      // VERTICAL ENEMIES
-      if (f_tile <= TILE_ITEM_E) {
-        return 0;
+
+
+
+    if (f_kind == E_VERTICAL) {
+      if (f_class == FIRE || f_class == PIRANHA) {
+        if (f_tile <= TILE_FLOOR) {
+          return 0;
+        } else {
+          return f_tile;
+        }
       } else {
-        return f_tile;
+        // VERTICAL ENEMIES
+        if (f_tile <= TILE_ITEM_E) {
+          return 0;
+        } else {
+          return f_tile;
+        }
       }
     }
 
-    if ( sprite_kind[class[sprite]] == E_HORIZONTAL || sprite_kind[class[sprite]] == E_WALK || sprite_kind[class[sprite]] == E_GOTA) {
+    if (f_kind == E_HORIZONTAL ||
+        f_kind == E_WALK ||
+        f_kind == E_GOTA) {
       // HORIZONTAL ENEMIES
       if (sprite_horizontal_check) {
         f_check = TILE_CEIL;
@@ -561,7 +577,6 @@ void game_paint_attrib_lin_h(unsigned char f_start, unsigned char f_end,
 
 void game_paint_attrib_lin_osd(unsigned char f_start, unsigned char f_end,
                                unsigned char f_lin) {
-
 
   for (tmp_uc = f_start; tmp_uc < f_end; ++tmp_uc) {
     NIRVANAP_paintC(attrib_osd, f_lin, tmp_uc);
@@ -699,34 +714,45 @@ unsigned char game_shoot_fire_boss(unsigned char f_tile, unsigned char f_dir) {
     return 0;
   }
 
-  if (bullet_col[f_sprite] == 0xFF) {
-    ++bullet_count;
-    bullet_dir[f_sprite] = 0;
-    bullet_lin0[f_sprite] = boss_lin;
-    bullet_col0[f_sprite] = boss_col;
-    bullet_lin[f_sprite] = boss_lin;
-    bullet_frames[f_sprite] = 2;
+  // if (bullet_col[f_sprite] == 0xFF) {
+  ++bullet_count;
+  bullet_dir[f_sprite] = 0;
+  if (game_world != 1) {
+    bullet_lin0[f_sprite] = boss_lin + 16;
     bullet_class[f_sprite] = BULLET_FIREBALL_UP;
-    bullet_max[f_sprite] = 8;
-    index1 = spr_calc_index(boss_lin, boss_col);
-    if (f_dir) {
-      // Left
-      if (boss_col < 1)
-        return 1;
-      bullet_col[f_sprite] = boss_col;
-      bullet_tile[f_sprite] = f_tile + 2;
-      bullet_dir[f_sprite] = 0x01;
-      bullet_colint[f_sprite] = 2;
+  } else {
+    bullet_class[f_sprite] = BULLET_FIREBALL;
+    if (tmp0 == 0) {
+      bullet_lin0[f_sprite] = boss_lin - 8; // Dual Fire
     } else {
-      // Right n default
-      if (boss_col > 29)
-        return 1;
-      bullet_col[f_sprite] = boss_col;
-      bullet_tile[f_sprite] = f_tile;
-      bullet_dir[f_sprite] = 0xFF;
-      bullet_colint[f_sprite] = 0xFF;
+      bullet_lin0[f_sprite] = boss_lin + 24; // Dual Fire
     }
   }
+  bullet_col0[f_sprite] = boss_col;
+  bullet_col[f_sprite] = boss_col;
+  bullet_lin[f_sprite] = bullet_lin0[f_sprite];
+  bullet_frames[f_sprite] = 2;
+
+  bullet_max[f_sprite] = 8;
+  index1 = spr_calc_index(boss_lin, boss_col);
+  if (f_dir) {
+    // Left
+    if (boss_col < 1)
+      return 1;
+
+    bullet_tile[f_sprite] = f_tile + 2;
+    bullet_dir[f_sprite] = 0x01;
+    bullet_colint[f_sprite] = 2;
+  } else {
+    // Right n default
+    if (boss_col > 29)
+      return 1;
+    bullet_col[f_sprite] = boss_col;
+    bullet_tile[f_sprite] = f_tile;
+    bullet_dir[f_sprite] = 0xFF;
+    bullet_colint[f_sprite] = 0xFF;
+  }
+  //}
   return 0;
 }
 
@@ -823,11 +849,13 @@ void game_attribs() {
 
 unsigned char game_match_back(unsigned int f_index) {
   if ((f_index > 1) && ((f_index & 15) != 0) &&
-      (scr_map[f_index - 1] == TILE_EMPTY_DARK )) { // || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
+      (scr_map[f_index - 1] ==
+       TILE_EMPTY_DARK)) { // || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
     return TILE_EMPTY_DARK;
   }
   if ((f_index > 1) && ((f_index & 15) != 0) &&
-      (scr_map[f_index - 1] == TILE_EMPTY_DARK_A )) { // || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
+      (scr_map[f_index - 1] ==
+       TILE_EMPTY_DARK_A)) { // || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
     return TILE_EMPTY_DARK_A;
   }
 
@@ -915,7 +943,7 @@ void menu_main_print(unsigned char s_row, unsigned char s_col,
   zx_paper_fill(INK_BLACK | PAPER_BLACK);
   zx_print_ink(INK_WHITE);
   // Gandalf Logo
-  NIRVANAP_spriteT(0, TILE_TITLE    , 32, 11);
+  NIRVANAP_spriteT(0, TILE_TITLE, 32, 11);
   NIRVANAP_spriteT(1, TILE_TITLE + 1, 32, 13);
   NIRVANAP_spriteT(2, TILE_TITLE + 2, 32, 15);
   NIRVANAP_spriteT(3, TILE_TITLE + 3, 32, 17);
@@ -1000,5 +1028,5 @@ unsigned int menu_define_key() {
       ++tmp0;
     }
   }
-  //return 0;
+  // return 0;
 }

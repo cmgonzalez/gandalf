@@ -90,8 +90,10 @@
 #define SNAKE                         18 //
 #define BAT_H                         19 //
 #define DEVIL                         20
-#define GAME_TOTAL_CLASSES            16  //Total class of enemies
-#define GAME_TOTAL_INDEX_CLASSES      22  //Total class of enemies variations, the same enemy can be left/right etc...
+#define FIRE_S                        21 //
+
+#define GAME_TOTAL_CLASSES            20  //Total class of enemies
+#define GAME_TOTAL_INDEX_CLASSES      23  //Total class of enemies variations, the same enemy can be left/right etc...
 
 #define E_HORIZONTAL                  1
 #define E_VERTICAL                    2
@@ -102,18 +104,18 @@
 
 
 //MUSHROM'S INIT
-#define INDEX_MUSH_VITA_L             120
-#define INDEX_MUSH_VITA_R             121
+#define INDEX_MUSH_VITA_L             121
+#define INDEX_MUSH_VITA_R             122
 
-#define INDEX_MUSH_MANA_L              122
-#define INDEX_MUSH_MANA_R              123
+#define INDEX_MUSH_MANA_L             123
+#define INDEX_MUSH_MANA_R             124
 
-#define INDEX_MUSH_EXTRA_L             124
-#define INDEX_MUSH_EXTRA_R             125
+#define INDEX_MUSH_EXTRA_L            125
+#define INDEX_MUSH_EXTRA_R            126
 
 //BOSSES
-#define INDEX_ENEMY_BOSS1              127
-#define TILE_ENEMY_BOSS1               200
+#define INDEX_ENEMY_BOSS1             120
+#define TILE_ENEMY_BOSS1              200
 
 
 
@@ -274,6 +276,7 @@
 #define BULLET_FIREBALL_UP           0x02
 #define BULLET_FIREBALL_DOWN         0x03
 #define BULLET_AXE                   0x04
+#define BULLET_FIREBALL              0x05
 
 
 typedef uint16_t (*JOYFUNC)(udk_t *);
