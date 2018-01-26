@@ -30,7 +30,6 @@ extern void			     game_loop(void);
 extern unsigned int  game_check_map(unsigned char f_lin, unsigned char f_col);
 extern unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall;
 extern void			     game_print_score(void);
-//extern void			     game_paint_attrib(unsigned char e_r1) __z88dk_fastcall;
 extern void			     game_paint_attrib_lin(unsigned char f_start,unsigned char f_end,unsigned char f_lin);
 extern void			     game_paint_attrib_lin_h(unsigned char f_start,unsigned char f_end,unsigned char f_lin);
 extern void			     game_paint_attrib_lin_osd(unsigned char f_start,unsigned char f_end,unsigned char f_lin);
@@ -50,7 +49,7 @@ extern void          game_boss_kill(void);
 extern void          game_boss_clear( );
 extern void          game_attribs( );
 unsigned char        game_match_back(unsigned int f_index ) __z88dk_fastcall;
-//Menues
+//Menues TODO MOVE TO bank X
 extern void          menu_main();
 extern void          menu_main_print(unsigned char s_row, unsigned char s_col, unsigned char s_col_e);
 extern void          menu_redefine();

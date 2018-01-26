@@ -103,7 +103,7 @@ void game_respawn(void) {
         s_col1 = (index1 & 15) << 1;
         s_lin1 = index1;
         s_lin1 = (s_lin1 >> 4) << 4;
-        scr_map[index1] = 0xFF;
+        scr_map[index1] = 0x80 + sprite; // 0xFF;
         game_respawn_time[sprite] = 0;
 
         spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 4,
@@ -143,23 +143,15 @@ void game_draw_screen(void) {
   // intrinsic_ei();
   spr_count = 0;
   intrinsic_di();
-  while (index1 < ((GAME_ROWS - 1) << 4)) {
 
+  while (index1 < GAME_SCR_MAX_INDEX) {
     if ((index1 & 15) == 0) {
       s_lin1 = s_lin1 + 16;
       s_col1 = 0;
     }
     f_tile = scr_map[index1];
-
     if (f_tile < TILE_END) {
-      /*
-      if ((f_tile == TILE_SPECIAL || f_tile == TILE_HIDDEN_BRICK) &&
-          game_obj_chk(index1 - 16)) {
-        //USED BRICKS
-        scr_map[index1] = TILE_NOSPECIAL;
-        f_tile = TILE_NOSPECIAL;
-      }
-      */
+      //TILES
       if (f_tile == TILE_HIDDEN_BRICK || f_tile == TILE_SPECIAL) {
         if (game_obj_chk(index1 - 16)) {
           // USED BRICKS
@@ -171,11 +163,13 @@ void game_draw_screen(void) {
           }
         }
       }
+      if (f_tile == TILE_STOPPER ) {
+        f_tile = game_match_back(index1);
+      }
       // NORMAL TILE
       NIRVANAP_drawT_raw(f_tile, s_lin1, s_col1);
-
     } else {
-
+      //SPRITES
       if (f_tile <= INDEX_ENEMY_BOSS1) {
         // ENEMIES
         if (spr_count < 8 && game_boss_alive) {
@@ -191,8 +185,7 @@ void game_draw_screen(void) {
           ++f_mush;
         }
       }
-
-      scr_map[index1] = game_match_back(index1); // TILE_EMPTY;
+      scr_map[index1] = game_match_back(index1);
       NIRVANAP_drawT_raw(scr_map[index1], s_lin1, s_col1);
     }
     s_col1 = s_col1 + 2;
@@ -565,14 +558,8 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
   // NOT A TILE f_tile > TILE_END
   return 0;
 }
-/*
-void game_paint_attrib(unsigned char e_r1) __z88dk_fastcall {
-  for (tmp0 = e_r1; tmp0 <= 19; ++tmp0) {
-    game_paint_attrib_lin(1, 31, (tmp0 << 3) + 8);
-  }
-}
-*/
 
+//TODO SINGLE FUNCTION 
 void game_paint_attrib_lin(unsigned char f_start, unsigned char f_end,
                            unsigned char f_lin) {
   for (tmp_uc = f_start; tmp_uc < f_end; ++tmp_uc) {
@@ -877,7 +864,7 @@ unsigned char game_match_back(unsigned int f_index) __z88dk_fastcall {
   unsigned char v1;
   if ((f_index > 1) && ((f_index & 15) != 0)) {
     v0 = scr_map[f_index - 1];
-    v1 = scr_map[f_index - 1];
+    v1 = scr_map[f_index + 1];
     if (v0 == TILE_EMPTY_DARK || v1 == TILE_EMPTY_DARK)
       return TILE_EMPTY_DARK;
     if (v0 == TILE_EMPTY_DARK_A || v1 == TILE_EMPTY_DARK_A)

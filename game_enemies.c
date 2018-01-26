@@ -37,35 +37,39 @@ void enemy_turn(void) {
     if (s_class > 0 && spr_chktime(&sprite)) {
       s_lin0 = lin[sprite];
       s_col0 = col[sprite];
-      s_tile0 = tile[sprite] + colint[sprite];
+      //s_tile0 = tile[sprite] + colint[sprite];
       s_state = state[sprite];
       enemy_move();
       if (spr_redraw()) {
         // The sprite have moved...
-        index1 = spr_calc_index(lin[sprite], col[sprite]);
-        if (scr_map[index1] > TILE_ITEM_E & scr_map[index1] < TILE_FLOOR) {
-          // Deadly Backgrounds
-          if (s_class != FIRE && s_class != PIRANHA ) {
-            enemy_kill(sprite);
-          } else {
-            if ( BIT_CHK(s_state, STAT_FALL) ) {
-              spr_set_up(&s_state);
-              if (s_class == PIRANHA) {
-                tile[sprite] = tile[sprite] + 1;
-              }
-            } else {
-              spr_set_down(&s_state);
-              if (s_class == PIRANHA) {
-                tile[sprite] = tile[sprite] - 1;
-              }
-            }
-          }
-        }
+        enemy_check_deadly();
       }
       state[sprite] = s_state;
       last_time[sprite] = zx_clock();
     }
     ++sprite;
+  }
+}
+
+void enemy_check_deadly() {
+  index1 = spr_calc_index(lin[sprite], col[sprite]);
+  if (scr_map[index1] > TILE_ITEM_E & scr_map[index1] < TILE_FLOOR) {
+    // Deadly Backgrounds
+    if (s_class != FIRE && s_class != PIRANHA ) {
+      enemy_kill(sprite);
+    } else {
+      if ( BIT_CHK(s_state, STAT_FALL) ) {
+        spr_set_up(&s_state);
+        if (s_class == PIRANHA) {
+          tile[sprite] = tile[sprite] + 1;
+        }
+      } else {
+        spr_set_down(&s_state);
+        if (s_class == PIRANHA) {
+          tile[sprite] = tile[sprite] - 1;
+        }
+      }
+    }
   }
 }
 
@@ -169,26 +173,24 @@ void enemy_ghost() {
   unsigned char v;
   v = 0;
 
-  if (col[sprite] < col[SPR_P1]) {
-    BIT_CLR(s_state, STAT_DIRL);
-    BIT_SET(s_state, STAT_DIRR);
+  if (s_col0 < col[SPR_P1]) {
+    spr_set_right(&s_state);
     tile[sprite] = spr_tile(&sprite);
     spr_move_right();
     v = 1;
   }
-  if (col[sprite] > col[SPR_P1]) {
-    BIT_CLR(s_state, STAT_DIRR);
-    BIT_SET(s_state, STAT_DIRL);
+  if (s_col0 > col[SPR_P1]) {
+    spr_set_left(&s_state);
     tile[sprite] = spr_tile(&sprite);
     spr_move_left();
     v = 1;
   }
 
   if (s_col0 == col[sprite]) {
-    if (lin[sprite] > lin[SPR_P1]) {
+    if (s_lin0 > lin[SPR_P1]) {
       spr_move_up();
     }
-    if (lin[sprite] < lin[SPR_P1]) {
+    if (s_lin0 < lin[SPR_P1]) {
       spr_move_down();
     }
     if (v == 0 && s_lin0 != lin[sprite]) {
@@ -214,13 +216,11 @@ void enemy_static() {
 void enemy_horizontal() {
   if (BIT_CHK(s_state, STAT_DIRR)) {
     if (spr_move_right()) {
-      BIT_CLR(s_state, STAT_DIRR);
-      BIT_SET(s_state, STAT_DIRL);
+      spr_set_left(&s_state);
     }
   } else {
     if (spr_move_left()) {
-      BIT_CLR(s_state, STAT_DIRL);
-      BIT_SET(s_state, STAT_DIRR);
+      spr_set_right(&s_state);
     }
   }
 }
@@ -336,6 +336,8 @@ void enemy_walk(void) {
     }
   }
 }
+
+
 
 void enemy_kill( unsigned char f_sprite ) __z88dk_fastcall {
   game_respawn_time[f_sprite] = zx_clock();

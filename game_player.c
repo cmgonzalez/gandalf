@@ -67,7 +67,7 @@ unsigned char player_move(void) {
   /* Player initial Values */
   s_lin0 = lin[SPR_P1];
   s_col0 = col[SPR_P1];
-  s_tile0 = tile[SPR_P1] + colint[SPR_P1];
+  //s_tile0 = tile[SPR_P1] + colint[SPR_P1];
   s_state = state[SPR_P1];
 
   if (BIT_CHK(s_state, STAT_JUMP) || BIT_CHK(s_state, STAT_FALL)) {
@@ -76,12 +76,10 @@ unsigned char player_move(void) {
     // If the player push fire alone and then move HORIZONTAL
     if (player_vel_y < player_vel_y1) {
       if (dirs & IN_STICK_LEFT) {
-        BIT_SET(s_state, STAT_DIRL);
-        BIT_CLR(s_state, STAT_DIRR);
+        spr_set_left(&s_state);
       }
       if (dirs & STAT_DIRR) {
-        BIT_SET(s_state, STAT_DIRR);
-        BIT_CLR(s_state, STAT_DIRL);
+        spr_set_right(&s_state);
       }
     }
 
@@ -165,8 +163,7 @@ unsigned char player_move_input(void) {
     /* Move Right */
     if (dirs & IN_STICK_RIGHT) {
       player_fix_walk_lin();
-      BIT_SET(s_state, STAT_DIRR);
-      BIT_CLR(s_state, STAT_DIRL);
+      spr_set_right(&s_state);
       BIT_SET(state_a[SPR_P1], STAT_LDIRR);
       BIT_CLR(state_a[SPR_P1], STAT_LDIRL);
       if (player_onstair) {
@@ -178,8 +175,7 @@ unsigned char player_move_input(void) {
     /* Move Left */
     if (dirs & IN_STICK_LEFT) {
       player_fix_walk_lin();
-      BIT_SET(s_state, STAT_DIRL);
-      BIT_CLR(s_state, STAT_DIRR);
+      spr_set_left(&s_state);
       BIT_SET(state_a[SPR_P1], STAT_LDIRL);
       BIT_CLR(state_a[SPR_P1], STAT_LDIRR);
       if (player_onstair) {
@@ -361,7 +357,7 @@ void player_1up() {
     ++player_lives;
     spr_flatten();
     zx_print_str(12, 12, "1 UP!");
-    game_colour_message(12, 12, 12 + 9, 25, 0);
+    game_colour_message(12, 12, 12 + 5, 25, 0);
     game_update_stats();
     spr_unflatten();
   }
@@ -896,12 +892,10 @@ unsigned char player_move_jump(void) {
 
   if (!BIT_CHK(s_state, STAT_DIRL) && !BIT_CHK(s_state, STAT_DIRR)) {
     if (dirs & IN_STICK_LEFT) {
-      BIT_SET(s_state, STAT_DIRL);
-      BIT_CLR(s_state, STAT_DIRR);
+      spr_set_left(&s_state);
     }
     if (dirs & IN_STICK_RIGHT) {
-      BIT_SET(s_state, STAT_DIRR);
-      BIT_CLR(s_state, STAT_DIRL);
+      spr_set_right(&s_state);
     }
   }
 

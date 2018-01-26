@@ -220,6 +220,10 @@ unsigned char map_paper;
 unsigned char map_paper_clr;
 unsigned char map_paper_last;
 
+unsigned char stp_tile;
+unsigned char stp_col;
+unsigned char stp_row;
+
 //###############################################################################################
 //# # # ENEMIES ANIMATION SPEEDS - INTERRUPTS VALUES 50HZ
 //# #
