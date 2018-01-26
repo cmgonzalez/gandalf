@@ -56,6 +56,7 @@ void player_turn(void) {
   if (spr_chktime(&sprite)) {
     dirs = (joyfunc1)(&k1);
     dirs_alt = (joyfunc2)(&k2); // for game_2buttons
+    s_class = 0;
     player_move();
     player_collision();
   }
@@ -151,8 +152,7 @@ unsigned char player_move_input(void) {
       }
       player_onstair = 0;
       // colint[SPR_P1] = FRAMES_PLAYER / 2;
-      BIT_SET(s_state, STAT_JUMP);
-      BIT_CLR(s_state, STAT_FALL);
+      spr_set_up(&s_state);
       jump_lin[SPR_P1] = lin[SPR_P1];
       state[SPR_P1] = s_state; /*TODO FIXME!*/
       player_tile(TILE_P1_JUMPR, TILE_P1_LEN);
@@ -279,7 +279,7 @@ unsigned char player_fire() {
 
 unsigned char player_collision(void) {
   unsigned char v0;
-  if (game_check_time(player_hit_time, 25)) { // HACK REPATED ON player_hit
+  if (game_check_time(&player_hit_time, 25)) { // HACK REPATED ON player_hit
 
     sprite = 0;
     s_col1 = col[SPR_P1];
@@ -309,11 +309,12 @@ unsigned char player_collision(void) {
     }
 
     while (sprite < SPR_P1) {
-      if (class[sprite] > 0) {
+      s_class = class[sprite];
+      if (s_class > 0) {
         if (abs(col[sprite] - s_col1) < 2) {
           if (abs(lin[sprite] - s_lin1) < 14) {
             /*MUSHROMS*/
-            if (class[sprite] == MUSHROOM_VITA) {
+            if (s_class == MUSHROOM_VITA) {
               player_vita = player_vita + 25;
               if (player_vita > player_max_vita) {
                 player_vita = player_max_vita;
@@ -321,7 +322,7 @@ unsigned char player_collision(void) {
               player_pick_mushroom();
               return 0;
             }
-            if (class[sprite] == MUSHROOM_MANA) {
+            if (s_class== MUSHROOM_MANA) {
               player_mana = player_mana + 25;
               if (player_mana > player_max_mana) {
                 player_mana = player_max_mana;
@@ -329,7 +330,7 @@ unsigned char player_collision(void) {
               player_pick_mushroom();
               return 0;
             }
-            if (class[sprite] == MUSHROOM_EXTRA) {
+            if (s_class== MUSHROOM_EXTRA) {
               player_pick_mushroom();
               player_1up();
               return 0;
@@ -366,7 +367,7 @@ void player_1up() {
   }
 }
 
-void player_check_stairs_vertical(signed char f_inc) {
+void player_check_stairs_vertical(signed char f_inc) __z88dk_fastcall {
   unsigned char v0;
   unsigned char v1;
   if ((col[SPR_P1] & 1) == 0) {
@@ -442,7 +443,7 @@ void player_anim_tile(void) {
 }
 void player_tile(unsigned char f_tile, unsigned char f_inc) {
 
-  tile[SPR_P1] = spr_tile_dir(f_tile, sprite, f_inc);
+  tile[SPR_P1] = spr_tile_dir(&f_tile, &sprite, &f_inc);
 }
 
 void player_check_map() {
@@ -692,7 +693,7 @@ unsigned char player_hit_platform(void) {
 
 void player_hit_platform_clear(void) {
   // CLEAR HITTED BRICKS N MAKES THE PLAYER FALL
-  if (game_check_time(spr_timer[SPR_P1], PLAYER_HIT_BRICK_TIME)) {
+  if (game_check_time(&spr_timer[SPR_P1], PLAYER_HIT_BRICK_TIME)) {
     index1 = spr_calc_index(player_hit_lin, player_hit_col);
     spr_brick_anim(0);
     player_hit_lin = 0;
@@ -754,7 +755,7 @@ void player_check_floor(void) {
     }
 
   } else {
-    if (game_check_time(player_brick_time, 16)) {
+    if (game_check_time(&player_brick_time, 16)) {
       player_brick_time = zx_clock();
       if (v1 == TILE_BRICK3) {
         scr_map[index_d] = game_match_back(index_d); // TILE_EMPTY;
@@ -839,8 +840,7 @@ unsigned char player_move_jump(void) {
 
   if (val_yc < 0) {
     // Asending
-    BIT_SET(s_state, STAT_JUMP);
-    BIT_CLR(s_state, STAT_FALL);
+    spr_set_up(&s_state);
     if (s_lin1 > GAME_LIN_FLOOR) {
       if (spr_page_up()) {
         return 0;
@@ -860,8 +860,7 @@ unsigned char player_move_jump(void) {
     }
   } else {
     // Falling
-    BIT_SET(s_state, STAT_FALL);
-    BIT_CLR(s_state, STAT_JUMP);
+    spr_set_down(&s_state);
 
     if (s_lin1 > GAME_LIN_FLOOR) {
       if (spr_page_down()) {
@@ -947,7 +946,7 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
   if (f_open || game_inmune) {
     scr_map[f_index] = game_match_back(f_index); // TILE_EMPTY;
     game_obj_set(f_index);
-    spr_draw_index(f_index);
+    spr_draw_index(&f_index);
   }
 }
 
@@ -975,7 +974,7 @@ void player_lost_life() {
   i = 1;
   anim_time = zx_clock();
   while (i) {
-    if (game_check_time(anim_time, TIME_ANIM_PLAYER_EXPODE)) {
+    if (game_check_time(&anim_time, TIME_ANIM_PLAYER_EXPODE)) {
       anim_time = zx_clock();
       if (anim_count) {
         spr_play_anim();

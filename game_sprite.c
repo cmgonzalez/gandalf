@@ -39,37 +39,21 @@ unsigned char spr_chktime(unsigned char *sprite) __z88dk_fastcall {
   } else {
     tmp = sprite_speed_alt[*sprite];
   }
-  if (game_check_time(last_time[*sprite], tmp)) {
+  if (game_check_time(&last_time[*sprite], tmp)) {
     last_time[*sprite] = zx_clock();
     return 1;
   }
   return 0;
 }
-/*
-unsigned char spr_move_up_fast(void) {
-  s_lin1 = lin[sprite] - SPRITE_LIN_INC;
-  if (s_lin1 > lin_min[sprite]) {
-    lin[sprite] = s_lin1;
-    return 0;
-  } else {
-    lin[sprite] = lin_min[sprite];
-    return 1;
-  }
-}
-*/
 
-/*
-unsigned char spr_move_down_fast(void) {
-  s_lin1 = lin[sprite] + SPRITE_LIN_INC;
-  if (s_lin1 < lin_max[sprite]) {
-    lin[sprite] = s_lin1;
-    return 0;
-  } else {
-    lin[sprite] = lin_max[sprite];
-    return 1;
-  }
+void spr_set_up(unsigned char * f_state) __z88dk_fastcall  {
+  BIT_SET(*f_state, STAT_JUMP);
+  BIT_CLR(*f_state, STAT_FALL);
 }
-*/
+void spr_set_down(unsigned char * f_state) __z88dk_fastcall  {
+  BIT_SET(*f_state, STAT_FALL);
+  BIT_CLR(*f_state, STAT_JUMP);
+}
 
 unsigned char spr_move_up(void) {
   unsigned char f_check;
@@ -141,7 +125,7 @@ unsigned char spr_move_horizontal(void) {
 
 unsigned char spr_move_right(void) {
   ++colint[sprite];
-  if (colint[sprite] == sprite_frames[class[sprite]]) {
+  if (colint[sprite] == sprite_frames[s_class]) {
     s_lin1 = lin[sprite];
     if (col[sprite] < 30) {
       s_col1 = col[sprite] + 1;
@@ -203,7 +187,7 @@ unsigned char spr_move_left(void) {
       }
     }
     --col[sprite];
-    colint[sprite] = sprite_frames[class[sprite]] - 1;
+    colint[sprite] = sprite_frames[s_class] - 1;
 
     if (col[sprite] == 255) {
       if (sprite == SPR_P1) {
@@ -474,48 +458,38 @@ void spr_destroy(unsigned char f_sprite) __z88dk_fastcall {
   state_a[f_sprite] = 0;
 }
 
-unsigned char spr_tile(unsigned char f_sprite) __z88dk_fastcall {
+unsigned char spr_tile(unsigned char *f_sprite) __z88dk_fastcall {
 
   tmp0 = 0;
   while (tmp0 < GAME_TOTAL_CLASSES) {
     tmp1 = tmp0 * 3;
-    if (spr_map_tile[tmp1] == class[f_sprite]) {
-      return spr_tile_dir(spr_map_tile[tmp1 + 1], f_sprite,
-                          spr_map_tile[tmp1 + 2]);
+    if (spr_map_tile[tmp1] == class[*f_sprite]) {
+      return spr_tile_dir(&spr_map_tile[tmp1 + 1], f_sprite,
+                          &spr_map_tile[tmp1 + 2]);
     }
     ++tmp0;
   }
   return 0;
 }
 
-unsigned char spr_tile_dir(unsigned char f_tile, unsigned char f_sprite,
-                           unsigned char f_inc) {
+unsigned char spr_tile_dir(unsigned char *f_tile, unsigned char *f_sprite,
+                           unsigned char *f_inc) {
 
-  if (BIT_CHK(state[f_sprite], STAT_DIRR)) {
-    return f_tile;
+  if (BIT_CHK(state[*f_sprite], STAT_DIRR)) {
+    return *f_tile;
   }
-  if (BIT_CHK(state[f_sprite], STAT_DIRL)) {
-    return f_tile + f_inc;
+  if (BIT_CHK(state[*f_sprite], STAT_DIRL)) {
+    return *f_tile + *f_inc;
   }
-  if (BIT_CHK(state_a[f_sprite], STAT_LDIRR)) {
-    return f_tile;
+  if (BIT_CHK(state_a[*f_sprite], STAT_LDIRR)) {
+    return *f_tile;
   }
-  if (BIT_CHK(state_a[f_sprite], STAT_LDIRL)) {
-    return f_tile + f_inc;
+  if (BIT_CHK(state_a[*f_sprite], STAT_LDIRL)) {
+    return *f_tile + *f_inc;
   }
-  return f_tile;
+  return *f_tile;
 }
-/* void spr_draw_clear(void) {
-  intrinsic_di();
-  zx_paper_fill(INK_BLACK);
-  // todo an asm routine to clear the screen fast (nirvana)
-  for (s_lin1 = 16; s_lin1 <= 162; s_lin1 += 16) {
-    for (s_col1 = 0; s_col1 < 32; s_col1 += 2) {
-      NIRVANAP_drawT_raw(TILE_EMPTY, s_lin1, s_col1);
-    }
-  }
-  intrinsic_ei();
-} */
+
 
 void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
   unsigned char v1;
@@ -554,16 +528,16 @@ void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
   intrinsic_ei();
 }
 
-void spr_draw_index(unsigned int f_index) {
-  s_col1 = (f_index & 15) << 1;
-  s_lin1 = f_index;
+void spr_draw_index(unsigned int *f_index) __z88dk_fastcall {
+  s_col1 = (*f_index & 15) << 1;
+  s_lin1 = *f_index;
   s_lin1 = (s_lin1 >> 4) << 4;
   intrinsic_di();
-  NIRVANAP_drawT_raw(scr_map[f_index], s_lin1, s_col1);
+  NIRVANAP_drawT_raw(scr_map[*f_index], s_lin1, s_col1);
   intrinsic_ei();
 }
 
-unsigned char spr_calc_hor(unsigned char f_sprite) {
+unsigned char spr_calc_hor(unsigned char f_sprite) __z88dk_fastcall  {
   /*
     if (class[f_sprite] != COIN_2) {
       return col[f_sprite] * 3 + colint[f_sprite];
@@ -984,7 +958,7 @@ void spr_turn_horizontal(void) {
     BIT_SET(s_state, STAT_DIRR);
   }
   state[sprite] = s_state;
-  tile[sprite] = spr_tile(sprite);
+  tile[sprite] = spr_tile(&sprite);
 }
 
 void spr_btile_paint_back() {

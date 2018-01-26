@@ -49,14 +49,14 @@ void game_loop(void) {
         boss_turn();
       }
       /*Anim Bullets*/
-      if (game_check_time(bullet_time, TIME_BULLETS)) {
+      if (game_check_time(&bullet_time, TIME_BULLETS)) {
         bullet_time = zx_clock();
         if (bullet_count)
           spr_bullets_play();
       }
 
       /*Play animatios*/
-      if (game_check_time(anim_time, TIME_ANIM)) {
+      if (game_check_time(&anim_time, TIME_ANIM)) {
         zx_border(INK_BLACK);
         anim_time = zx_clock();
         if (anim_count)
@@ -64,7 +64,7 @@ void game_loop(void) {
       }
 
       /*Each second aprox - update fps/score/phase left/phase advance*/
-      if (game_check_time(frame_time, 100)) {
+      if (game_check_time(&frame_time, 100)) {
         frame_time = zx_clock();
         game_fps();
         game_respawn();
@@ -98,7 +98,7 @@ void game_respawn(void) {
   sprite = 0;
   while (sprite < SPR_P1) {
     if (game_respawn_time[sprite] > 0) {
-      if (game_check_time(game_respawn_time[sprite], game_respawn_curr_time)) {
+      if (game_check_time(&game_respawn_time[sprite], game_respawn_curr_time)) {
         index1 = game_respawn_index[sprite];
         s_col1 = (index1 & 15) << 1;
         s_lin1 = index1;
@@ -118,6 +118,7 @@ void game_respawn(void) {
 
 void game_draw_screen(void) {
   unsigned char f_mush;
+  unsigned char f_tile;
   NIRVANAP_halt();
   game_boss = 0;
   game_boss_fix = 0;
@@ -148,31 +149,45 @@ void game_draw_screen(void) {
       s_lin1 = s_lin1 + 16;
       s_col1 = 0;
     }
+    f_tile = scr_map[index1];
 
-    if (scr_map[index1] < TILE_END) {
-
-      if ((scr_map[index1] == TILE_SPECIAL ||
-           scr_map[index1] == TILE_HIDDEN_BRICK) &&
+    if (f_tile < TILE_END) {
+      /*
+      if ((f_tile == TILE_SPECIAL || f_tile == TILE_HIDDEN_BRICK) &&
           game_obj_chk(index1 - 16)) {
+        //USED BRICKS
         scr_map[index1] = TILE_NOSPECIAL;
+        f_tile = TILE_NOSPECIAL;
+      }
+      */
+      if (f_tile == TILE_HIDDEN_BRICK || f_tile == TILE_SPECIAL) {
+        if (game_obj_chk(index1 - 16)) {
+          // USED BRICKS
+          scr_map[index1] = TILE_NOSPECIAL;
+          f_tile = TILE_NOSPECIAL;
+        } else {
+          if (f_tile == TILE_HIDDEN_BRICK) {
+            f_tile = TILE_EMPTY;
+          }
+        }
       }
       // NORMAL TILE
-      NIRVANAP_drawT_raw(scr_map[index1], s_lin1, s_col1);
+      NIRVANAP_drawT_raw(f_tile, s_lin1, s_col1);
 
     } else {
 
-      if (scr_map[index1] <= INDEX_ENEMY_BOSS1) {
+      if (f_tile <= INDEX_ENEMY_BOSS1) {
         // ENEMIES
         if (spr_count < 8 && game_boss_alive) {
           game_respawn_index[spr_count] = index1;
-          game_respawn_tile[spr_count] = scr_map[index1];
-          game_add_enemy(scr_map[index1]);
+          game_respawn_tile[spr_count] = f_tile;
+          game_add_enemy(f_tile);
         }
       } else {
         if (!game_obj_chk(index1)) {
           // MUSHROMS
           mush_index[f_mush] = index1 + 16;
-          mush_class[f_mush] = scr_map[index1];
+          mush_class[f_mush] = f_tile;
           ++f_mush;
         }
       }
@@ -209,7 +224,7 @@ void game_boss_kill(void) {
   game_boss_clear();
 }
 
-void game_add_enemy(unsigned char enemy_tile_index) {
+void game_add_enemy(unsigned char enemy_tile_index) __z88dk_fastcall {
 
   if (enemy_tile_index != INDEX_ENEMY_BOSS1) {
     tmp0 = 0;
@@ -244,7 +259,7 @@ void game_add_enemy(unsigned char enemy_tile_index) {
       }
       // boss_tile = TILE_ENEMY_BOSS1 + (game_world * 4);
       boss_stat = 0;
-      BIT_SET(boss_stat, STAT_JUMP);
+      spr_set_up(&boss_stat);
       game_boss = 1;
       game_boss_hit = 8;
     } else {
@@ -429,18 +444,19 @@ unsigned int game_check_map(unsigned char f_lin, unsigned char f_col) {
   if ((f_col & 1) == 0) {
     index1 = spr_calc_index(f_lin, f_col);
 
-    return game_check_cell(index1);
+    return game_check_cell(&index1);
   } else {
 
     g_player_hit_left = 0;
     g_player_hit_right = 0;
 
     index1 = spr_calc_index(f_lin, f_col - 1);
-    if (game_check_cell(index1)) {
+    if (game_check_cell(&index1)) {
       g_player_hit_left = 1;
     }
     if (g_player_hit_left == 0) {
-      if (game_check_cell(index1 + 1)) {
+      ++index1;
+      if (game_check_cell(&index1)) {
         g_player_hit_right = 1;
       }
     }
@@ -449,22 +465,22 @@ unsigned int game_check_map(unsigned char f_lin, unsigned char f_col) {
   }
 }
 
-unsigned char game_check_cell(int f_index) __z88dk_fastcall {
+unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
   unsigned char f_tile;
   unsigned char f_check;
   unsigned char f_kind;
   unsigned char f_class;
   // OUT OFF SCREEN
-  if (f_index > GAME_SCR_MAX_INDEX) {
+  if (*f_index > GAME_SCR_MAX_INDEX) {
     return 1;
   }
 
-  f_tile = scr_map[f_index];
+  f_tile = scr_map[*f_index];
 
   if (sprite != SPR_P1) {
     f_class = class[sprite];
     f_kind = sprite_kind[f_class];
-    if (f_kind == E_GHOST  ) {
+    if (f_kind == E_GHOST) {
       return 0;
     }
     if (f_tile == 0xFF) {
@@ -474,8 +490,6 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
     if (f_tile == TILE_STOPPER) {
       return 1;
     }
-
-
 
     if (f_kind == E_VERTICAL) {
       if (f_class == FIRE || f_class == PIRANHA) {
@@ -494,9 +508,7 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
       }
     }
 
-    if (f_kind == E_HORIZONTAL ||
-        f_kind == E_WALK ||
-        f_kind == E_GOTA) {
+    if (f_kind == E_HORIZONTAL || f_kind == E_WALK || f_kind == E_GOTA) {
       // HORIZONTAL ENEMIES
       if (sprite_horizontal_check) {
         f_check = TILE_CEIL;
@@ -541,7 +553,7 @@ unsigned char game_check_cell(int f_index) __z88dk_fastcall {
 
   if (f_tile < TILE_DOOR_E) { // DOOR EXIT
     if (sprite == SPR_P1) {
-      player_open_door(f_index, f_tile);
+      player_open_door(*f_index, f_tile);
       return 1;
     }
   }
@@ -591,8 +603,8 @@ void game_colour_message(unsigned char f_row, unsigned char f_col,
   tmp = 1;
   frame_time = zx_clock();
   entry_time = zx_clock();
-  while (tmp && !game_check_time(entry_time, f_microsecs)) {
-    if (game_check_time(frame_time, 5)) {
+  while (tmp && !game_check_time(&entry_time, f_microsecs)) {
+    if (game_check_time(&frame_time, 5)) {
       // ROTATE ATTRIB ARRAY
       frame_time = zx_clock();
       if (game_over) {
@@ -625,8 +637,8 @@ void game_colour_message(unsigned char f_row, unsigned char f_col,
   }
 }
 
-unsigned char game_check_time(unsigned int start, unsigned int lapse) {
-  if (zx_clock() - start > lapse) {
+unsigned char game_check_time(unsigned int *start, unsigned char lapse) {
+  if (zx_clock() - *start > lapse) {
     return 1;
   } else {
     return 0;
@@ -798,13 +810,14 @@ void game_boss_clear() {
   unsigned int f_index;
   if (game_world == 0) {
     for (f_index = 0; f_index < GAME_SCR_MAX_INDEX; ++f_index) {
-      intrinsic_di();
+      // intrinsic_di();
       if (scr_map[f_index] == 55) {
         scr_map[f_index] = TILE_EMPTY;
-        NIRVANAP_drawT_raw(TILE_EMPTY, (f_index >> 4) << 4,
-                           (f_index & 15) << 1);
+        spr_draw_index(&f_index);
+        // NIRVANAP_drawT_raw(TILE_EMPTY, (f_index >> 4) << 4, (f_index & 15) <<
+        // 1);
       }
-      intrinsic_ei();
+      // intrinsic_ei();
     }
   }
 }
@@ -847,18 +860,29 @@ void game_attribs() {
   attrib_osd[3] = map_paper | BRIGHT | INK_CYAN;
 }
 
-unsigned char game_match_back(unsigned int f_index) {
-  if ((f_index > 1) && ((f_index & 15) != 0) &&
-      (scr_map[f_index - 1] ==
-       TILE_EMPTY_DARK)) { // || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
-    return TILE_EMPTY_DARK;
+unsigned char game_match_back(unsigned int f_index) __z88dk_fastcall {
+  /*
+    if ((f_index > 1) && ((f_index & 15) != 0) &&
+        (scr_map[f_index - 1] ==
+         TILE_EMPTY_DARK)) { // || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
+      return TILE_EMPTY_DARK;
+    }
+    if ((f_index > 1) && ((f_index & 15) != 0) &&
+        (scr_map[f_index - 1] ==
+         TILE_EMPTY_DARK_A)) { // || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
+      return TILE_EMPTY_DARK_A;
+    }
+  */
+  unsigned char v0;
+  unsigned char v1;
+  if ((f_index > 1) && ((f_index & 15) != 0)) {
+    v0 = scr_map[f_index - 1];
+    v1 = scr_map[f_index - 1];
+    if (v0 == TILE_EMPTY_DARK || v1 == TILE_EMPTY_DARK)
+      return TILE_EMPTY_DARK;
+    if (v0 == TILE_EMPTY_DARK_A || v1 == TILE_EMPTY_DARK_A)
+      return TILE_EMPTY_DARK_A;
   }
-  if ((f_index > 1) && ((f_index & 15) != 0) &&
-      (scr_map[f_index - 1] ==
-       TILE_EMPTY_DARK_A)) { // || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
-    return TILE_EMPTY_DARK_A;
-  }
-
   return TILE_EMPTY;
 }
 

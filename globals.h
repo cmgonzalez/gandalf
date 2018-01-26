@@ -365,6 +365,7 @@ extern unsigned char s_lin0;
 extern unsigned char s_lin1;
 extern unsigned char s_col0;
 extern unsigned char s_col1;
+extern unsigned char s_class;
 extern unsigned int loop_count;
 extern unsigned int index0;
 extern unsigned int index1;

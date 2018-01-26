@@ -129,6 +129,7 @@ unsigned char s_lin0;
 unsigned char s_lin1;
 unsigned char s_col0;
 unsigned char s_col1;
+unsigned char s_class;
 unsigned int loop_count;
 unsigned int index0;
 unsigned int index1;
