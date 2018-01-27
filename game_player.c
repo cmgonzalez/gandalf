@@ -311,7 +311,7 @@ unsigned char player_collision(void) {
           if (abs(lin[sprite] - s_lin1) < 14) {
             /*MUSHROMS*/
             if (s_class == MUSHROOM_VITA) {
-              player_vita = player_vita + 25;
+              player_vita = player_vita + 50;
               if (player_vita > player_max_vita) {
                 player_vita = player_max_vita;
               }
@@ -319,7 +319,7 @@ unsigned char player_collision(void) {
               return 0;
             }
             if (s_class== MUSHROOM_MANA) {
-              player_mana = player_mana + 25;
+              player_mana = player_mana + 50;
               if (player_mana > player_max_mana) {
                 player_mana = player_max_mana;
               }

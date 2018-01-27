@@ -56,7 +56,7 @@
 #define TILE_STAIR_E                  71 //END OF STAIRS
 
 #define TILE_DIRT                     77 //CAN BE DESTROYED BY FIREBALLS
-#define TILE_SPECIAL                  92 //HAVE A MUSHROM VITA / MANA
+#define TILE_SPECIAL                  90 //HAVE A MUSHROM VITA / MANA
 #define TILE_HIDDEN_BRICK             93 //HIDDEN TREASURE (COINS LIKE MARIO?)
 #define TILE_NORMAL_BRICK             84
 #define TILE_NOSPECIAL                79 //AFTER HIT
@@ -168,7 +168,6 @@
 #define TILE_SCROLL                   46
 
 #define TILE_CHEST                    47
-
 
 #define TILE_DOOR_WHITE               72
 #define TILE_DOOR_RED                 73
@@ -471,7 +470,7 @@ extern unsigned char spr_hack;
 
 extern unsigned char bullet_count;
 
-extern const JOYFUNC control_method[7];
+//extern const JOYFUNC control_method[7];
 
 extern unsigned char g_player_hit_left;
 extern unsigned char g_player_hit_right;

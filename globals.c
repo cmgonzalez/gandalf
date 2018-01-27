@@ -285,16 +285,16 @@ unsigned char sprite_kind[] = {
 };
 
 unsigned char sprite_speed[] = {
-    2,// PLAYER
-    3,// GOTA
+    1,// PLAYER
+    4,// GOTA
     6,// DRAGON
     2,// BAT
-   12,// GHOST
+    8,// GHOST
     2,// SPIDER
     2,// MUSHROOM_VITA
     2,// MUSHROOM_MANA
     2,// MUSHROOM_EXTRA
-    1,// FIRE
+    2,// FIRE
     1,// PIRANHA
     4,// SKELETON
     3,// ORC
@@ -306,13 +306,13 @@ unsigned char sprite_speed[] = {
     8,// SNAKE
     1,// BAT_H
     8,// DEVIL
-    4,// FIRE_S
+    2,// FIRE_S
 };
 
 //Sprite tile and animation frames for init, used with GAME_TOTAL_CLASSES
 unsigned char spr_map_tile[] = {
   //ENEMY Class     ,TILE INDEX ,DIR INC
-  GOTA              , 87        ,0,
+  GOTA              , 91        ,0,
   SKELETON          ,144        ,0,
   ORC               ,148        ,0,
   WARG              ,152        ,2,

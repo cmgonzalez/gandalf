@@ -493,7 +493,7 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
         }
       } else {
         // VERTICAL ENEMIES
-        if (f_tile <= TILE_ITEM_E) {
+        if (f_tile <= TILE_ITEM_E || ( f_tile >= TILE_STAIR_S && f_tile <= TILE_STAIR_E ) ) {
           return 0;
         } else {
           return f_tile;
