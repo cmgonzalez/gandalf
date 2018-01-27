@@ -263,7 +263,7 @@ unsigned char player_fire() {
         player_mana = 0;
       }
       game_update_stats();
-      ay_fx_play(ay_effect_05);
+      //ay_fx_play(ay_effect_05);
       game_shoot_fire(SPR_P1, TILE_FIREBALL);
     }
     return 1;
@@ -293,7 +293,7 @@ unsigned char player_collision(void) {
           player_lost_life();
           return 0;
         } else {
-          ay_fx_play(ay_effect_06);
+          //ay_fx_play(ay_effect_06);
           zx_border(INK_YELLOW);
           player_hit(50);
         }
@@ -329,7 +329,7 @@ unsigned char player_collision(void) {
               player_1up();
               return 0;
             }
-            ay_fx_play(ay_effect_06);
+            //ay_fx_play(ay_effect_06);
             zx_border(INK_RED);
             player_hit(20);
             return 1;
@@ -343,7 +343,7 @@ unsigned char player_collision(void) {
 }
 
 void player_pick_mushroom() {
-  ay_fx_play(ay_effect_12);
+  //ay_fx_play(ay_effect_12);
   player_score_add(1);
   game_update_stats();
   spr_destroy(sprite);
@@ -489,27 +489,27 @@ void player_pick_item(void) {
     spr_add_anim(s_lin1, s_col1, TILE_ANIM_PICK, 3, 0, 0);
     switch (v0) {
     case TILE_KEY_WHITE:
-      ay_fx_play(ay_effect_09);
+      //ay_fx_play(ay_effect_09);
       player_keys[0] = 1;
       game_update_stats();
       break;
     case TILE_KEY_RED:
-      ay_fx_play(ay_effect_09);
+      //ay_fx_play(ay_effect_09);
       player_keys[1] = 1;
       game_update_stats();
       break;
     case TILE_KEY_GREEN:
-      ay_fx_play(ay_effect_09);
+      //ay_fx_play(ay_effect_09);
       player_keys[2] = 1;
       game_update_stats();
       break;
     case TILE_KEY_CYAN:
-      ay_fx_play(ay_effect_09);
+      //ay_fx_play(ay_effect_09);
       player_keys[3] = 1;
       game_update_stats();
       break;
     case TILE_MONEY:
-      ay_fx_play(ay_effect_10);
+      //ay_fx_play(ay_effect_10);
       player_score_add(1);
       ++player_coins;
       if (player_coins == 100) {
@@ -519,11 +519,11 @@ void player_pick_item(void) {
       game_update_stats();
       break;
     case TILE_CHEST:
-      ay_fx_play(ay_effect_10);
+      //ay_fx_play(ay_effect_10);
       player_score_add(10);
       break;
     case TILE_SHIELD:
-      ay_fx_play(ay_effect_09);
+      //ay_fx_play(ay_effect_09);
       player_str++;
       if (player_max_vita < GAME_MAX_VITA) {
         player_max_vita = player_max_vita + 10;
@@ -531,7 +531,7 @@ void player_pick_item(void) {
       }
       break;
     case TILE_HELMET:
-      ay_fx_play(ay_effect_09);
+      //ay_fx_play(ay_effect_09);
       player_str++;
       if (player_max_vita < GAME_MAX_VITA) {
         player_max_vita = player_max_vita + 10;
@@ -539,7 +539,7 @@ void player_pick_item(void) {
       }
       break;
     case TILE_SWORD:
-      ay_fx_play(ay_effect_09);
+      //ay_fx_play(ay_effect_09);
       player_str++;
       if (player_max_vita < GAME_MAX_VITA) {
         player_max_vita = player_max_vita + 10;
@@ -547,7 +547,7 @@ void player_pick_item(void) {
       }
       break;
     case TILE_POTION:
-      ay_fx_play(ay_effect_09);
+      //ay_fx_play(ay_effect_09);
       player_int++;
       if (player_max_mana < GAME_MAX_MANA) {
         player_max_mana = player_max_mana + 10;
@@ -555,7 +555,7 @@ void player_pick_item(void) {
       }
       break;
     case TILE_ORB:
-      ay_fx_play(ay_effect_09);
+      //ay_fx_play(ay_effect_09);
       player_int++;
       if (player_max_mana < GAME_MAX_MANA) {
         player_max_mana = player_max_mana + 10;
@@ -563,7 +563,7 @@ void player_pick_item(void) {
       }
       break;
     case TILE_SCROLL:
-      ay_fx_play(ay_effect_09);
+      //ay_fx_play(ay_effect_09);
       player_int++;
       if (player_max_mana < GAME_MAX_MANA) {
         player_max_mana = player_max_mana + 10;
@@ -630,7 +630,7 @@ unsigned char player_hit_platform(void) {
             }
             ++j;
           }
-          ay_fx_play(ay_effect_07);
+          //ay_fx_play(ay_effect_07);
 
 
           switch (mush_class[j]) {
@@ -678,7 +678,7 @@ unsigned char player_hit_platform(void) {
         ++i;
       }
     }
-    ay_fx_play(ay_effect_02);
+    //ay_fx_play(ay_effect_02);
     spr_brick_anim(1);
     return 1;
   }
@@ -907,7 +907,7 @@ unsigned char player_move_jump(void) {
 void player_open_door(unsigned int f_index, unsigned char f_tile) {
   unsigned char f_open;
   f_open = 0;
-  ay_fx_play(ay_effect_05);
+  //ay_fx_play(ay_effect_05);
   switch (f_tile) {
   case TILE_DOOR_WHITE:
     if (player_keys[0]) {
@@ -944,7 +944,7 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
 
 void player_lost_life() {
   unsigned char i;
-  ay_fx_play(ay_effect_18);
+  //ay_fx_play(ay_effect_18);
   player_vita = 0;
   game_update_stats();
   s_lin0 = lin[SPR_P1];

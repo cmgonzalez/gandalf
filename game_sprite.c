@@ -900,7 +900,7 @@ void spr_bullets_play(void) {
 }
 void spr_bullet_enemy_colision() {
   if (spr_colision_b(SPR_P1, bullet)) {
-    ay_fx_play(ay_effect_06);
+    //ay_fx_play(ay_effect_06);
     zx_border(INK_MAGENTA);
     bullet_col[bullet] = s_col0;
     spr_bullet_explode();
@@ -938,7 +938,7 @@ void spr_bullet_explode() {
   spr_add_anim(bullet_lin[bullet], bullet_col[bullet], TILE_ANIM_FIRE, 3, 0, 0);
   --bullet_count;
   bullet_col[bullet] = 0xFF;
-  ay_fx_play(ay_effect_11);
+  //ay_fx_play(ay_effect_11);
 }
 
 void spr_turn_horizontal(void) {

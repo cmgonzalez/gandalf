@@ -637,7 +637,7 @@ unsigned char game_check_time(unsigned int *start, unsigned char lapse) {
 unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
   unsigned char f_dir;
   if (bullet_col[f_sprite] == 0xFF) {
-    ay_fx_play(ay_effect_08);
+    //ay_fx_play(ay_effect_08);
     ++bullet_count;
     bullet_dir[f_sprite] = 0;
     bullet_lin0[f_sprite] = lin[f_sprite];

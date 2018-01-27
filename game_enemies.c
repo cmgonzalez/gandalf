@@ -346,7 +346,7 @@ void enemy_kill( unsigned char f_sprite ) __z88dk_fastcall {
   spr_destroy(f_sprite);
   spr_bullet_explode();
   spr_add_anim(s_lin0, s_col0, TILE_ANIM_DEAD, 3, 0, 0);
-  ay_fx_play(ay_effect_02);
+  //ay_fx_play(ay_effect_02);
 }
 
 void enemy_avoid_fall() {
