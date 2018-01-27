@@ -672,7 +672,7 @@ void spr_play_anim(void) {
   for (f_anim = 0; f_anim < 8; f_anim++) {
     if (anim_lin[f_anim] != 0xFF) {
 
-      z80_delay_ms(1); // TODO I don't get that...
+      //z80_delay_ms(1); // TODO I don't get that...
       ++anim_int[f_anim];
       if (anim_int[f_anim] < anim_end[f_anim]) {
         NIRVANAP_halt();
