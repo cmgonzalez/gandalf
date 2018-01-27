@@ -1,5 +1,5 @@
 /*
-        This file is part of Pietro Bros.
+        This file is part of Gandalf.
 
         Pietro Bros is free software: you can redistribute it and/or modify
         it under the terms of the GNU General Public License as published by
@@ -12,15 +12,16 @@
         GNU General Public License for more details.
 
         You should have received a copy of the GNU General Public License
-        along with Pietro Bros.  If not, see <http://www.gnu.org/licenses/>.
+        along with Gandalf.  If not, see <http://www.gnu.org/licenses/>.
 
 
-        Super Pietro Bros - Cristian Gonzalez - cmgonzalez@gmail.com
+        Gandalf - Cristian Gonzalez - cmgonzalez@gmail.com
 */
 
 #include "game.h"
 #include "game_ay.h"
 #include "game_enemies.h"
+#include "game_ay.h"
 #include "game_engine.h"
 #include "game_player.h"
 #include "game_sound.h"

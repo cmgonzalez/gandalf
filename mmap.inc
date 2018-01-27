@@ -1,7 +1,7 @@
 ;; GAME BROS CUSTOM MEMORY MAP
 ;;
-;; Nirvana+ has been assembled to use 19 rows instead of the
-;; usual 23 and this leaves a hole of more than 1300 bytes
+;; Nirvana+ has been assembled to use 18 rows instead of the
+;; usual 23 and this leaves a hole of more than 1600 bytes
 ;; inside the nirvana+ binary that can be used for other
 ;; things.
 ;;
@@ -24,6 +24,8 @@
 ;; memory model ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+INCLUDE "config_zx_private.inc"
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; sections defined by pietro bros
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -43,17 +45,33 @@ section LOADER_CODE
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-SECTION BANK_06
+SECTION BANK_3
 org 0xc000
+SECTION BANK_3_VTII
+SECTION BANK_3_MFX
+SECTION BANK_3_AUDIO
+SECTION BANK_3_MISC
+
+SECTION BANK_4
+org 0xc000
+SECTION BANK_4_VTII
+SECTION BANK_4_MFX
+SECTION BANK_4_AUDIO
+SECTION BANK_4_MISC
+
+SECTION BANK_6
+org 0xc000
+SECTION BANK_6_VTII
+SECTION BANK_6_MFX
+SECTION BANK_6_AUDIO
+SECTION BANK_6_MISC
 
 ;; 128k only, mainly ay audio
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 SECTION NIRVANA_HOLE
-org 56718+(328*19)
-
-defb 0    ;; control the name of the output file
+org __NIRVANAP_HOLE
 
 ;; ensure beeper code is not in contended memory
 

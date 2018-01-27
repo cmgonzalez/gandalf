@@ -1,5 +1,5 @@
 /*
-        This file is part of Pietro Bros.
+        This file is part of Gandalf.
 
         Pietro Bros is free software: you can redistribute it and/or modify
         it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
         GNU General Public License for more details.
 
         You should have received a copy of the GNU General Public License
-        along with Pietro Bros.  If not, see <http://www.gnu.org/licenses/>.
+        along with Gandalf.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "game.h"
 #include "game_ay.h"
@@ -56,8 +56,10 @@ unsigned char player_check_input(void) {
     dirs = 0;
   }
 
-  return dirs & IN_STICK_FIRE || dirs & IN_STICK_LEFT ||
-         dirs & IN_STICK_RIGHT || dirs & IN_STICK_UP || dirs & IN_STICK_DOWN;
+//  return dirs & IN_STICK_FIRE || dirs & IN_STICK_LEFT ||
+//         dirs & IN_STICK_RIGHT || dirs & IN_STICK_UP || dirs & IN_STICK_DOWN;
+
+   return (dirs & (IN_STICK_FIRE | IN_STICK_LEFT | IN_STICK_RIGHT | IN_STICK_UP | IN_STICK_DOWN)) != 0;
 }
 
 unsigned char player_collision(void) {
@@ -267,9 +269,12 @@ unsigned char player_move_input(void) {
     /* New jump */
     if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP)) {
       player_vel_inc = 1;
+/************************************************
       if (ay_is_playing() != AY_PLAYING_MUSIC) {
         ay_fx_play(ay_effect_03);
       }
+*************************************************/
+ay_fx_play(4, ay_fx_04_salto2);
       player_over_stair = 0;
       sound_jump();
 
@@ -420,7 +425,9 @@ void player_pick_item(void) {
   if (v0 >= TILE_ITEM_S && v0 <= TILE_ITEM_E) {
     // PICK ITEM
     ay_reset();
+/******************************************
     ay_fx_play(ay_effect_10);
+******************************************/
     sound_coin();
     scr_map[sprite_curr_index] = TILE_EMPTY;
 

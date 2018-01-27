@@ -1,5 +1,5 @@
 /*
-        This file is part of Pietro Bros.
+        This file is part of Gandalf.
 
         Pietro Bros is free software: you can redistribute it and/or modify
         it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
         GNU General Public License for more details.
 
         You should have received a copy of the GNU General Public License
-        along with Pietro Bros.  If not, see <http://www.gnu.org/licenses/>.
+        along with Gandalf.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "game.h"
 #include "game_ay.h"
@@ -38,6 +38,8 @@ void game_loop(void) {
   // TODO CALL MENU HERE
   while (!game_over) {
     game_round_init();
+/*******************************/
+ay_song_play(AY_SONG_LOOP, 6, ay_song_06_lotr);
 
     while (!game_worldup && !game_over) {
       /*Play animatios*/
@@ -330,7 +332,9 @@ void game_start_timer(void) {
 
 void game_round_init(void) {
   ay_reset();
+/***************************
   ay_fx_play(ay_effect_10);
+***************************/
   sound_coin();
   /* screen init */
   /*PHASE INIT*/

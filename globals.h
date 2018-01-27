@@ -1,5 +1,5 @@
 /*
-   This file is part of Pietro Bros.
+   This file is part of Gandalf.
 
    Pietro Bros is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with Pietro Bros.  If not, see <http://www.gnu.org/licenses/>.
+   along with Gandalf.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef GLOBALS_H
 #define GLOBALS_H
@@ -349,9 +349,6 @@
 #define BULLET_FIREBALL_UP           0x02
 #define BULLET_FIREBALL_DOWN         0x03
 #define BULLET_AXE                   0x04
-
-
-typedef uint16_t (*JOYFUNC)(udk_t *);
 
 //typedef uint16_t (*JOYFUNC)(udk_t *);
 #endif

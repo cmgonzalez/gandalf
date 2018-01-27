@@ -6,12 +6,13 @@ SECTION code_crt_common
 
 PUBLIC _zx_isr
 
-EXTERN _spec128
-EXTERN _zx_enable_bank_00, _zx_enable_bank_06
+EXTERN _spec128, _GLOBAL_ZX_PORT_7FFD
 
-EXTERN BANK06_ay_reset, _ay_reset_low
-EXTERN BANK06_ay_fx_play_isr, _ay_fx_playing
-EXTERN BANK06_ay_midi_play_isr, _ay_midi_playing, _ay_midi_hold
+EXTERN _ay_song_bank, _ay_song_command, _ay_song_command_param
+EXTERN vtii_setup, vtii_stop, vtii_init, vtii_play
+
+EXTERN _ay_fx_bank, _ay_fx_command, _ay_fx_command_param
+EXTERN mfx_mfxptr, mfx_add, mfx_playm
 
 _zx_isr:
 
@@ -21,83 +22,102 @@ _zx_isr:
    or a
    ret z
 
-   ; gather ay variables from main bank
+   ; process song command
 
-   ld hl,(_ay_fx_playing)
-   push hl
+song_command:
 
-   ld hl,(_ay_midi_playing)
-   push hl
+   ld a,(_ay_song_bank)
+   or $10
+   
+   ld bc,$7ffd
+   out (c),a                   ; page in song bank
+   
+   ld hl,vtii_setup
+   set 1,(hl)                  ; enable stack output from ay song player
 
-   ld a,(_ay_midi_hold)
-   push af
+   ld a,(_ay_song_command)
+   
+   bit 1,a
+   jr z, check_song_new
 
-   ld a,(_ay_reset_low)
-   ld e,a
+song_stop:
 
-   ; enable bank 06
+   call vtii_stop
+   jr song_exit
 
-   call _zx_enable_bank_06
+check_song_new:
 
-   ; perform ay reset if demanded
+   bit 2,a
+   jr z, song_play
 
-   ld a,e
-   or a
-   call z, BANK06_ay_reset
+song_new:
 
-   ; call midi isr
+   and $01                     ; keep loop bit
+   or $02                      ; enable stack output from ay song player
+   ld (vtii_setup),a
+   
+   ld hl,(_ay_song_command_param)
+   
+   call vtii_init
+   jr song_exit
 
-   pop de                      ;  d = ay_midi_hold
-   pop hl                      ; hl = ay_midi_playing
+song_play:
 
-   call BANK06_ay_midi_play_isr
+   call vtii_play
 
-   ; call effects isr
+song_exit:
 
-   ex (sp),hl                  ; hl = ay_fx_playing
-   push af
+   xor a
+   ld (_ay_song_command),a
 
-   call BANK06_ay_fx_play_isr
+   ; process fx command
 
-   ; restore bank 00
+fx_command:
 
-   call _zx_enable_bank_00
+   ld a,(_ay_fx_bank)
+   or $10
+   
+   ld bc,$7ffd
+   out (c),a                   ; page in fx bank
 
-   ld (_ay_fx_playing),hl
+   ld a,(_ay_fx_command)
+   
+   bit 1,a
+   jr z, check_fx_new
 
-   pop af
-   ld (_ay_midi_hold),a
+fx_stop:
 
-   pop hl
-   ld (_ay_midi_playing),hl
+   ld hl,0
+   ld (mfx_mfxptr+1),hl
+   
+   jr fx_play
 
-   ld a,$ff
-   ld (_ay_reset_low),a
+check_fx_new:
 
-   ret
+   bit 2,a
+   jr z, fx_play
+   
+fx_new:
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; BANKSWITCHING ;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   ld hl,(_ay_fx_command_param)
+   call mfx_add
+   
+fx_play:
 
-SECTION code_crt_common
+   call mfx_playm
 
-PUBLIC _zx_enable_bank_00, _zx_enable_bank_06
+fx_exit:
 
-EXTERN _GLOBAL_ZX_PORT_7FFD
-
-_zx_enable_bank_00:
-
+   xor a
+   ld (_ay_fx_command),a
+   
+   ; restore original bank
+   
    ld a,(_GLOBAL_ZX_PORT_7FFD)
-   jr _zx_enable_bank_06 + 2
-
-_zx_enable_bank_06:
-
-   ld a,$16
-
+   
    ld bc,$7ffd
    out (c),a
-
+   
    ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

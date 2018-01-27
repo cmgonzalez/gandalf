@@ -20,8 +20,8 @@
 #ifndef GAME_H
 #define GAME_H
 
-#endif
-
 #include "globals.h"
 void  test_proc();
 unsigned char  test_func();
+
+#endif
