@@ -32,16 +32,20 @@
 #define GAME_MAX_LEVEL                20
 #define GAME_MAX_MANA                 200
 #define GAME_MAX_VITA                 200
+
 /* Map foreground tiles */
 
 #define TILE_EMPTY                    0
+#define TILE_EMPTY_DARK               29
+#define TILE_EMPTY_DARK_A             24
+#define TILE_WORLD_EXIT               57
 #define TILE_BACKGROUND_S             0  //START OF BACKGROUND
 #define TILE_BACKGROUND_E             35 //END OF BACKGROUND
 
 #define TILE_ITEM_S                   36 //START OF ITEMS
 #define TILE_ITEM_E                   47 //END OF ITEMS
 
-#define TILE_FLOOR                    60 //START FLOOR TILES
+#define TILE_FLOOR                    58 //START FLOOR TILES
 #define TILE_CEIL                     72 //START CEILS TILES
 
 #define TILE_DOOR_E                   76 //END OF DOOR TILES
@@ -66,134 +70,56 @@
 
 /* Enemies Class indexes */
 #define PLAYER                        0
-#define GOTA                          1 //VERTICAL
-#define DRAGON                        2 //VERTICAL
-#define BAT                           3 //VERTICAL
-#define WYVERN                        4 //VERTICAL
-#define SPIDER                        5 //VERTICAL
-#define MUSHROOM_VITA                 6  //WALKER
-#define MUSHROOM_MANA                 7  //WALKER
-#define MUSHROOM_EXTRA                8  //WALKER
-#define FIRE                          9  //WALKER
-#define SNOWMAN                       10 //WALKER
-#define SKELETON                      11 //WALKER
-#define ORC                           12 //WALKER
-#define WARG                          13 //WALKER
-#define DWARF                         14 //WALKER
-#define ELF                           15 //WALKER
-#define PLANT                         16 //STATIC
-#define TRAP                          17 //STATIC
-#define SNAKE                         18 //STATIC
-#define BAT_H                         19 //HORIZONTAL
-#define DEVIL                         20 //OTHER
+#define GOTA                          1 //
+#define DRAGON                        2 //
+#define BAT                           3 //
+#define GHOST                         4 //
+#define SPIDER                        5 //
+#define MUSHROOM_VITA                 6  //
+#define MUSHROOM_MANA                 7  //
+#define MUSHROOM_EXTRA                8  //
+#define FIRE                          9  //
+#define PIRANHA                       10 //
+#define SKELETON                      11 //
+#define ORC                           12 //
+#define WARG                          13 //
+#define DWARF                         14 //
+#define ELF                           15 //
+#define PLANT                         16 //
+#define TRAP                          17 //
+#define SNAKE                         18 //
+#define BAT_H                         19 //
+#define DEVIL                         20
+#define FIRE_S                        21 //
+
+#define GAME_TOTAL_CLASSES            20  //Total class of enemies
+#define GAME_TOTAL_INDEX_CLASSES      23  //Total class of enemies variations, the same enemy can be left/right etc...
+
+#define E_HORIZONTAL                  1
+#define E_VERTICAL                    2
+#define E_WALK                        3
+#define E_STATIC                      4
+#define E_GHOST                       5
+#define E_GOTA                        6
 
 
+//MUSHROM'S INIT
+#define INDEX_MUSH_VITA_L             121
+#define INDEX_MUSH_VITA_R             122
 
+#define INDEX_MUSH_MANA_L             123
+#define INDEX_MUSH_MANA_R             124
 
-/* Enemies Variables */
-#define TILE_ENEMY_SKELETON           144
-#define FRAMES_ENEMY_SKELETON         4
-#define SPEED_ENEMY_SKELETON          4
-#define DIRINC_ENEMY_SKELETON         0
-#define INDEX_SKELETON_LEFT           96
-#define INDEX_SKELETON_RIGHT          97
-
-
-#define TILE_ENEMY_ORC                148
-#define FRAMES_ENEMY_ORC              4
-#define SPEED_ENEMY_ORC               3
-#define DIRINC_ENEMY_ORC              0
-#define INDEX_ORC_LEFT                98
-#define INDEX_ORC_RIGHT               99
-
-#define TILE_ENEMY_WARG               152
-#define FRAMES_ENEMY_WARG             2
-#define SPEED_ENEMY_WARG              1
-#define DIRINC_ENEMY_WARG             2
-#define INDEX_WARG_LEFT               100
-#define INDEX_WARG_RIGHT              101
-
-#define TILE_ENEMY_DWARF              156
-#define FRAMES_ENEMY_DWARF            4
-#define SPEED_ENEMY_DWARF             4
-#define DIRINC_ENEMY_DWARF            0
-#define INDEX_DWARF_LEFT              102
-#define INDEX_DWARF_RIGHT             103
-
-#define TILE_ENEMY_ELF                160
-#define FRAMES_ENEMY_ELF              4
-#define SPEED_ENEMY_ELF               6
-#define DIRINC_ENEMY_ELF              4
-#define INDEX_ELF_LEFT                104
-#define INDEX_ELF_RIGHT               105
-
-#define TILE_ENEMY_DRAGON             168
-#define FRAMES_ENEMY_DRAGON           2
-#define SPEED_ENEMY_DRAGON            3
-#define DIRINC_ENEMY_DRAGON           2
-#define INDEX_DRAGON_LEFT             106
-#define INDEX_DRAGON_RIGHT            107
-
-#define TILE_ENEMY_BAT                172
-#define FRAMES_ENEMY_BAT              2
-#define SPEED_ENEMY_BAT               1
-#define DIRINC_ENEMY_BAT              0
-#define INDEX_BAT                     108
-
-#define TILE_ENEMY_WYVERN             174
-#define FRAMES_ENEMY_WYVERN           2
-#define SPEED_ENEMY_WYVERN            2
-#define DIRINC_ENEMY_WYVERN           0
-#define INDEX_WYVERN                  109
-
-#define TILE_ENEMY_SPIDER             176
-#define FRAMES_ENEMY_SPIDER           2
-#define SPEED_ENEMY_SPIDER            2
-#define DIRINC_ENEMY_SPIDER           0
-#define INDEX_SPIDER                  110
-
-#define TILE_ENEMY_PLANT              178
-#define FRAMES_ENEMY_PLANT            2
-#define SPEED_ENEMY_PLANT             8
-#define DIRINC_ENEMY_PLANT            0
-#define INDEX_PLANT                   111
-
-#define TILE_ENEMY_SNAKE              180
-#define FRAMES_ENEMY_SNAKE            2
-#define SPEED_ENEMY_SNAKE             8
-#define DIRINC_ENEMY_SNAKE            0
-#define INDEX_SNAKE                   112
-
-#define TILE_ENEMY_BAT_H              182
-#define FRAMES_ENEMY_BAT_H            3
-#define SPEED_ENEMY_BAT_H             1
-#define DIRINC_ENEMY_BAT_H            0
-#define INDEX_BAT_H                   113
-
-#define TILE_ENEMY_MUSH_VITA          192
-#define FRAMES_ENEMY_MUSH_VITA        2
-#define SPEED_ENEMY_MUSH_VITA         2
-#define DIRINC_ENEMY_MUSH_VITA        0
-#define INDEX_MUSH_VITA_L             120
-#define INDEX_MUSH_VITA_R             121
-
-#define TILE_ENEMY_MUSH_MANA           194
-#define FRAMES_ENEMY_MUSH_MANA         2
-#define SPEED_ENEMY_MUSH_MANA          2
-#define DIRINC_ENEMY_MUSH_MANA         0
-#define INDEX_MUSH_MANA_L              122
-#define INDEX_MUSH_MANA_R              123
-
-#define TILE_ENEMY_MUSH_EXTRA          196
-#define FRAMES_ENEMY_MUSH_EXTRA        2
-#define SPEED_ENEMY_MUSH_EXTRA         2
-#define DIRINC_ENEMY_MUSH_EXTRA        0
-#define INDEX_MUSH_EXTRA_L             124
-#define INDEX_MUSH_EXTRA_R             125
+#define INDEX_MUSH_EXTRA_L            125
+#define INDEX_MUSH_EXTRA_R            126
 
 //BOSSES
-#define INDEX_ENEMY_BOSS1              116
-#define TILE_ENEMY_BOSS1               216
+#define INDEX_ENEMY_BOSS1             120
+#define TILE_ENEMY_BOSS1              200
+
+
+
+#define TILE_TITLE                     204
 
 
 
@@ -217,6 +143,7 @@
 #define TILE_ANIM_PICK                132
 #define TILE_ANIM_FIRE                135
 #define TILE_ANIM_RESPAWN             138
+#define TILE_ANIM_DEAD                141
 #define TILE_P1_KILL                  76
 #define TILE_P1_HITR                  76
 
@@ -277,6 +204,7 @@
 /* Starting positions*/
 #define DIR_LEFT                      255
 #define DIR_RIGHT                     1
+#define DIR_NONE                      0
 /*Stats (bit position number)*/
 #define STAT_JUMP                     0
 #define STAT_FALL                     1
@@ -292,7 +220,7 @@
 #define STAT_PUSH                     2
 #define STAT_LDIRL                    3
 #define STAT_LDIRR                    4
-#define STAT_INERT                    5
+#define STAT_STAIR                    5
 #define STAT_RESTART                  6
 #define STAT_HITBRICK                 7
 /* General */
@@ -310,7 +238,6 @@
 
 #define PLAYER_HCOL_MARGIN            2  //HORIZONTAL COLLISION MARGIN
 #define PLAYER_HCOL_MARGIN_INT        4  //HORIZONTAL COLLISION MARGIN INTERNAL (1 COL = 3 INT)
-#define PLAYER_SPEED                  2
 #define PLAYER_JUMP_SPEED             2
 #define PLAYER_FALL_SPEED             2
 #define PLAYER_INERT_TIME             8  /* Time for Player Inertia */
@@ -349,6 +276,7 @@
 #define BULLET_FIREBALL_UP           0x02
 #define BULLET_FIREBALL_DOWN         0x03
 #define BULLET_AXE                   0x04
+#define BULLET_FIREBALL              0x05
 
 //typedef uint16_t (*JOYFUNC)(udk_t *);
 #endif
@@ -357,10 +285,14 @@
 extern unsigned char spec128;
 extern unsigned char btiles[];
 extern uint16_t (*joyfunc1)(udk_t *); //TODO REMOVE THIS AS IS PART NOW OF input.h
+extern uint16_t (*joyfunc2)(udk_t *); //TODO REMOVE THIS AS IS PART NOW OF input.h
 extern udk_t k1;
+extern udk_t k2;
 
 
 extern unsigned char dirs;
+extern unsigned char dirs_alt;
+
 extern unsigned char tbuffer[7];
 extern unsigned char class[8];
 extern unsigned char state[8];
@@ -379,7 +311,6 @@ extern unsigned int spr_timer[8];
 extern unsigned char player_slide;
 extern unsigned int last_time[8];
 extern unsigned int player_score;
-extern unsigned int player_joy;
 extern signed char  player_vel_x;
 extern signed char  player_vel_y;
 extern signed char  player_vel_y0;
@@ -401,6 +332,8 @@ extern unsigned char player_col_scr;
 extern unsigned char player_lin_scr;
 
 extern unsigned int player_hit_time;
+extern unsigned char player_anim_stair;
+extern unsigned char player_onfire;
 
 
 extern signed   int  game_gravity;
@@ -413,6 +346,7 @@ extern unsigned char game_mush_count;
 
 extern unsigned char game_worldup;
 extern unsigned char game_respawn_curr_time;
+extern unsigned char game_2buttons;
 extern unsigned int fps;
 
 
@@ -428,6 +362,7 @@ extern unsigned char s_lin0;
 extern unsigned char s_lin1;
 extern unsigned char s_col0;
 extern unsigned char s_col1;
+extern unsigned char s_class;
 extern unsigned int loop_count;
 extern unsigned int index0;
 extern unsigned int index1;
@@ -441,9 +376,9 @@ extern unsigned char enemies;
 extern unsigned char zx_val_asm;
 extern unsigned char attrib[4];
 extern unsigned char attrib_hl[4];
+extern unsigned char attrib_osd[4];
 extern unsigned char s_state;
 extern unsigned int curr_time;
-extern unsigned int entry_time;
 extern unsigned int frame_time;
 extern unsigned int anim_time;
 extern unsigned int bullet_time;
@@ -451,55 +386,42 @@ extern unsigned char spr_count;
 extern unsigned char sprite_curr_index;
 
 
-extern unsigned char game_brick_tile;
-extern unsigned char game_two_player;
 extern unsigned char game_god_mode;
 extern unsigned char game_inmune;
 extern unsigned char game_sound;
 
 extern unsigned char game_over;
 extern unsigned char player_lives;
+extern unsigned char player_coins;
 extern unsigned int game_score_top;
-extern unsigned char game_menu_sel;
 extern unsigned int game_respawn_time[7];
 extern unsigned char game_respawn_index[7];
 extern unsigned char game_respawn_tile[7];
 extern unsigned char game_start_scr;
 
-extern unsigned char player_over_stair;
+extern unsigned char player_onstair;
 
 
 extern unsigned char screen_paper, screen_ink;
 extern unsigned char sprite_speed[];
 extern unsigned char sprite_frames[];
+extern unsigned char spr_map_tile[];
+extern unsigned char spr_init[];
+
 extern unsigned char sprite_speed_alt[8];
 extern unsigned char scr_map[];
 extern unsigned char scr_obj0[];
 extern unsigned char scr_obj1[];
+extern unsigned char sprite_kind[];
 
-/*
-   extern const unsigned char scr_0[];
-   extern const unsigned char scr_1[];
-   extern const unsigned char scr_2[];
-   extern const unsigned char scr_3[];
-   extern const unsigned char scr_4[];
-   extern const unsigned char scr_5[];
-   extern const unsigned char scr_6[];
-   extern const unsigned char scr_7[];
- */
-extern const unsigned char start_scr0;
+
+//Bank 6 Level Data
+extern const unsigned char start_scr0[];
 extern const unsigned char lenght0[];
 extern const unsigned char paper0[];
 extern const unsigned char world0[];
-extern const unsigned char world0_w;
-extern const unsigned char world0_h;
-
-extern const unsigned char start_scr1;
-extern const unsigned char lenght1[];
-extern const unsigned char paper1[];
-extern const unsigned char world1[];
-extern const unsigned char world1_w;
-extern const unsigned char world1_h;
+extern const unsigned char world0_w[];
+extern const unsigned char world0_h[];
 
 extern unsigned char scr_curr;
 extern unsigned char map_width;
@@ -531,6 +453,7 @@ extern unsigned char bullet_dir[8];
 extern unsigned char bullet_colint[8];
 extern unsigned char bullet_frames[8];
 extern signed char bullet_vel[8];
+extern unsigned char bullet;
 
 extern unsigned char boss_lin;
 extern unsigned char boss_col;
@@ -545,8 +468,6 @@ extern unsigned char spr_hack;
 extern unsigned char bullet_count;
 
 extern const JOYFUNC control_method[7];
-extern unsigned char initials[8];
-extern const char *joynames[];
 
 extern unsigned char g_player_hit_left;
 extern unsigned char g_player_hit_right;
@@ -555,5 +476,12 @@ extern unsigned char draw_count;
 extern unsigned char map_paper;
 extern unsigned char map_paper_clr;
 extern unsigned char map_paper_last;
+extern unsigned char stp_tile;
+extern unsigned char stp_col;
+extern unsigned char stp_row;
+
 
 extern unsigned int player_lvl_table[];
+
+extern unsigned char key_map[];
+extern unsigned int scan_map[];

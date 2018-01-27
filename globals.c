@@ -48,18 +48,14 @@ unsigned char map_heigth;
 //#
 //###############################################################################################
 
-const char *joynames[] = {"SJ1", "SJ2", "KB1", "KB2", "KEM", "CUR", "FUL"};
 uint16_t (*joyfunc1)(udk_t *); // pointer to joystick function Player 1
+uint16_t (*joyfunc2)(udk_t *); // pointer to joystick function for game_2buttons
 udk_t k1;
+udk_t k2; // For game_2buttons
 
 unsigned char dirs;
+unsigned char dirs_alt;
 unsigned char tbuffer[7]; // temporary buffer
-
-const JOYFUNC control_method[7] = {
-    (JOYFUNC)(in_stick_sinclair1), (JOYFUNC)(in_stick_sinclair2),
-    (JOYFUNC)(in_stick_keyboard),  (JOYFUNC)(in_stick_keyboard),
-    (JOYFUNC)(in_stick_kempston),  (JOYFUNC)(in_stick_cursor),
-    (JOYFUNC)(in_stick_fuller)};
 
 // SPRITES GAME ARRAYS
 unsigned char class[8];   // CLASS OF SPRITE
@@ -73,26 +69,28 @@ unsigned char lin[8];     // LINE
 
 unsigned char col[8];      // COLUMN
 unsigned char colint[8];   // INTERNAL COLUMN/TILE INCREMENT
-unsigned int  spr_timer[8]; // SPRITE GENERAL TIMER MILISECONDS
-unsigned int  last_time[8]; // LAST TIME OF MOVEMENT FOR ANIMATIONS / SPEED
+unsigned int spr_timer[8]; // SPRITE GENERAL TIMER MILISECONDS
+unsigned int last_time[8]; // LAST TIME OF MOVEMENT FOR ANIMATIONS / SPEED
 unsigned char jump_lin[8]; // START JUMP LINE
 
 // PLAYER ONLY
 unsigned char player_hit_lin; // HIT BRICK LINE
 unsigned char player_hit_col; // HIT BRICK COL
 unsigned char player_slide;   // SLIDING COUNTER
-unsigned int  player_score;    // SCORE
-unsigned int  player_joy;      // JOYSTICK
+unsigned int player_score;    // SCORE
 unsigned char player_lives;
-unsigned char player_over_stair;
-signed char   player_vel_x;
-signed char   player_vel_y;
-signed char   player_vel_y0;
-signed char   player_vel_y1;
-signed char   player_vel_inc;
+unsigned char player_coins;
+unsigned char player_onstair;
+signed char player_vel_x;
+signed char player_vel_y;
+signed char player_vel_y0;
+signed char player_vel_y1;
+signed char player_vel_inc;
 unsigned char player_keys[4];
 unsigned char player_hit_count;
-unsigned int  player_brick_time;
+unsigned int player_brick_time;
+unsigned char player_anim_stair;
+unsigned char player_onfire;
 // PLAYER ATTRIBUTES
 unsigned char player_mana;
 unsigned char player_vita;
@@ -103,13 +101,11 @@ unsigned char player_max_vita;
 unsigned char player_str;
 unsigned char player_int;
 unsigned char player_lvl;
-
 unsigned char player_col_scr;
 unsigned char player_lin_scr;
+unsigned int  player_hit_time;
 
-unsigned int player_hit_time;
-
-signed   int  game_gravity;
+signed int    game_gravity;
 unsigned char game_world;
 unsigned char game_boss;
 unsigned char game_boss_hit;
@@ -120,6 +116,7 @@ unsigned char game_mush_count;
 
 unsigned char game_worldup;
 unsigned char game_respawn_curr_time;
+unsigned char game_2buttons;
 unsigned int fps;
 
 unsigned char sprite;
@@ -132,6 +129,7 @@ unsigned char s_lin0;
 unsigned char s_lin1;
 unsigned char s_col0;
 unsigned char s_col1;
+unsigned char s_class;
 unsigned int loop_count;
 unsigned int index0;
 unsigned int index1;
@@ -145,13 +143,13 @@ unsigned char enemies;
 unsigned char zx_val_asm;
 unsigned char attrib[4];
 unsigned char attrib_hl[4];
+unsigned char attrib_osd[4];
 unsigned char s_state;
 
 unsigned char g_player_hit_left;
 unsigned char g_player_hit_right;
 
 unsigned int curr_time;
-unsigned int entry_time;
 unsigned int frame_time;
 unsigned int anim_time;
 unsigned int bullet_time;
@@ -183,7 +181,8 @@ unsigned char bullet_tile[8];
 unsigned char bullet_dir[8];
 unsigned char bullet_colint[8];
 unsigned char bullet_frames[8];
-signed char bullet_vel[8];
+unsigned char bullet;
+signed char   bullet_vel[8];
 
 unsigned char boss_lin;
 unsigned char boss_col;
@@ -191,7 +190,7 @@ unsigned char boss_inc;
 unsigned char boss_tile;
 unsigned int  boss_time;
 unsigned int  boss_time_fire;
-unsigned char  boss_stat;
+unsigned char boss_stat;
 
 unsigned char spr_hack;
 
@@ -201,20 +200,17 @@ unsigned char spr_hack;
 //#
 //###############################################################################################
 
-unsigned char game_brick_tile;
 unsigned char game_god_mode;
 unsigned char game_inmune;
 
 unsigned char game_sound;
 unsigned char game_over;
-unsigned char game_menu_sel;
 
 unsigned int game_score_top;
 unsigned int game_respawn_time[7]; // 8-1=7 Player don't respawn
 unsigned char game_respawn_index[7];
 unsigned char game_respawn_tile[7];
 unsigned char game_start_scr;
-
 
 // PHASE RELATED VARIABLES
 unsigned char screen_paper;
@@ -224,64 +220,172 @@ unsigned char map_paper;
 unsigned char map_paper_clr;
 unsigned char map_paper_last;
 
+unsigned char stp_tile;
+unsigned char stp_col;
+unsigned char stp_row;
+
 //###############################################################################################
 //# # # ENEMIES ANIMATION SPEEDS - INTERRUPTS VALUES 50HZ
 //# #
 //#
 //###############################################################################################
-unsigned char sprite_speed[] = {
-    PLAYER_SPEED,
-    0,
-    SPEED_ENEMY_DRAGON,
-    SPEED_ENEMY_BAT,
-    SPEED_ENEMY_WYVERN,
-    SPEED_ENEMY_SPIDER,
-    SPEED_ENEMY_MUSH_VITA,
-    SPEED_ENEMY_MUSH_MANA,
-    SPEED_ENEMY_MUSH_EXTRA,
-    0, // FIRE
-    0, // SNOWMAN
-    SPEED_ENEMY_SKELETON,
-    SPEED_ENEMY_ORC,
-    SPEED_ENEMY_WARG,
-    SPEED_ENEMY_DWARF,
-    SPEED_ENEMY_ELF,
-    SPEED_ENEMY_PLANT,
-    0, // TRAP
-    SPEED_ENEMY_SNAKE,
-    SPEED_ENEMY_BAT_H,
-    0, // DEVIL
+
+//Enemy intialization variables, based on index on map array, used along GAME_TOTAL_INDEX_CLASSES.
+unsigned char spr_init[] = {
+  //TILE INDEX ON MAP FILE, CLASS OF ENEMY TO CREATE, SPRITE DIRECTION IF APLLY
+  96, SKELETON, DIR_LEFT,
+  97, SKELETON, DIR_RIGHT,
+  98, ORC, DIR_LEFT,
+  99, ORC, DIR_RIGHT,
+  100, WARG, DIR_LEFT,
+  101, WARG, DIR_RIGHT,
+  102, DWARF, DIR_LEFT,
+  103, DWARF, DIR_RIGHT,
+  104, ELF, DIR_LEFT,
+  105, ELF, DIR_RIGHT,
+  106, DRAGON, DIR_RIGHT,
+  107, DRAGON, DIR_LEFT,
+  108, BAT, DIR_NONE,
+  109, GHOST, DIR_RIGHT,
+  110, SPIDER, DIR_NONE,
+  111, PLANT, DIR_NONE,
+  112, SNAKE, DIR_NONE,
+  113, BAT_H, DIR_NONE,
+  114, FIRE, DIR_NONE,
+  115, PIRANHA, DIR_NONE,
+  116, GHOST, DIR_LEFT,
+  117, DEVIL, DIR_NONE,
+  118, GOTA, DIR_NONE,
+  119, FIRE_S, DIR_NONE,
 };
 
-unsigned char sprite_frames[] = {
-    FRAMES_PLAYER,
-    0,
-    FRAMES_ENEMY_DRAGON,
-    FRAMES_ENEMY_BAT,
-    FRAMES_ENEMY_WYVERN,
-    FRAMES_ENEMY_SPIDER,
-    FRAMES_ENEMY_MUSH_VITA,
-    FRAMES_ENEMY_MUSH_MANA,
-    FRAMES_ENEMY_MUSH_EXTRA,
-    0,
-    0,
-    FRAMES_ENEMY_SKELETON,
-    FRAMES_ENEMY_ORC,
-    FRAMES_ENEMY_WARG,
-    FRAMES_ENEMY_DWARF,
-    FRAMES_ENEMY_ELF,
-    FRAMES_ENEMY_PLANT,
-    0, // TRAP
-    FRAMES_ENEMY_SNAKE,
-    FRAMES_ENEMY_BAT_H,
-    0, // DEVIL
+unsigned char sprite_kind[] = {
+  0,// PLAYER
+  E_GOTA,// GOTA
+  E_VERTICAL,// DRAGON
+  E_VERTICAL,// BAT
+  E_GHOST,// GHOST
+  E_VERTICAL,// SPIDER
+  E_WALK,// MUSHROOM_VITA
+  E_WALK,// MUSHROOM_MANA
+  E_WALK,// MUSHROOM_EXTRA
+  E_VERTICAL,// FIRE
+  E_VERTICAL,// PIRANHA
+  E_WALK,// SKELETON
+  E_WALK,// ORC
+  E_WALK,// WARG
+  E_WALK,// DWARF
+  E_WALK,// ELF
+  E_STATIC,// PLANT
+  E_STATIC,// TRAP
+  E_STATIC,// SNAKE
+  E_HORIZONTAL,// BAT_H
+  E_GHOST,// DEVIL
+  E_STATIC,// FIRE_S
 };
+
+unsigned char sprite_speed[] = {
+    2,// PLAYER
+    3,// GOTA
+    6,// DRAGON
+    2,// BAT
+   12,// GHOST
+    2,// SPIDER
+    2,// MUSHROOM_VITA
+    2,// MUSHROOM_MANA
+    2,// MUSHROOM_EXTRA
+    1,// FIRE
+    1,// PIRANHA
+    4,// SKELETON
+    3,// ORC
+    1,// WARG
+    4,// DWARF
+    6,// ELF
+    8,// PLANT
+    0,// TRAP
+    8,// SNAKE
+    1,// BAT_H
+    8,// DEVIL
+    4,// FIRE_S
+};
+
+//Sprite tile and animation frames for init, used with GAME_TOTAL_CLASSES
+unsigned char spr_map_tile[] = {
+  //ENEMY Class     ,TILE INDEX ,DIR INC
+  GOTA              , 87        ,0,
+  SKELETON          ,144        ,0,
+  ORC               ,148        ,0,
+  WARG              ,152        ,2,
+  DWARF             ,156        ,0,
+  ELF               ,160        ,4,
+  DRAGON            ,168        ,2,
+  BAT               ,172        ,0,
+  GHOST             ,192        ,2,
+  DEVIL             ,174        ,0,
+  SPIDER            ,176        ,0,
+  PLANT             ,178        ,0,
+  SNAKE             ,180        ,0,
+  FIRE              ,196        ,0,
+  PIRANHA           ,198        ,0,
+  BAT_H             ,182        ,0,
+  MUSHROOM_VITA     ,185        ,0,
+  MUSHROOM_MANA     ,187        ,0,
+  MUSHROOM_EXTRA    ,189        ,0,
+  FIRE_S            ,94         ,0,
+};
+
+unsigned char sprite_frames[] = { //TODO REPLACE CONSTANT WITH FIXED VALUES TO SIMPLIFY
+  4,// PLAYER
+  3,// GOTA
+  2,// DRAGON
+  2,// BAT
+  2,// GHOST
+  2,// SPIDER
+  2,// MUSHROOM_VITA
+  2,// MUSHROOM_MANA
+  2,// MUSHROOM_EXTRA
+  1,// FIRE
+  1,// PIRANHA
+  4,// SKELETON
+  4,// ORC
+  2,// WARG
+  4,// DWARF
+  4,// ELF
+  2,// PLANT
+  0,// TRAP
+  2,// SNAKE
+  3,// BAT_H
+  2,// DEVIL
+  2,// FIRE_S
+};
+
 
 
 unsigned int player_lvl_table[] = {
     100,   500,   1000,  2000,  4000,  6000,  7000,  8000,  9000,  10000,
-    12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000,
+    12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000
 };
 // TEMPORARY SPEED FOR SPEED UP
 unsigned char sprite_speed_alt[8];
 unsigned char draw_count;
+
+unsigned char key_map[] = {
+    13,  32,  48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  97,
+    98,  99,  100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110,
+    111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
+};
+unsigned int scan_map[] = {
+    IN_KEY_SCANCODE_ENTER, IN_KEY_SCANCODE_SPACE, IN_KEY_SCANCODE_0,
+    IN_KEY_SCANCODE_1,     IN_KEY_SCANCODE_2,     IN_KEY_SCANCODE_3,
+    IN_KEY_SCANCODE_4,     IN_KEY_SCANCODE_5,     IN_KEY_SCANCODE_6,
+    IN_KEY_SCANCODE_7,     IN_KEY_SCANCODE_8,     IN_KEY_SCANCODE_9,
+    IN_KEY_SCANCODE_a,     IN_KEY_SCANCODE_b,     IN_KEY_SCANCODE_c,
+    IN_KEY_SCANCODE_d,     IN_KEY_SCANCODE_e,     IN_KEY_SCANCODE_f,
+    IN_KEY_SCANCODE_g,     IN_KEY_SCANCODE_h,     IN_KEY_SCANCODE_i,
+    IN_KEY_SCANCODE_j,     IN_KEY_SCANCODE_k,     IN_KEY_SCANCODE_l,
+    IN_KEY_SCANCODE_m,     IN_KEY_SCANCODE_n,     IN_KEY_SCANCODE_o,
+    IN_KEY_SCANCODE_p,     IN_KEY_SCANCODE_q,     IN_KEY_SCANCODE_r,
+    IN_KEY_SCANCODE_s,     IN_KEY_SCANCODE_t,     IN_KEY_SCANCODE_u,
+    IN_KEY_SCANCODE_v,     IN_KEY_SCANCODE_w,     IN_KEY_SCANCODE_x,
+    IN_KEY_SCANCODE_y,     IN_KEY_SCANCODE_z
+};

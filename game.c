@@ -24,7 +24,7 @@
 #include "game_ay.h"
 #include "game_engine.h"
 #include "game_player.h"
-#include "game_sound.h"
+//#include "game_sound.h"
 #include "game_sprite.h"
 #include "game_zx.h"
 #include "macros.h"
@@ -39,7 +39,6 @@ void main(void) {
   game_god_mode = 1; // GAME_GOD_MODE;
   game_inmune = 1;   // GAME_INMUNE;
   // INTERRUPTS ARE DISABLED
-
   // RESET AY CHIP
   ay_reset();
   // GAME OPTIONS
@@ -48,7 +47,6 @@ void main(void) {
 
   game_sound = spec128 ? (GAME_SOUND_AY_FX_ON | GAME_SOUND_AY_MUS_ON)
                        : (GAME_SOUND_48_FX_ON | GAME_SOUND_48_MUS_ON);
-  player_joy = 0;              /*KB1*/
   game_gravity = GAME_GRAVITY; // 8;
   // vel_y0 + vel_y1 = -84
   player_vel_y0 = GAME_VELOCITY;     //-88; // Velocity
@@ -57,23 +55,35 @@ void main(void) {
   // Keyboard Handling
 
   k1.fire = IN_KEY_SCANCODE_m;
+  // TODO k1.fire1 = IN_KEY_SCANCODE_SPACE;
   k1.left = IN_KEY_SCANCODE_o;
   k1.right = IN_KEY_SCANCODE_p;
   k1.up = IN_KEY_SCANCODE_q;   // must be defined otherwise up is always true
   k1.down = IN_KEY_SCANCODE_a; // must be defined otherwise down is always true
 
-  game_joystick_set_menu();
+  k2.left = IN_KEY_SCANCODE_DISABLE;
+  k2.right = IN_KEY_SCANCODE_DISABLE;
+  k2.up = IN_KEY_SCANCODE_DISABLE;
+  k2.down = IN_KEY_SCANCODE_DISABLE;
+  k2.fire = IN_KEY_SCANCODE_SPACE;
+
+  zx_print_paper(PAPER_BLACK);
   zx_border(INK_BLACK);
 
-  // Wait for Keypress and Randomize
+  // Wait for Keypress and Randomize //
+  /* Default Values for menu */
+  joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_sinclair1);
+  joyfunc2 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
+
 
   in_wait_nokey();
   for (counter = 31416; !in_test_key(); counter += 10061)
     ;
   srand(counter);
-
-  zx_paper_fill(INK_BLACK | PAPER_BLACK);
   zx_print_paper(PAPER_BLACK);
+  zx_border(INK_BLACK);
+  zx_paper_fill(INK_BLACK | PAPER_BLACK);
+
   // Init Game
   game_start_timer();
   // Init Nirvana
@@ -86,6 +96,8 @@ void main(void) {
   while (1) {
     /*Init Objects*/
     game_obj_clear();
+    game_world = 0;//1;//0;
+    scr_curr =  0; //2;//14;//0xFF; // 255 equals read default screen from map
 
     /*Player Init*/
     player_max_mana = GAME_START_MAX_MANA;
@@ -99,60 +111,41 @@ void main(void) {
     player_score = 0;
     player_lin_scr = GAME_LIN_FLOOR - 16;
     player_col_scr = 2;
-    fps = 0;
-    game_world = 0;
+
+
     game_worldup = 0;
     game_respawn_curr_time = 255;
     game_mush_count = 0;
     game_boss_alive = 1;
+    game_2buttons = 1; // Two button control - Space default 2 button
     /* phase init */
     game_over = 0;
-    scr_curr = 255; // 255 equals read default screen from map
+
     /* game loop start */
     dirs = 0x00;
-    //MENU
-    game_joystick_set();
-    map_paper = PAPER_BLACK;
-    game_attribs();
-    zx_print_ink(INK_WHITE);
-    zx_print_str(12, 12, "GANDALF");
-    game_colour_message(12, 12, 12 + 7, 25, 0);
+    // MENU
+    ay_reset();
+    menu_main();
     map_paper_last = PAPER_BLUE;
     map_paper = PAPER_BLUE;
     map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
     game_attribs();
-    //END MENU
+    // END MENU
     game_loop();
-    for (sprite = 0; sprite < 8; ++sprite) {
-      NIRVANAP_spriteT(sprite, TILE_EMPTY, 0, 0);
-    }
+    spr_flatten();
     zx_print_str(12, 12, "GAME OVER");
     game_over = 0; // Hack game_colour_message to render background
     game_colour_message(12, 12, 12 + 9, 250, 0);
     game_obj_clear();
+    spr_clear_scr();
+    NIRVANAP_stop();
+    zx_print_paper(PAPER_BLACK);
+    zx_border(INK_BLACK);
+    zx_paper_fill(INK_BLACK | PAPER_BLACK);
+    NIRVANAP_start();
   }
 }
 
-void test_proc() {
-
-  // 768 byte colour attribute data, immediately after the bitmap data at
-  // address &5800 (22528d)
-  unsigned char i;
-  unsigned char j;
-
-  for (i = 0; i < 8; ++i) {
-    NIRVANAP_spriteT(i,TILE_EMPTY, 0,0) ;
-  }
-  NIRVANAP_halt();
-
-  intrinsic_di();
-  for (i = 0; i < 16; ++i) {
-    for (j = 1; j < 10; ++j) {
-      NIRVANAP_fillT_raw(INK_BLACK || PAPER_BLACK, j * 16, i * 2) ;
-    }
-  }
-  intrinsic_ei();
-  NIRVANAP_halt();
-}
+void test_proc() {}
 
 unsigned char test_func() { return 0; }

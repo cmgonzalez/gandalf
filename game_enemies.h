@@ -21,13 +21,13 @@ extern void          enemy_vertical(void);
 extern void          enemy_horizontal(void);
 extern void          enemy_walk(void);
 extern void          enemy_static(void);
-extern void          enemy_coin1(void);
-extern void          enemy_hit(void);
 extern void          enemy_turn(void);
 extern void          enemy_move(void);
 extern void          enemy_init(unsigned char f_lin,unsigned  char f_col,unsigned  char f_class,unsigned  char f_dir);
-extern void          enemy_respawn(unsigned char f_anim);
+extern void          enemy_respawn(unsigned char f_anim) __z88dk_fastcall;
+extern void          enemy_kill( unsigned char f_sprite) __z88dk_fastcall;
 extern void          enemy_avoid_fall(void);
 extern unsigned char enemy_avoid_dead(void);
 extern void          boss_turn(void);
+extern void          boss_draw(unsigned char f_inc) __z88dk_fastcall;
 #endif
