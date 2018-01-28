@@ -27,7 +27,7 @@ extern unsigned char ay_is_playing(void) __preserves_regs(d,e);
 
 // AY Effects Player
 
-extern void ay_fx_play(unsigned char bank, void *effect) __preserves_regs(a,b,c);
+extern void ay_fx_play(unsigned char bank, void *effect) __preserves_regs(a,b,c) __z88dk_callee;
 extern void ay_fx_stop(void) __preserves_regs(b,c,d,e,h,l);
 
 // AY Song Player
@@ -35,7 +35,7 @@ extern void ay_fx_stop(void) __preserves_regs(b,c,d,e,h,l);
 #define AY_SONG_LOOP             0
 #define AY_SONG_ONCE             1
 
-extern void ay_song_play(unsigned char flag, unsigned char bank, void *song) __preserves_regs(b,c);
+extern void ay_song_play(unsigned char flag, unsigned char bank, void *song) __preserves_regs(b,c) __z88dk_callee;
 extern void ay_song_stop(void) __preserves_regs(b,c,d,e,h,l);
 
 // AY Miscellaneous
