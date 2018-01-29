@@ -47,44 +47,27 @@ INCLUDE "src/mfx.asm"
 SECTION BANK_6_AUDIO
 
 PUBLIC _ay_song_06_ciel
-PUBLIC _ay_song_06_lotr
-PUBLIC _ay_song_06_lotr_lose_a_life
-PUBLIC _ay_song_06_lotr_level_complete
-PUBLIC _ay_song_06_lotr_level_start
-
-PUBLIC _ay_fx_06_explosion1
-PUBLIC _ay_fx_06_fx1
-PUBLIC _ay_fx_06_fx2
-PUBLIC _ay_fx_06_fx3
-PUBLIC _ay_fx_06_fx4
+PUBLIC _ay_song_06_luna
 
 _ay_song_06_ciel:
    BINARY "songs/ciel.bin"
 
-_ay_song_06_lotr:
-   BINARY "songs/lotr.bin"
+_ay_song_06_luna:
+   BINARY "songs/luna.bin"
 
-_ay_song_06_lotr_lose_a_life:
-   BINARY "songs/lotr-losealife.bin"
+PUBLIC _ay_fx_06_disparo1
+PUBLIC _ay_fx_06_disparo2
+PUBLIC _ay_fx_06_efecto
+PUBLIC _ay_fx_06_explosion1
 
-_ay_song_06_lotr_level_complete:
-   BINARY "songs/lotr-lvlcomplete.bin"
+_ay_fx_06_disparo1:
+   BINARY "fx/disparo1.bin"
 
-_ay_song_06_lotr_level_start:
-   BINARY "songs/lotr-lvlstart.bin"
-
+_ay_fx_06_disparo2:
+   BINARY "fx/disparo2.bin"
+	
+_ay_fx_06_efecto:
+   BINARY "fx/efecto.bin"
 
 _ay_fx_06_explosion1:
    BINARY "fx/explosion1.bin"
-
-_ay_fx_06_fx1:
-   BINARY "fx/fx1.bin"
-
-_ay_fx_06_fx2:
-   BINARY "fx/fx2.bin"
-
-_ay_fx_06_fx3:
-   BINARY "fx/fx3.bin"
-
-_ay_fx_06_fx4:
-   BINARY "fx/fx4.bin"

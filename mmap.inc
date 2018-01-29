@@ -45,13 +45,6 @@ section LOADER_CODE
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-SECTION BANK_3
-org 0xc000
-SECTION BANK_3_VTII
-SECTION BANK_3_MFX
-SECTION BANK_3_AUDIO
-SECTION BANK_3_MISC
-
 SECTION BANK_4
 org 0xc000
 SECTION BANK_4_VTII

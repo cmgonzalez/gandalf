@@ -146,7 +146,7 @@ unsigned char player_move_input(void) {
     if (f_check) {
       player_vel_inc = 1;
 /*****************************************/
-ay_fx_play(4, ay_fx_04_salto2);
+ay_fx_play(4, ay_fx_04_salto);
       player_onstair = 0;
       // colint[SPR_P1] = FRAMES_PLAYER / 2;
       spr_set_up(&s_state);

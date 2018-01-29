@@ -57,7 +57,6 @@ IFNDEF PCOMPRESS
    PUBLIC game_loader
    
    EXTERN __CODE_head, __CODE_END_tail
-   EXTERN __BANK_3_head, __BANK_3_MISC_tail
    EXTERN __BANK_4_head, __BANK_4_MISC_tail
    EXTERN __BANK_6_head, __BANK_6_MISC_tail
    EXTERN _spec128
@@ -111,12 +110,12 @@ IFNDEF PCOMPRESS
       ; check for 128k spectrum
    
       ld bc,$7ffd
-      ld de,$1013
+      ld de,$1014
    
       ld hl,0xc000
       ld a,(hl)                   ; a = byte at 0xc000
    
-      out (c),e                   ; enable BANK_3
+      out (c),e                   ; enable BANK_4
    
       cpl
       ld (hl),a                   ; write complemented byte to 0xc000
@@ -131,21 +130,6 @@ IFNDEF PCOMPRESS
    
       ; load extra banks for 128k machines
    
-      out (c),e                   ; enable BANK_3
-
-      push bc
-      push de
-      
-      ld de,__BANK_3_MISC_tail - __BANK_3_head
-      call load_bank
-      
-      pop de
-      pop bc
-      
-      out (c),d                   ; restore BANK_0
-      jp nc, __CODE_head          ; if tape loading error forget about sound effects
-      
-      inc e
       out (c),e                   ; enable BANK_4
       
       push bc
@@ -224,7 +208,7 @@ IFDEF PCOMPRESS
 
    EXTERN asm_dzx7_standard
    EXTERN __CODE_head, __CODE_END_tail, _spec128
-   EXTERN LEN_SCREEN, LEN_NIRVANAP, LEN_GAME, LEN_BANK_3, LEN_BANK_4, LEN_BANK_6
+   EXTERN LEN_SCREEN, LEN_NIRVANAP, LEN_GAME, LEN_BANK_4, LEN_BANK_6
 
    game_loader:
 
@@ -290,12 +274,12 @@ IFDEF PCOMPRESS
       ; check for 128k spectrum
    
       ld bc,$7ffd
-      ld de,$1013
+      ld de,$1014
    
       ld hl,0xc000
       ld a,(hl)                     ; a = byte at 0xc000
    
-      out (c),e                     ; enable BANK_3
+      out (c),e                     ; enable BANK_4
    
       cpl
       ld (hl),a                     ; write complemented byte to 0xc000
@@ -309,22 +293,7 @@ IFDEF PCOMPRESS
       jp nz, __CODE_head            ; if the byte changed this is a 48k machine
    
       ; load extra banks for 128k machines
-   
-      out (c),e                     ; enable BANK_3
 
-      push bc
-      push de
-
-      ld ix,0x10000 - LEN_BANK_3    ; load at top of bank to enable overlapped decompression
-      ld de,LEN_BANK_3
-   
-      call load_bank
-      jr nc, set_mode               ; if tape loading error stay in 48k mode
-
-      pop de
-      pop bc
-      
-      inc e
       out (c),e                     ; enable BANK_4
       
       push bc
