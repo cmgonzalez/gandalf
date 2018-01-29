@@ -478,7 +478,7 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
     if (f_kind == E_GHOST) {
       return 0;
     }
-    if (f_tile == 0xFF) {
+    if (f_tile >= 0x80) {
       // Animation
       return 0;
     }
@@ -495,7 +495,7 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
         }
       } else {
         // VERTICAL ENEMIES
-        if (f_tile <= TILE_ITEM_E) {
+        if (f_tile <= TILE_ITEM_E || ( f_tile >= TILE_STAIR_S && f_tile <= TILE_STAIR_E ) ) {
           return 0;
         } else {
           return f_tile;
@@ -561,7 +561,7 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
   return 0;
 }
 
-//TODO SINGLE FUNCTION 
+//TODO SINGLE FUNCTION
 void game_paint_attrib_lin(unsigned char f_start, unsigned char f_end,
                            unsigned char f_lin) {
   for (tmp_uc = f_start; tmp_uc < f_end; ++tmp_uc) {
@@ -871,6 +871,8 @@ unsigned char game_match_back(unsigned int f_index) __z88dk_fastcall {
       return TILE_EMPTY_DARK;
     if (v0 == TILE_EMPTY_DARK_A || v1 == TILE_EMPTY_DARK_A)
       return TILE_EMPTY_DARK_A;
+      if (v0 == TILE_EMPTY_DARK_B || v1 == TILE_EMPTY_DARK_B)
+        return TILE_EMPTY_DARK_B;
   }
   return TILE_EMPTY;
 }

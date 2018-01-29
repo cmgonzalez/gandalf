@@ -96,7 +96,7 @@ void main(void) {
   while (1) {
     /*Init Objects*/
     game_obj_clear();
-    game_world = 0;//1;//0;
+    game_world = 2;//1;//0;
     scr_curr =  0; //2;//14;//0xFF; // 255 equals read default screen from map
 
     /*Player Init*/
