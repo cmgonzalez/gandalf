@@ -1,6 +1,7 @@
 #include "globals.h"
 #include <arch/zx.h>
-// PLACED IN BANK 06
+
+// PLACED IN BANK_6_MISC
 // zsdcc can only place code and rodata into different banks at the moment
 // anything else use assembly language and sections
 // Compressed MAP

@@ -1,5 +1,5 @@
 /*
-        This file is part of Pietro Bros.
+        This file is part of Gandalf.
 
         Pietro Bros is free software: you can redistribute it and/or modify
         it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
         GNU General Public License for more details.
 
         You should have received a copy of the GNU General Public License
-        along with Pietro Bros.  If not, see <http://www.gnu.org/licenses/>.
+        along with Gandalf.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "game.h"
 #include "game_ay.h"
@@ -36,6 +36,7 @@ void game_loop(void) {
 
   // TODO CALL MENU HERE
   game_round_init();
+  ay_song_play(AY_SONG_LOOP, 6, ay_song_06_ciel);
   while (!game_over) {
 
     while (!game_worldup && !game_over) {
@@ -377,6 +378,7 @@ void game_start_timer(void) {
 
 void game_round_init(void) {
 
+  ay_reset();
   /* screen init */
   /*PHASE INIT*/
   loop_count = 0;
@@ -392,8 +394,8 @@ void game_round_init(void) {
   game_print_footer();
   spr_page_map();
   game_draw_screen();
-  ay_reset();
-  ay_fx_play(ay_effect_12);
+  //ay_reset();
+  //ay_fx_play(ay_effect_12);
   /* Player(s) init */
   if (!game_over) {
     player_init(player_lin_scr, player_col_scr, TILE_P1_STANR);
@@ -637,7 +639,7 @@ unsigned char game_check_time(unsigned int *start, unsigned char lapse) {
 unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
   unsigned char f_dir;
   if (bullet_col[f_sprite] == 0xFF) {
-    ay_fx_play(ay_effect_08);
+    //ay_fx_play(ay_effect_08);
     ++bullet_count;
     bullet_dir[f_sprite] = 0;
     bullet_lin0[f_sprite] = lin[f_sprite];

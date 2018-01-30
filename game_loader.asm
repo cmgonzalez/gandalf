@@ -57,7 +57,9 @@ IFNDEF PCOMPRESS
    PUBLIC game_loader
    
    EXTERN __CODE_head, __CODE_END_tail
-   EXTERN __BANK_06_size, _spec128
+   EXTERN __BANK_4_head, __BANK_4_MISC_tail
+   EXTERN __BANK_6_head, __BANK_6_MISC_tail
+   EXTERN _spec128
    
    game_loader:
       
@@ -87,7 +89,7 @@ IFNDEF PCOMPRESS
       
       jp nc, 0                    ; if tape loading error
    
-      ; 3. Pietro Bros
+      ; 3. Gandalf
    
       ld sp,__CODE_head                             ; move stack underneath program
       ld iy,128                                     ; move IY into ROM in case an im1 interrupt occurs
@@ -108,51 +110,72 @@ IFNDEF PCOMPRESS
       ; check for 128k spectrum
    
       ld bc,$7ffd
-      ld de,$1016
+      ld de,$1014
    
       ld hl,0xc000
       ld a,(hl)                   ; a = byte at 0xc000
    
-      out (c),e                   ; enable BANK_06
+      out (c),e                   ; enable BANK_4
    
       cpl
       ld (hl),a                   ; write complemented byte to 0xc000
       cpl
    
-      out (c),d                   ; restore BANK_00
+      out (c),d                   ; restore BANK_0
    
       cp (hl)                     ; did the byte change?
       ld (hl),a                   ; restore byte at 0xc000
    
       jp nz, __CODE_head          ; if the byte changed this is a 48k machine
    
-      ; load extra bank for 128k machines
+      ; load extra banks for 128k machines
    
-      out (c),e                   ; enable BANK_06
+      out (c),e                   ; enable BANK_4
+      
+      push bc
+      push de
+      
+      ld de,__BANK_4_MISC_tail - __BANK_4_head
+      call load_bank
+      
+      pop de
+      pop bc
+      
+      out (c),d                   ; restore BANK_0
+      jp nc, __CODE_head          ; if tape loading error forget about sound effects
+      
+      inc e
+      inc e
+      out (c),e                   ; enable BANK_6
 
       push bc
       push de
-
-      ld ix,0xc000
-      ld de,__BANK_06_size
-   
-      ld a,$ff
-      scf
-   
-      call 0x0556
-      di
-
+      
+      ld de,__BANK_6_MISC_tail - __BANK_6_head
+      call load_bank
+      
       pop de
       pop bc
-   
-      out (c),d                   ; restore BANK_00
-
+      
+      out (c),d                   ; restore BANK_0
       jp nc, __CODE_head          ; if tape loading error forget about sound effects
 
       ld a,$ff
       ld (_spec128),a             ; indicate 128k spectrum
       
       jp __CODE_head
+
+   load_bank:
+
+      ld ix,0xc000
+      
+      ld a,$ff
+      scf
+      
+      call 0x0556
+      di
+
+      ret
 
 ENDIF
 
@@ -185,7 +208,7 @@ IFDEF PCOMPRESS
 
    EXTERN asm_dzx7_standard
    EXTERN __CODE_head, __CODE_END_tail, _spec128
-   EXTERN LEN_SCREEN, LEN_NIRVANAP, LEN_GAME, LEN_BANK_06
+   EXTERN LEN_SCREEN, LEN_NIRVANAP, LEN_GAME, LEN_BANK_4, LEN_BANK_6
 
    game_loader:
 
@@ -225,7 +248,7 @@ IFDEF PCOMPRESS
    
       call asm_dzx7_standard      ; decompress to 56323
    
-      ; 3. Pietro Bros
+      ; 3. Gandalf
    
       ld sp,__CODE_head                             ; move stack underneath program
       ld iy,128                                     ; move IY into ROM in case an im1 interrupt occurs
@@ -251,47 +274,52 @@ IFDEF PCOMPRESS
       ; check for 128k spectrum
    
       ld bc,$7ffd
-      ld de,$1016
+      ld de,$1014
    
       ld hl,0xc000
       ld a,(hl)                     ; a = byte at 0xc000
    
-      out (c),e                     ; enable BANK_06
+      out (c),e                     ; enable BANK_4
    
       cpl
       ld (hl),a                     ; write complemented byte to 0xc000
       cpl
    
-      out (c),d                     ; restore BANK_00
+      out (c),d                     ; restore BANK_0
    
       cp (hl)                       ; did the byte change?
       ld (hl),a                     ; restore byte at 0xc000
    
       jp nz, __CODE_head            ; if the byte changed this is a 48k machine
    
-      ; load extra bank for 128k machines
-   
-      out (c),e                     ; enable BANK_06
+      ; load extra banks for 128k machines
 
+      out (c),e                     ; enable BANK_4
+      
       push bc
       push de
-
-      ld ix,0x10000 - LEN_BANK_06   ; load at top of bank to enable overlapped decompression
-      ld de,LEN_BANK_06
-   
-      ld a,$ff
-      scf
-   
-      call 0x0556
-      di
       
-      ld a,0
+      ld ix,0x10000 - LEN_BANK_4    ; load at top of bank to enable overlapped decompression
+      ld de,LEN_BANK_4
+   
+      call load_bank
       jr nc, set_mode               ; if tape loading error stay in 48k mode
+
+      pop de
+      pop bc
+
+      inc e
+      inc e
+      out (c),e                     ; enable BANK_6
       
-      ld hl,0x10000 - LEN_BANK_06
-      ld de,0xc000
+      push bc
+      push de
       
-      call asm_dzx7_standard        ; decompress to 0xc000
+      ld ix,0x10000 - LEN_BANK_6    ; load at top of bank to enable overlapped decompression
+      ld de,LEN_BANK_6
+   
+      call load_bank
+      jr nc, set_mode               ; if tape loading error stay in 48k mode
 
       ld a,$ff
       
@@ -300,10 +328,31 @@ IFDEF PCOMPRESS
       pop de
       pop bc
       
-      out (c),d                     ; restore BANK_00
+      out (c),d                     ; restore BANK_0
       ld (_spec128),a               ; indicate if 128k spectrum
   
       jp __CODE_head
+
+   load_bank:
+   
+      push ix
+      
+      ld a,$ff
+      scf
+      
+      call 0x0556
+      di
+      
+      pop hl
+      
+      ld a,0
+      ret nc                        ; if tape loading error
+
+      ld de,0xc000
+      call asm_dzx7_standard        ; decompress to 0xc000
+      
+      scf
+      ret
 
 ENDIF
 

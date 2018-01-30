@@ -1,5 +1,5 @@
 /*
-        This file is part of Pietro Bros.
+        This file is part of Gandalf.
 
         Pietro Bros is free software: you can redistribute it and/or modify
         it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
         GNU General Public License for more details.
 
         You should have received a copy of the GNU General Public License
-        along with Pietro Bros.  If not, see <http://www.gnu.org/licenses/>.
+        along with Gandalf.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "game.h"
 #include "game_ay.h"
@@ -345,7 +345,7 @@ void enemy_kill( unsigned char f_sprite ) __z88dk_fastcall {
   spr_destroy(f_sprite);
   spr_bullet_explode();
   spr_add_anim(s_lin0, s_col0, TILE_ANIM_DEAD, 3, 0, 0);
-  ay_fx_play(ay_effect_02);
+  //ay_fx_play(ay_effect_02);
 }
 
 void enemy_avoid_fall() {

@@ -1,63 +1,71 @@
 /*
-	This file is part of Pietro Bros.
+   This file is part of Gandalf.
 
-	Pietro Bros is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+   Gandalf is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
 
-	Pietro Bros is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+   Pietro Bros is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Pietro Bros.  If not, see <http://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU General Public License
+   along with Gandalf.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef GAME_AY_H
 #define GAME_AY_H
 
-// Returned from ay_is_playing()
+// Bit Flags Returned from ay_is_playing()
 
 #define AY_PLAYING_NONE          0
-#define AY_PLAYING_BACKGROUND    1
-#define AY_PLAYING_FOREGROUND    2
+#define AY_PLAYING_SONG          1
 #define AY_PLAYING_FX            2
-#define AY_PLAYING_MUSIC         3
 
-// AY Control
+extern unsigned char ay_is_playing(void) __preserves_regs(d,e);
 
-extern void              ay_reset(void) __preserves_regs(b,c);
-extern unsigned char     ay_is_playing(void) __preserves_regs(b,c,d,e);
-extern void              ay_midi_play(void *song) __preserves_regs(b,c) __z88dk_fastcall;
-extern void              ay_fx_play(void *effect) __preserves_regs(b,c) __z88dk_fastcall;
+// AY Effects Player
 
-// AY Midi Music
+extern void ay_fx_play(unsigned char bank, void *effect) __preserves_regs(a,b,c) __z88dk_callee;
+extern void ay_fx_stop(void) __preserves_regs(b,c,d,e,h,l);
 
-extern unsigned char pb_midi_title[];                 // title music
-extern unsigned char pb_midi_phase_1[];               // phase 1 preamble
+// AY Song Player
+
+#define AY_SONG_LOOP             0
+#define AY_SONG_ONCE             1
+
+extern void ay_song_play(unsigned char flag, unsigned char bank, void *song) __preserves_regs(b,c) __z88dk_callee;
+extern void ay_song_stop(void) __preserves_regs(b,c,d,e,h,l);
+
+// AY Miscellaneous
+
+extern void ay_reset(void) __preserves_regs(b,c,d,e,h,l);
 
 // AY Sound Effects
 
-extern unsigned char ay_effect_01[]; //SLIDE
-extern unsigned char ay_effect_02[]; //FLIP ENEMY
-extern unsigned char ay_effect_03[]; //JUMP
-extern unsigned char ay_effect_04[]; //ENEMY ENTER
-extern unsigned char ay_effect_05[];
-extern unsigned char ay_effect_06[]; //HIT POW
-extern unsigned char ay_effect_07[]; //COIN ENTER
-extern unsigned char ay_effect_08[];
-extern unsigned char ay_effect_09[]; //COIN ON BONUS
-extern unsigned char ay_effect_10[]; //HIT COIN
-extern unsigned char ay_effect_11[]; //ENEMY KILL
-extern unsigned char ay_effect_12[]; //HIT SLIPICE
-extern unsigned char ay_effect_13[]; //FIGHTER FLY JUMP
-extern unsigned char ay_effect_14[]; //PAUSE NOT USED YET, SHOULD WE IMPLEMENT PAUSE?
-extern unsigned char ay_effect_15[]; //PLAYER RESTART
-extern unsigned char ay_effect_16[]; //PLATFORM FREZE
-extern unsigned char ay_effect_17[]; //LAST ENEMY KILL
-extern unsigned char ay_effect_18[]; //PLAYER HIT
-extern unsigned char ay_effect_19[]; //BONUS TIMER (LOOPING)
-extern unsigned char ay_effect_20[]; //WALKING (LOOPING)
+extern unsigned char ay_fx_04_coin[];
+extern unsigned char ay_fx_04_dano_por_toque[];
+extern unsigned char ay_fx_04_explosion[];
+extern unsigned char ay_fx_04_golpe[];
+extern unsigned char ay_fx_04_magia1[];
+extern unsigned char ay_fx_04_pierto_abierta[];
+extern unsigned char ay_fx_04_salto[];
+extern unsigned char ay_fx_04_sin_mana[];
+
+extern unsigned char ay_fx_06_disparo1[];
+extern unsigned char ay_fx_06_disparo2[];
+extern unsigned char ay_fx_06_efecto[];
+extern unsigned char ay_fx_06_explosion1[];
+
+// AY Songs
+
+extern unsigned char ay_song_04_lotr[];
+extern unsigned char ay_song_04_lotr_lose_a_life[];
+extern unsigned char ay_song_04_lotr_level_complete[];
+extern unsigned char ay_song_04_lotr_level_start[];
+extern unsigned char ay_song_04_sunflower[];
+
+extern unsigned char ay_song_06_ciel[];
 
 #endif

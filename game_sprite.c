@@ -1,5 +1,5 @@
 /*
-        This file is part of Pietro Bros.
+        This file is part of Gandalf.
 
         Pietro Bros is free software: you can redistribute it and/or modify
         it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
         GNU General Public License for more details.
 
         You should have received a copy of the GNU General Public License
-        along with Pietro Bros.  If not, see <http://www.gnu.org/licenses/>.
+        along with Gandalf.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "game.h"
 #include "game_ay.h"
@@ -900,7 +900,7 @@ void spr_bullets_play(void) {
 }
 void spr_bullet_enemy_colision() {
   if (spr_colision_b(SPR_P1, bullet)) {
-    ay_fx_play(ay_effect_06);
+    //ay_fx_play(ay_effect_06);
     zx_border(INK_MAGENTA);
     bullet_col[bullet] = s_col0;
     spr_bullet_explode();
@@ -938,7 +938,7 @@ void spr_bullet_explode() {
   spr_add_anim(bullet_lin[bullet], bullet_col[bullet], TILE_ANIM_FIRE, 3, 0, 0);
   --bullet_count;
   bullet_col[bullet] = 0xFF;
-  ay_fx_play(ay_effect_11);
+  //ay_fx_play(ay_effect_11);
 }
 
 void spr_turn_horizontal(void) {
