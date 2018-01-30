@@ -50,6 +50,8 @@ void player_init(unsigned char f_lin, unsigned char f_col,
   player_onstair = 0; // TODO TO STAT
   player_onfire = 0;
   NIRVANAP_spriteT(SPR_P1, f_tile, f_lin, f_col);
+  index0 = spr_calc_index(f_lin,f_col);
+  scr_map[index0] = TILE_CHECKPOINT;
 }
 
 void player_turn(void) {
@@ -67,7 +69,7 @@ unsigned char player_move(void) {
   /* Player initial Values */
   s_lin0 = lin[SPR_P1];
   s_col0 = col[SPR_P1];
-  //s_tile0 = tile[SPR_P1] + colint[SPR_P1];
+  // s_tile0 = tile[SPR_P1] + colint[SPR_P1];
   s_state = state[SPR_P1];
 
   if (BIT_CHK(s_state, STAT_JUMP) || BIT_CHK(s_state, STAT_FALL)) {
@@ -259,7 +261,7 @@ unsigned char player_fire() {
     /*Fireball*/
     if (player_mana > 0 && (bullet_col[SPR_P1] == 0xFF)) {
       if (player_mana > 5) {
-        if (!game_god_mode)
+        if (!game_inmune)
           player_mana = player_mana - 5;
       } else {
         player_mana = 0;
@@ -287,10 +289,15 @@ unsigned char player_collision(void) {
     if (v0 > TILE_ITEM_E && v0 < TILE_FLOOR) {
       // if ((s_lin1  & 3) != 0) {
       // DEADLY BACKGROUNDS
+      if (v0 == TILE_CHECKPOINT) {
+        game_checkpoint_col = s_col1;
+        game_checkpoint_lin = s_lin1;
+        game_checkpoint_scr = scr_curr;
+      }
       if (v0 == TILE_WORLD_EXIT) {
         game_worldup = 1;
       } else {
-        if (!game_god_mode && !game_inmune && s_lin1 > GAME_LIN_FLOOR - 14) {
+        if (!game_inmune && !game_inmune && s_lin1 > GAME_LIN_FLOOR - 14) {
           // INSTANT kill
           player_lost_life();
           return 0;
@@ -318,7 +325,7 @@ unsigned char player_collision(void) {
               player_pick_mushroom();
               return 0;
             }
-            if (s_class== MUSHROOM_MANA) {
+            if (s_class == MUSHROOM_MANA) {
               player_mana = player_mana + 50;
               if (player_mana > player_max_mana) {
                 player_mana = player_max_mana;
@@ -326,7 +333,7 @@ unsigned char player_collision(void) {
               player_pick_mushroom();
               return 0;
             }
-            if (s_class== MUSHROOM_EXTRA) {
+            if (s_class == MUSHROOM_EXTRA) {
               player_pick_mushroom();
               player_1up();
               return 0;
@@ -353,7 +360,7 @@ void player_pick_mushroom() {
 }
 
 void player_1up() {
-  if (player_lives < 255) {
+  if (player_lives < 100) {
     ++player_lives;
     spr_flatten();
     zx_print_str(12, 12, "1 UP!");
@@ -577,7 +584,7 @@ void player_pick_item(void) {
 }
 
 unsigned char player_hit_platform(void) {
- unsigned char i, j;
+  unsigned char i, j;
 
   if ((player_hit_lin == 0) && (lin[SPR_P1] > 16) &&
       (scr_map[index1] >= TILE_HIT)) {
@@ -633,7 +640,6 @@ unsigned char player_hit_platform(void) {
             ++j;
           }
           ay_fx_play(ay_effect_07);
-
 
           switch (mush_class[j]) {
           case INDEX_MUSH_VITA_L:
@@ -706,7 +712,7 @@ void player_score_add(unsigned int f_score) __z88dk_fastcall {
       game_update_stats();
       spr_flatten();
       zx_print_str(12, 12, "LEVEL UP!");
-      game_colour_message(12, 12, 12+9, 60, 0);
+      game_colour_message(12, 12, 12 + 9, 60, 0);
       spr_unflatten();
     }
   }
@@ -982,16 +988,20 @@ void player_lost_life() {
     if (class[i] != 0) {
       NIRVANAP_spriteT(i, tile[i] + colint[i], lin[i], col[i]);
     }
-
   }
   // Player lost life
-  --player_lives;
+  if (!game_inf_lives) {
+    --player_lives;
+  }
   player_mana = GAME_START_MAX_MANA;
   player_vita = GAME_START_MAX_VITA;
   // game_update_stats();
 
   if (player_lives > 0) {
     z80_delay_ms(500);
+    player_col_scr = game_checkpoint_col;
+    player_lin_scr = game_checkpoint_lin;
+    scr_curr = game_checkpoint_scr;
     game_round_init();
   } else {
     // Game End

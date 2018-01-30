@@ -219,7 +219,7 @@ unsigned char spr_move_left(void) {
 
 unsigned char spr_page_right() {
   tmp1 = 1 + (scr_curr % map_width);
-  if (tmp1 < map_width && (!game_boss || game_god_mode)) {
+  if (tmp1 < map_width && (!game_boss || game_inmune)) {
     ++scr_curr;
     spr_page_map();
     game_draw_screen();
@@ -230,7 +230,7 @@ unsigned char spr_page_right() {
 
 unsigned char spr_page_left() {
   tmp1 = scr_curr % map_width;
-  if (tmp1 > 0 && (!game_boss || game_god_mode)) {
+  if (tmp1 > 0 && (!game_boss || game_inmune)) {
     --scr_curr;
     spr_page_map();
     game_draw_screen();
@@ -241,7 +241,7 @@ unsigned char spr_page_left() {
 
 unsigned char spr_page_down() {
   tmp1 = 1 + (scr_curr / map_width);
-  if (tmp1 < map_heigth && (!game_boss || game_god_mode)) {
+  if (tmp1 < map_heigth && (!game_boss || game_inmune)) {
     scr_curr = scr_curr + map_width;
     spr_page_map();
     game_draw_screen();
@@ -255,7 +255,7 @@ unsigned char spr_page_down() {
 
 unsigned char spr_page_up() {
   tmp1 = scr_curr / map_width;
-  if (tmp1 > 0 && (!game_boss || game_god_mode)) {
+  if (tmp1 > 0 && (!game_boss || game_inmune)) {
     scr_curr = scr_curr - map_width;
     spr_page_map();
     game_draw_screen();

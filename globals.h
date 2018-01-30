@@ -21,8 +21,7 @@
 #define GAME_ROWS                     11
 #define GAME_SCR_MAX_INDEX            160
 
-#define GAME_GOD_MODE                 1
-#define GAME_INMUNE                   1
+
 #define GAME_GRAVITY                  1
 #define GAME_VELOCITY                 -8
 #define GAME_MIN_VELOCITY             -7
@@ -42,6 +41,8 @@
 #define TILE_WORLD_EXIT               57
 #define TILE_BACKGROUND_S             0  //START OF BACKGROUND
 #define TILE_BACKGROUND_E             35 //END OF BACKGROUND
+
+#define TILE_CHECKPOINT               21
 
 #define TILE_ITEM_S                   36 //START OF ITEMS
 #define TILE_ITEM_E                   47 //END OF ITEMS
@@ -334,6 +335,10 @@ extern unsigned char player_lvl;
 extern unsigned char player_col_scr;
 extern unsigned char player_lin_scr;
 
+extern unsigned char game_checkpoint_col;
+extern unsigned char game_checkpoint_lin;
+extern unsigned char game_checkpoint_scr;
+
 extern unsigned int player_hit_time;
 extern unsigned char player_anim_stair;
 extern unsigned char player_onfire;
@@ -389,8 +394,8 @@ extern unsigned char spr_count;
 extern unsigned char sprite_curr_index;
 
 
-extern unsigned char game_god_mode;
 extern unsigned char game_inmune;
+extern unsigned char game_inf_lives;
 extern unsigned char game_sound;
 
 extern unsigned char game_over;

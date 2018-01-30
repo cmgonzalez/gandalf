@@ -35,8 +35,8 @@
 void main(void) {
   unsigned int counter;
 
-  game_god_mode = 1; // GAME_GOD_MODE;
-  game_inmune = 1;   // GAME_INMUNE;
+  game_inmune = 0;    // GAME_INMUNE;
+  game_inf_lives = 1; // GAME_INF_LIVES;
   // INTERRUPTS ARE DISABLED
   // RESET AY CHIP
   ay_reset();
@@ -74,7 +74,6 @@ void main(void) {
   joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_sinclair1);
   joyfunc2 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
 
-
   in_wait_nokey();
   for (counter = 31416; !in_test_key(); counter += 10061)
     ;
@@ -95,8 +94,8 @@ void main(void) {
   while (1) {
     /*Init Objects*/
     game_obj_clear();
-    game_world = 0;//1;//0;
-    scr_curr = 0xFF; //2;//14;//0xFF; // 255 equals read default screen from map
+    game_world = 0; // 1;//0;
+    scr_curr = 0xFF; // 0xFF equals read default screen from map
 
     /*Player Init*/
     player_max_mana = GAME_START_MAX_MANA;
@@ -111,6 +110,9 @@ void main(void) {
     player_lin_scr = GAME_LIN_FLOOR - 16;
     player_col_scr = 2;
 
+    game_checkpoint_col = player_col_scr;
+    game_checkpoint_lin = player_lin_scr;
+    game_checkpoint_scr = scr_curr;
 
     game_worldup = 0;
     game_respawn_curr_time = 255;

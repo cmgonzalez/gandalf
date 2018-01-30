@@ -151,7 +151,7 @@ void game_draw_screen(void) {
     }
     f_tile = scr_map[index1];
     if (f_tile < TILE_END) {
-      //TILES
+      // TILES
       if (f_tile == TILE_HIDDEN_BRICK || f_tile == TILE_SPECIAL) {
         if (game_obj_chk(index1 - 16)) {
           // USED BRICKS
@@ -163,13 +163,13 @@ void game_draw_screen(void) {
           }
         }
       }
-      if (f_tile == TILE_STOPPER ) {
+      if (f_tile == TILE_STOPPER) {
         f_tile = game_match_back(index1);
       }
       // NORMAL TILE
       NIRVANAP_drawT_raw(f_tile, s_lin1, s_col1);
     } else {
-      //SPRITES
+      // SPRITES
       if (f_tile <= INDEX_ENEMY_BOSS1) {
         // ENEMIES
         if (spr_count < 8 && game_boss_alive) {
@@ -386,6 +386,7 @@ void game_round_init(void) {
   /* Phase Draw Start */
   // spr_draw_clear();
   /*Draw Platforms*/
+
   spr_init_effects();
   game_print_header();
   game_print_footer();
@@ -484,7 +485,7 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
       return 1;
     }
 
-    if (f_kind == E_VERTICAL) {
+    if (f_kind == E_VERTICAL || f_kind == E_GOTA) {
       if (f_class == FIRE || f_class == PIRANHA) {
         if (f_tile <= TILE_FLOOR) {
           return 0;
@@ -493,7 +494,8 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
         }
       } else {
         // VERTICAL ENEMIES
-        if (f_tile <= TILE_ITEM_E || ( f_tile >= TILE_STAIR_S && f_tile <= TILE_STAIR_E ) ) {
+        if (f_tile <= TILE_ITEM_E ||
+            (f_tile >= TILE_STAIR_S && f_tile <= TILE_STAIR_E)) {
           return 0;
         } else {
           return f_tile;
@@ -501,7 +503,7 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
       }
     }
 
-    if (f_kind == E_HORIZONTAL || f_kind == E_WALK || f_kind == E_GOTA) {
+    if (f_kind == E_HORIZONTAL || f_kind == E_WALK) {
       // HORIZONTAL ENEMIES
       if (sprite_horizontal_check) {
         f_check = TILE_CEIL;
@@ -559,7 +561,7 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
   return 0;
 }
 
-//TODO SINGLE FUNCTION
+// TODO SINGLE FUNCTION
 void game_paint_attrib_lin(unsigned char f_start, unsigned char f_end,
                            unsigned char f_lin) {
   for (tmp_uc = f_start; tmp_uc < f_end; ++tmp_uc) {
@@ -698,9 +700,18 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
   return 0;
 }
 
-unsigned char game_shoot_fire_boss(unsigned char f_tile, unsigned char f_dir) {
+unsigned char game_shoot_fire_boss(unsigned char f_tile) {
 
   unsigned char f_sprite;
+  unsigned char f_dir;
+
+  if (boss_col > col[SPR_P1]) {
+    f_dir = 1;
+  }
+
+  if (boss_col < col[SPR_P1]) {
+    f_dir = 0;
+  }
 
   f_sprite = 0;
   while (f_sprite < SPR_P1) {
@@ -746,7 +757,7 @@ unsigned char game_shoot_fire_boss(unsigned char f_tile, unsigned char f_dir) {
     // Right n default
     if (boss_col > 29)
       return 1;
-    bullet_col[f_sprite] = boss_col;
+    bullet_col[f_sprite] = boss_col + 6;
     bullet_tile[f_sprite] = f_tile;
     bullet_dir[f_sprite] = 0xFF;
     bullet_colint[f_sprite] = 0xFF;
@@ -782,7 +793,7 @@ void game_obj_clear() {
     scr_obj0[tmp] = 0;
     scr_obj1[tmp] = 0;
   }
-  if (game_god_mode) {
+  if (game_inmune) {
     tmp = 1;
   } else {
     tmp = 0;
@@ -869,8 +880,8 @@ unsigned char game_match_back(unsigned int f_index) __z88dk_fastcall {
       return TILE_EMPTY_DARK;
     if (v0 == TILE_EMPTY_DARK_A || v1 == TILE_EMPTY_DARK_A)
       return TILE_EMPTY_DARK_A;
-      if (v0 == TILE_EMPTY_DARK_B || v1 == TILE_EMPTY_DARK_B)
-        return TILE_EMPTY_DARK_B;
+    if (v0 == TILE_EMPTY_DARK_B || v1 == TILE_EMPTY_DARK_B)
+      return TILE_EMPTY_DARK_B;
   }
   return TILE_EMPTY;
 }
