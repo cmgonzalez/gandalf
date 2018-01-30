@@ -219,6 +219,7 @@ unsigned char screen_ink;
 unsigned char map_paper;
 unsigned char map_paper_clr;
 unsigned char map_paper_last;
+unsigned char map_paper_last_a;
 
 unsigned char stp_tile;
 unsigned char stp_col;
