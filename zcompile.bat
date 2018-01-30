@@ -4,7 +4,7 @@
 set STARTTIME=%time%
 echo Start     %STARTTIME%
 
-set "CFLAGS=-SO3 --max-allocs-per-node200000 --opt-code-size"
+set "CFLAGS=-SO3 --max-allocs-per-node200000 --opt-code-size --list"
 
 @rem MAKE BASIC LOADER
 echo Creating Basic Loader.
@@ -34,7 +34,7 @@ zcc +zx -v -c -clib=sdcc_iy %CFLAGS% --fsigned-char -o game @zproject.lst global
 echo Making Normal Loading Binary
 del bin\game_release.tap
 zcc +zx -v -m -startup=31 -clib=sdcc_iy game.o game_loader.asm -o game -pragma-include:zpragma.inc
-appmake +inject -b game_NIRVANAP.bin -o nirvanap_final.bin -i game_NIRVANA_HOLE.bin --offset 6627
+appmake +inject -b game_NIRVANAP.bin -o nirvanap_final.bin -i game_NIRVANA_HOLE.bin --offset 6599
 appmake +zx -b game_MCLOAD.bin -o mcload.tap --blockname mcload --org 16384 --noloader
 appmake +zx -b game_LOADER.bin -o mcloader.tap --org 23296 --noloader --noheader
 appmake +zx -b game_scr.bin -o game_scr.tap --org 16384 --noloader --noheader

@@ -36,7 +36,7 @@ void game_loop(void) {
 
   // TODO CALL MENU HERE
   game_round_init();
-  ay_song_play(AY_SONG_LOOP, 6, ay_song_06_luna);
+  ay_song_play(AY_SONG_LOOP, 6, ay_song_06_ciel);
   while (!game_over) {
 
     while (!game_worldup && !game_over) {

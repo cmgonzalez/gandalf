@@ -64,7 +64,7 @@ SECTION BANK_6_MISC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 SECTION NIRVANA_HOLE
-org __NIRVANAP_HOLE
+org __NIRVANAP_HOLE+300
 
 ;; ensure beeper code is not in contended memory
 

@@ -67,6 +67,5 @@ extern unsigned char ay_song_04_lotr_level_start[];
 extern unsigned char ay_song_04_sunflower[];
 
 extern unsigned char ay_song_06_ciel[];
-extern unsigned char ay_song_06_luna[];
 
 #endif

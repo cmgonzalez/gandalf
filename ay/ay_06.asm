@@ -47,13 +47,9 @@ INCLUDE "src/mfx.asm"
 SECTION BANK_6_AUDIO
 
 PUBLIC _ay_song_06_ciel
-PUBLIC _ay_song_06_luna
 
 _ay_song_06_ciel:
    BINARY "songs/ciel.bin"
-
-_ay_song_06_luna:
-   BINARY "songs/luna.bin"
 
 PUBLIC _ay_fx_06_disparo1
 PUBLIC _ay_fx_06_disparo2
