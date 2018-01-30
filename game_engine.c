@@ -36,7 +36,7 @@ void game_loop(void) {
 
   // TODO CALL MENU HERE
   game_round_init();
-  ay_song_play(AY_SONG_LOOP, 6, ay_song_06_ciel);
+
   while (!game_over) {
 
     while (!game_worldup && !game_over) {
@@ -378,7 +378,7 @@ void game_start_timer(void) {
 
 void game_round_init(void) {
 
-  ay_reset();
+
   /* screen init */
   /*PHASE INIT*/
   loop_count = 0;
@@ -401,7 +401,9 @@ void game_round_init(void) {
     player_init(player_lin_scr, player_col_scr, TILE_P1_STANR);
   }
   game_update_stats();
-  z80_delay_ms(50);
+  //z80_delay_ms(50);
+  ay_reset();
+  ay_song_play(AY_SONG_LOOP, 4, ay_song_04_lotr_level_start);
   switch (game_world) {
   case 0:
     game_paint_attrib_lin_osd(6, 6 + 17, (12 << 3) + 8);
@@ -424,6 +426,7 @@ void game_round_init(void) {
     game_colour_message(12, 6, 6 + 17, 25, 0);
     break;
   }
+
 }
 
 void game_print_header(void) {
@@ -955,6 +958,7 @@ void menu_main() {
       z80_delay_ms(40);
       break;
     case 0:
+      ay_reset();
       NIRVANAP_halt();
       zx_paper_fill(INK_BLACK | PAPER_BLACK);
       f_input = 0; // Exit Loop
@@ -965,6 +969,8 @@ void menu_main() {
 
 void menu_main_print(unsigned char s_row, unsigned char s_col,
                      unsigned char s_col_e) {
+  ay_song_play(AY_SONG_LOOP, 4, ay_song_04_lotr);
+
   NIRVANAP_halt();
   zx_paper_fill(INK_BLACK | PAPER_BLACK);
   zx_print_ink(INK_WHITE);

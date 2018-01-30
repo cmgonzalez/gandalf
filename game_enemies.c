@@ -37,7 +37,7 @@ void enemy_turn(void) {
     if (s_class > 0 && spr_chktime(&sprite)) {
       s_lin0 = lin[sprite];
       s_col0 = col[sprite];
-      //s_tile0 = tile[sprite] + colint[sprite];
+      // s_tile0 = tile[sprite] + colint[sprite];
       s_state = state[sprite];
       enemy_move();
       if (spr_redraw()) {
@@ -55,10 +55,10 @@ void enemy_check_deadly() {
   index1 = spr_calc_index(lin[sprite], col[sprite]);
   if (scr_map[index1] > TILE_ITEM_E & scr_map[index1] < TILE_FLOOR) {
     // Deadly Backgrounds
-    if (s_class != FIRE && s_class != PIRANHA ) {
+    if (s_class != FIRE && s_class != PIRANHA) {
       enemy_kill(sprite);
     } else {
-      if ( BIT_CHK(s_state, STAT_FALL) ) {
+      if (BIT_CHK(s_state, STAT_FALL)) {
         spr_set_up(&s_state);
         if (s_class == PIRANHA) {
           tile[sprite] = tile[sprite] + 1;
@@ -95,6 +95,7 @@ void boss_turn() {
       --boss_col;
       --boss_col;
       tmp0 = 0;
+      ay_song_play(AY_SONG_ONCE, 6, ay_fx_06_disparo2);
       game_shoot_fire_boss(TILE_FIREBALL);
       if (game_world == 1) {
         tmp0 = 1;
@@ -122,7 +123,7 @@ void boss_turn() {
   }
 }
 
-void boss_draw(unsigned char f_inc)  __z88dk_fastcall {
+void boss_draw(unsigned char f_inc) __z88dk_fastcall {
   NIRVANAP_drawT_raw(boss_tile + f_inc + 0, boss_lin, s_col1);
   NIRVANAP_drawT_raw(boss_tile + f_inc + 1, boss_lin, s_col1 + 2);
   NIRVANAP_drawT_raw(boss_tile + f_inc + 12, boss_lin + 16, s_col1);
@@ -162,7 +163,7 @@ void enemy_gota() {
     colint[sprite]++;
     if (colint[sprite] == sprite_frames[s_class]) {
       // Respawn!
-      lin[sprite] = ( game_respawn_index[sprite] >> 4) << 4;
+      lin[sprite] = (game_respawn_index[sprite] >> 4) << 4;
       colint[sprite] = 0;
     }
   }
@@ -248,6 +249,7 @@ void enemy_vertical() {
 
         if ((BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) ||
             (BIT_CHK(s_state, STAT_DIRL) && col[SPR_P1] < col[sprite])) {
+          ay_song_play(AY_SONG_ONCE, 6, ay_fx_06_disparo2);
           game_shoot_fire(sprite, TILE_FIREBALL);
         }
       }
@@ -307,7 +309,7 @@ void enemy_walk(void) {
           if (abs(lin[SPR_P1] - lin[sprite]) < 32) { // TODO VARIABLE
             if ((BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) || (
                     BIT_CHK(s_state, STAT_DIRL) && col[SPR_P1] < col[sprite])) {
-
+              ay_song_play(AY_SONG_ONCE, 6, ay_fx_06_disparo2);
               game_shoot_fire(sprite, TILE_ARROW);
             }
           }
@@ -321,7 +323,7 @@ void enemy_walk(void) {
           if (s_col1 < 6) {
             if ((BIT_CHK(s_state, STAT_DIRL) && (col[sprite] > col[SPR_P1])) ||
                 (BIT_CHK(s_state, STAT_DIRR) && (col[sprite] < col[SPR_P1]))) {
-
+              ay_song_play(AY_SONG_ONCE, 6, ay_fx_06_disparo2);
               game_shoot_fire(sprite, TILE_AXE);
             }
           }
@@ -336,16 +338,14 @@ void enemy_walk(void) {
   }
 }
 
-
-
-void enemy_kill( unsigned char f_sprite ) __z88dk_fastcall {
+void enemy_kill(unsigned char f_sprite) __z88dk_fastcall {
   game_respawn_time[f_sprite] = zx_clock();
   s_lin0 = lin[f_sprite];
   s_col0 = col[f_sprite];
   spr_destroy(f_sprite);
   spr_bullet_explode();
   spr_add_anim(s_lin0, s_col0, TILE_ANIM_DEAD, 3, 0, 0);
-  //ay_fx_play(ay_effect_02);
+  // ay_fx_play(ay_effect_02);
 }
 
 void enemy_avoid_fall() {

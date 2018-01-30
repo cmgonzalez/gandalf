@@ -935,6 +935,8 @@ void spr_bullet_player_colision() {
   }
 }
 void spr_bullet_explode() {
+
+  ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_explosion);
   spr_add_anim(bullet_lin[bullet], bullet_col[bullet], TILE_ANIM_FIRE, 3, 0, 0);
   --bullet_count;
   bullet_col[bullet] = 0xFF;

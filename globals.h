@@ -472,7 +472,7 @@ extern unsigned char spr_hack;
 
 extern unsigned char bullet_count;
 
-extern const JOYFUNC control_method[7];
+//extern const JOYFUNC control_method[7];
 
 extern unsigned char g_player_hit_left;
 extern unsigned char g_player_hit_right;
