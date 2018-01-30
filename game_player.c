@@ -50,8 +50,8 @@ void player_init(unsigned char f_lin, unsigned char f_col,
   player_onstair = 0; // TODO TO STAT
   player_onfire = 0;
   NIRVANAP_spriteT(SPR_P1, f_tile, f_lin, f_col);
-  index0 = spr_calc_index(f_lin, f_col);
-  scr_map[index0] = TILE_CHECKPOINT;
+  //index0 = spr_calc_index(f_lin, f_col);
+  //scr_map[index0] = TILE_CHECKPOINT;
 }
 
 void player_turn(void) {
@@ -301,6 +301,8 @@ unsigned char player_collision(void) {
 
       if (v0 == TILE_WORLD_EXIT) {
         ay_song_play(AY_SONG_ONCE, 4, ay_song_04_lotr_level_complete);
+        zx_print_str(12, 8, "ROUND COMPLETE!");
+        game_colour_message(12, 8, 8 + 15, 1000, 0);
         game_worldup = 1;
       } else {
         if (!game_inmune && !game_inmune && s_lin1 > GAME_LIN_FLOOR - 14) {

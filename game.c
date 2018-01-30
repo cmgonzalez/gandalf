@@ -89,6 +89,10 @@ void main(void) {
   NIRVANAP_tiles(_btiles);
   NIRVANAP_start();
 
+  game_attribs();
+  game_over = 1;
+  zx_print_str(12, 6, "FOR FELIPE AND EDDIE");
+  game_colour_message(12, 6, 6 + 20, 30, 0);
   // Init Screen
   frame_time = zx_clock();
 
@@ -96,7 +100,7 @@ void main(void) {
     /*Init Objects*/
     game_obj_clear();
     game_world = 0; // 1;//0;
-    scr_curr = 0xFF; // 0xFF equals read default screen from map
+    scr_curr = 15;//0xFF; // 0xFF equals read default screen from map
 
     /*Player Init*/
     player_max_mana = GAME_START_MAX_MANA;

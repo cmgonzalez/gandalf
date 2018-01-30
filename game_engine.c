@@ -407,22 +407,22 @@ void game_round_init(void) {
   switch (game_world) {
   case 0:
     game_paint_attrib_lin_osd(6, 6 + 17, (12 << 3) + 8);
-    zx_print_str(12, 6, "WORLD 1 THE SHIRE"); // TODO WORLD NAMES ARRAY
+    zx_print_str(12, 6, "ROUND 1 THE SHIRE"); // TODO WORLD NAMES ARRAY
     game_colour_message(12, 6, 6 + 17, 25, 0);
     break;
   case 1:
     game_paint_attrib_lin_osd(6, 6 + 13, (12 << 3) + 8);
-    zx_print_str(12, 6, "WORLD 2 MORIA"); // TODO WORLD NAMES ARRAY
+    zx_print_str(12, 6, "ROUND 2 MORIA"); // TODO WORLD NAMES ARRAY
     game_colour_message(12, 6, 6 + 13, 25, 0);
     break;
   case 2:
     game_paint_attrib_lin_osd(6, 6 + 14, (12 << 3) + 8);
-    zx_print_str(12, 6, "WORLD 1 MORDOR"); // TODO WORLD NAMES ARRAY
+    zx_print_str(12, 6, "ROUND 1 MORDOR"); // TODO WORLD NAMES ARRAY
     game_colour_message(12, 6, 6 + 14, 25, 0);
     break;
   case 3:
     game_paint_attrib_lin_osd(6, 6 + 17, (12 << 3) + 8);
-    zx_print_str(12, 6, "WORLD 2 BARAD DUR"); // TODO WORLD NAMES ARRAY
+    zx_print_str(12, 6, "ROUND 2 BARAD DUR"); // TODO WORLD NAMES ARRAY
     game_colour_message(12, 6, 6 + 17, 25, 0);
     break;
   }
@@ -1009,8 +1009,13 @@ void menu_main_print(unsigned char s_row, unsigned char s_col,
   ++s_row;
   ++s_row;
   ++s_row;
-  zx_print_str(s_row, 2, "CGONZALEZ/AANON/S9/BEIKER/ABU");
-  game_paint_attrib_lin_h(0, 31, (s_row << 3) + 8);
+  ++s_row;
+  zx_print_ink(INK_BLUE);
+  zx_print_str(s_row, 2, "CODE C.GONZALEZ/A.ALBRECHT");
+  ++s_row;
+  zx_print_str(s_row, 2, "MUSIC/FX HIKARU/BEIKERSOFT");
+  ++s_row;
+  zx_print_str(s_row, 6, "TESTING ABU SIMBEL");
   ++s_row;
   ++s_row;
   zx_print_ink(INK_CYAN);
