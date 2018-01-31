@@ -103,6 +103,11 @@ unsigned char player_int;
 unsigned char player_lvl;
 unsigned char player_col_scr;
 unsigned char player_lin_scr;
+unsigned char game_checkpoint_col;
+unsigned char game_checkpoint_lin;
+unsigned char game_checkpoint_scr;
+
+
 unsigned int  player_hit_time;
 
 signed int    game_gravity;
@@ -200,8 +205,8 @@ unsigned char spr_hack;
 //#
 //###############################################################################################
 
-unsigned char game_god_mode;
 unsigned char game_inmune;
+unsigned char game_inf_lives;
 
 unsigned char game_sound;
 unsigned char game_over;
@@ -219,6 +224,7 @@ unsigned char screen_ink;
 unsigned char map_paper;
 unsigned char map_paper_clr;
 unsigned char map_paper_last;
+unsigned char map_paper_last_a;
 
 unsigned char stp_tile;
 unsigned char stp_col;

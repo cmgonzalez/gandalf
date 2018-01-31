@@ -95,10 +95,10 @@ void boss_turn() {
       --boss_col;
       --boss_col;
       tmp0 = 0;
-      game_shoot_fire_boss(TILE_FIREBALL, 1);
+      game_shoot_fire_boss(TILE_FIREBALL);
       if (game_world == 1) {
         tmp0 = 1;
-        game_shoot_fire_boss(TILE_FIREBALL, 1);
+        game_shoot_fire_boss(TILE_FIREBALL);
       }
       boss_time_fire = zx_clock();
       ++boss_col;
@@ -154,7 +154,6 @@ void enemy_move(void) {
 }
 
 void enemy_gota() {
-
   if (colint[sprite] == 0) {
     if (spr_move_down()) {
       colint[sprite] = 1;

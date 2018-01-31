@@ -219,7 +219,7 @@ unsigned char spr_move_left(void) {
 
 unsigned char spr_page_right() {
   tmp1 = 1 + (scr_curr % map_width);
-  if (tmp1 < map_width && (!game_boss || game_god_mode)) {
+  if (tmp1 < map_width && (!game_boss || game_inmune)) {
     ++scr_curr;
     spr_page_map();
     game_draw_screen();
@@ -230,7 +230,7 @@ unsigned char spr_page_right() {
 
 unsigned char spr_page_left() {
   tmp1 = scr_curr % map_width;
-  if (tmp1 > 0 && (!game_boss || game_god_mode)) {
+  if (tmp1 > 0 && (!game_boss || game_inmune)) {
     --scr_curr;
     spr_page_map();
     game_draw_screen();
@@ -241,7 +241,7 @@ unsigned char spr_page_left() {
 
 unsigned char spr_page_down() {
   tmp1 = 1 + (scr_curr / map_width);
-  if (tmp1 < map_heigth && (!game_boss || game_god_mode)) {
+  if (tmp1 < map_heigth && (!game_boss || game_inmune)) {
     scr_curr = scr_curr + map_width;
     spr_page_map();
     game_draw_screen();
@@ -255,7 +255,7 @@ unsigned char spr_page_down() {
 
 unsigned char spr_page_up() {
   tmp1 = scr_curr / map_width;
-  if (tmp1 > 0 && (!game_boss || game_god_mode)) {
+  if (tmp1 > 0 && (!game_boss || game_inmune)) {
     scr_curr = scr_curr - map_width;
     spr_page_map();
     game_draw_screen();
@@ -366,7 +366,7 @@ void spr_page_map(void) {
       if (!game_obj_chk(k)) {
         scr_map[k] = v0;
       } else {
-        scr_map[k+1]=TILE_EMPTY;
+        scr_map[k + 1] = TILE_EMPTY;
         scr_map[k] = game_match_back(k); // TILE_EMPTY;
       }
       ++k;
@@ -377,7 +377,7 @@ void spr_page_map(void) {
         if (!game_obj_chk(k)) {
           scr_map[k] = v1;
         } else {
-          scr_map[k+1]=TILE_EMPTY;
+          scr_map[k + 1] = TILE_EMPTY;
           scr_map[k] = game_match_back(k); // TILE_EMPTY;
         }
 
@@ -672,7 +672,7 @@ void spr_play_anim(void) {
   for (f_anim = 0; f_anim < 8; f_anim++) {
     if (anim_lin[f_anim] != 0xFF) {
 
-      //z80_delay_ms(1); // TODO I don't get that...
+      // z80_delay_ms(1); // TODO I don't get that...
       ++anim_int[f_anim];
       if (anim_int[f_anim] < anim_end[f_anim]) {
         NIRVANAP_halt();
@@ -952,21 +952,45 @@ void spr_turn_horizontal(void) {
 }
 
 void spr_btile_paint_back() {
+  unsigned char f_tile;
+  unsigned char f_paper_c;
+
+
+  f_tile = 0;
   tmp_ui = 32;
   map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
   while (tmp_ui < (32 + (48 * 12 * 20))) { // 12*20 btiles
-    tmp0 = 0;
-    while (tmp0 < 16) {
-      tmp = PEEK(&btiles + tmp_ui + tmp0);
-      if ((tmp & 0x38) == map_paper_last) { // 00111000
-        tmp = tmp & 0xC7;                   // 11000111
-        tmp = tmp | map_paper; // TODO we can hava a map array for ink to
-                              // prevent using the same paper n ink
-        POKE(&btiles + tmp_ui + tmp0, tmp);
+    if ( (f_tile < 73 && f_tile != 13 && f_tile != 14) || f_tile > 90 ) { // TODO AN ARRAY WILL BE A MORE ELEGANT SOLUTION
+
+      //f_half = 0;
+      tmp0 = 0;
+      f_paper_c = map_paper_last;
+
+      if ( (f_tile > 56 && f_tile < 65) || (f_tile > 16 && f_tile < 20) )  {
+        if ( map_paper == PAPER_RED ) {
+          tmp0 = 16;
+          map_paper_last_a = map_paper_last;
+        }
+        if ( map_paper_last == PAPER_RED ) {
+          f_paper_c = map_paper_last_a;
+        }
       }
-      ++tmp0;
+
+
+      while (tmp0 < 16) {
+        tmp = PEEK(&btiles + tmp_ui + tmp0);
+        if ( (tmp & 0x38) == f_paper_c ) { // 00111000
+          tmp = tmp & 0xC7;                   // 11000111
+          tmp = tmp | map_paper; // TODO we can hava a map array for ink to
+                                 // prevent using the same paper n ink
+          POKE(&btiles + tmp_ui + tmp0, tmp);
+        }
+        ++tmp0;
+        //if ( f_half & tmp0 == 8 ) tmp0 = 12;
+      }
     }
     tmp_ui = tmp_ui + 48;
+    ++f_tile;
   }
   game_attribs();
 }
