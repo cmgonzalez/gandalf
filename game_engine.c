@@ -1036,7 +1036,7 @@ void menu_main_print(unsigned char s_row, unsigned char s_col,
   zx_print_ink(INK_BLUE);
   zx_print_str(s_row, 2, "CODE C.GONZALEZ A.ALBRECHT");
   ++s_row;
-  zx_print_str(s_row, 2, "MUSIC HIKARU FX BEIKERSOFT");
+  zx_print_str(s_row, 4, "MUSIC S9 FX BEYKERSOFT");
   ++s_row;
   zx_print_str(s_row, 3, "TEST ABU SIMBEL VER 1.00");
   ++s_row;
