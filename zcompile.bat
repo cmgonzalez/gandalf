@@ -78,7 +78,8 @@ dir *.bin
 
 @rem CLEANUP
 echo Cleanup
-del *.o *.lis *.bin *.tap *.font *.zx7 game zcc_opt.def > nul 2>&1
+@rem del *.o *.lis *.bin *.tap *.font *.zx7 game zcc_opt.def > nul 2>&1
+del *.bin *.tap *.font *.zx7 game zcc_opt.def > nul 2>&1
 
 set ENDTIME=%TIME%
 
