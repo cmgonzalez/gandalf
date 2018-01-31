@@ -102,7 +102,7 @@ void main(void) {
     /*Init Objects*/
     game_obj_clear();
     game_world = 0;
-    scr_curr = 5;//0xFF; // 0xFF equals read default screen from map on bank 6
+    scr_curr = 0xFF;//0xFF; // 0xFF equals read default screen from map on bank 6
 
     /*Player Init*/
     player_max_mana = GAME_START_MAX_MANA;

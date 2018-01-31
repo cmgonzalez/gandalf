@@ -7,6 +7,32 @@ This games was build using the Pietro Engine, with the help of z88dk compiler an
 
 
 ==============================================================================
+HISTORY
+
+Long after the destruction of the Ring, Gandalf comebacks for a revenge with the four last demons of Middle earth. Help him to free the world of the remaining evil of Melkor.
+
+An arcade / rpg mix with four rounds of 16 screens each. Each Round have a an unique boss that have to be defeated to move to the next Round. Control can be by either 1 button or 2 button control. For the ZX Spectrum models with 128 Kb only.
+
+Gandalf can gain experience, this will increase your fire range, levels are upgraded based your points: Also you can pick items that will increase your maximum health and mana. You can have a maximum of 200 health and mana.
+
+Damage Table:
+Deadly damage 50 points
+Enemy damage 20 points
+Bullet damage 10 points
+Boss Bullet damage 10 points
+Boss damage instant dead.
+
+Coded on C using the powerfull z88dk compiler , the fabulous Nirvana Plus, and the genial Vortex II Player for AY music. The code is GPL’ed https://bitbucket.org/CmGonzalez/gandalf/
+
+Code: Cristián González, Alvin Albrecht
+Music: Hikaru
+FX: BeikerSoft
+Testing:Abu Simbel
+
+
+Good luck wizard!
+
+
 
 BUILD INSTRUCTIONS:
 

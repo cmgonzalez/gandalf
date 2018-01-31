@@ -138,6 +138,20 @@ INIT:
    LD HL,SETUP
    RES 7,(HL)
 
+SMC_INIT_0:
+
+   JR FIRST_TIME_INIT_0
+
+   XOR A
+   JP INIT_REGISTERS
+
+FIRST_TIME_INIT_0:
+
+   PUSH HL
+   LD HL,0
+   LD (SMC_INIT_0),HL
+   POP HL
+
 ;note table data depacker
    LD DE,T_PACK
    LD BC,T1_+(2*49)-1
@@ -165,6 +179,8 @@ TP_2:  LD A,H
    SUB 0xF0 ;#F8*2
    JR NZ,TP_0
 
+INIT_REGISTERS:
+
    LD HL,VARS
    LD (HL),A
    LD DE,VARS+1
@@ -187,6 +203,16 @@ TP_2:  LD A,H
    LD (ChanB+CHP_SamPtr),HL ;S2 sample in PT3, so, you
    LD (ChanC+CHP_SamPtr),HL ;S3 can comment S1,2,3; see
                 ;also EMPTYSAMORN comment
+
+SMC_INIT_1:
+
+   JR FIRST_TIME_INIT_1
+   JP ROUT
+
+FIRST_TIME_INIT_1:
+
+   LD HL,0
+   LD (SMC_INIT_1),HL
 
    LD A,(IX+13-100) ;EXTRACT VERSION NUMBER
    SUB 0x30
@@ -340,7 +366,6 @@ M2:      defb 0x7D
 M3:      LD A,C
    AND A
    JR NZ,INITV2
-
    JP ROUT_A0
 
 ;pattern decoder
@@ -816,8 +841,8 @@ CH_ONDL:  LD (IX+CHP_COnOff),A
 
 PLAY:
    LD A,(MODADDR+1)
-	OR A
-	JP Z, ROUT_A0     ; if no song
+   OR A
+   JP Z, ROUT_A0     ; if no song
    XOR A
    LD (AddToEn),A
    LD (AYREGS+Mixer),A

@@ -49,8 +49,8 @@ void player_init(unsigned char f_lin, unsigned char f_col,
   player_onstair = 0; // TODO TO STAT
   player_onfire = 0;
   NIRVANAP_spriteT(SPR_P1, f_tile, f_lin, f_col);
-  //index0 = spr_calc_index(f_lin, f_col);
-  //scr_map[index0] = TILE_CHECKPOINT;
+  // index0 = spr_calc_index(f_lin, f_col);
+  // scr_map[index0] = TILE_CHECKPOINT;
 }
 
 void player_turn(void) {
@@ -251,10 +251,12 @@ unsigned char player_fire() {
     player_onfire = (dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP);
   }
   if (player_onfire) {
+
     if (tile[SPR_P1] == TILE_P1_STANR || tile[SPR_P1] == TILE_P1_STANR + 1) {
       player_tile(TILE_P1_RIGHT, TILE_P1_LEN);
       colint[SPR_P1] = 0;
     }
+
     /*Fireball*/
     if (player_mana > 0 && (bullet_col[SPR_P1] == 0xFF)) {
       if (player_mana > 5) {
@@ -286,10 +288,13 @@ unsigned char player_collision(void) {
     sprite_curr_index = spr_calc_index(s_lin1 + 8, s_col1);
     v0 = scr_map[sprite_curr_index];
     if (v0 == TILE_CHECKPOINT && !BIT_CHK(s_state, STAT_JUMP)) {
-      if (game_checkpoint_scr != scr_curr)
-        zx_border(INK_BLUE);
-      player_col_scr = s_col1;
-      player_lin_scr = s_lin1;
+      if (game_checkpoint_scr != scr_curr) {
+        ay_song_play(AY_SONG_ONCE, 6, ay_fx_06_efecto);
+        zx_border(INK_WHITE);
+        player_col_scr = s_col1;
+        player_lin_scr = s_lin1;
+      }
+
       game_set_checkpoint();
     }
 
@@ -705,7 +710,7 @@ unsigned char player_hit_platform(void) {
         ++i;
       }
     }
-      ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_golpe);
+    ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_golpe);
 
     // ay_fx_play(ay_effect_02);
     spr_brick_anim(1);
@@ -732,6 +737,7 @@ void player_score_add(unsigned int f_score) __z88dk_fastcall {
       player_lvl++;
       game_update_stats();
       spr_flatten();
+      ay_song_play(AY_SONG_ONCE, 6, ay_fx_06_efecto);
       zx_print_str(12, 12, "LEVEL UP!");
       game_colour_message(12, 12, 12 + 9, 60, 0);
       spr_unflatten();
@@ -936,7 +942,6 @@ unsigned char player_move_jump(void) {
 void player_open_door(unsigned int f_index, unsigned char f_tile) {
   unsigned char f_open;
 
-  ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_pierto_abierta);
   f_open = 0;
   // ay_fx_play(ay_effect_05);
   switch (f_tile) {
@@ -967,16 +972,19 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
   }
 
   if (f_open || game_inmune) {
+    ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_pierto_abierta);
     scr_map[f_index] = TILE_EMPTY;
     game_obj_set(f_index);
     spr_draw_index(&f_index);
+  } else {
+    ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_sin_mana);
   }
 }
 
 void player_lost_life() {
   unsigned char i;
   // ay_fx_play(ay_effect_18);
-  ay_song_play(AY_SONG_ONCE, 4, ay_song_04_lotr_lose_a_life);
+
   player_vita = 0;
   game_update_stats();
   s_lin0 = lin[SPR_P1];
@@ -985,7 +993,7 @@ void player_lost_life() {
   for (i = 0; i <= SPR_P1; i++) {
     NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
   }
-
+  ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_explosion);
   NIRVANAP_halt();
   // Player Explode
   spr_add_anim(s_lin0 - 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
@@ -994,6 +1002,7 @@ void player_lost_life() {
   spr_add_anim(s_lin0, s_col0 + 2, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(s_lin0 + 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
   zx_border(INK_BLACK);
+
   // Animate Explotion
   i = 1;
   anim_time = zx_clock();
@@ -1008,7 +1017,9 @@ void player_lost_life() {
     }
   }
 
-  if (game_boss){
+  ay_song_play(AY_SONG_ONCE, 4, ay_song_04_lotr_lose_a_life);
+
+  if (game_boss) {
     s_lin1 = boss_lin;
     s_col1 = boss_col;
     boss_draw();

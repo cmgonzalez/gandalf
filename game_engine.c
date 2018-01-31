@@ -207,6 +207,7 @@ void game_draw_screen(void) {
 void game_boss_kill(void) {
   game_boss = 0;
   game_boss_alive = 0;
+  ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_explosion);
   spr_add_anim(boss_lin, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(boss_lin, boss_col + 2, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(boss_lin + 16, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
@@ -292,7 +293,7 @@ void game_add_enemy(unsigned char enemy_tile_index) __z88dk_fastcall {
       boss_stat = 0;
       spr_set_up(&boss_stat);
       game_boss = 1;
-      game_boss_hit = 8;
+      game_boss_hit = 6;
     } else {
       if (!game_boss)
         game_boss_fix = 1;
@@ -375,11 +376,11 @@ void game_update_stats(void) {
   zx_print_chr(20, 17, player_mana);
   if (game_boss) {
     zx_print_ink(INK_MAGENTA);
-    for (tmp0 = 0; tmp0 < 8; ++tmp0) {
+    for (tmp0 = 0; tmp0 < 6; ++tmp0) {
       if (tmp0 < game_boss_hit) {
-        zx_print_str(19, 12 + tmp0, "*");
+        zx_print_str(19, 13 + tmp0, "*");
       } else {
-        zx_print_str(19, 12 + tmp0, " ");
+        zx_print_str(19, 13 + tmp0, " ");
       }
     }
 
@@ -944,28 +945,28 @@ void menu_main() {
     switch (c) {
     case 1: // SINCLAIR
       joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_sinclair1);
-      game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
+      //game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
       curr_sel = 1;
       break;
     case 2: // KEYBOARD
       joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
-      game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
+      //game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
       curr_sel = 2;
       break;
     case 3: // KEMPSTON
       joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_kempston);
-      game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
+      //game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
       curr_sel = 3;
       break;
     case 4: // CURSOR
       joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_cursor);
-      game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
+      //game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
       curr_sel = 4;
       break;
     case 5: // DEFINE
       menu_redefine();
       joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
-      game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
+      //game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
       curr_sel = 2;
       break;
     case 6: // CONTROL
@@ -978,12 +979,14 @@ void menu_main() {
       z80_delay_ms(40);
       break;
     case 0:
-      ay_reset();
       NIRVANAP_halt();
       zx_paper_fill(INK_BLACK | PAPER_BLACK);
+      //ay_reset();
+      ay_song_play(AY_SONG_ONCE, 6, ay_fx_06_explosion1);
       f_input = 0; // Exit Loop
       break;
     }
+    if (c > 0 && c < 5) game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
   }
 }
 
@@ -1035,7 +1038,7 @@ void menu_main_print(unsigned char s_row, unsigned char s_col,
   ++s_row;
   zx_print_str(s_row, 2, "MUSIC HIKARU FX BEIKERSOFT");
   ++s_row;
-  zx_print_str(s_row, 6, "TESTING ABU SIMBEL");
+  zx_print_str(s_row, 3, "TEST ABU SIMBEL VER 1.00");
   ++s_row;
   ++s_row;
   zx_print_ink(INK_CYAN);

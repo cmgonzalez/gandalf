@@ -90,7 +90,7 @@ void boss_turn() {
       }
     } else {
       boss_lin = boss_lin + 2;
-      if (boss_lin >= (GAME_LIN_FLOOR - 64)) {
+      if (boss_lin >= (GAME_LIN_FLOOR - 48)) {
         spr_set_up(&boss_stat);
       }
     }
