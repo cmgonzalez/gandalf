@@ -358,6 +358,7 @@ extern unsigned int fps;
 extern unsigned char sprite;
 extern unsigned char sprite_on_air;
 extern unsigned char sprite_horizontal_check;
+extern unsigned char game_show_fps;
 
 extern unsigned char player_hit_count;
 extern unsigned int  player_brick_time;

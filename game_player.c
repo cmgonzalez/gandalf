@@ -287,12 +287,12 @@ unsigned char player_collision(void) {
 
     sprite_curr_index = spr_calc_index(s_lin1 + 8, s_col1);
     v0 = scr_map[sprite_curr_index];
-    if (((s_col1 & 1) == 0) && v0 == TILE_CHECKPOINT) {
+    if (v0 == TILE_CHECKPOINT) {
       if (game_checkpoint_scr != scr_curr)
         zx_border(INK_BLUE);
-      game_checkpoint_col = s_col1;
-      game_checkpoint_lin = s_lin1;
-      game_checkpoint_scr = scr_curr;
+      player_col_scr = s_col1;
+      player_lin_scr = s_lin1;
+      game_set_checkpoint();
     }
 
     if (v0 > TILE_ITEM_E && v0 < TILE_FLOOR) {

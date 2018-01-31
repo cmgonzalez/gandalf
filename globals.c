@@ -127,6 +127,7 @@ unsigned int fps;
 unsigned char sprite;
 unsigned char sprite_on_air;
 unsigned char sprite_horizontal_check;
+unsigned char game_show_fps;
 
 unsigned char s_tile0;
 unsigned char s_tile1;

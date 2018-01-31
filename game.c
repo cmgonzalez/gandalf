@@ -35,9 +35,11 @@
 
 void main(void) {
   unsigned int counter;
-
+  //DEBUG
   game_inmune = 0;    // GAME_INMUNE;
   game_inf_lives = 1; // GAME_INF_LIVES;
+  game_show_fps = 0;
+  
   // INTERRUPTS ARE DISABLED
   // RESET AY CHIP
   ay_reset();
@@ -114,11 +116,7 @@ void main(void) {
     player_score = 0;
     player_lin_scr = GAME_LIN_FLOOR - 16;
     player_col_scr = 2;
-
-    game_checkpoint_col = player_col_scr;
-    game_checkpoint_lin = player_lin_scr;
-    game_checkpoint_scr = scr_curr;
-
+    game_set_checkpoint();
     game_worldup = 0;
     game_respawn_curr_time = 255;
     game_mush_count = 0;

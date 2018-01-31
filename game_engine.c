@@ -67,7 +67,7 @@ void game_loop(void) {
       /*Each second aprox - update fps/score/phase left/phase advance*/
       if (game_check_time(&frame_time, 100)) {
         frame_time = zx_clock();
-        game_fps();
+        if (game_show_fps) game_fps();
         game_respawn();
       }
 
@@ -81,7 +81,11 @@ void game_loop(void) {
       game_boss_alive = 1;
       game_boss = 0;
       scr_curr = 255;
+      player_lin_scr = 0;
+      player_col_scr = 0;
       game_obj_clear();
+      player_col_scr = 2;
+      player_lin_scr = 128;
       game_round_init();
     }
   }
@@ -376,6 +380,12 @@ void game_start_timer(void) {
   z80_wpoke(&NIRVANAP_ISR_HOOK[1], (unsigned int)game_tick); // game_tick
 }
 
+void game_set_checkpoint() {
+  game_checkpoint_col = ( player_col_scr >> 1 ) << 1;
+  game_checkpoint_lin = ( ( player_lin_scr >> 4 ) << 4 );
+  game_checkpoint_scr = scr_curr;
+}
+
 void game_round_init(void) {
 
 
@@ -394,6 +404,8 @@ void game_round_init(void) {
   game_print_footer();
   spr_page_map();
   game_draw_screen();
+  game_set_checkpoint();
+
   //ay_reset();
   //ay_fx_play(ay_effect_12);
   /* Player(s) init */
@@ -516,7 +528,7 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
         f_check = TILE_FLOOR;
       }
 
-      if (f_tile <= f_check) {
+      if (f_tile < f_check) {
         return 0;
       } else {
         return f_tile;
