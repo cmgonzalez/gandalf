@@ -1320,7 +1320,7 @@
 1320  0216  21 00 00    	ld	hl,_spr_count
 1321  0219  36 00       	ld	(hl),0x00
 1322  021B  F3          	di
-1323  021C  DD 36 FF 00 	ld	(ix-1),0x00
+1323  021C  DD 36 FE 00 	ld	(ix-2),0x00
 1324  0220              l_game_draw_screen_00127:
 1325  0220  21 00 00    	ld	hl,_index1
 1326  0223  7E          	ld	a, (hl)
@@ -1344,10 +1344,10 @@
 1344  0242  2A 00 00    	ld	hl,(_index1)
 1345  0245  09          	add	hl,bc
 1346  0246  7E          	ld	a,(hl)
-1347  0247  DD 77 FE    	ld	(ix-2),a
+1347  0247  DD 77 FF    	ld	(ix-1),a
 1348  024A  D6 60       	sub	a,0x60
 1349  024C  30 67       	jr	NC,l_game_draw_screen_00125
-1350  024E  DD 7E FE    	ld	a,(ix-2)
+1350  024E  DD 7E FF    	ld	a,(ix-1)
 1351  0251  D6 5D       	sub	a,0x5d
 1352  0253  20 04       	jr	NZ,l_game_draw_screen_00197
 1353  0255  3E 01       	ld	a,0x01
@@ -1358,7 +1358,7 @@
 1358  025A  4F          	ld	c,a
 1359  025B  B7          	or	a, a
 1360  025C  20 07       	jr	NZ,l_game_draw_screen_00111
-1361  025E  DD 7E FE    	ld	a,(ix-2)
+1361  025E  DD 7E FF    	ld	a,(ix-1)
 1362  0261  D6 5A       	sub	a,0x5a
 1363  0263  20 2E       	jr	NZ,l_game_draw_screen_00112
 1364  0265              l_game_draw_screen_00111:
@@ -1382,32 +1382,32 @@
 1382  027F  2A 00 00    	ld	hl,(_index1)
 1383  0282  09          	add	hl,bc
 1384  0283  36 4F       	ld	(hl),0x4f
-1385  0285  DD 36 FE 4F 	ld	(ix-2),0x4f
+1385  0285  DD 36 FF 4F 	ld	(ix-1),0x4f
 1386  0289  18 08       	jr	l_game_draw_screen_00112
 1387  028B              l_game_draw_screen_00109:
 1388  028B  79          	ld	a, c
 1389  028C  B7          	or	a, a
 1390  028D  28 04       	jr	Z,l_game_draw_screen_00112
-1391  028F  DD 36 FE 00 	ld	(ix-2),0x00
+1391  028F  DD 36 FF 00 	ld	(ix-1),0x00
 1392  0293              l_game_draw_screen_00112:
-1393  0293  DD 7E FE    	ld	a,(ix-2)
+1393  0293  DD 7E FF    	ld	a,(ix-1)
 1394  0296  D6 23       	sub	a,0x23
 1395  0298  20 09       	jr	NZ,l_game_draw_screen_00115
 1396  029A  2A 00 00    	ld	hl,(_index1)
 1397  029D  CD A8 11    	call	_game_match_back
-1398  02A0  DD 75 FE    	ld	(ix-2),l
+1398  02A0  DD 75 FF    	ld	(ix-1),l
 1399  02A3              l_game_draw_screen_00115:
 1400  02A3  3A 00 00    	ld	a,(_s_col1)
 1401  02A6  F5          	push	af
 1402  02A7  33          	inc	sp
 1403  02A8  2A FF FF    	ld	hl,(_s_lin1-1)
-1404  02AB  DD 6E FE    	ld	l,(ix-2)
+1404  02AB  DD 6E FF    	ld	l,(ix-1)
 1405  02AE  E5          	push	hl
 1406  02AF  CD 00 00    	call	_NIRVANAP_drawT_raw_callee
 1407  02B2  C3 3D 03    	jp	l_game_draw_screen_00126
 1408  02B5              l_game_draw_screen_00125:
 1409  02B5  3E 78       	ld	a,0x78
-1410  02B7  DD 96 FE    	sub	a,(ix-2)
+1410  02B7  DD 96 FF    	sub	a,(ix-1)
 1411  02BA  38 2D       	jr	C,l_game_draw_screen_00122
 1412  02BC  3A 00 00    	ld	a,(_spr_count)
 1413  02BF  D6 08       	sub	a,0x08
@@ -1425,7 +1425,7 @@
 1425  02D9  26 00       	ld	h,0x00
 1426  02DB  01 00 00    	ld	bc,_game_respawn_tile
 1427  02DE  09          	add	hl,bc
-1428  02DF  DD 7E FE    	ld	a,(ix-2)
+1428  02DF  DD 7E FF    	ld	a,(ix-1)
 1429  02E2  77          	ld	(hl),a
 1430  02E3  6F          	ld	l,a
 1431  02E4  CD 05 05    	call	_game_add_enemy
@@ -1437,7 +1437,7 @@
 1437  02F0  B7          	or	a, a
 1438  02F1  20 23       	jr	NZ,l_game_draw_screen_00123
 1439  02F3  3E 00       	ld	a, +((_mush_index) & 0xFF)
-1440  02F5  DD 86 FF    	add	a,(ix-1)
+1440  02F5  DD 86 FE    	add	a,(ix-2)
 1441  02F8  4F          	ld	c, a
 1442  02F9  3E 00       	ld	a, +((_mush_index) / 256)
 1443  02FB  CE 00       	adc	a,0x00
@@ -1446,14 +1446,14 @@
 1446  0301  C6 10       	add	a,0x10
 1447  0303  02          	ld	(bc), a
 1448  0304  3E 00       	ld	a, +((_mush_class) & 0xFF)
-1449  0306  DD 86 FF    	add	a,(ix-1)
+1449  0306  DD 86 FE    	add	a,(ix-2)
 1450  0309  4F          	ld	c, a
 1451  030A  3E 00       	ld	a, +((_mush_class) / 256)
 1452  030C  CE 00       	adc	a,0x00
 1453  030E  47          	ld	b, a
-1454  030F  DD 7E FE    	ld	a,(ix-2)
+1454  030F  DD 7E FF    	ld	a,(ix-1)
 1455  0312  02          	ld	(bc), a
-1456  0313  DD 34 FF    	inc	(ix-1)
+1456  0313  DD 34 FE    	inc	(ix-2)
 1457  0316              l_game_draw_screen_00123:
 1458  0316  2A 00 00    	ld	hl,(_index1)
 1459  0319  01 00 00    	ld	bc,_scr_map
@@ -3314,11 +3314,11 @@
 3306  0EF4  34          	inc	(hl)
 3307  0EF5  3E 00       	ld	a, +((_bullet_dir) & 0xFF)
 3308  0EF7  83          	add	a, e
-3309  0EF8  DD 77 FE    	ld	(ix-2),a
+3309  0EF8  DD 77 FC    	ld	(ix-4),a
 3310  0EFB  6F          	ld	l,a
 3311  0EFC  3E 00       	ld	a,+((_bullet_dir) / 256)
 3312  0EFE  CE 00       	adc	a,0x00
-3313  0F00  DD 77 FF    	ld	(ix-1),a
+3313  0F00  DD 77 FD    	ld	(ix-3),a
 3314  0F03  67          	ld	h,a
 3315  0F04  36 00       	ld	(hl),0x00
 3316  0F06  3A 00 00    	ld	a,(_game_world)
@@ -3379,11 +3379,11 @@
 3371  0F61  12          	ld	(de), a
 3372  0F62  3E 00       	ld	a, +((_bullet_col) & 0xFF)
 3373  0F64  80          	add	a, b
-3374  0F65  DD 77 FC    	ld	(ix-4),a
+3374  0F65  DD 77 FE    	ld	(ix-2),a
 3375  0F68  6F          	ld	l,a
 3376  0F69  3E 00       	ld	a,+((_bullet_col) / 256)
 3377  0F6B  CE 00       	adc	a,0x00
-3378  0F6D  DD 77 FD    	ld	(ix-3),a
+3378  0F6D  DD 77 FF    	ld	(ix-1),a
 3379  0F70  67          	ld	h,a
 3380  0F71  3A 00 00    	ld	a,(_boss_col)
 3381  0F74  77          	ld	(hl),a
@@ -3441,8 +3441,8 @@
 3433  0FCA  DD 7E 04    	ld	a,(ix+4)
 3434  0FCD  C6 02       	add	a,0x02
 3435  0FCF  12          	ld	(de), a
-3436  0FD0  DD 6E FE    	ld	l,(ix-2)
-3437  0FD3  DD 66 FF    	ld	h,(ix-1)
+3436  0FD0  DD 6E FC    	ld	l,(ix-4)
+3437  0FD3  DD 66 FD    	ld	h,(ix-3)
 3438  0FD6  36 01       	ld	(hl),0x01
 3439  0FD8  11 00 00    	ld	de,_bullet_colint+0
 3440  0FDB  68          	ld	l,b
@@ -3460,8 +3460,8 @@
 3452  0FEF              l_game_shoot_fire_boss_00121:
 3453  0FEF  3A 00 00    	ld	a,(_boss_col)
 3454  0FF2  C6 06       	add	a,0x06
-3455  0FF4  DD 6E FC    	ld	l,(ix-4)
-3456  0FF7  DD 66 FD    	ld	h,(ix-3)
+3455  0FF4  DD 6E FE    	ld	l,(ix-2)
+3456  0FF7  DD 66 FF    	ld	h,(ix-1)
 3457  0FFA  77          	ld	(hl), a
 3458  0FFB  3E 00       	ld	a, +((_bullet_tile) & 0xFF)
 3459  0FFD  80          	add	a, b
@@ -3471,8 +3471,8 @@
 3463  1003  57          	ld	d, a
 3464  1004  DD 7E 04    	ld	a,(ix+4)
 3465  1007  12          	ld	(de), a
-3466  1008  DD 6E FE    	ld	l,(ix-2)
-3467  100B  DD 66 FF    	ld	h,(ix-1)
+3466  1008  DD 6E FC    	ld	l,(ix-4)
+3467  100B  DD 66 FD    	ld	h,(ix-3)
 3468  100E  36 FF       	ld	(hl),0xff
 3469  1010  11 00 00    	ld	de,_bullet_colint+0
 3470  1013  68          	ld	l,b
