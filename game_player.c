@@ -285,7 +285,7 @@ unsigned char player_collision(void) {
 
     sprite_curr_index = spr_calc_index(s_lin1 + 8, s_col1);
     v0 = scr_map[sprite_curr_index];
-    if (v0 == TILE_CHECKPOINT) {
+    if (v0 == TILE_CHECKPOINT && !BIT_CHK(s_state, STAT_JUMP)) {
       if (game_checkpoint_scr != scr_curr)
         zx_border(INK_BLUE);
       player_col_scr = s_col1;

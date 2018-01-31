@@ -622,7 +622,12 @@ void spr_tile_paint(void) {
     } else {
       // Animation
       i = stp_tile - 0x80;
-      NIRVANAP_drawT_raw(anim_tile[i] + anim_int[i], stp_row, stp_col);
+
+      if (anim_end[i] > anim_int[i]) {
+        NIRVANAP_drawT_raw(anim_tile[i] + anim_int[i], stp_row, stp_col);
+      } else {
+        NIRVANAP_fillT_raw(map_paper_clr, stp_row, stp_col);
+      }
     }
   }
 }
