@@ -407,8 +407,10 @@ void spr_page_map(void) {
   intrinsic_ei();
   NIRVANAP_start();
   zx_print_ink(INK_YELLOW);
-  zx_print_str(23, 12, "SCR:");
-  zx_print_chr(23, 12 + 4, scr_curr);
+  if (game_show_fps) {
+    zx_print_str(23, 12, "SCR:");
+    zx_print_chr(23, 12 + 4, scr_curr);
+  }
 }
 
 unsigned char spr_redraw(void) {
@@ -620,7 +622,12 @@ void spr_tile_paint(void) {
     } else {
       // Animation
       i = stp_tile - 0x80;
-      NIRVANAP_drawT_raw(anim_tile[i] + anim_int[i], stp_row, stp_col);
+
+      if (anim_end[i] > anim_int[i]) {
+        NIRVANAP_drawT_raw(anim_tile[i] + anim_int[i], stp_row, stp_col);
+      } else {
+        NIRVANAP_fillT_raw(map_paper_clr, stp_row, stp_col);
+      }
     }
   }
 }
@@ -778,13 +785,14 @@ unsigned char spr_colision_b(unsigned char f_sprite, unsigned char f_bullet) {
   return 0;
 }
 
-unsigned char spr_colision_b2(void) {
-  // Colission Boss -> Bullet
-  if (abs(boss_lin - bullet_lin[SPR_P1]) < 32) {
-    if (boss_lin <= bullet_lin[SPR_P1]) {
-      if (abs(boss_col - bullet_col[SPR_P1]) < 2) {
-        return 1;
-      }
+unsigned char spr_colision_boss(unsigned char f_lin, unsigned char f_col) {
+  // Colission Boss -> Bullet or sprite
+
+  tmp0 = abs((f_col + 1) - (boss_col + 2));
+  if (tmp0 < 2) {
+    tmp1 = abs((f_lin + 8) - (boss_lin + 16));
+    if (tmp1 < 16) {
+      return 1;
     }
   }
   return 0;
@@ -900,11 +908,14 @@ void spr_bullets_play(void) {
 }
 void spr_bullet_enemy_colision() {
   if (spr_colision_b(SPR_P1, bullet)) {
-    //ay_fx_play(ay_effect_06);
     zx_border(INK_MAGENTA);
     bullet_col[bullet] = s_col0;
     spr_bullet_explode();
-    player_hit(10);
+    if (game_boss) {
+      player_hit(20);
+    } else {
+      player_hit(10);
+    }
   }
 }
 
@@ -924,7 +935,7 @@ void spr_bullet_player_colision() {
   }
   if (game_boss) {
     // Player Bullet hit the boss
-    if (spr_colision_b2()) {
+    if (spr_colision_boss(bullet_lin[SPR_P1], bullet_col[SPR_P1])) {
       spr_bullet_explode();
       --game_boss_hit;
       game_update_stats();
@@ -935,10 +946,12 @@ void spr_bullet_player_colision() {
   }
 }
 void spr_bullet_explode() {
+
+  ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_explosion);
   spr_add_anim(bullet_lin[bullet], bullet_col[bullet], TILE_ANIM_FIRE, 3, 0, 0);
   --bullet_count;
   bullet_col[bullet] = 0xFF;
-  //ay_fx_play(ay_effect_11);
+  // ay_fx_play(ay_effect_11);
 }
 
 void spr_turn_horizontal(void) {
@@ -955,38 +968,37 @@ void spr_btile_paint_back() {
   unsigned char f_tile;
   unsigned char f_paper_c;
 
-
   f_tile = 0;
   tmp_ui = 32;
   map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
   while (tmp_ui < (32 + (48 * 12 * 20))) { // 12*20 btiles
-    if ( (f_tile < 73 && f_tile != 13 && f_tile != 14) || f_tile > 90 ) { // TODO AN ARRAY WILL BE A MORE ELEGANT SOLUTION
+    if ((f_tile < 73 && f_tile != 13 && f_tile != 14) ||
+        f_tile > 90) { // TODO AN ARRAY WILL BE A MORE ELEGANT SOLUTION
 
-      //f_half = 0;
+      // f_half = 0;
       tmp0 = 0;
       f_paper_c = map_paper_last;
 
-      if ( (f_tile > 56 && f_tile < 65) || (f_tile > 16 && f_tile < 20) )  {
-        if ( map_paper == PAPER_RED ) {
+      if ((f_tile > 56 && f_tile < 65) || (f_tile > 16 && f_tile < 20)) {
+        if (map_paper == PAPER_RED) {
           tmp0 = 16;
           map_paper_last_a = map_paper_last;
         }
-        if ( map_paper_last == PAPER_RED ) {
+        if (map_paper_last == PAPER_RED) {
           f_paper_c = map_paper_last_a;
         }
       }
 
-
       while (tmp0 < 16) {
         tmp = PEEK(&btiles + tmp_ui + tmp0);
-        if ( (tmp & 0x38) == f_paper_c ) { // 00111000
-          tmp = tmp & 0xC7;                   // 11000111
+        if ((tmp & 0x38) == f_paper_c) { // 00111000
+          tmp = tmp & 0xC7;              // 11000111
           tmp = tmp | map_paper; // TODO we can hava a map array for ink to
                                  // prevent using the same paper n ink
           POKE(&btiles + tmp_ui + tmp0, tmp);
         }
         ++tmp0;
-        //if ( f_half & tmp0 == 8 ) tmp0 = 12;
+        // if ( f_half & tmp0 == 8 ) tmp0 = 12;
       }
     }
     tmp_ui = tmp_ui + 48;

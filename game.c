@@ -35,9 +35,11 @@
 
 void main(void) {
   unsigned int counter;
-
+  //DEBUG
   game_inmune = 0;    // GAME_INMUNE;
-  game_inf_lives = 1; // GAME_INF_LIVES;
+  game_inf_lives = 0; // GAME_INF_LIVES;
+  game_show_fps = 0;
+
   // INTERRUPTS ARE DISABLED
   // RESET AY CHIP
   ay_reset();
@@ -89,14 +91,18 @@ void main(void) {
   NIRVANAP_tiles(_btiles);
   NIRVANAP_start();
 
+  game_attribs();
+  game_over = 1;
+  zx_print_str(12, 6, "FOR FELIPE AND EDDIE");
+  game_colour_message(12, 6, 6 + 20, 30, 0);
   // Init Screen
   frame_time = zx_clock();
 
   while (1) {
     /*Init Objects*/
     game_obj_clear();
-    game_world = 0; // 1;//0;
-    scr_curr = 0xFF; // 0xFF equals read default screen from map
+    game_world = 0;
+    scr_curr = 5;//0xFF; // 0xFF equals read default screen from map on bank 6
 
     /*Player Init*/
     player_max_mana = GAME_START_MAX_MANA;
@@ -110,11 +116,7 @@ void main(void) {
     player_score = 0;
     player_lin_scr = GAME_LIN_FLOOR - 16;
     player_col_scr = 2;
-
-    game_checkpoint_col = player_col_scr;
-    game_checkpoint_lin = player_lin_scr;
-    game_checkpoint_scr = scr_curr;
-
+    game_set_checkpoint();
     game_worldup = 0;
     game_respawn_curr_time = 255;
     game_mush_count = 0;

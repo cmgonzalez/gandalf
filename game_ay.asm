@@ -52,19 +52,19 @@ ay_fx_play:
 
    ; hl = song address
    ;  d = bank
-   
+
    ld (_ay_fx_command_param),hl
-   
+
    ld e,$04                    ; NEW command
    ld (_ay_fx_command),de
-   
+
    ret
 
 _ay_fx_stop:
 
    ld a,$02                    ; STOP command
    ld (_ay_fx_command),a
-   
+
    ret
 
 ;; AY SONG FUNCTIONS
@@ -102,14 +102,14 @@ ay_song_play:
    ; hl = song address
    ;  d = bank
    ;  e = 0 to repeat, 1 to not repeat
-   
+
    ld (_ay_song_command_param),hl
-   
+
    ld a,e
    and $01                     ; keep loop bit
    or $04                      ; add NEW command
    ld e,a
-   
+
    ld (_ay_song_command),de
    ret
 
@@ -140,35 +140,35 @@ _ay_is_playing:
 
    ld a,(_ay_fx_bank)
    or $10                      ; select 48k rom
-   
+
    ld bc,$7ffd
-   
+
    di
-   
+
    out (c),a
-   
+
    ld hl,(mfx_mfxptr+1)        ; current effect position
-   
+
    ld a,(_ay_song_bank)
    or $10                      ; select 48k rom
 
    out (c),a
-   
+
    ld a,(vtii_modaddr+1)       ; msb of current song position
    ld l,a
-   
+
    ld a,(_GLOBAL_ZX_PORT_7FFD)
    out (c),a                   ; restore bank
-   
+
    ei
-   
+
    inc l
    dec l
    jr z, no_song
    ld l,1
 
 no_song:
-   
+
    ld a,h
    or a
    jr z, no_effect
