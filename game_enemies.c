@@ -76,6 +76,9 @@ void enemy_check_deadly() {
 void boss_turn() {
 
   if (game_check_time(&boss_time, 6)) {
+
+
+
     s_col1 = boss_col;
     s_lin1 = boss_lin;
 
@@ -106,24 +109,38 @@ void boss_turn() {
       ++boss_col;
     }
 
+
+
     // PAINT
-    spr_hack = 1;
-    NIRVANAP_halt();
-    intrinsic_di();
-    if (boss_inc) {
-      boss_inc = 0;
-      boss_draw(0);
-    } else {
-      boss_inc = 1;
-      boss_draw(2);
-    }
-    intrinsic_ei();
-    spr_hack = 0;
+    boss_draw();
+
+
     boss_time = zx_clock();
+    // KILL PLAYER INSTANTLY
+    if (spr_colision_boss(lin[SPR_P1], col[SPR_P1])) {
+      player_lost_life();
+    }
+
+
   }
 }
 
-void boss_draw(unsigned char f_inc) __z88dk_fastcall {
+void boss_draw() {
+  spr_hack = 1;
+  NIRVANAP_halt();
+  intrinsic_di();
+  if (boss_inc) {
+    boss_inc = 0;
+    boss_draw_frame(0);
+  } else {
+    boss_inc = 1;
+    boss_draw_frame(2);
+  }
+  intrinsic_ei();
+  spr_hack = 0;
+}
+
+void boss_draw_frame(unsigned char f_inc) __z88dk_fastcall {
   NIRVANAP_drawT_raw(boss_tile + f_inc + 0, boss_lin, s_col1);
   NIRVANAP_drawT_raw(boss_tile + f_inc + 1, boss_lin, s_col1 + 2);
   NIRVANAP_drawT_raw(boss_tile + f_inc + 12, boss_lin + 16, s_col1);

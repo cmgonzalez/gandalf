@@ -46,7 +46,6 @@ void player_init(unsigned char f_lin, unsigned char f_col,
   BIT_SET(state_a[SPR_P1], STAT_LDIRR);
   player_hit_col = 0;
   player_hit_lin = 0;
-  player_slide = 0;
   player_onstair = 0; // TODO TO STAT
   player_onfire = 0;
   NIRVANAP_spriteT(SPR_P1, f_tile, f_lin, f_col);
@@ -156,7 +155,6 @@ unsigned char player_move_input(void) {
       state[SPR_P1] = s_state; /*TODO FIXME!*/
       player_tile(TILE_P1_JUMPR, TILE_P1_LEN);
       sprite_speed_alt[SPR_P1] = PLAYER_JUMP_SPEED;
-      player_slide = 0;
       player_vel_y = player_vel_y0; // -negative up / positive down
       return 1;
     }
@@ -1009,10 +1007,17 @@ void player_lost_life() {
       }
     }
   }
-  // Restore Sprites
-  for (i = 0; i < SPR_P1; ++i) {
-    if (class[i] != 0) {
-      NIRVANAP_spriteT(i, tile[i] + colint[i], lin[i], col[i]);
+
+  if (game_boss){
+    s_lin1 = boss_lin;
+    s_col1 = boss_col;
+    boss_draw();
+  } else {
+    // Restore Sprites
+    for (i = 0; i < SPR_P1; ++i) {
+      if (class[i] != 0) {
+        NIRVANAP_spriteT(i, tile[i] + colint[i], lin[i], col[i]);
+      }
     }
   }
   // Player lost life

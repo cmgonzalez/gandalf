@@ -37,9 +37,9 @@ void main(void) {
   unsigned int counter;
   //DEBUG
   game_inmune = 0;    // GAME_INMUNE;
-  game_inf_lives = 1; // GAME_INF_LIVES;
+  game_inf_lives = 0; // GAME_INF_LIVES;
   game_show_fps = 0;
-  
+
   // INTERRUPTS ARE DISABLED
   // RESET AY CHIP
   ay_reset();
@@ -101,8 +101,8 @@ void main(void) {
   while (1) {
     /*Init Objects*/
     game_obj_clear();
-    game_world = 0; // 1;//0;
-    scr_curr = 15;//0xFF; // 0xFF equals read default screen from map
+    game_world = 0;
+    scr_curr = 0xFF; // 0xFF equals read default screen from map on bank 6
 
     /*Player Init*/
     player_max_mana = GAME_START_MAX_MANA;

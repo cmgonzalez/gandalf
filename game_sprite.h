@@ -51,6 +51,6 @@ extern void             spr_btile_paint_back(void);
 extern void             spr_flatten(void);
 extern void             spr_unflatten(void);
 extern unsigned char    spr_colision_b( unsigned char f_sprite, unsigned char f_bullet );
-extern unsigned char    spr_colision_b2(void);
+extern unsigned char    spr_colision_boss(unsigned char f_lin, unsigned char f_col);
 
 #endif

@@ -232,8 +232,6 @@
 #define SPRITE_VCOL_MARGIN            14 //VERTICAL COLLISION MARGIN
 
 /* Player */
-#define PLAYER_SLIDE_NORMAL           2
-#define PLAYER_SLIDE_ICE              1
 
 #define PLAYER_HIT_BRICK_TIME         4
 
@@ -294,14 +292,13 @@ extern udk_t k2;
 extern unsigned char dirs;
 extern unsigned char dirs_alt;
 
-extern unsigned char tbuffer[7];
 extern unsigned char class[8];
 extern unsigned char state[8];
 extern unsigned char state_a[8];
 extern unsigned char tile[8];
 extern unsigned char lin[8];
-//extern unsigned char lin_max[7];      // MAX LINE FOR VERTICAL ENEMIES
-//extern unsigned char lin_min[7];      // MIN LINE FOR VERTICAL ENEMIES
+extern unsigned char tbuffer[7];
+
 extern unsigned char col[8];
 extern unsigned char colint[8];
 extern unsigned char player_hit_lin;
@@ -309,7 +306,6 @@ extern unsigned char player_hit_col;
 extern unsigned char jump_lin[8];
 extern unsigned int spr_timer[8];
 
-extern unsigned char player_slide;
 extern unsigned int last_time[8];
 extern unsigned int player_score;
 extern signed char  player_vel_x;

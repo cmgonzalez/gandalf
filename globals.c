@@ -55,7 +55,6 @@ udk_t k2; // For game_2buttons
 
 unsigned char dirs;
 unsigned char dirs_alt;
-unsigned char tbuffer[7]; // temporary buffer
 
 // SPRITES GAME ARRAYS
 unsigned char class[8];   // CLASS OF SPRITE
@@ -63,6 +62,7 @@ unsigned char state[8];   // SPRITE STATES SEE DEFINES UPPER BIT VALUES
 unsigned char state_a[8]; // SPRITE STATES ALT SEE DEFINES UPPER BIT VALUES
 unsigned char tile[8];    // TILE
 unsigned char lin[8];     // LINE
+unsigned char tbuffer[7];
 
 // unsigned char lin_max[7];      // MAX LINE FOR VERTICAL ENEMIES
 // unsigned char lin_min[7];      // MIN LINE FOR VERTICAL ENEMIES
@@ -76,7 +76,6 @@ unsigned char jump_lin[8]; // START JUMP LINE
 // PLAYER ONLY
 unsigned char player_hit_lin; // HIT BRICK LINE
 unsigned char player_hit_col; // HIT BRICK COL
-unsigned char player_slide;   // SLIDING COUNTER
 unsigned int player_score;    // SCORE
 unsigned char player_lives;
 unsigned char player_coins;
