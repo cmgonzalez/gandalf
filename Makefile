@@ -1,6 +1,6 @@
 
 
-CSRC   = globals.c game.c game_enemies.c game_engine.c game_player.c game_sprite.c game_zx.c
+CSRC   = globals.c game.c game_enemies.c game_engine.c game_player.c game_sprite.c game_zx.c game_audio.c game_menu.c
 ASRC   = ay/ay_04.asm ay/ay_06.asm btiles.asm font.asm game_ay.asm game_engine.asm game_zx.asm
 
 OBJS = $(CSRC:.c=.o)

@@ -25,8 +25,8 @@ Boss damage instant dead.
 Coded on C using the powerfull z88dk compiler , the fabulous Nirvana Plus, and the genial Vortex II Player for AY music. The code is GPL’ed https://bitbucket.org/CmGonzalez/gandalf/
 
 Code: Cristián González, Alvin Albrecht
-Music: Hikaru
-FX: BeikerSoft
+Music: s9
+FX: BeykerSoft
 Testing:Abu Simbel
 
 
@@ -39,6 +39,16 @@ BUILD INSTRUCTIONS:
 * Install or update to the current Z88DK
 
 https://github.com/z88dk/z88dk#installation
+
+Compile z88dk
+cd z88dk
+chmod 777 build.sh
+chmod 777 config.sh
+./build.sh
+cd libsrc
+cd _DEVELOPMENT
+make TARGET=zx
+
 Git clone if you will regularly update z88dk.
 Nightly build if you just want to unzip the current build.
 
@@ -67,7 +77,7 @@ Run "Winmake zx" (windows) or "make TARGET=zx" (anything else)
 
 * Build
 Open a shell in the game home directory
-Run "make"
+Run "make" or "make -j10" for 10 compiler threads
 
 To build zx7 compresed run "make zx7" (twice)
 
@@ -84,3 +94,12 @@ RUNTIME MEMORY MAP:
 49152 - 55587     AY Music, Sound Effects and Players
 
 ==============================================================================
+
+Version 1.01
+  -Remove Red Dot on loading screen
+  -Repaint menu choice after a game
+  -Game key repaint on screen after Round UP
+  -Level table updated (10 Level Max)
+  -Some Map Fixes
+  -Boss fire left range fixed
+  -Speed up anims

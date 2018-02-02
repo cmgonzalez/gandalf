@@ -15,11 +15,12 @@
         along with Gandalf.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "game.h"
+#include "game_audio.h"
 #include "game_ay.h"
 #include "game_enemies.h"
+#include "game_menu.h"
 #include "game_engine.h"
 #include "game_player.h"
-//#include "game_sound.h"
 #include "game_sprite.h"
 #include "game_zx.h"
 #include "macros.h"
@@ -34,12 +35,12 @@
 
 void game_loop(void) {
 
-  // TODO CALL MENU HERE
+
   game_round_init();
 
   while (!game_over) {
 
-    while (!game_worldup && !game_over) {
+    while (!game_round_up && !game_over) {
 
       /*Enemies turn*/
       enemy_turn();
@@ -65,9 +66,9 @@ void game_loop(void) {
       }
 
       /*Each second aprox - update fps/score/phase left/phase advance*/
-      if (game_check_time(&frame_time, 100)) {
+      if (game_check_time(&frame_time, TIME_EVENT)) {
         frame_time = zx_clock();
-        if (game_show_fps)
+        if (game_debug)
           game_fps();
         game_respawn();
       }
@@ -75,8 +76,8 @@ void game_loop(void) {
       ++loop_count;
       ++fps;
     }
-    if (game_worldup) {
-      game_worldup = 0;
+    if (game_round_up) {
+      game_round_up = 0;
       game_respawn_curr_time = game_respawn_curr_time - 32;
       game_world++;
       game_boss_alive = 1;
@@ -88,6 +89,7 @@ void game_loop(void) {
       player_col_scr = 2;
       player_lin_scr = 128;
       game_round_init();
+      game_print_footer();
     }
   }
 }
@@ -207,7 +209,7 @@ void game_draw_screen(void) {
 void game_boss_kill(void) {
   game_boss = 0;
   game_boss_alive = 0;
-  ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_explosion);
+  audio_explosion();
   spr_add_anim(boss_lin, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(boss_lin, boss_col + 2, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(boss_lin + 16, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
@@ -230,30 +232,33 @@ void game_boss_kill(void) {
 }
 
 void game_end() {
-  z80_delay_ms(500);
+
+    z80_delay_ms(500);
 
 
-  scr_curr = 0;
-  spr_page_map();
-  game_draw_screen();
-  ay_song_play(AY_SONG_ONCE, 4, ay_song_04_sunflower);
-  NIRVANAP_drawT(TILE_P1_STANR,128,2);
-  z80_delay_ms(1500);
+    scr_curr = 0;
+    spr_page_map();
+    game_draw_screen();
+    audio_game_end();
+    NIRVANAP_drawT(TILE_P1_STANR,128,2);
+    z80_delay_ms(1500);
 
-  zx_print_str(8, 8, "CONGRATULATIONS!");
-  game_colour_message(8, 8, 8 + 16, 2000, 0);
-  zx_print_str(8, 7, "YOU HAVE DEFEATED");
-  game_colour_message(8, 7, 7 + 17, 2000, 0);
-  zx_print_str(8, 5, "THE LEFT EYE OF SAURON");
-  game_colour_message(8, 5, 5 + 22, 2000, 0);
-  zx_print_str(8, 3, "ARDA WILL BE ON PEACE NOW");
-  game_colour_message(8, 3, 3 + 25, 2000, 0);
-  z80_delay_ms(1000);
-  in_wait_key();
-  ay_reset();
-  game_world = 0xFF;
-  scr_curr = 0xFF;
-  game_worldup = 1;
+    zx_print_str(8, 8, "CONGRATULATIONS!");
+    game_colour_message(8, 8, 8 + 16, 2000, 0);
+    zx_print_str(8, 7, "YOU HAVE DEFEATED");
+    game_colour_message(8, 7, 7 + 17, 2000, 0);
+    zx_print_str(8, 5, "THE LEFT EYE OF SAURON");
+    game_colour_message(8, 5, 5 + 22, 2000, 0);
+    zx_print_str(8, 3, "ARDA WILL BE ON PEACE NOW");
+    game_colour_message(8, 3, 3 + 25, 2000, 0);
+    z80_delay_ms(1000);
+    in_wait_key();
+    ay_reset();
+    //Keep Playing
+    game_world = 0xFF;
+    scr_curr = 0xFF;
+    game_round_up = 1;
+
 }
 
 void game_add_enemy(unsigned char enemy_tile_index) __z88dk_fastcall {
@@ -315,11 +320,17 @@ void game_print_footer(void) {
   game_fill_row(23, 98);
   zx_print_str(23, 0, "f");
   zx_print_str(23, 31, "g");
+  zx_print_str(21, 15, "_"); // live p1 face
+
   // GANDALF FACE
-  zx_print_ink(INK_CYAN);
+  // zx_print_ink(INK_CYAN);
   zx_print_str(20, 1, "<"); // live p1 hut
   zx_print_ink(INK_YELLOW);
   zx_print_str(21, 1, "\\"); // live p1 face
+  zx_print_str(22, 7, "l");  // COIN
+  zx_print_str(22, 13, "m"); // STR
+  zx_print_str(22, 19, "n"); // INT
+  zx_print_str(22, 25, "o"); // LEVEL
   // VITA
   zx_print_ink(INK_RED | BRIGHT);
   zx_print_str(20, 8, ">"); // live p1 hut
@@ -328,15 +339,14 @@ void game_print_footer(void) {
   // MANA
   zx_print_ink(INK_WHITE | BRIGHT);
   zx_print_str(20, 15, "?"); // live p1 hut
-  zx_print_ink(INK_CYAN);
-  zx_print_str(21, 15, "_"); // live p1 face
+  // zx_print_ink(INK_CYAN);
   // XP
   zx_print_ink(INK_CYAN | BRIGHT);
   zx_print_str(20, 21, "x"); // live p1 hut
   zx_print_ink(INK_WHITE);
   zx_print_str(21, 21, "y"); // live p1 face
 
-  if (game_show_fps) {
+  if (game_debug) {
     /* phase osd bottom*/
     zx_print_str(23, 20, "LPS:");
   }
@@ -347,11 +357,7 @@ void game_print_footer(void) {
   // zx_print_str(20, 13, "k");
 
   // zx_print_str(20, 22, "x"); //XP
-  zx_print_ink(INK_YELLOW);
-  zx_print_str(22, 7, "l");  // COIN
-  zx_print_str(22, 13, "m"); // STR
-  zx_print_str(22, 19, "n"); // INT
-  zx_print_str(22, 25, "o"); // LEVEL
+  // zx_print_ink(INK_YELLOW);
 
   game_update_stats();
 }
@@ -449,7 +455,7 @@ void game_round_init(void) {
   game_update_stats();
   // z80_delay_ms(50);
   ay_reset();
-  ay_song_play(AY_SONG_ONCE, 4, ay_song_04_lotr_level_start);
+  audio_level_start();
   switch (game_world) {
   case 0:
     zx_print_str(12, 6, "ROUND 1 THE SHIRE");
@@ -759,6 +765,7 @@ unsigned char game_shoot_fire_boss(unsigned char f_tile) {
   // if (bullet_col[f_sprite] == 0xFF) {
   ++bullet_count;
   bullet_dir[f_sprite] = 0;
+
   if (game_world != 1) {
     bullet_lin0[f_sprite] = boss_lin + 16;
     bullet_class[f_sprite] = BULLET_FIREBALL_UP;
@@ -770,8 +777,8 @@ unsigned char game_shoot_fire_boss(unsigned char f_tile) {
       bullet_lin0[f_sprite] = boss_lin + 24; // Dual Fire
     }
   }
-  bullet_col0[f_sprite] = boss_col;
-  bullet_col[f_sprite] = boss_col;
+
+
   bullet_lin[f_sprite] = bullet_lin0[f_sprite];
   bullet_frames[f_sprite] = 2;
 
@@ -781,19 +788,20 @@ unsigned char game_shoot_fire_boss(unsigned char f_tile) {
     // Left
     if (boss_col < 1)
       return 1;
-
     bullet_tile[f_sprite] = f_tile + 2;
     bullet_dir[f_sprite] = 0x01;
     bullet_colint[f_sprite] = 2;
+    bullet_col[f_sprite] = boss_col;
   } else {
     // Right n default
     if (boss_col > 29)
       return 1;
-    bullet_col[f_sprite] = boss_col + 6;
     bullet_tile[f_sprite] = f_tile;
     bullet_dir[f_sprite] = 0xFF;
     bullet_colint[f_sprite] = 0xFF;
+    bullet_col[f_sprite] = boss_col+6;
   }
+  bullet_col0[f_sprite] = bullet_col[f_sprite] ;
   //}
   return 0;
 }
@@ -910,183 +918,4 @@ unsigned char game_match_back(unsigned int f_index) __z88dk_fastcall {
       return TILE_EMPTY_DARK_B;
   }
   return TILE_EMPTY;
-}
-
-void menu_main() {
-  unsigned char curr_sel;
-  unsigned char f_input;
-  unsigned char s_col;
-  unsigned char s_col_e;
-  unsigned char s_row;
-  unsigned char c;
-
-  f_input = 1;
-  s_col = 10;
-  s_col_e = 10 + 12;
-  s_row = 7;
-  c = 0;
-
-  map_paper = PAPER_BLACK;
-
-  curr_sel = 1;
-  menu_main_print(s_row, s_col, s_col_e);
-  while (f_input) {
-    z80_delay_ms(40);
-    // in_wait_key();
-    c = in_inkey();
-    // in_wait_nokey();
-
-    game_rotate_attrib();
-    s_row = 6 + curr_sel;
-    game_paint_attrib(&attrib_hl, s_col + 1, s_col_e, (s_row << 3) + 8);
-    // 48
-    c = c - 48;
-
-    switch (c) {
-    case 1: // SINCLAIR
-      joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_sinclair1);
-      //game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-      curr_sel = 1;
-      break;
-    case 2: // KEYBOARD
-      joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
-      //game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-      curr_sel = 2;
-      break;
-    case 3: // KEMPSTON
-      joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_kempston);
-      //game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-      curr_sel = 3;
-      break;
-    case 4: // CURSOR
-      joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_cursor);
-      //game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-      curr_sel = 4;
-      break;
-    case 5: // DEFINE
-      menu_redefine();
-      joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
-      //game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-      curr_sel = 2;
-      break;
-    case 6: // CONTROL
-      if (game_2buttons) {
-        game_2buttons = 0;
-      } else {
-        game_2buttons = 1;
-      }
-      menu_main_print(s_row, s_col, s_col_e);
-      z80_delay_ms(40);
-      break;
-    case 0:
-      NIRVANAP_halt();
-      zx_paper_fill(INK_BLACK | PAPER_BLACK);
-      //ay_reset();
-      ay_song_play(AY_SONG_ONCE, 6, ay_fx_06_explosion1);
-      f_input = 0; // Exit Loop
-      break;
-    }
-    if (c > 0 && c < 5) game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  }
-}
-
-void menu_main_print(unsigned char s_row, unsigned char s_col,
-                     unsigned char s_col_e) {
-  ay_song_play(AY_SONG_LOOP, 4, ay_song_04_lotr);
-
-  NIRVANAP_halt();
-  zx_paper_fill(INK_BLACK | PAPER_BLACK);
-  zx_print_ink(INK_WHITE);
-  // Gandalf Logo
-  NIRVANAP_spriteT(0, TILE_TITLE, 32, 11);
-  NIRVANAP_spriteT(1, TILE_TITLE + 1, 32, 13);
-  NIRVANAP_spriteT(2, TILE_TITLE + 2, 32, 15);
-  NIRVANAP_spriteT(3, TILE_TITLE + 3, 32, 17);
-  game_attribs();
-  zx_print_str(s_row, s_col, "1 SINCLAIR");
-  game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  ++s_row;
-  zx_print_str(s_row, s_col, "2 KEYBOARD");
-  game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  ++s_row;
-  zx_print_str(s_row, s_col, "3 KEMPSTON");
-  game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  ++s_row;
-  zx_print_str(s_row, s_col, "4 CURSOR");
-  game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  ++s_row;
-  zx_print_str(s_row, s_col, "5 DEFINE");
-  game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  ++s_row;
-  zx_print_str(s_row, s_col, "6 CONTROL");
-  if (game_2buttons) {
-    zx_print_str(s_row, s_col + 10, "2B");
-  } else
-     { zx_print_str(s_row, s_col + 10, "1B"); }
-  game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  ++s_row;
-  ++s_row;
-  zx_print_str(s_row, s_col, "0 START");
-  game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  ++s_row;
-  ++s_row;
-  ++s_row;
-  ++s_row;
-  ++s_row;
-  zx_print_ink(INK_BLUE);
-  zx_print_str(s_row, 2, "CODE C.GONZALEZ A.ALBRECHT");
-  ++s_row;
-  zx_print_str(s_row, 4, "MUSIC S9 FX BEYKERSOFT");
-  ++s_row;
-  zx_print_str(s_row, 3, "TEST ABU SIMBEL VER 1.00");
-  ++s_row;
-  ++s_row;
-  zx_print_ink(INK_CYAN);
-  zx_print_str(s_row, 8, "2018 NOENTIENDO");
-  game_paint_attrib(&attrib, 0, 31, (s_row << 3) + 8);
-}
-
-void menu_redefine() {
-  NIRVANAP_halt();
-  zx_paper_fill(INK_BLACK | PAPER_BLACK);
-  for (tmp0 = 8; tmp0 < 14; ++tmp0)
-    game_paint_attrib(&attrib, 10, 16, (tmp0 << 3) + 8);
-
-  zx_print_str(8, 10, "UP");
-  k1.up = menu_define_key();
-  zx_print_str(9, 10, "DOWN");
-  k1.down = menu_define_key();
-  zx_print_str(10, 10, "LEFT");
-  k1.left = menu_define_key();
-  zx_print_str(11, 10, "RIGHT");
-  k1.right = menu_define_key();
-  if (game_2buttons) {
-    zx_print_str(12, 10, "FIRE");
-    k2.fire = menu_define_key();
-    zx_print_str(13, 10, "JUMP");
-    k1.fire = menu_define_key();
-  } else {
-    zx_print_str(12, 10, "FIRE");
-    k1.fire = menu_define_key();
-  }
-
-  game_fill_row(12, 32);
-  menu_main_print(7, 10, 20);
-}
-
-unsigned int menu_define_key() {
-
-  while (1) {
-    in_wait_key();
-    tmp1 = in_inkey();
-    in_wait_nokey();
-    tmp0 = 0;
-    while (tmp0 < 38) {
-      if (tmp1 == key_map[tmp0]) {
-        return scan_map[tmp0];
-      }
-      ++tmp0;
-    }
-  }
-  // return 0;
 }

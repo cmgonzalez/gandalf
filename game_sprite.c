@@ -402,15 +402,41 @@ void spr_page_map(void) {
   if (map_paper_last != map_paper) {
     spr_btile_paint_back();
   }
-  map_paper_last = map_paper;
+
 
   intrinsic_ei();
   NIRVANAP_start();
   zx_print_ink(INK_YELLOW);
-  if (game_show_fps) {
+  if (game_debug) {
     zx_print_str(23, 12, "SCR:");
     zx_print_chr(23, 12 + 4, scr_curr);
   }
+}
+
+unsigned char spr_redraw_player(void) {
+
+  s_col1 = col[SPR_P1];
+  s_lin1 = lin[SPR_P1];
+
+  if ((s_lin1 != s_lin0) || (s_col1 != s_col0)) {
+    /* Column or lin Movement */
+    // Speed UP hack
+
+    player_anim_tile();
+    spr_back_repaint();
+
+    NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
+    return 1;
+  } else {
+    s_tile0 = *SPRITEVAL(sprite);
+    s_tile1 = tile[SPR_P1] + colint[SPR_P1];
+    if (s_tile1 != s_tile0) {
+      /* Internal Movement, no clean needed */
+      NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
+      return 0;
+    }
+  }
+  return 0;
 }
 
 unsigned char spr_redraw(void) {
@@ -421,22 +447,16 @@ unsigned char spr_redraw(void) {
   if ((s_lin1 != s_lin0) || (s_col1 != s_col0)) {
     /* Column or lin Movement */
     // Speed UP hack
-    if (sprite == SPR_P1) {
-      player_anim_tile(); // Returns to s_tile1
+    s_tile1 = tile[sprite] + colint[sprite];
+    if ((s_lin1 & 7) == 0) {
       spr_back_repaint();
     } else {
-      s_tile1 = tile[sprite] + colint[sprite];
-      if ((s_lin1 & 7) == 0) {
-        spr_back_repaint();
-      } else {
-        NIRVANAP_fillT(map_paper_clr, s_lin0, s_col0);
-      }
+      NIRVANAP_fillT(map_paper_clr, s_lin0, s_col0);
     }
-
     NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
     return 1;
   } else {
-    s_tile0 = s_tile1 = *SPRITEVAL(sprite);
+    s_tile0 = *SPRITEVAL(sprite);
     s_tile1 = tile[sprite] + colint[sprite];
     if (s_tile1 != s_tile0) {
       /* Internal Movement, no clean needed */
@@ -682,7 +702,7 @@ void spr_play_anim(void) {
       // z80_delay_ms(1); // TODO I don't get that...
       ++anim_int[f_anim];
       if (anim_int[f_anim] < anim_end[f_anim]) {
-        NIRVANAP_halt();
+        //NIRVANAP_halt();
         intrinsic_di();
         NIRVANAP_drawT_raw(anim_tile[f_anim] + anim_int[f_anim],
                            anim_lin[f_anim], anim_col[f_anim]);
@@ -696,9 +716,9 @@ void spr_play_anim(void) {
           f_index = spr_calc_index(s_lin0, s_col0);
           if (scr_map[spr_calc_index(s_lin0, s_col0)] >= 0x80) {
             index0 = spr_calc_index(s_lin0, s_col0);
-            scr_map[index0] = game_match_back(index0); // TILE_EMPTY;
+            scr_map[index0] = game_match_back(index0);
           }
-          NIRVANAP_halt();
+
           spr_back_repaint();
 
           if (anim_respanwn[f_anim]) {
@@ -912,9 +932,9 @@ void spr_bullet_enemy_colision() {
     bullet_col[bullet] = s_col0;
     spr_bullet_explode();
     if (game_boss) {
-      player_hit(20);
+      player_damage(20);
     } else {
-      player_hit(10);
+      player_damage(10);
     }
   }
 }
@@ -972,8 +992,10 @@ void spr_btile_paint_back() {
   tmp_ui = 32;
   map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
   while (tmp_ui < (32 + (48 * 12 * 20))) { // 12*20 btiles
-    if ((f_tile < 73 && f_tile != 13 && f_tile != 14) ||
-        f_tile > 90) { // TODO AN ARRAY WILL BE A MORE ELEGANT SOLUTION
+    if (
+        (f_tile < 73 && f_tile != 13 && f_tile != 14) ||
+        ( f_tile > 90 )
+       ) { // TODO AN ARRAY WILL BE A MORE ELEGANT SOLUTION
 
       // f_half = 0;
       tmp0 = 0;
@@ -1004,6 +1026,7 @@ void spr_btile_paint_back() {
     tmp_ui = tmp_ui + 48;
     ++f_tile;
   }
+  map_paper_last = map_paper;
   game_attribs();
 }
 

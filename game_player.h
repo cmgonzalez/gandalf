@@ -36,7 +36,7 @@ extern void          player_check_stairs_vertical(signed char f_inc) __z88dk_fas
 extern unsigned char player_fire(void);
 extern unsigned char player_move_jump(void);
 extern void          player_open_door(unsigned int f_index, unsigned char f_tile);
-extern void          player_hit(unsigned char f_val) __z88dk_fastcall;
+extern void          player_damage(unsigned char f_val) __z88dk_fastcall;
 extern void          player_lost_life();
 extern void          player_gasta_brick();
 extern void          player_fix_walk_lin();

@@ -118,15 +118,17 @@ unsigned char game_boss_fix;
 
 unsigned char game_mush_count;
 
-unsigned char game_worldup;
+unsigned char game_round_up;
 unsigned char game_respawn_curr_time;
 unsigned char game_2buttons;
+unsigned char menu_curr_sel;
+
 unsigned int fps;
 
 unsigned char sprite;
 unsigned char sprite_on_air;
 unsigned char sprite_horizontal_check;
-unsigned char game_show_fps;
+unsigned char game_debug;
 
 unsigned char s_tile0;
 unsigned char s_tile1;
@@ -368,9 +370,19 @@ unsigned char sprite_frames[] = { //TODO REPLACE CONSTANT WITH FIXED VALUES TO S
 
 
 unsigned int player_lvl_table[] = {
-    100,   500,   1000,  2000,  4000,  6000,  7000,  8000,  9000,  10000,
-    12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000
+    50,
+    100,
+    150,
+    200,
+    300,
+    500,
+    650,
+    800,
+    950,
+    1000
 };
+
+
 // TEMPORARY SPEED FOR SPEED UP
 unsigned char sprite_speed_alt[8];
 unsigned char draw_count;

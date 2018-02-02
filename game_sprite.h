@@ -28,9 +28,9 @@ extern unsigned char    spr_move_horizontal(void);
 extern unsigned char    spr_move_right(void);
 extern unsigned char    spr_move_left(void);
 extern unsigned char    spr_redraw(void);
-extern unsigned char    spr_tile_dir(unsigned char *f_tile, unsigned char *f_sprite, unsigned char *f_inc);
-extern void             spr_destroy(unsigned char f_sprite) __z88dk_fastcall;
+extern unsigned char    spr_redraw_player(void);
 extern unsigned char    spr_tile(unsigned char *f_sprite) __z88dk_fastcall;
+extern unsigned char    spr_tile_dir(unsigned char *f_tile, unsigned char *f_sprite, unsigned char *f_inc);
 extern void             spr_back_repaint(void);
 extern void             spr_brick_anim(unsigned char f_hit) __z88dk_fastcall;
 extern void             spr_draw_index(unsigned int *f_index)  __z88dk_fastcall;
@@ -52,5 +52,7 @@ extern void             spr_flatten(void);
 extern void             spr_unflatten(void);
 extern unsigned char    spr_colision_b( unsigned char f_sprite, unsigned char f_bullet );
 extern unsigned char    spr_colision_boss(unsigned char f_lin, unsigned char f_col);
+extern void             spr_destroy(unsigned char f_sprite) __z88dk_fastcall;
+
 
 #endif
