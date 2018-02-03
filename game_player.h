@@ -21,6 +21,8 @@ extern void          player_init(unsigned char f_lin, unsigned char f_col, unsig
 extern unsigned char player_collision(void);
 extern void          player_pick_mushroom();
 extern unsigned char player_check_input(void);
+extern unsigned char player_action_fire();
+extern unsigned char player_action_jump();
 extern unsigned char player_move(void);
 extern void          player_turn(void);
 extern unsigned char player_move_input(void);

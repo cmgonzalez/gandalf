@@ -122,9 +122,15 @@ unsigned char player_check_input(void) {
     dirs = 0;
   }
 
-  return dirs & IN_STICK_FIRE || dirs & IN_STICK_LEFT ||
-         dirs & IN_STICK_RIGHT || dirs & IN_STICK_UP || dirs & IN_STICK_DOWN ||
-         dirs_alt & IN_STICK_FIRE;
+  if (dirs & IN_STICK_FIRE || dirs & IN_STICK_LEFT || dirs & IN_STICK_RIGHT ||
+      dirs & IN_STICK_UP || dirs & IN_STICK_DOWN ||
+      (!game_control_mode && dirs_alt & IN_STICK_FIRE)) {
+
+    return 1;
+  } else {
+    game_control_fire_lock = 0;
+    return 0;
+  }
 }
 
 unsigned char player_action_fire() {
@@ -137,12 +143,13 @@ unsigned char player_action_fire() {
     return (dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP);
     break;
   case 2:
-    if (player_onstair) {
-      return ( (dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP) );
-    } else {
-      return dirs & IN_STICK_FIRE;
+    if (!game_control_fire_lock) {
+      if (player_onstair) {
+        return (dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP);
+      } else {
+        return dirs & IN_STICK_FIRE;
+      }
     }
-
     break;
   }
   return 0;
@@ -159,7 +166,10 @@ unsigned char player_action_jump() {
     break;
   case 2:
     if (player_onstair) {
-      return (dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP);
+      if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP)) {
+        game_control_fire_lock = 1;
+        return 1;
+      }
     } else {
       return dirs & IN_STICK_UP;
     }

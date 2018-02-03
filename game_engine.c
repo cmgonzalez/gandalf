@@ -472,12 +472,12 @@ void game_round_init(void) {
     tmp0 = 17;
     break;
   case 1:
-    zx_print_str(12, 6, "ROUND 2 MORIA");
-    tmp0 = 13;
+    zx_print_str(12, 8, "ROUND 2 MORIA");
+    tmp0 = 15;
     break;
   case 2:
-    zx_print_str(12, 6, "ROUND 3 MORDOR");
-    tmp0 = 14;
+    zx_print_str(12, 8, "ROUND 3 MORDOR");
+    tmp0 = 15;
     break;
   case 3:
     zx_print_str(12, 6, "ROUND 4 BARAD DUR");

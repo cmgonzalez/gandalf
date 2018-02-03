@@ -121,6 +121,7 @@ unsigned char game_mush_count;
 unsigned char game_round_up;
 unsigned char game_respawn_curr_time;
 unsigned char game_control_mode;
+unsigned char game_control_fire_lock;
 unsigned char menu_curr_sel;
 
 unsigned int fps;

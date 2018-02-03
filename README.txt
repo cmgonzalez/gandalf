@@ -97,26 +97,27 @@ RUNTIME MEMORY MAP:
 
 Version 1.01
 
-  -Shoot Animation.
-  -Shoot Sound fix.
+What's NEW
+
+  -Player Shoot Animation.
+  -Performance improved
+  -2 buttons alternative mode 1BB (up jumps, fire shoots, up+fire jumps on stairs)
   -Brick Hit picks items, a la SMB1
-  -Perfomance improved on animations
+  -Level table updated (10 Level Max)
+  -Player Shoot Sound fix.
   -Remove Red Dot on loading screen
   -Repaint menu choice after a game
   -Mushroom remove block by stopper tiles
-  -Mushroom fix popup
+  -Mushroom fix popup on screen
   -Game key repaint on screen after Round UP
-  -Level table updated (10 Level Max)
-  -Some Map Fixes
+  -Map fixes
   -Boss fire left range fixed
   -Speed up animations
-  -Background paint fixes , stric function.
-  -Perfomance improved on animations
-  -SPR_P1 / enemies different paint functions for perfomance
+  -Background paint fixes, strict function.
+  -SPR_P1 / enemies different paint functions for performance
   -game_audio.c - audio abstract
   -game_menu.c - menu abstract
   -Tiles fixes
   -Corrected btiles paper restore after game end.
-  -Code clean
-  -2 buttons alternative mode (up jumps, fire shoots, up+fire jumps on ladders)
   -Game clear screen better routine
+  -Code clean

@@ -46,10 +46,7 @@ void main(void) {
   // INTERRUPTS ARE DISABLED
   // RESET AY CHIP
   ay_reset();
-  // GAME OPTIONS
-
   // ENABLE SOUND BASED ON DETECTED MODEL
-
   game_sound = spec128 ? (GAME_SOUND_AY_FX_ON | GAME_SOUND_AY_MUS_ON)
                        : (GAME_SOUND_48_FX_ON | GAME_SOUND_48_MUS_ON);
   game_gravity = GAME_GRAVITY; // 8;
@@ -85,13 +82,12 @@ void main(void) {
     ;
   srand(counter);
   }
+  //Clear Screen and init Nirvana
   game_cls();
   // Init Game
   game_start_timer();
-  // Init Nirvana
+  // Load Tiles
   NIRVANAP_tiles(_btiles);
-  NIRVANAP_start();
-
   game_attribs();
   game_over = 1;
   zx_print_str(12, 6, "FOR FELIPE AND EDDIE");
