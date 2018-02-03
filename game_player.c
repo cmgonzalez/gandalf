@@ -656,7 +656,7 @@ unsigned char player_hit_platform(void) {
 
         if (mush_index[i] == index1) {
           s_lin1 = ((lin[SPR_P1] >> 4) << 4) - 32;
-          s_col1 = (col[SPR_P1] >> 1) << 1;
+          s_col1 = (player_hit_col >> 1) << 1;
           j = 0;
           while (j < SPR_P1) {
             if (mush_index[j] == index1) {

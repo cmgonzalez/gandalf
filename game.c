@@ -38,10 +38,10 @@ void main(void) {
   unsigned int counter;
   //DEBUG
   game_inmune = 0;    // GAME_INMUNE;
-  game_inf_lives = 0; // GAME_INF_LIVES;
+  game_inf_lives = 1; // GAME_INF_LIVES;
   game_debug = 1;
   game_world = 0;
-  scr_curr = 0xff;
+  scr_curr = 0xFF;
 
   // INTERRUPTS ARE DISABLED
   // RESET AY CHIP
@@ -103,7 +103,6 @@ void main(void) {
 
   menu_curr_sel = 1;
   map_paper_last = PAPER_BLUE;
-
   /*MAIN LOOP*/
   while (1) {
     /*Init Objects*/

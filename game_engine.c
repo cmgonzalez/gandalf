@@ -89,7 +89,7 @@ void game_loop(void) {
       player_col_scr = 2;
       player_lin_scr = 128;
       game_round_init();
-      game_print_footer();
+
     }
   }
 }
@@ -307,8 +307,12 @@ void game_add_enemy(unsigned char enemy_tile_index) __z88dk_fastcall {
 }
 
 void game_print_footer(void) {
+
   zx_print_ink(INK_CYAN);
   game_fill_row(19, 98);
+  game_fill_row(23, 98);
+
+
   zx_print_str(19, 0, "a");
   zx_print_str(19, 31, "c");
   zx_print_str(20, 0, "d");
@@ -317,21 +321,18 @@ void game_print_footer(void) {
   zx_print_str(21, 31, "e");
   zx_print_str(22, 0, "d");
   zx_print_str(22, 31, "e");
-  game_fill_row(23, 98);
   zx_print_str(23, 0, "f");
   zx_print_str(23, 31, "g");
   zx_print_str(21, 15, "_"); // live p1 face
+  zx_print_str(20, 1, "<");  // live p1 hut
 
-  // GANDALF FACE
-  // zx_print_ink(INK_CYAN);
-  zx_print_str(20, 1, "<"); // live p1 hut
   zx_print_ink(INK_YELLOW);
   zx_print_str(21, 1, "\\"); // live p1 face
   zx_print_str(22, 7, "l");  // COIN
   zx_print_str(22, 13, "m"); // STR
   zx_print_str(22, 19, "n"); // INT
   zx_print_str(22, 25, "o"); // LEVEL
-  // VITA
+
   zx_print_ink(INK_RED | BRIGHT);
   zx_print_str(20, 8, ">"); // live p1 hut
   zx_print_ink(INK_MAGENTA);
@@ -359,6 +360,8 @@ void game_print_footer(void) {
   // zx_print_str(20, 22, "x"); //XP
   // zx_print_ink(INK_YELLOW);
 
+  //Clear KEYS
+  zx_print_str(22, 2, "    ");
   game_update_stats();
 }
 
@@ -535,7 +538,7 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
       // Animation
       return 0;
     }
-    if (f_tile == TILE_STOPPER) {
+    if (f_tile == TILE_STOPPER && f_class != MUSHROOM_VITA && f_class != MUSHROOM_MANA && f_class != MUSHROOM_EXTRA) {
       return 1;
     }
 
