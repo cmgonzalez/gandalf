@@ -56,7 +56,7 @@ void player_init(unsigned char f_lin, unsigned char f_col,
 void player_turn(void) {
   if (spr_chktime(&sprite)) {
     dirs = (joyfunc1)(&k1);
-    dirs_alt = (joyfunc2)(&k2); // for game_2buttons
+    dirs_alt = (joyfunc2)(&k2); // for game_control_mode 2b
     /* Player initial Values */
     s_lin0 = lin[SPR_P1];
     s_col0 = col[SPR_P1];
@@ -127,20 +127,54 @@ unsigned char player_check_input(void) {
          dirs_alt & IN_STICK_FIRE;
 }
 
+unsigned char player_action_fire() {
+
+  switch (game_control_mode) {
+  case 0:
+    return dirs_alt & IN_STICK_FIRE;
+    break;
+  case 1:
+    return (dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP);
+    break;
+  case 2:
+    if (player_onstair) {
+      return ( (dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP) );
+    } else {
+      return dirs & IN_STICK_FIRE;
+    }
+
+    break;
+  }
+  return 0;
+}
+
+unsigned char player_action_jump() {
+  /* New jump */
+  switch (game_control_mode) {
+  case 0:
+    return dirs & IN_STICK_FIRE;
+    break;
+  case 1:
+    return (dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP);
+    break;
+  case 2:
+    if (player_onstair) {
+      return (dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP);
+    } else {
+      return dirs & IN_STICK_UP;
+    }
+    break;
+  }
+  return 0;
+}
 unsigned char player_move_input(void) {
   // TODO CLEAN THIS!
   /* User have pressed valid input */
-  unsigned char f_check;
+
   if (player_check_input()) {
 
-    /* New jump */
-    if (game_2buttons) {
-      f_check = dirs & IN_STICK_FIRE;
-    } else {
-      f_check = (dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP);
-    }
-
-    if (f_check) {
+    if (player_action_jump()) {
+      // NEW JUMP
       player_vel_inc = 1;
       audio_salto();
       player_onstair = 0;
@@ -238,12 +272,9 @@ void player_fix_walk_lin() {
 
 void player_fire() {
   /*Shoot a Fireball*/
-  player_onfire = 0;
-  if (game_2buttons) {
-    player_onfire = dirs_alt & IN_STICK_FIRE;
-  } else {
-    player_onfire = (dirs & IN_STICK_FIRE) && !(dirs & IN_STICK_UP);
-  }
+
+  player_onfire = player_action_fire();
+
   if (bullet_col[SPR_P1] == 0xFF) {
 
     if (player_onfire) {
@@ -819,19 +850,13 @@ void player_gasta_brick() {
 unsigned char player_move_jump(void) {
 
   signed int val_yc;
-  unsigned char f_check;
+
   player_vel_y = player_vel_y + game_gravity;
   // JUMP BOOST
 
-  if ((player_vel_inc)) {
-
-    if (game_2buttons) {
-      f_check = !(dirs & IN_STICK_FIRE);
-    } else {
-      f_check = !((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP));
-    }
-
-    if (f_check && (player_vel_y > player_vel_y1) && (player_vel_y < 0)) {
+  if (player_vel_inc) {
+    if ((player_vel_y > player_vel_y1) && (player_vel_y < 0) &&
+        (!player_action_jump())) {
       player_vel_y = 0; // TODO FIX WHEN FALLING!
       player_vel_inc = 0;
     }

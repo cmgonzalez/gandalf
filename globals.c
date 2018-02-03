@@ -49,9 +49,9 @@ unsigned char map_heigth;
 //###############################################################################################
 
 uint16_t (*joyfunc1)(udk_t *); // pointer to joystick function Player 1
-uint16_t (*joyfunc2)(udk_t *); // pointer to joystick function for game_2buttons
+uint16_t (*joyfunc2)(udk_t *); // pointer to joystick function for game_control_mode
 udk_t k1;
-udk_t k2; // For game_2buttons
+udk_t k2; // For game_control_mode 2B
 
 unsigned char dirs;
 unsigned char dirs_alt;
@@ -120,7 +120,7 @@ unsigned char game_mush_count;
 
 unsigned char game_round_up;
 unsigned char game_respawn_curr_time;
-unsigned char game_2buttons;
+unsigned char game_control_mode;
 unsigned char menu_curr_sel;
 
 unsigned int fps;

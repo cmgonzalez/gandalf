@@ -85,9 +85,7 @@ void main(void) {
     ;
   srand(counter);
   }
-  zx_print_paper(PAPER_BLACK);
-  zx_paper_fill(INK_BLACK | PAPER_BLACK);
-
+  game_cls();
   // Init Game
   game_start_timer();
   // Init Nirvana
@@ -126,7 +124,7 @@ void main(void) {
     game_respawn_curr_time = 255;
     game_mush_count = 0;
     game_boss_alive = 1;
-    game_2buttons = 1; // Two button control - Space default 2 button
+    game_control_mode = 0; // 0)2button - default 1) 1button: 1 Button UP+FIRE Shoots 3) 1 button: fire shoots, up jump , up+fire for ladders
     game_over = 0;
     dirs = 0x00;
     ay_reset();
@@ -148,11 +146,7 @@ void main(void) {
     game_world = 0;
     scr_curr = 0xFF;
 
-    NIRVANAP_stop();
-    zx_print_paper(PAPER_BLACK);
-    zx_border(INK_BLACK);
-    zx_paper_fill(INK_BLACK | PAPER_BLACK);
-    NIRVANAP_start();
+    game_cls();
   }
 }
 

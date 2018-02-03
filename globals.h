@@ -350,7 +350,7 @@ extern unsigned char game_mush_count;
 
 extern unsigned char game_round_up;
 extern unsigned char game_respawn_curr_time;
-extern unsigned char game_2buttons;
+extern unsigned char game_control_mode;
 extern unsigned char menu_curr_sel;
 
 

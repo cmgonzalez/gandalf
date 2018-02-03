@@ -30,7 +30,6 @@
 #include <string.h>
 #include <z80.h>
 
-
 void menu_main() {
   unsigned char f_input;
   unsigned char s_col;
@@ -88,16 +87,15 @@ void menu_main() {
       menu_curr_sel = 2;
       break;
     case 6: // CONTROL
-      if (game_2buttons) {
-        game_2buttons = 0;
-      } else {
-        game_2buttons = 1;
+      ++game_control_mode;
+      if (game_control_mode > 2) {
+        game_control_mode = 0;
       }
       menu_main_print();
       break;
     case 0:
       NIRVANAP_halt();
-      zx_paper_fill(INK_BLACK | PAPER_BLACK);
+      game_cls();
       audio_explosion1();
       f_input = 0; // Exit Loop
       break;
@@ -115,9 +113,8 @@ void menu_main_print(void) {
   s_row = 7;
   s_col = 10;
   s_col_e = 20;
-  NIRVANAP_halt();
-  zx_paper_fill(INK_BLACK | PAPER_BLACK);
-  zx_print_ink(INK_WHITE);
+  // NIRVANAP_halt();
+  game_cls();
   // Gandalf Logo
   NIRVANAP_spriteT(0, TILE_TITLE, 32, 11);
   NIRVANAP_spriteT(1, TILE_TITLE + 1, 32, 13);
@@ -140,11 +137,18 @@ void menu_main_print(void) {
   game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
   ++s_row;
   zx_print_str(s_row, s_col, "6 CONTROL");
-  if (game_2buttons) {
-    zx_print_str(s_row, s_col + 10, "2B");
-  } else
-     { zx_print_str(s_row, s_col + 10, "1B"); }
-  game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
+  switch (game_control_mode) {
+  case 0:
+    zx_print_str(s_row, s_col + 10, "2B ");
+    break;
+  case 1:
+    zx_print_str(s_row, s_col + 10, "1BA");
+    break;
+  case 2:
+    zx_print_str(s_row, s_col + 10, "1BB");
+    break;
+  }
+  game_paint_attrib(&attrib, s_col, s_col_e + 4, (s_row << 3) + 8);
   s_row = s_row + 2;
   zx_print_str(s_row, s_col, "0 START");
   game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
@@ -175,7 +179,7 @@ void menu_redefine() {
   k1.left = menu_define_key();
   zx_print_str(11, 10, "RIGHT");
   k1.right = menu_define_key();
-  if (game_2buttons) {
+  if (game_control_mode == 0) {
     zx_print_str(12, 10, "JUMP");
     k1.fire = menu_define_key();
 

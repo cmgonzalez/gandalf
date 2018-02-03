@@ -372,6 +372,13 @@ void game_print_score(void) {
   zx_print_int(0, 14, game_score_top); // SCORE TOP
 }
 
+void game_cls() {
+  NIRVANAP_stop();
+  zx_paper_fill(INK_BLACK | PAPER_BLACK);
+  zx_print_ink(INK_WHITE);
+  NIRVANAP_start();
+}
+
 void game_update_stats(void) {
   zx_print_ink(INK_WHITE);
   zx_print_chr(20, 3, player_lives);
