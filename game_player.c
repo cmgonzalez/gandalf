@@ -270,7 +270,8 @@ unsigned char player_fire() {
       ay_song_play(AY_SONG_ONCE, 6, ay_fx_06_disparo1);
       game_shoot_fire(SPR_P1, TILE_FIREBALL);
     } else {
-      ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_sin_mana);
+      /*BUGFIX SONIDO*/
+      if (!player_mana) ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_sin_mana);
     }
     return 1;
   }
