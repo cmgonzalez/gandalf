@@ -80,7 +80,8 @@ unsigned char player_move(void) {
   } else {
     sprite_on_air = 0;
     /* Read player input */
-    if (!player_onfire) player_move_input();
+    if (!player_onfire)
+      player_move_input();
     /* Check if the player have floor, and set fall if not */
     if (!player_onstair) {
       player_check_floor();
@@ -596,6 +597,17 @@ unsigned char player_hit_platform(void) {
 
   if ((player_hit_lin == 0) && (lin[SPR_P1] > 16) &&
       (scr_map[index1] >= TILE_HIT)) {
+
+    if (scr_map[index1] == TILE_DIRT) {
+      // Destroy Bricks
+      scr_map[index1] = game_match_back(index1); // TILE_EMPTY;
+      game_obj_set(index1);
+      audio_explosion();
+      spr_add_anim((index1 >> 4) << 4, (index1 & 15) << 1, TILE_ANIM_FIRE, 3, 0,
+                   0);
+      return 1;
+    }
+
     spr_timer[SPR_P1] = zx_clock();
     player_hit_lin = 8 + (((lin[SPR_P1] - 8) >> 4) << 4);
 
@@ -618,16 +630,6 @@ unsigned char player_hit_platform(void) {
       }
     }
 
-    if (scr_map[index1] == TILE_DIRT) {
-      // Destroy Bricks
-      scr_map[index1] = game_match_back(index1); // TILE_EMPTY;
-      game_obj_set(index1);
-      audio_explosion();
-      spr_add_anim((index1 >> 4) << 4, (index1 & 15) << 1, TILE_ANIM_FIRE, 3, 0,
-                   0);
-
-      return 1;
-    }
     if (scr_map[index1] == TILE_SPECIAL ||
         scr_map[index1] == TILE_HIDDEN_BRICK) {
       i = 0;
@@ -698,7 +700,7 @@ unsigned char player_hit_platform(void) {
 
     // ay_fx_play(ay_effect_02);
     spr_brick_anim(1);
-    index1 = spr_calc_index(player_hit_lin,player_hit_col);
+    index1 = spr_calc_index(player_hit_lin, player_hit_col);
     if (index1 > 16) {
       sprite_curr_index = index1 - 16;
       player_pick_item();
@@ -1012,7 +1014,6 @@ void player_lost_life() {
     s_col1 = boss_col;
     boss_draw();
   }
-
 
   // Player lost life
   if (!game_inf_lives) {

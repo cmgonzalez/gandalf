@@ -2252,118 +2252,118 @@
 2246  0916  3E 10       	ld	a,0x10
 2247  0918  93          	sub	a, e
 2248  0919  D2 CD 0B    	jp	NC, l_player_hit_platform_00147
-2249  091C  11 00 00    	ld	de,_scr_map
-2250  091F  2A 00 00    	ld	hl,(_index1)
+2249  091C  2A 00 00    	ld	hl,(_index1)
+2250  091F  11 00 00    	ld	de,_scr_map
 2251  0922  19          	add	hl,de
 2252  0923  7E          	ld	a,(hl)
-2253  0924  D6 45       	sub	a,0x45
-2254  0926  DA CD 0B    	jp	C, l_player_hit_platform_00147
-2255  0929  ED 5B 00 00 	ld	de,(_curr_time)
-2256  092D  ED 53 0E 00 	ld	(_spr_timer + 0x000e),de
-2257  0931  0A          	ld	a, (bc)
-2258  0932  5F          	ld	e, a
-2259  0933  16 00       	ld	d,0x00
-2260  0935  21 F8 FF    	ld	hl,0xfff8
-2261  0938  19          	add	hl,de
-2262  0939  EB          	ex	de,hl
-2263  093A  7B          	ld	a,e
-2264  093B  1E 04       	ld	e,0x04
-2265  093D              l_player_hit_platform_00258:
-2266  093D  CB 2A       	sra	d
-2267  093F  1F          	rra
-2268  0940  1D          	dec	e
-2269  0941  20 FA       	jr	NZ,l_player_hit_platform_00258
-2270  0943  07          	rlca
-2271  0944  07          	rlca
-2272  0945  07          	rlca
-2273  0946  07          	rlca
-2274  0947  E6 F0       	and	a,0xf0
-2275  0949  C6 08       	add	a,0x08
-2276  094B  32 00 00    	ld	(_player_hit_lin),a
-2277  094E  21 07 00    	ld	hl,+(_col + 0x0007)
-2278  0951  5E          	ld	e, (hl)
-2279  0952  CB 43       	bit	0, e
-2280  0954  20 06       	jr	NZ,l_player_hit_platform_00111
-2281  0956  21 00 00    	ld	hl,_player_hit_col
-2282  0959  73          	ld	(hl), e
-2283  095A  18 2C       	jr	l_player_hit_platform_00112
-2284  095C              l_player_hit_platform_00111:
-2285  095C  2A 07 00    	ld	hl,(_state + 0x0007)
-2286  095F  53          	ld	d, e
-2287  0960  14          	inc	d
-2288  0961  1D          	dec	e
-2289  0962  CB 5D       	bit	3, l
-2290  0964  28 12       	jr	Z,l_player_hit_platform_00108
-2291  0966  3A 00 00    	ld	a,(_g_player_hit_right)
-2292  0969  B7          	or	a, a
-2293  096A  28 06       	jr	Z,l_player_hit_platform_00102
-2294  096C  21 00 00    	ld	hl,_player_hit_col
-2295  096F  72          	ld	(hl), d
-2296  0970  18 16       	jr	l_player_hit_platform_00112
-2297  0972              l_player_hit_platform_00102:
-2298  0972  21 00 00    	ld	hl,_player_hit_col
-2299  0975  73          	ld	(hl), e
-2300  0976  18 10       	jr	l_player_hit_platform_00112
-2301  0978              l_player_hit_platform_00108:
-2302  0978  3A 00 00    	ld	a,(_g_player_hit_left)
-2303  097B  B7          	or	a, a
-2304  097C  28 06       	jr	Z,l_player_hit_platform_00105
-2305  097E  21 00 00    	ld	hl,_player_hit_col
-2306  0981  73          	ld	(hl), e
-2307  0982  18 04       	jr	l_player_hit_platform_00112
-2308  0984              l_player_hit_platform_00105:
-2309  0984  21 00 00    	ld	hl,_player_hit_col
-2310  0987  72          	ld	(hl), d
-2311  0988              l_player_hit_platform_00112:
-2312  0988  2A 00 00    	ld	hl,(_index1)
-2313  098B  11 00 00    	ld	de,_scr_map
-2314  098E  19          	add	hl,de
-2315  098F  7E          	ld	a,(hl)
-2316  0990  EB          	ex	de,hl
-2317  0991  FE 4D       	cp	a,0x4d
-2318  0993  20 42       	jr	NZ,l_player_hit_platform_00114
-2319  0995  2A 00 00    	ld	hl,(_index1)
-2320  0998  D5          	push	de
-2321  0999  CD 00 00    	call	_game_match_back
-2322  099C  D1          	pop	de
-2323  099D  7D          	ld	a,l
-2324  099E  12          	ld	(de), a
-2325  099F  2A 00 00    	ld	hl,(_index1)
-2326  09A2  CD 00 00    	call	_game_obj_set
-2327  09A5  CD 00 00    	call	_audio_explosion
-2328  09A8  21 00 00    	ld	hl,_index1
-2329  09AB  7E          	ld	a, (hl)
-2330  09AC  E6 0F       	and	a,0x0f
-2331  09AE  87          	add	a, a
-2332  09AF  57          	ld	d, a
-2333  09B0  4E          	ld	c, (hl)
-2334  09B1  23          	inc	hl
-2335  09B2  5E          	ld	e, (hl)
-2336  09B3  06 04       	ld	b,0x04
-2337  09B5  79          	ld	a,c
-2338  09B6              l_player_hit_platform_00264:
-2339  09B6  CB 3B       	srl	e
-2340  09B8  1F          	rra
-2341  09B9  10 FB       	djnz	l_player_hit_platform_00264
-2342  09BB  07          	rlca
-2343  09BC  07          	rlca
-2344  09BD  07          	rlca
-2345  09BE  07          	rlca
-2346  09BF  E6 F0       	and	a,0xf0
-2347  09C1  47          	ld	b, a
-2348  09C2  21 00 00    	ld	hl,0x0000
-2349  09C5  E5          	push	hl
-2350  09C6  21 87 03    	ld	hl,0x0387
-2351  09C9  E5          	push	hl
-2352  09CA  58          	ld	e,b
-2353  09CB  D5          	push	de
-2354  09CC  CD 00 00    	call	_spr_add_anim
-2355  09CF  F1          	pop	af
-2356  09D0  F1          	pop	af
-2357  09D1  F1          	pop	af
-2358  09D2  2E 01       	ld	l,0x01
-2359  09D4  C3 CF 0B    	jp	l_player_hit_platform_00150
-2360  09D7              l_player_hit_platform_00114:
+2253  0924  EB          	ex	de,hl
+2254  0925  FE 45       	cp	a,0x45
+2255  0927  DA CD 0B    	jp	C,l_player_hit_platform_00147
+2256  092A  D6 4D       	sub	a,0x4d
+2257  092C  20 42       	jr	NZ,l_player_hit_platform_00102
+2258  092E  2A 00 00    	ld	hl,(_index1)
+2259  0931  D5          	push	de
+2260  0932  CD 00 00    	call	_game_match_back
+2261  0935  D1          	pop	de
+2262  0936  7D          	ld	a,l
+2263  0937  12          	ld	(de), a
+2264  0938  2A 00 00    	ld	hl,(_index1)
+2265  093B  CD 00 00    	call	_game_obj_set
+2266  093E  CD 00 00    	call	_audio_explosion
+2267  0941  21 00 00    	ld	hl,_index1
+2268  0944  7E          	ld	a, (hl)
+2269  0945  E6 0F       	and	a,0x0f
+2270  0947  87          	add	a, a
+2271  0948  57          	ld	d, a
+2272  0949  4E          	ld	c, (hl)
+2273  094A  23          	inc	hl
+2274  094B  5E          	ld	e, (hl)
+2275  094C  06 04       	ld	b,0x04
+2276  094E  79          	ld	a,c
+2277  094F              l_player_hit_platform_00260:
+2278  094F  CB 3B       	srl	e
+2279  0951  1F          	rra
+2280  0952  10 FB       	djnz	l_player_hit_platform_00260
+2281  0954  07          	rlca
+2282  0955  07          	rlca
+2283  0956  07          	rlca
+2284  0957  07          	rlca
+2285  0958  E6 F0       	and	a,0xf0
+2286  095A  47          	ld	b, a
+2287  095B  21 00 00    	ld	hl,0x0000
+2288  095E  E5          	push	hl
+2289  095F  21 87 03    	ld	hl,0x0387
+2290  0962  E5          	push	hl
+2291  0963  58          	ld	e,b
+2292  0964  D5          	push	de
+2293  0965  CD 00 00    	call	_spr_add_anim
+2294  0968  F1          	pop	af
+2295  0969  F1          	pop	af
+2296  096A  F1          	pop	af
+2297  096B  2E 01       	ld	l,0x01
+2298  096D  C3 CF 0B    	jp	l_player_hit_platform_00150
+2299  0970              l_player_hit_platform_00102:
+2300  0970  ED 5B 00 00 	ld	de,(_curr_time)
+2301  0974  ED 53 0E 00 	ld	(_spr_timer + 0x000e),de
+2302  0978  0A          	ld	a, (bc)
+2303  0979  5F          	ld	e, a
+2304  097A  16 00       	ld	d,0x00
+2305  097C  21 F8 FF    	ld	hl,0xfff8
+2306  097F  19          	add	hl,de
+2307  0980  EB          	ex	de,hl
+2308  0981  7B          	ld	a,e
+2309  0982  1E 04       	ld	e,0x04
+2310  0984              l_player_hit_platform_00261:
+2311  0984  CB 2A       	sra	d
+2312  0986  1F          	rra
+2313  0987  1D          	dec	e
+2314  0988  20 FA       	jr	NZ,l_player_hit_platform_00261
+2315  098A  07          	rlca
+2316  098B  07          	rlca
+2317  098C  07          	rlca
+2318  098D  07          	rlca
+2319  098E  E6 F0       	and	a,0xf0
+2320  0990  C6 08       	add	a,0x08
+2321  0992  32 00 00    	ld	(_player_hit_lin),a
+2322  0995  21 07 00    	ld	hl,+(_col + 0x0007)
+2323  0998  5E          	ld	e, (hl)
+2324  0999  CB 43       	bit	0, e
+2325  099B  20 06       	jr	NZ,l_player_hit_platform_00113
+2326  099D  21 00 00    	ld	hl,_player_hit_col
+2327  09A0  73          	ld	(hl), e
+2328  09A1  18 2C       	jr	l_player_hit_platform_00114
+2329  09A3              l_player_hit_platform_00113:
+2330  09A3  2A 07 00    	ld	hl,(_state + 0x0007)
+2331  09A6  53          	ld	d, e
+2332  09A7  14          	inc	d
+2333  09A8  1D          	dec	e
+2334  09A9  CB 5D       	bit	3, l
+2335  09AB  28 12       	jr	Z,l_player_hit_platform_00110
+2336  09AD  3A 00 00    	ld	a,(_g_player_hit_right)
+2337  09B0  B7          	or	a, a
+2338  09B1  28 06       	jr	Z,l_player_hit_platform_00104
+2339  09B3  21 00 00    	ld	hl,_player_hit_col
+2340  09B6  72          	ld	(hl), d
+2341  09B7  18 16       	jr	l_player_hit_platform_00114
+2342  09B9              l_player_hit_platform_00104:
+2343  09B9  21 00 00    	ld	hl,_player_hit_col
+2344  09BC  73          	ld	(hl), e
+2345  09BD  18 10       	jr	l_player_hit_platform_00114
+2346  09BF              l_player_hit_platform_00110:
+2347  09BF  3A 00 00    	ld	a,(_g_player_hit_left)
+2348  09C2  B7          	or	a, a
+2349  09C3  28 06       	jr	Z,l_player_hit_platform_00107
+2350  09C5  21 00 00    	ld	hl,_player_hit_col
+2351  09C8  73          	ld	(hl), e
+2352  09C9  18 04       	jr	l_player_hit_platform_00114
+2353  09CB              l_player_hit_platform_00107:
+2354  09CB  21 00 00    	ld	hl,_player_hit_col
+2355  09CE  72          	ld	(hl), d
+2356  09CF              l_player_hit_platform_00114:
+2357  09CF  11 00 00    	ld	de,_scr_map
+2358  09D2  2A 00 00    	ld	hl,(_index1)
+2359  09D5  19          	add	hl,de
+2360  09D6  7E          	ld	a,(hl)
 2361  09D7  FE 5A       	cp	a,0x5a
 2362  09D9  28 05       	jr	Z,l_player_hit_platform_00141
 2363  09DB  D6 5D       	sub	a,0x5d

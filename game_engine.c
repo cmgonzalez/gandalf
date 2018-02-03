@@ -111,7 +111,7 @@ void game_respawn(void) {
         s_col1 = (index1 & 15) << 1;
         s_lin1 = index1;
         s_lin1 = (s_lin1 >> 4) << 4;
-        scr_map[index1] = 0x80 + sprite; // 0xFF;
+        scr_map[index1] = TILE_ANIM + sprite; // 0xFF;
         game_respawn_time[sprite] = 0;
 
         spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 4,
@@ -534,7 +534,7 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
     if (f_kind == E_GHOST) {
       return 0;
     }
-    if (f_tile >= 0x80) {
+    if (f_tile >= TILE_ANIM) {
       // Animation
       return 0;
     }

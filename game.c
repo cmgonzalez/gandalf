@@ -38,10 +38,10 @@ void main(void) {
   unsigned int counter;
   //DEBUG
   game_inmune = 0;    // GAME_INMUNE;
-  game_inf_lives = 1; // GAME_INF_LIVES;
+  game_inf_lives = 0; // GAME_INF_LIVES;
   game_debug = 0;
   game_world = 0;
-  scr_curr = 0xFF;
+  scr_curr = 0xff;
 
   // INTERRUPTS ARE DISABLED
   // RESET AY CHIP

@@ -403,7 +403,6 @@ void spr_page_map(void) {
     spr_btile_paint_back();
   }
 
-
   intrinsic_ei();
   NIRVANAP_start();
   zx_print_ink(INK_YELLOW);
@@ -422,7 +421,8 @@ unsigned char spr_paint_player(void) {
     /* Column or lin Movement */
     s_tile1 = tile[SPR_P1] + colint[SPR_P1];
 
-    if (player_onstair) player_anim_stairs();
+    if (player_onstair)
+      player_anim_stairs();
     spr_back_repaint();
 
     NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
@@ -541,15 +541,12 @@ void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
   /* Draw Brick */
   intrinsic_di();
   if (f_hit) {
-    // NIRVANAP_fillC(map_paper_clr, f_lin, f_col);
-    // NIRVANAP_fillC(map_paper_clr, f_lin, f_col + 1);
-    NIRVANAP_fillT_raw(map_paper_clr, f_lin, f_col); // TODO BORRA SI HAY BRICK
-                                                     // ARRIBA!!!
+    NIRVANAP_fillT_raw(map_paper_clr, f_lin, f_col);
     NIRVANAP_drawT_raw(v1, l_tmp, f_col);
   } else {
-    // NIRVANAP_fillC( map_paper_clr, f_lin-16, f_col  );
-    // NIRVANAP_fillC( map_paper_clr, f_lin-16, f_col+1);
-    NIRVANAP_drawT_raw(v0, l_tmp - 16, f_col);
+    if (v0 < TILE_ANIM) {
+      NIRVANAP_drawT_raw(v0, l_tmp - 16, f_col);
+    }
     NIRVANAP_drawT_raw(v1, l_tmp, f_col);
   }
   intrinsic_ei();
@@ -633,7 +630,7 @@ void spr_tile_paint(void) {
   if (stp_tile == TILE_EMPTY) {
     NIRVANAP_fillT_raw(map_paper_clr, stp_row, stp_col);
   } else {
-    if (stp_tile < 0x80) {
+    if (stp_tile < TILE_ANIM) {
       // Normal Tile
       if (stp_tile != TILE_STOPPER) {
         NIRVANAP_drawT_raw(stp_tile, stp_row, stp_col);
@@ -643,7 +640,7 @@ void spr_tile_paint(void) {
       }
     } else {
       // Animation
-      i = stp_tile - 0x80;
+      i = stp_tile - TILE_ANIM;
 
       if (anim_end[i] > anim_int[i]) {
         NIRVANAP_drawT_raw(anim_tile[i] + anim_int[i], stp_row, stp_col);
@@ -677,7 +674,7 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
         anim_col[f_anim] = f_col;
         anim_tile[f_anim] = f_tile;
         anim_loop[f_anim] = f_loops;
-        anim_int[f_anim] = 0xFF;
+        anim_int[f_anim] = 0;
         anim_end[f_anim] = f_end;
         anim_respanwn[f_anim] = f_respawn;
         intrinsic_di();
@@ -687,7 +684,7 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
         index0 = spr_calc_index(f_lin, f_col);
 
         if (scr_map[index0] == TILE_EMPTY)
-          scr_map[index0] = 0x80 + f_anim; // 0xFF;
+          scr_map[index0] = TILE_ANIM + f_anim; // 0xFF;
         break;
       }
     }
@@ -696,28 +693,25 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
 
 void spr_play_anim(void) {
   unsigned char f_anim;
-  unsigned int f_index;
 
   for (f_anim = 0; f_anim < 8; f_anim++) {
     if (anim_lin[f_anim] != 0xFF) {
-
-      // z80_delay_ms(1); // TODO I don't get that...
-      ++anim_int[f_anim];
       if (anim_int[f_anim] < anim_end[f_anim]) {
-        //NIRVANAP_halt();
+        // NIRVANAP_halt();
         intrinsic_di();
         NIRVANAP_drawT_raw(anim_tile[f_anim] + anim_int[f_anim],
                            anim_lin[f_anim], anim_col[f_anim]);
         intrinsic_ei();
+        ++anim_int[f_anim];
 
       } else {
         if (anim_loop[f_anim] == 0) {
           --anim_count;
           s_col0 = anim_col[f_anim];
           s_lin0 = anim_lin[f_anim];
-          f_index = spr_calc_index(s_lin0, s_col0);
-          if (scr_map[spr_calc_index(s_lin0, s_col0)] >= 0x80) {
-            index0 = spr_calc_index(s_lin0, s_col0);
+          index0 = spr_calc_index(s_lin0, s_col0);
+          if (scr_map[index0] >= TILE_ANIM) {
+
             scr_map[index0] = game_match_back(index0);
           }
 
@@ -901,7 +895,7 @@ void spr_bullets_play(void) {
         continue;
       }
 
-      if ((scr_map[index0] >= TILE_CEIL && scr_map[index0] < 0x80)) {
+      if ((scr_map[index0] >= TILE_CEIL && scr_map[index0] < TILE_ANIM)) {
         // Explode Bullet
         spr_bullet_explode();
         continue;
@@ -943,11 +937,12 @@ void spr_bullet_enemy_colision() {
 
 void spr_bullet_player_colision() {
   unsigned char f_sprite;
-  // TODO BUGGY Respawn!!!!! FIX ME
+  unsigned char l_class;
   f_sprite = 0;
-  // for (f_sprite = 0; f_sprite < SPR_P1; ++f_sprite) {
   while (f_sprite < SPR_P1) {
-    if (class[f_sprite] != 0 && spr_colision_b(f_sprite, bullet)) {
+    l_class = class[f_sprite];
+    if (l_class != 0 && l_class != GOTA && l_class != FIRE &&
+        spr_colision_b(f_sprite, bullet)) {
       // Player Bullet hit an enemy
       player_score_add(rand() % 6);
       enemy_kill(f_sprite);
@@ -994,10 +989,8 @@ void spr_btile_paint_back() {
   tmp_ui = 32;
   map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
   while (tmp_ui < (32 + (48 * 12 * 20))) { // 12*20 btiles
-    if (
-        (f_tile < 73 && f_tile != 13 && f_tile != 14) ||
-        ( f_tile > 90 )
-       ) { // TODO AN ARRAY WILL BE A MORE ELEGANT SOLUTION
+    if ((f_tile < 73 && f_tile != 13 && f_tile != 14) ||
+        (f_tile > 90)) { // TODO AN ARRAY WILL BE A MORE ELEGANT SOLUTION
 
       // f_half = 0;
       tmp0 = 0;
