@@ -139,6 +139,7 @@ void main(void) {
     game_loop();
     //GAME OVER
     spr_flatten();
+    game_update_stats();
     zx_print_str(12, 12, "GAME OVER");
     game_over = 0; // Hack game_colour_message to render background
     game_colour_message(12, 12, 12 + 9, 250, 0);

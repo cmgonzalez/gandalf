@@ -1072,62 +1072,63 @@
 1068  015C  CD 00 00    	call	_menu_main
 1069  015F  CD 00 00    	call	_game_loop
 1070  0162  CD 00 00    	call	_spr_flatten
-1071  0165  21 15 00    	ld	hl,___str_1
-1072  0168  E5          	push	hl
-1073  0169  21 0C 0C    	ld	hl,0x0c0c
-1074  016C  E5          	push	hl
-1075  016D  CD 00 00    	call	_zx_print_str
-1076  0170  AF          	xor	a,a
-1077  0171  32 00 00    	ld	(_game_over),a
-1078  0174  F5          	push	af
-1079  0175  33          	inc	sp
-1080  0176  21 FA 00    	ld	hl,0x00fa
-1081  0179  E5          	push	hl
-1082  017A  21 0C 15    	ld	hl,0x150c
-1083  017D  E5          	push	hl
-1084  017E  3E 0C       	ld	a,0x0c
-1085  0180  F5          	push	af
-1086  0181  33          	inc	sp
-1087  0182  CD 00 00    	call	_game_colour_message
-1088  0185  F1          	pop	af
-1089  0186  F1          	pop	af
-1090  0187  F1          	pop	af
-1091  0188  CD 00 00    	call	_spr_clear_scr
-1092  018B  21 00 00    	ld	hl,_game_world
-1093  018E  36 00       	ld	(hl),0x00
-1094  0190  21 00 00    	ld	hl,_scr_curr
-1095  0193  36 FF       	ld	(hl),0xff
-1096  0195  CD 00 00    	call	_NIRVANAP_stop
-1097  0198  21 00 00    	ld	hl,_screen_paper
-1098  019B  36 00       	ld	(hl),0x00
-1099  019D  2E 00       	ld	l,0x00
-1100  019F  CD 00 00    	call	_zx_border_fastcall
-1101  01A2  2E 00       	ld	l,0x00
-1102  01A4  CD 00 00    	call	_zx_cls_fastcall
-1103  01A7  CD 00 00    	call	_NIRVANAP_start
-1104  01AA  C3 ED 00    	jp	l_main_00105
-1105  01AD              	SECTION rodata_compiler
-1106  0000              ___str_0:
-1107  0000  46 4F 52 20 46 45 4C 49 50 45 20 41 4E 44 20 45 44 44 49 45 
+1071  0165  CD 00 00    	call	_game_update_stats
+1072  0168  21 15 00    	ld	hl,___str_1
+1073  016B  E5          	push	hl
+1074  016C  21 0C 0C    	ld	hl,0x0c0c
+1075  016F  E5          	push	hl
+1076  0170  CD 00 00    	call	_zx_print_str
+1077  0173  AF          	xor	a,a
+1078  0174  32 00 00    	ld	(_game_over),a
+1079  0177  F5          	push	af
+1080  0178  33          	inc	sp
+1081  0179  21 FA 00    	ld	hl,0x00fa
+1082  017C  E5          	push	hl
+1083  017D  21 0C 15    	ld	hl,0x150c
+1084  0180  E5          	push	hl
+1085  0181  3E 0C       	ld	a,0x0c
+1086  0183  F5          	push	af
+1087  0184  33          	inc	sp
+1088  0185  CD 00 00    	call	_game_colour_message
+1089  0188  F1          	pop	af
+1090  0189  F1          	pop	af
+1091  018A  F1          	pop	af
+1092  018B  CD 00 00    	call	_spr_clear_scr
+1093  018E  21 00 00    	ld	hl,_game_world
+1094  0191  36 00       	ld	(hl),0x00
+1095  0193  21 00 00    	ld	hl,_scr_curr
+1096  0196  36 FF       	ld	(hl),0xff
+1097  0198  CD 00 00    	call	_NIRVANAP_stop
+1098  019B  21 00 00    	ld	hl,_screen_paper
+1099  019E  36 00       	ld	(hl),0x00
+1100  01A0  2E 00       	ld	l,0x00
+1101  01A2  CD 00 00    	call	_zx_border_fastcall
+1102  01A5  2E 00       	ld	l,0x00
+1103  01A7  CD 00 00    	call	_zx_cls_fastcall
+1104  01AA  CD 00 00    	call	_NIRVANAP_start
+1105  01AD  C3 ED 00    	jp	l_main_00105
+1106  01B0              	SECTION rodata_compiler
+1107  0000              ___str_0:
+1108  0000  46 4F 52 20 46 45 4C 49 50 45 20 41 4E 44 20 45 44 44 49 45 
                         	DEFM "FOR FELIPE AND EDDIE"
-1108  0014  00          	DEFB 0x00
-1109  0015              	SECTION rodata_compiler
-1110  0015              ___str_1:
-1111  0015  47 41 4D 45 20 4F 56 45 52 
+1109  0014  00          	DEFB 0x00
+1110  0015              	SECTION rodata_compiler
+1111  0015              ___str_1:
+1112  0015  47 41 4D 45 20 4F 56 45 52 
                         	DEFM "GAME OVER"
-1112  001E  00          	DEFB 0x00
-1113  001F              	SECTION code_compiler
-1114  01AD              ;	---------------------------------
-1115  01AD              ; Function test_proc is a stub
-1116  01AD              ; ---------------------------------
-1117  01AD              EXTERN l_ret
-1118  01AD              defc _test_proc = l_ret
-1119  01AD              	SECTION code_compiler
-1120  01AD              ;	---------------------------------
-1121  01AD              ; Function test_func
-1122  01AD              ; ---------------------------------
-1123  01AD              _test_func:
-1124  01AD  2E 00       	ld	l,0x00
-1125  01AF  C9          	ret
-1126  01B0              	SECTION IGNORE
-1127  0000              
+1113  001E  00          	DEFB 0x00
+1114  001F              	SECTION code_compiler
+1115  01B0              ;	---------------------------------
+1116  01B0              ; Function test_proc is a stub
+1117  01B0              ; ---------------------------------
+1118  01B0              EXTERN l_ret
+1119  01B0              defc _test_proc = l_ret
+1120  01B0              	SECTION code_compiler
+1121  01B0              ;	---------------------------------
+1122  01B0              ; Function test_func
+1123  01B0              ; ---------------------------------
+1124  01B0              _test_func:
+1125  01B0  2E 00       	ld	l,0x00
+1126  01B2  C9          	ret
+1127  01B3              	SECTION IGNORE
+1128  0000              

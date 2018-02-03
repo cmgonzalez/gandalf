@@ -712,7 +712,7 @@ void spr_play_anim(void) {
           index0 = spr_calc_index(s_lin0, s_col0);
           if (scr_map[index0] >= TILE_ANIM) {
 
-            scr_map[index0] = game_match_back(index0);
+            scr_map[index0] = game_match_back_strict(index0);
           }
 
           spr_back_repaint();

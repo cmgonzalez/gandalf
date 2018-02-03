@@ -831,11 +831,13 @@ unsigned char game_obj_chk(unsigned int f_index) __z88dk_fastcall {
 }
 
 void game_obj_clear() {
+
   for (tmp = 0; tmp < 160; tmp++) {
-    // scr_map[tmp] = game_match_back(tmp); // TILE_EMPTY;
+    //scr_map[tmp] = game_match_back(tmp); // TILE_EMPTY;
     scr_obj0[tmp] = 0;
     scr_obj1[tmp] = 0;
   }
+
   if (game_inmune) {
     tmp = 1;
   } else {
@@ -894,20 +896,25 @@ void game_attribs() {
   attrib_osd[2] = map_paper | BRIGHT | INK_WHITE;
   attrib_osd[3] = map_paper | BRIGHT | INK_YELLOW;
 }
+unsigned char game_match_back_strict(unsigned int f_index) __z88dk_fastcall {
+
+  unsigned char v0;
+  unsigned char v1;
+  if ((f_index > 1) && ((f_index & 15) != 0)) {
+    v0 = scr_map[f_index - 1];
+    v1 = scr_map[f_index + 1];
+    if (v0 == TILE_EMPTY_DARK && v1 == TILE_EMPTY_DARK)
+      return TILE_EMPTY_DARK;
+    if (v0 == TILE_EMPTY_DARK_A && v1 == TILE_EMPTY_DARK_A)
+      return TILE_EMPTY_DARK_A;
+    if (v0 == TILE_EMPTY_DARK_B && v1 == TILE_EMPTY_DARK_B)
+      return TILE_EMPTY_DARK_B;
+  }
+  return TILE_EMPTY;
+}
 
 unsigned char game_match_back(unsigned int f_index) __z88dk_fastcall {
-  /*
-    if ((f_index > 1) && ((f_index & 15) != 0) &&
-        (scr_map[f_index - 1] ==
-         TILE_EMPTY_DARK)) { // || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
-      return TILE_EMPTY_DARK;
-    }
-    if ((f_index > 1) && ((f_index & 15) != 0) &&
-        (scr_map[f_index - 1] ==
-         TILE_EMPTY_DARK_A)) { // || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
-      return TILE_EMPTY_DARK_A;
-    }
-  */
+
   unsigned char v0;
   unsigned char v1;
   if ((f_index > 1) && ((f_index & 15) != 0)) {

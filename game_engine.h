@@ -47,4 +47,5 @@ extern void          game_boss_kill(void);
 extern void          game_boss_clear( );
 extern void          game_attribs( );
 unsigned char        game_match_back(unsigned int f_index ) __z88dk_fastcall;
+unsigned char        game_match_back_strict(unsigned int f_index ) __z88dk_fastcall;
 #endif
