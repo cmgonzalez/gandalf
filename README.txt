@@ -118,3 +118,5 @@ Version 1.01
   -Tiles fixes
   -Corrected btiles paper restore after game end.
   -Code clean
+  -2 buttons alternative mode (up jumps, fire shoots, up+fire jumps on ladders)
+  -Game clear screen better routine
