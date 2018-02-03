@@ -53,7 +53,7 @@ void audio_golpe(void) {
   ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_golpe);
 }
 void audio_coin(void) {
-  ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_golpe);
+  ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_coin);
 }
 void audio_magia1(void) {
   ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_magia1);

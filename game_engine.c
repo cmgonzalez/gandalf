@@ -686,10 +686,13 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
     bullet_lin[f_sprite] = lin[f_sprite];
     bullet_frames[f_sprite] = 2;
 
+
     if (f_sprite == SPR_P1) {
-      bullet_max[f_sprite] = 4 + player_lvl;
+      bullet_max[f_sprite] = 4 + (player_lvl >> 1);
+      f_dir = BIT_CHK(state_a[SPR_P1], STAT_LDIRL);
     } else {
       bullet_max[f_sprite] = 0;
+      f_dir = BIT_CHK(s_state, STAT_DIRL);
     }
     if (f_tile == TILE_ARROW) {
       bullet_class[f_sprite] = BULLET_ARROW;
@@ -711,10 +714,7 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
       bullet_vel[f_sprite] = player_vel_y0;
     }
 
-    f_dir = BIT_CHK(s_state, STAT_DIRL);
-    if (sprite == SPR_P1) {
-      f_dir = BIT_CHK(state_a[SPR_P1], STAT_DIRL);
-    }
+
     index1 = spr_calc_index(lin[f_sprite], col[f_sprite]);
     if (f_dir) {
       // Left
@@ -879,7 +879,7 @@ void game_attribs() {
   // ATTRIB NORMAL
   attrib[0] = map_paper | BRIGHT | INK_WHITE;
   attrib[1] = map_paper | BRIGHT | INK_CYAN;
-  attrib[2] = map_paper | BRIGHT | INK_CYAN;
+  attrib[2] = map_paper | INK_CYAN;
   attrib[3] = map_paper | BRIGHT | INK_BLUE;
 
   // ATTRIB HIGHLIGHT
@@ -889,10 +889,10 @@ void game_attribs() {
   attrib_hl[3] = map_paper | BRIGHT | INK_CYAN;
 
   // ATTRIB OSD
-  attrib_osd[0] = map_paper | BRIGHT | INK_CYAN;
+  attrib_osd[0] = map_paper | BRIGHT | INK_YELLOW;
   attrib_osd[1] = map_paper | BRIGHT | INK_WHITE;
   attrib_osd[2] = map_paper | BRIGHT | INK_WHITE;
-  attrib_osd[3] = map_paper | BRIGHT | INK_CYAN;
+  attrib_osd[3] = map_paper | BRIGHT | INK_YELLOW;
 }
 
 unsigned char game_match_back(unsigned int f_index) __z88dk_fastcall {

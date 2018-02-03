@@ -39,7 +39,7 @@ void main(void) {
   //DEBUG
   game_inmune = 0;    // GAME_INMUNE;
   game_inf_lives = 1; // GAME_INF_LIVES;
-  game_debug = 1;
+  game_debug = 0;
   game_world = 0;
   scr_curr = 0xFF;
 
@@ -134,7 +134,7 @@ void main(void) {
     game_attribs();
     spr_btile_paint_back();
     // MENU
-    if (!game_debug) menu_main();
+    menu_main();
     //GAME
     game_loop();
     //GAME OVER

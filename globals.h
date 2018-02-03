@@ -149,6 +149,8 @@
 #define TILE_ANIM_DEAD                141
 #define TILE_P1_KILL                  76
 #define TILE_P1_HITR                  76
+#define TILE_P1_FIRE_R                208
+#define TILE_P1_FIRE_L                209
 
 #define TILE_FIREBALL                 120
 #define TILE_ARROW                    124

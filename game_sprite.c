@@ -413,16 +413,16 @@ void spr_page_map(void) {
   }
 }
 
-unsigned char spr_redraw_player(void) {
+unsigned char spr_paint_player(void) {
 
   s_col1 = col[SPR_P1];
   s_lin1 = lin[SPR_P1];
 
   if ((s_lin1 != s_lin0) || (s_col1 != s_col0)) {
     /* Column or lin Movement */
-    // Speed UP hack
+    s_tile1 = tile[SPR_P1] + colint[SPR_P1];
 
-    player_anim_tile();
+    if (player_onstair) player_anim_stairs();
     spr_back_repaint();
 
     NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
@@ -430,6 +430,7 @@ unsigned char spr_redraw_player(void) {
   } else {
     s_tile0 = *SPRITEVAL(sprite);
     s_tile1 = tile[SPR_P1] + colint[SPR_P1];
+
     if (s_tile1 != s_tile0) {
       /* Internal Movement, no clean needed */
       NIRVANAP_spriteT(sprite, s_tile1, s_lin1, s_col1);
@@ -439,7 +440,7 @@ unsigned char spr_redraw_player(void) {
   return 0;
 }
 
-unsigned char spr_redraw(void) {
+unsigned char spr_paint(void) {
 
   s_col1 = col[sprite];
   s_lin1 = lin[sprite];
@@ -519,6 +520,7 @@ unsigned char spr_tile_dir(unsigned char *f_tile, unsigned char *f_sprite,
 void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
   unsigned char v1;
   unsigned char v0;
+  unsigned char l_tmp;
   unsigned char f_lin;
   unsigned char f_col;
   /*f_hit should be even*/
@@ -531,9 +533,9 @@ void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
   v1 = scr_map[index1];
 
   if (f_hit) {
-    tmp = f_lin - 10;
+    l_tmp = f_lin - 10;
   } else {
-    tmp = f_lin - 8;
+    l_tmp = f_lin - 8;
   }
 
   /* Draw Brick */
@@ -543,12 +545,12 @@ void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
     // NIRVANAP_fillC(map_paper_clr, f_lin, f_col + 1);
     NIRVANAP_fillT_raw(map_paper_clr, f_lin, f_col); // TODO BORRA SI HAY BRICK
                                                      // ARRIBA!!!
-    NIRVANAP_drawT_raw(v1, tmp, f_col);
+    NIRVANAP_drawT_raw(v1, l_tmp, f_col);
   } else {
     // NIRVANAP_fillC( map_paper_clr, f_lin-16, f_col  );
     // NIRVANAP_fillC( map_paper_clr, f_lin-16, f_col+1);
-    NIRVANAP_drawT_raw(v0, tmp - 16, f_col);
-    NIRVANAP_drawT_raw(v1, tmp, f_col);
+    NIRVANAP_drawT_raw(v0, l_tmp - 16, f_col);
+    NIRVANAP_drawT_raw(v1, l_tmp, f_col);
   }
   intrinsic_ei();
 }
@@ -1041,8 +1043,8 @@ void spr_flatten(void) {
   }
 }
 
-void spr_unflatten(void) {
+void spr_unflattenP1(void) {
   // Only for SPR_P1
-  player_anim_tile(); // Returns to s_tile1
+  player_anim_stairs(); // Returns to s_tile1
   NIRVANAP_drawT(s_tile1, lin[SPR_P1], col[SPR_P1]);
 }

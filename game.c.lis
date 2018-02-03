@@ -526,7 +526,7 @@
 522   0000              	GLOBAL _spr_destroy
 523   0000              	GLOBAL _spr_colision_boss
 524   0000              	GLOBAL _spr_colision_b
-525   0000              	GLOBAL _spr_unflatten
+525   0000              	GLOBAL _spr_unflattenP1
 526   0000              	GLOBAL _spr_flatten
 527   0000              	GLOBAL _spr_btile_paint_back
 528   0000              	GLOBAL _spr_bullet_explode
@@ -547,8 +547,8 @@
 543   0000              	GLOBAL _spr_back_repaint
 544   0000              	GLOBAL _spr_tile_dir
 545   0000              	GLOBAL _spr_tile
-546   0000              	GLOBAL _spr_redraw_player
-547   0000              	GLOBAL _spr_redraw
+546   0000              	GLOBAL _spr_paint_player
+547   0000              	GLOBAL _spr_paint
 548   0000              	GLOBAL _spr_move_left
 549   0000              	GLOBAL _spr_move_right
 550   0000              	GLOBAL _spr_move_horizontal
@@ -590,7 +590,7 @@
 586   0000              	GLOBAL _player_check_stairs_vertical
 587   0000              	GLOBAL _player_check_stairs
 588   0000              	GLOBAL _player_tile
-589   0000              	GLOBAL _player_anim_tile
+589   0000              	GLOBAL _player_anim_stairs
 590   0000              	GLOBAL _player_pick_item
 591   0000              	GLOBAL _player_check_floor
 592   0000              	GLOBAL _player_hit_platform_clear
@@ -923,7 +923,7 @@
 919   0005  21 00 00    	ld	hl,_game_inf_lives
 920   0008  36 01       	ld	(hl),0x01
 921   000A  21 00 00    	ld	hl,_game_debug
-922   000D  36 01       	ld	(hl),0x01
+922   000D  36 00       	ld	(hl),0x00
 923   000F  21 00 00    	ld	hl,_game_world
 924   0012  36 00       	ld	(hl),0x00
 925   0014  21 00 00    	ld	hl,_scr_curr
@@ -931,12 +931,12 @@
 927   0019  CD 00 00    	call	_ay_reset
 928   001C  3A 00 00    	ld	a,(_spec128)
 929   001F  B7          	or	a, a
-930   0020  28 04       	jr	Z,l_main_00114
+930   0020  28 04       	jr	Z,l_main_00112
 931   0022  0E 0C       	ld	c,0x0c
-932   0024  18 02       	jr	l_main_00115
-933   0026              l_main_00114:
+932   0024  18 02       	jr	l_main_00113
+933   0026              l_main_00112:
 934   0026  0E 03       	ld	c,0x03
-935   0028              l_main_00115:
+935   0028              l_main_00113:
 936   0028  21 00 00    	ld	hl,_game_sound
 937   002B  71          	ld	(hl), c
 938   002C  21 01 00    	ld	hl,0x0001
@@ -974,7 +974,7 @@
 970   0083  20 1A       	jr	NZ,l_main_00103
 971   0085  CD 00 00    	call	_in_wait_nokey
 972   0088  01 B8 7A    	ld	bc,0x7ab8
-973   008B              l_main_00110:
+973   008B              l_main_00108:
 974   008B  CD 00 00    	call	_in_test_key
 975   008E  7C          	ld	a, h
 976   008F  B5          	or	a,l
@@ -983,7 +983,7 @@
 979   0095  09          	add	hl,bc
 980   0096  4D          	ld	c, l
 981   0097  44          	ld	b, h
-982   0098  18 F1       	jr	l_main_00110
+982   0098  18 F1       	jr	l_main_00108
 983   009A              l_main_00101:
 984   009A  69          	ld	l, c
 985   009B  60          	ld	h, b
@@ -1025,115 +1025,109 @@
 1021  00E6  36 01       	ld	(hl),0x01
 1022  00E8  21 00 00    	ld	hl,_map_paper_last
 1023  00EB  36 08       	ld	(hl),0x08
-1024  00ED  21 F4 01    	ld	hl,0x01f4
-1025  00F0  CD 00 00    	call	_z80_delay_ms_fastcall
-1026  00F3              l_main_00107:
-1027  00F3  CD 00 00    	call	_game_obj_clear
-1028  00F6  21 00 00    	ld	hl,_player_max_mana
-1029  00F9  36 64       	ld	(hl),0x64
-1030  00FB  21 00 00    	ld	hl,_player_max_vita
-1031  00FE  36 64       	ld	(hl),0x64
-1032  0100  21 00 00    	ld	hl,_player_lives
-1033  0103  36 03       	ld	(hl),0x03
-1034  0105  21 00 00    	ld	hl,_player_mana
-1035  0108  36 64       	ld	(hl),0x64
-1036  010A  21 00 00    	ld	hl,_player_vita
-1037  010D  36 64       	ld	(hl),0x64
-1038  010F  21 00 00    	ld	hl,_player_str
-1039  0112  36 00       	ld	(hl),0x00
-1040  0114  21 00 00    	ld	hl,_player_lvl
-1041  0117  36 00       	ld	(hl),0x00
-1042  0119  21 00 00    	ld	hl,_player_int
-1043  011C  36 00       	ld	(hl),0x00
-1044  011E  21 00 00    	ld	hl,0x0000
-1045  0121  22 00 00    	ld	(_player_score),hl
-1046  0124  21 00 00    	ld	hl,_player_lin_scr
-1047  0127  36 80       	ld	(hl),0x80
-1048  0129  21 00 00    	ld	hl,_player_col_scr
-1049  012C  36 02       	ld	(hl),0x02
-1050  012E  CD 00 00    	call	_game_set_checkpoint
-1051  0131  21 00 00    	ld	hl,_game_round_up
-1052  0134  36 00       	ld	(hl),0x00
-1053  0136  21 00 00    	ld	hl,_game_respawn_curr_time
-1054  0139  36 FF       	ld	(hl),0xff
-1055  013B  21 00 00    	ld	hl,_game_mush_count
-1056  013E  36 00       	ld	(hl),0x00
-1057  0140  21 00 00    	ld	hl,_game_boss_alive
-1058  0143  36 01       	ld	(hl),0x01
-1059  0145  21 00 00    	ld	hl,_game_2buttons
-1060  0148  36 01       	ld	(hl),0x01
-1061  014A  21 00 00    	ld	hl,_game_over
-1062  014D  36 00       	ld	(hl),0x00
-1063  014F  21 00 00    	ld	hl,_dirs
-1064  0152  36 00       	ld	(hl),0x00
-1065  0154  CD 00 00    	call	_ay_reset
-1066  0157  21 00 00    	ld	hl,_map_paper
-1067  015A  36 00       	ld	(hl),0x00
-1068  015C  CD 00 00    	call	_game_attribs
-1069  015F  CD 00 00    	call	_spr_btile_paint_back
-1070  0162  3A 00 00    	ld	a,(_game_debug)
-1071  0165  B7          	or	a, a
-1072  0166  20 03       	jr	NZ,l_main_00105
-1073  0168  CD 00 00    	call	_menu_main
-1074  016B              l_main_00105:
-1075  016B  CD 00 00    	call	_game_loop
-1076  016E  CD 00 00    	call	_spr_flatten
-1077  0171  21 15 00    	ld	hl,___str_1
-1078  0174  E5          	push	hl
-1079  0175  21 0C 0C    	ld	hl,0x0c0c
-1080  0178  E5          	push	hl
-1081  0179  CD 00 00    	call	_zx_print_str
-1082  017C  AF          	xor	a,a
-1083  017D  32 00 00    	ld	(_game_over),a
-1084  0180  F5          	push	af
-1085  0181  33          	inc	sp
-1086  0182  21 FA 00    	ld	hl,0x00fa
-1087  0185  E5          	push	hl
-1088  0186  21 0C 15    	ld	hl,0x150c
-1089  0189  E5          	push	hl
-1090  018A  3E 0C       	ld	a,0x0c
-1091  018C  F5          	push	af
-1092  018D  33          	inc	sp
-1093  018E  CD 00 00    	call	_game_colour_message
-1094  0191  F1          	pop	af
-1095  0192  F1          	pop	af
-1096  0193  F1          	pop	af
-1097  0194  CD 00 00    	call	_spr_clear_scr
-1098  0197  21 00 00    	ld	hl,_game_world
-1099  019A  36 00       	ld	(hl),0x00
-1100  019C  21 00 00    	ld	hl,_scr_curr
-1101  019F  36 FF       	ld	(hl),0xff
-1102  01A1  CD 00 00    	call	_NIRVANAP_stop
-1103  01A4  21 00 00    	ld	hl,_screen_paper
-1104  01A7  36 00       	ld	(hl),0x00
-1105  01A9  2E 00       	ld	l,0x00
-1106  01AB  CD 00 00    	call	_zx_border_fastcall
-1107  01AE  2E 00       	ld	l,0x00
-1108  01B0  CD 00 00    	call	_zx_cls_fastcall
-1109  01B3  CD 00 00    	call	_NIRVANAP_start
-1110  01B6  C3 F3 00    	jp	l_main_00107
-1111  01B9              	SECTION rodata_compiler
-1112  0000              ___str_0:
-1113  0000  46 4F 52 20 46 45 4C 49 50 45 20 41 4E 44 20 45 44 44 49 45 
+1024  00ED              l_main_00105:
+1025  00ED  CD 00 00    	call	_game_obj_clear
+1026  00F0  21 00 00    	ld	hl,_player_max_mana
+1027  00F3  36 64       	ld	(hl),0x64
+1028  00F5  21 00 00    	ld	hl,_player_max_vita
+1029  00F8  36 64       	ld	(hl),0x64
+1030  00FA  21 00 00    	ld	hl,_player_lives
+1031  00FD  36 03       	ld	(hl),0x03
+1032  00FF  21 00 00    	ld	hl,_player_mana
+1033  0102  36 64       	ld	(hl),0x64
+1034  0104  21 00 00    	ld	hl,_player_vita
+1035  0107  36 64       	ld	(hl),0x64
+1036  0109  21 00 00    	ld	hl,_player_str
+1037  010C  36 00       	ld	(hl),0x00
+1038  010E  21 00 00    	ld	hl,_player_lvl
+1039  0111  36 00       	ld	(hl),0x00
+1040  0113  21 00 00    	ld	hl,_player_int
+1041  0116  36 00       	ld	(hl),0x00
+1042  0118  21 00 00    	ld	hl,0x0000
+1043  011B  22 00 00    	ld	(_player_score),hl
+1044  011E  21 00 00    	ld	hl,_player_lin_scr
+1045  0121  36 80       	ld	(hl),0x80
+1046  0123  21 00 00    	ld	hl,_player_col_scr
+1047  0126  36 02       	ld	(hl),0x02
+1048  0128  CD 00 00    	call	_game_set_checkpoint
+1049  012B  21 00 00    	ld	hl,_game_round_up
+1050  012E  36 00       	ld	(hl),0x00
+1051  0130  21 00 00    	ld	hl,_game_respawn_curr_time
+1052  0133  36 FF       	ld	(hl),0xff
+1053  0135  21 00 00    	ld	hl,_game_mush_count
+1054  0138  36 00       	ld	(hl),0x00
+1055  013A  21 00 00    	ld	hl,_game_boss_alive
+1056  013D  36 01       	ld	(hl),0x01
+1057  013F  21 00 00    	ld	hl,_game_2buttons
+1058  0142  36 01       	ld	(hl),0x01
+1059  0144  21 00 00    	ld	hl,_game_over
+1060  0147  36 00       	ld	(hl),0x00
+1061  0149  21 00 00    	ld	hl,_dirs
+1062  014C  36 00       	ld	(hl),0x00
+1063  014E  CD 00 00    	call	_ay_reset
+1064  0151  21 00 00    	ld	hl,_map_paper
+1065  0154  36 00       	ld	(hl),0x00
+1066  0156  CD 00 00    	call	_game_attribs
+1067  0159  CD 00 00    	call	_spr_btile_paint_back
+1068  015C  CD 00 00    	call	_menu_main
+1069  015F  CD 00 00    	call	_game_loop
+1070  0162  CD 00 00    	call	_spr_flatten
+1071  0165  21 15 00    	ld	hl,___str_1
+1072  0168  E5          	push	hl
+1073  0169  21 0C 0C    	ld	hl,0x0c0c
+1074  016C  E5          	push	hl
+1075  016D  CD 00 00    	call	_zx_print_str
+1076  0170  AF          	xor	a,a
+1077  0171  32 00 00    	ld	(_game_over),a
+1078  0174  F5          	push	af
+1079  0175  33          	inc	sp
+1080  0176  21 FA 00    	ld	hl,0x00fa
+1081  0179  E5          	push	hl
+1082  017A  21 0C 15    	ld	hl,0x150c
+1083  017D  E5          	push	hl
+1084  017E  3E 0C       	ld	a,0x0c
+1085  0180  F5          	push	af
+1086  0181  33          	inc	sp
+1087  0182  CD 00 00    	call	_game_colour_message
+1088  0185  F1          	pop	af
+1089  0186  F1          	pop	af
+1090  0187  F1          	pop	af
+1091  0188  CD 00 00    	call	_spr_clear_scr
+1092  018B  21 00 00    	ld	hl,_game_world
+1093  018E  36 00       	ld	(hl),0x00
+1094  0190  21 00 00    	ld	hl,_scr_curr
+1095  0193  36 FF       	ld	(hl),0xff
+1096  0195  CD 00 00    	call	_NIRVANAP_stop
+1097  0198  21 00 00    	ld	hl,_screen_paper
+1098  019B  36 00       	ld	(hl),0x00
+1099  019D  2E 00       	ld	l,0x00
+1100  019F  CD 00 00    	call	_zx_border_fastcall
+1101  01A2  2E 00       	ld	l,0x00
+1102  01A4  CD 00 00    	call	_zx_cls_fastcall
+1103  01A7  CD 00 00    	call	_NIRVANAP_start
+1104  01AA  C3 ED 00    	jp	l_main_00105
+1105  01AD              	SECTION rodata_compiler
+1106  0000              ___str_0:
+1107  0000  46 4F 52 20 46 45 4C 49 50 45 20 41 4E 44 20 45 44 44 49 45 
                         	DEFM "FOR FELIPE AND EDDIE"
-1114  0014  00          	DEFB 0x00
-1115  0015              	SECTION rodata_compiler
-1116  0015              ___str_1:
-1117  0015  47 41 4D 45 20 4F 56 45 52 
+1108  0014  00          	DEFB 0x00
+1109  0015              	SECTION rodata_compiler
+1110  0015              ___str_1:
+1111  0015  47 41 4D 45 20 4F 56 45 52 
                         	DEFM "GAME OVER"
-1118  001E  00          	DEFB 0x00
-1119  001F              	SECTION code_compiler
-1120  01B9              ;	---------------------------------
-1121  01B9              ; Function test_proc is a stub
-1122  01B9              ; ---------------------------------
-1123  01B9              EXTERN l_ret
-1124  01B9              defc _test_proc = l_ret
-1125  01B9              	SECTION code_compiler
-1126  01B9              ;	---------------------------------
-1127  01B9              ; Function test_func
-1128  01B9              ; ---------------------------------
-1129  01B9              _test_func:
-1130  01B9  2E 00       	ld	l,0x00
-1131  01BB  C9          	ret
-1132  01BC              	SECTION IGNORE
-1133  0000              
+1112  001E  00          	DEFB 0x00
+1113  001F              	SECTION code_compiler
+1114  01AD              ;	---------------------------------
+1115  01AD              ; Function test_proc is a stub
+1116  01AD              ; ---------------------------------
+1117  01AD              EXTERN l_ret
+1118  01AD              defc _test_proc = l_ret
+1119  01AD              	SECTION code_compiler
+1120  01AD              ;	---------------------------------
+1121  01AD              ; Function test_func
+1122  01AD              ; ---------------------------------
+1123  01AD              _test_func:
+1124  01AD  2E 00       	ld	l,0x00
+1125  01AF  C9          	ret
+1126  01B0              	SECTION IGNORE
+1127  0000              

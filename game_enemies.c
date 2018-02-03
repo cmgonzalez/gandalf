@@ -40,7 +40,7 @@ void enemy_turn(void) {
       // s_tile0 = tile[sprite] + colint[sprite];
       s_state = state[sprite];
       enemy_move();
-      if (spr_redraw()) {
+      if (spr_paint()) {
         // The sprite have moved...
         enemy_check_deadly();
       }
