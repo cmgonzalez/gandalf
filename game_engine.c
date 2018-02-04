@@ -529,7 +529,9 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
       // Animation
       return 0;
     }
-    if (f_tile == TILE_STOPPER) {
+    /*BUGFIX ZXDEV if (f_tile == TILE_STOPPER) */
+    if (f_tile == TILE_STOPPER && f_class != MUSHROOM_VITA && f_class != MUSHROOM_MANA && f_class != MUSHROOM_EXTRA) {
+
       return 1;
     }
 
@@ -785,15 +787,19 @@ unsigned char game_shoot_fire_boss(unsigned char f_tile) {
     bullet_tile[f_sprite] = f_tile + 2;
     bullet_dir[f_sprite] = 0x01;
     bullet_colint[f_sprite] = 2;
+    bullet_col[f_sprite] = boss_col;
   } else {
     // Right n default
     if (boss_col > 29)
       return 1;
-    bullet_col[f_sprite] = boss_col + 6;
+    /*BUGFIX ZXDEV*/
+    //bullet_col[f_sprite] = boss_col + 6;
     bullet_tile[f_sprite] = f_tile;
     bullet_dir[f_sprite] = 0xFF;
     bullet_colint[f_sprite] = 0xFF;
+    bullet_col[f_sprite] = boss_col + 6;
   }
+  bullet_col0[f_sprite] = bullet_col[f_sprite] ;
   //}
   return 0;
 }
