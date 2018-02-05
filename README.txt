@@ -95,10 +95,14 @@ RUNTIME MEMORY MAP:
 
 ==============================================================================
 
-Version 1.01
+
 
 What's NEW
 
+Version 1.02
+  -Player Jump Fix, now it won't stop at platforms
+
+Version 1.01
   -Player Shoot Animation.
   -Performance improved
   -2 buttons alternative mode 1BB (up jumps, fire shoots, up+fire jumps on stairs)
