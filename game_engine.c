@@ -18,8 +18,8 @@
 #include "game_audio.h"
 #include "game_ay.h"
 #include "game_enemies.h"
-#include "game_menu.h"
 #include "game_engine.h"
+#include "game_menu.h"
 #include "game_player.h"
 #include "game_sprite.h"
 #include "game_zx.h"
@@ -34,7 +34,6 @@
 /* Main Game Loop  */
 
 void game_loop(void) {
-
 
   game_round_init();
 
@@ -89,7 +88,6 @@ void game_loop(void) {
       player_col_scr = 2;
       player_lin_scr = 128;
       game_round_init();
-
     }
   }
 }
@@ -233,32 +231,30 @@ void game_boss_kill(void) {
 
 void game_end() {
 
-    z80_delay_ms(500);
+  z80_delay_ms(500);
 
+  scr_curr = 0;
+  spr_page_map();
+  game_draw_screen();
+  audio_game_end();
+  NIRVANAP_drawT(TILE_P1_STANR, 128, 2);
+  z80_delay_ms(1500);
 
-    scr_curr = 0;
-    spr_page_map();
-    game_draw_screen();
-    audio_game_end();
-    NIRVANAP_drawT(TILE_P1_STANR,128,2);
-    z80_delay_ms(1500);
-
-    zx_print_str(8, 8, "CONGRATULATIONS!");
-    game_colour_message(8, 8, 8 + 16, 2000, 0);
-    zx_print_str(8, 7, "YOU HAVE DEFEATED");
-    game_colour_message(8, 7, 7 + 17, 2000, 0);
-    zx_print_str(8, 5, "THE LEFT EYE OF SAURON");
-    game_colour_message(8, 5, 5 + 22, 2000, 0);
-    zx_print_str(8, 3, "ARDA WILL BE ON PEACE NOW");
-    game_colour_message(8, 3, 3 + 25, 2000, 0);
-    z80_delay_ms(1000);
-    in_wait_key();
-    ay_reset();
-    //Keep Playing
-    game_world = 0xFF;
-    scr_curr = 0xFF;
-    game_round_up = 1;
-
+  zx_print_str(8, 8, "CONGRATULATIONS!");
+  game_colour_message(8, 8, 8 + 16, 2000, 0);
+  zx_print_str(8, 7, "YOU HAVE DEFEATED");
+  game_colour_message(8, 7, 7 + 17, 2000, 0);
+  zx_print_str(8, 5, "THE LEFT EYE OF SAURON");
+  game_colour_message(8, 5, 5 + 22, 2000, 0);
+  zx_print_str(8, 3, "ARDA WILL BE ON PEACE NOW");
+  game_colour_message(8, 3, 3 + 25, 2000, 0);
+  z80_delay_ms(1000);
+  in_wait_key();
+  ay_reset();
+  // Keep Playing
+  game_world = 0xFF;
+  scr_curr = 0xFF;
+  game_round_up = 1;
 }
 
 void game_add_enemy(unsigned char enemy_tile_index) __z88dk_fastcall {
@@ -312,7 +308,6 @@ void game_print_footer(void) {
   game_fill_row(19, 98);
   game_fill_row(23, 98);
 
-
   zx_print_str(19, 0, "a");
   zx_print_str(19, 31, "c");
   zx_print_str(20, 0, "d");
@@ -360,7 +355,7 @@ void game_print_footer(void) {
   // zx_print_str(20, 22, "x"); //XP
   // zx_print_ink(INK_YELLOW);
 
-  //Clear KEYS
+  // Clear KEYS
   zx_print_str(22, 2, "    ");
   game_update_stats();
 }
@@ -465,27 +460,29 @@ void game_round_init(void) {
   game_update_stats();
   // z80_delay_ms(50);
   ay_reset();
-  audio_level_start();
-  switch (game_world) {
-  case 0:
-    zx_print_str(12, 6, "ROUND 1 THE SHIRE");
-    tmp0 = 17;
-    break;
-  case 1:
-    zx_print_str(12, 8, "ROUND 2 MORIA");
-    tmp0 = 15;
-    break;
-  case 2:
-    zx_print_str(12, 8, "ROUND 3 MORDOR");
-    tmp0 = 15;
-    break;
-  case 3:
-    zx_print_str(12, 6, "ROUND 4 BARAD DUR");
-    tmp0 = 17;
-    break;
+  if (!game_debug) {
+    audio_level_start();
+    switch (game_world) {
+    case 0:
+      zx_print_str(12, 6, "ROUND 1 THE SHIRE");
+      tmp0 = 17;
+      break;
+    case 1:
+      zx_print_str(12, 8, "ROUND 2 MORIA");
+      tmp0 = 15;
+      break;
+    case 2:
+      zx_print_str(12, 8, "ROUND 3 MORDOR");
+      tmp0 = 15;
+      break;
+    case 3:
+      zx_print_str(12, 6, "ROUND 4 BARAD DUR");
+      tmp0 = 17;
+      break;
+    }
+    game_paint_attrib(&attrib_osd, 6, (6 + tmp0), (12 << 3) + 8);
+    game_colour_message(12, 6, 6 + tmp0, 200, 0);
   }
-  game_paint_attrib(&attrib_osd, 6, (6 + tmp0), (12 << 3) + 8);
-  game_colour_message(12, 6, 6 + tmp0, 200, 0);
 }
 
 void game_print_header(void) {
@@ -545,7 +542,8 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
       // Animation
       return 0;
     }
-    if (f_tile == TILE_STOPPER && f_class != MUSHROOM_VITA && f_class != MUSHROOM_MANA && f_class != MUSHROOM_EXTRA) {
+    if (f_tile == TILE_STOPPER && f_class != MUSHROOM_VITA &&
+        f_class != MUSHROOM_MANA && f_class != MUSHROOM_EXTRA) {
       return 1;
     }
 
@@ -581,44 +579,48 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
         return f_tile;
       }
     }
-  }
+  } else {
+    if (!player_jump_check) {
+      // TILE_EMPTY -> TILE_FLOOR
+      if (f_tile < TILE_FLOOR) {
+        return 0;
+      }
 
-  // TILE_EMPTY -> TILE_FLOOR
-  if (f_tile < TILE_FLOOR) {
-    return 0;
-  }
+      // TILE_FLOOR -> TILE_STAIR_S
+      if (f_tile < TILE_STAIR_S) {
+        if (BIT_CHK(s_state, STAT_FALL)) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
 
-  // TILE_FLOOR -> TILE_STAIR_S
-  if (f_tile < TILE_STAIR_S) {
-    if (BIT_CHK(s_state, STAT_FALL)) {
-      return 1;
+      // TILE_STAIR_S -> TILE_CEIL
+
+      if (f_tile < TILE_CEIL) {
+
+          if (BIT_CHK(s_state, STAT_FALL)) {
+            return 1;
+          } else {
+            return 0;
+          }
+
+      }
     } else {
-      return 0;
-    }
-  }
-
-  // TILE_STAIR_S -> TILE_CEIL
-  if (f_tile < TILE_CEIL) {
-    if (sprite_horizontal_check) {
-      return 0;
-    } else {
-      if (BIT_CHK(s_state, STAT_FALL)) {
-        return 1;
-      } else {
+      if (f_tile < TILE_STAIR_E ) {
         return 0;
       }
     }
-  }
 
-  if (f_tile < TILE_DOOR_E) { // DOOR EXIT
-    if (sprite == SPR_P1) {
+    if (f_tile < TILE_DOOR_E) { // DOOR EXIT
       player_open_door(*f_index, f_tile);
       return 1;
     }
-  }
-  // TILE_CEIL -> TILE_END
-  if (f_tile < TILE_END) {
-    return 1;
+    // TILE_CEIL -> TILE_END
+    if (f_tile < TILE_END) {
+      return 1;
+    }
+
   }
 
   // NOT A TILE f_tile > TILE_END
@@ -693,7 +695,6 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
     bullet_lin[f_sprite] = lin[f_sprite];
     bullet_frames[f_sprite] = 2;
 
-
     if (f_sprite == SPR_P1) {
       bullet_max[f_sprite] = 4 + (player_lvl >> 1);
       f_dir = BIT_CHK(state_a[SPR_P1], STAT_LDIRL);
@@ -720,7 +721,6 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
       bullet_frames[f_sprite] = 4;
       bullet_vel[f_sprite] = player_vel_y0;
     }
-
 
     index1 = spr_calc_index(lin[f_sprite], col[f_sprite]);
     if (f_dir) {
@@ -788,7 +788,6 @@ unsigned char game_shoot_fire_boss(unsigned char f_tile) {
     }
   }
 
-
   bullet_lin[f_sprite] = bullet_lin0[f_sprite];
   bullet_frames[f_sprite] = 2;
 
@@ -809,9 +808,9 @@ unsigned char game_shoot_fire_boss(unsigned char f_tile) {
     bullet_tile[f_sprite] = f_tile;
     bullet_dir[f_sprite] = 0xFF;
     bullet_colint[f_sprite] = 0xFF;
-    bullet_col[f_sprite] = boss_col+6;
+    bullet_col[f_sprite] = boss_col + 6;
   }
-  bullet_col0[f_sprite] = bullet_col[f_sprite] ;
+  bullet_col0[f_sprite] = bullet_col[f_sprite];
   //}
   return 0;
 }
@@ -840,7 +839,7 @@ unsigned char game_obj_chk(unsigned int f_index) __z88dk_fastcall {
 void game_obj_clear() {
 
   for (tmp = 0; tmp < 160; tmp++) {
-    //scr_map[tmp] = game_match_back(tmp); // TILE_EMPTY;
+    // scr_map[tmp] = game_match_back(tmp); // TILE_EMPTY;
     scr_obj0[tmp] = 0;
     scr_obj1[tmp] = 0;
   }

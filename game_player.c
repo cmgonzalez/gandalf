@@ -924,9 +924,9 @@ unsigned char player_move_jump(void) {
       }
     }
 
+    // 7z80_delay_ms(50);
     if (game_check_map(s_lin1 + 16, col[SPR_P1])) {
       // Jump end
-
       player_check_stairs(0);
       if (!player_onstair) {
         player_check_stairs(1);
@@ -957,10 +957,12 @@ unsigned char player_move_jump(void) {
     }
   }
 
+  player_jump_check = 1;
   if (spr_move_horizontal()) {
     BIT_CLR(s_state, STAT_DIRL);
     BIT_CLR(s_state, STAT_DIRR);
   }
+  player_jump_check = 0;
   return 0;
 }
 

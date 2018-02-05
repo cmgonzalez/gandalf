@@ -41,7 +41,7 @@ void main(void) {
   game_inf_lives = 0; // GAME_INF_LIVES;
   game_debug = 0;
   game_world = 0;
-  scr_curr = 0xff;
+  scr_curr = 0xff;//0xff;
 
   // INTERRUPTS ARE DISABLED
   // RESET AY CHIP
@@ -90,8 +90,10 @@ void main(void) {
   NIRVANAP_tiles(_btiles);
   game_attribs();
   game_over = 1;
-  zx_print_str(12, 6, "FOR FELIPE AND EDDIE");
-  game_colour_message(12, 6, 6 + 20, 30, 0);
+  if (!game_debug) {
+    zx_print_str(12, 6, "FOR FELIPE AND EDDIE");
+    game_colour_message(12, 6, 6 + 20, 30, 0);
+  }
   // Init Screen
   frame_time = zx_clock();
 
@@ -128,7 +130,7 @@ void main(void) {
     game_attribs();
     spr_btile_paint_back();
     // MENU
-    menu_main();
+    if (!game_debug) menu_main();
     //GAME
     game_loop();
     //GAME OVER

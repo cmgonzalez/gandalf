@@ -102,6 +102,9 @@ unsigned char player_int;
 unsigned char player_lvl;
 unsigned char player_col_scr;
 unsigned char player_lin_scr;
+unsigned char player_jump_check;
+
+
 unsigned char game_checkpoint_col;
 unsigned char game_checkpoint_lin;
 unsigned char game_checkpoint_scr;

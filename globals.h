@@ -330,6 +330,7 @@ extern unsigned char player_int;
 extern unsigned char player_lvl;
 extern unsigned char player_col_scr;
 extern unsigned char player_lin_scr;
+extern unsigned char player_jump_check;
 
 extern unsigned char game_checkpoint_col;
 extern unsigned char game_checkpoint_lin;
