@@ -15,11 +15,12 @@
         along with Gandalf.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "game.h"
+#include "game_audio.h"
 #include "game_ay.h"
 #include "game_enemies.h"
 #include "game_engine.h"
+#include "game_menu.h"
 #include "game_player.h"
-//#include "game_sound.h"
 #include "game_sprite.h"
 #include "game_zx.h"
 #include "macros.h"
@@ -34,12 +35,11 @@
 
 void game_loop(void) {
 
-  // TODO CALL MENU HERE
   game_round_init();
 
   while (!game_over) {
 
-    while (!game_worldup && !game_over) {
+    while (!game_round_up && !game_over) {
 
       /*Enemies turn*/
       enemy_turn();
@@ -65,9 +65,9 @@ void game_loop(void) {
       }
 
       /*Each second aprox - update fps/score/phase left/phase advance*/
-      if (game_check_time(&frame_time, 100)) {
+      if (game_check_time(&frame_time, TIME_EVENT)) {
         frame_time = zx_clock();
-        if (game_show_fps)
+        if (game_debug)
           game_fps();
         game_respawn();
       }
@@ -75,8 +75,8 @@ void game_loop(void) {
       ++loop_count;
       ++fps;
     }
-    if (game_worldup) {
-      game_worldup = 0;
+    if (game_round_up) {
+      game_round_up = 0;
       game_respawn_curr_time = game_respawn_curr_time - 32;
       game_world++;
       game_boss_alive = 1;
@@ -109,7 +109,7 @@ void game_respawn(void) {
         s_col1 = (index1 & 15) << 1;
         s_lin1 = index1;
         s_lin1 = (s_lin1 >> 4) << 4;
-        scr_map[index1] = 0x80 + sprite; // 0xFF;
+        scr_map[index1] = TILE_ANIM + sprite; // 0xFF;
         game_respawn_time[sprite] = 0;
 
         spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 4,
@@ -148,6 +148,8 @@ void game_draw_screen(void) {
   s_col1 = 2;
   // intrinsic_ei();
   spr_count = 0;
+  game_mush_count = 0;
+
   intrinsic_di();
 
   while (index1 < GAME_SCR_MAX_INDEX) {
@@ -207,7 +209,7 @@ void game_draw_screen(void) {
 void game_boss_kill(void) {
   game_boss = 0;
   game_boss_alive = 0;
-  ay_song_play(AY_SONG_ONCE, 4, ay_fx_04_explosion);
+  audio_explosion();
   spr_add_anim(boss_lin, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(boss_lin, boss_col + 2, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(boss_lin + 16, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
@@ -230,14 +232,14 @@ void game_boss_kill(void) {
 }
 
 void game_end() {
-  z80_delay_ms(500);
 
+  z80_delay_ms(500);
 
   scr_curr = 0;
   spr_page_map();
   game_draw_screen();
-  ay_song_play(AY_SONG_ONCE, 4, ay_song_04_sunflower);
-  NIRVANAP_drawT(TILE_P1_STANR,128,2);
+  audio_game_end();
+  NIRVANAP_drawT(TILE_P1_STANR, 128, 2);
   z80_delay_ms(1500);
 
   zx_print_str(8, 8, "CONGRATULATIONS!");
@@ -251,9 +253,10 @@ void game_end() {
   z80_delay_ms(1000);
   in_wait_key();
   ay_reset();
+  // Keep Playing
   game_world = 0xFF;
   scr_curr = 0xFF;
-  game_worldup = 1;
+  game_round_up = 1;
 }
 
 void game_add_enemy(unsigned char enemy_tile_index) __z88dk_fastcall {
@@ -302,8 +305,11 @@ void game_add_enemy(unsigned char enemy_tile_index) __z88dk_fastcall {
 }
 
 void game_print_footer(void) {
+
   zx_print_ink(INK_CYAN);
   game_fill_row(19, 98);
+  game_fill_row(23, 98);
+
   zx_print_str(19, 0, "a");
   zx_print_str(19, 31, "c");
   zx_print_str(20, 0, "d");
@@ -312,15 +318,18 @@ void game_print_footer(void) {
   zx_print_str(21, 31, "e");
   zx_print_str(22, 0, "d");
   zx_print_str(22, 31, "e");
-  game_fill_row(23, 98);
   zx_print_str(23, 0, "f");
   zx_print_str(23, 31, "g");
-  // GANDALF FACE
-  zx_print_ink(INK_CYAN);
-  zx_print_str(20, 1, "<"); // live p1 hut
+  zx_print_str(21, 15, "_"); // live p1 face
+  zx_print_str(20, 1, "<");  // live p1 hut
+
   zx_print_ink(INK_YELLOW);
   zx_print_str(21, 1, "\\"); // live p1 face
-  // VITA
+  zx_print_str(22, 7, "l");  // COIN
+  zx_print_str(22, 13, "m"); // STR
+  zx_print_str(22, 19, "n"); // INT
+  zx_print_str(22, 25, "o"); // LEVEL
+
   zx_print_ink(INK_RED | BRIGHT);
   zx_print_str(20, 8, ">"); // live p1 hut
   zx_print_ink(INK_MAGENTA);
@@ -328,15 +337,14 @@ void game_print_footer(void) {
   // MANA
   zx_print_ink(INK_WHITE | BRIGHT);
   zx_print_str(20, 15, "?"); // live p1 hut
-  zx_print_ink(INK_CYAN);
-  zx_print_str(21, 15, "_"); // live p1 face
+  // zx_print_ink(INK_CYAN);
   // XP
   zx_print_ink(INK_CYAN | BRIGHT);
   zx_print_str(20, 21, "x"); // live p1 hut
   zx_print_ink(INK_WHITE);
   zx_print_str(21, 21, "y"); // live p1 face
 
-  if (game_show_fps) {
+  if (game_debug) {
     /* phase osd bottom*/
     zx_print_str(23, 20, "LPS:");
   }
@@ -347,12 +355,10 @@ void game_print_footer(void) {
   // zx_print_str(20, 13, "k");
 
   // zx_print_str(20, 22, "x"); //XP
-  zx_print_ink(INK_YELLOW);
-  zx_print_str(22, 7, "l");  // COIN
-  zx_print_str(22, 13, "m"); // STR
-  zx_print_str(22, 19, "n"); // INT
-  zx_print_str(22, 25, "o"); // LEVEL
+  // zx_print_ink(INK_YELLOW);
 
+  // Clear KEYS
+  zx_print_str(22, 2, "    ");
   game_update_stats();
 }
 
@@ -361,6 +367,13 @@ void game_print_score(void) {
   zx_print_paper(PAPER_BLACK);
   zx_print_int(20, 23, player_score);
   zx_print_int(0, 14, game_score_top); // SCORE TOP
+}
+
+void game_cls() {
+  NIRVANAP_stop();
+  zx_paper_fill(INK_BLACK | PAPER_BLACK);
+  zx_print_ink(INK_WHITE);
+  NIRVANAP_start();
 }
 
 void game_update_stats(void) {
@@ -449,27 +462,29 @@ void game_round_init(void) {
   game_update_stats();
   // z80_delay_ms(50);
   ay_reset();
-  ay_song_play(AY_SONG_ONCE, 4, ay_song_04_lotr_level_start);
-  switch (game_world) {
-  case 0:
-    zx_print_str(12, 6, "ROUND 1 THE SHIRE");
-    tmp0 = 17;
-    break;
-  case 1:
-    zx_print_str(12, 6, "ROUND 2 MORIA");
-    tmp0 = 13;
-    break;
-  case 2:
-    zx_print_str(12, 6, "ROUND 3 MORDOR");
-    tmp0 = 14;
-    break;
-  case 3:
-    zx_print_str(12, 6, "ROUND 4 BARAD DUR");
-    tmp0 = 17;
-    break;
+  if (!game_debug) {
+    audio_level_start();
+    switch (game_world) {
+    case 0:
+      zx_print_str(12, 6, "ROUND 1 THE SHIRE");
+      tmp0 = 17;
+      break;
+    case 1:
+      zx_print_str(12, 8, "ROUND 2 MORIA");
+      tmp0 = 15;
+      break;
+    case 2:
+      zx_print_str(12, 8, "ROUND 3 MORDOR");
+      tmp0 = 15;
+      break;
+    case 3:
+      zx_print_str(12, 6, "ROUND 4 BARAD DUR");
+      tmp0 = 17;
+      break;
+    }
+    game_paint_attrib(&attrib_osd, 6, (6 + tmp0), (12 << 3) + 8);
+    game_colour_message(12, 6, 6 + tmp0, 200, 0);
   }
-  game_paint_attrib(&attrib_osd, 6, (6 + tmp0), (12 << 3) + 8);
-  game_colour_message(12, 6, 6 + tmp0, 200, 0);
 }
 
 void game_print_header(void) {
@@ -525,13 +540,12 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
     if (f_kind == E_GHOST) {
       return 0;
     }
-    if (f_tile >= 0x80) {
+    if (f_tile >= TILE_ANIM) {
       // Animation
       return 0;
     }
-    /*BUGFIX ZXDEV if (f_tile == TILE_STOPPER) */
-    if (f_tile == TILE_STOPPER && f_class != MUSHROOM_VITA && f_class != MUSHROOM_MANA && f_class != MUSHROOM_EXTRA) {
-
+    if (f_tile == TILE_STOPPER && f_class != MUSHROOM_VITA &&
+        f_class != MUSHROOM_MANA && f_class != MUSHROOM_EXTRA) {
       return 1;
     }
 
@@ -567,44 +581,48 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
         return f_tile;
       }
     }
-  }
+  } else {
+    if (!player_jump_check) {
+      // TILE_EMPTY -> TILE_FLOOR
+      if (f_tile < TILE_FLOOR) {
+        return 0;
+      }
 
-  // TILE_EMPTY -> TILE_FLOOR
-  if (f_tile < TILE_FLOOR) {
-    return 0;
-  }
+      // TILE_FLOOR -> TILE_STAIR_S
+      if (f_tile < TILE_STAIR_S) {
+        if (BIT_CHK(s_state, STAT_FALL)) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
 
-  // TILE_FLOOR -> TILE_STAIR_S
-  if (f_tile < TILE_STAIR_S) {
-    if (BIT_CHK(s_state, STAT_FALL)) {
-      return 1;
+      // TILE_STAIR_S -> TILE_CEIL
+
+      if (f_tile < TILE_CEIL) {
+
+          if (BIT_CHK(s_state, STAT_FALL)) {
+            return 1;
+          } else {
+            return 0;
+          }
+
+      }
     } else {
-      return 0;
-    }
-  }
-
-  // TILE_STAIR_S -> TILE_CEIL
-  if (f_tile < TILE_CEIL) {
-    if (sprite_horizontal_check) {
-      return 0;
-    } else {
-      if (BIT_CHK(s_state, STAT_FALL)) {
-        return 1;
-      } else {
+      if (f_tile < TILE_STAIR_E ) {
         return 0;
       }
     }
-  }
 
-  if (f_tile < TILE_DOOR_E) { // DOOR EXIT
-    if (sprite == SPR_P1) {
+    if (f_tile < TILE_DOOR_E) { // DOOR EXIT
       player_open_door(*f_index, f_tile);
       return 1;
     }
-  }
-  // TILE_CEIL -> TILE_END
-  if (f_tile < TILE_END) {
-    return 1;
+    // TILE_CEIL -> TILE_END
+    if (f_tile < TILE_END) {
+      return 1;
+    }
+
   }
 
   // NOT A TILE f_tile > TILE_END
@@ -680,9 +698,11 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
     bullet_frames[f_sprite] = 2;
 
     if (f_sprite == SPR_P1) {
-      bullet_max[f_sprite] = 4 + player_lvl;
+      bullet_max[f_sprite] = 4 + (player_lvl >> 1);
+      f_dir = BIT_CHK(state_a[SPR_P1], STAT_LDIRL);
     } else {
       bullet_max[f_sprite] = 0;
+      f_dir = BIT_CHK(s_state, STAT_DIRL);
     }
     if (f_tile == TILE_ARROW) {
       bullet_class[f_sprite] = BULLET_ARROW;
@@ -704,10 +724,6 @@ unsigned char game_shoot_fire(unsigned char f_sprite, unsigned char f_tile) {
       bullet_vel[f_sprite] = player_vel_y0;
     }
 
-    f_dir = BIT_CHK(s_state, STAT_DIRL);
-    if (sprite == SPR_P1) {
-      f_dir = BIT_CHK(state_a[SPR_P1], STAT_DIRL);
-    }
     index1 = spr_calc_index(lin[f_sprite], col[f_sprite]);
     if (f_dir) {
       // Left
@@ -761,6 +777,7 @@ unsigned char game_shoot_fire_boss(unsigned char f_tile) {
   // if (bullet_col[f_sprite] == 0xFF) {
   ++bullet_count;
   bullet_dir[f_sprite] = 0;
+
   if (game_world != 1) {
     bullet_lin0[f_sprite] = boss_lin + 16;
     bullet_class[f_sprite] = BULLET_FIREBALL_UP;
@@ -772,8 +789,7 @@ unsigned char game_shoot_fire_boss(unsigned char f_tile) {
       bullet_lin0[f_sprite] = boss_lin + 24; // Dual Fire
     }
   }
-  bullet_col0[f_sprite] = boss_col;
-  bullet_col[f_sprite] = boss_col;
+
   bullet_lin[f_sprite] = bullet_lin0[f_sprite];
   bullet_frames[f_sprite] = 2;
 
@@ -783,7 +799,6 @@ unsigned char game_shoot_fire_boss(unsigned char f_tile) {
     // Left
     if (boss_col < 1)
       return 1;
-
     bullet_tile[f_sprite] = f_tile + 2;
     bullet_dir[f_sprite] = 0x01;
     bullet_colint[f_sprite] = 2;
@@ -792,14 +807,12 @@ unsigned char game_shoot_fire_boss(unsigned char f_tile) {
     // Right n default
     if (boss_col > 29)
       return 1;
-    /*BUGFIX ZXDEV*/
-    //bullet_col[f_sprite] = boss_col + 6;
     bullet_tile[f_sprite] = f_tile;
     bullet_dir[f_sprite] = 0xFF;
     bullet_colint[f_sprite] = 0xFF;
     bullet_col[f_sprite] = boss_col + 6;
   }
-  bullet_col0[f_sprite] = bullet_col[f_sprite] ;
+  bullet_col0[f_sprite] = bullet_col[f_sprite];
   //}
   return 0;
 }
@@ -826,11 +839,13 @@ unsigned char game_obj_chk(unsigned int f_index) __z88dk_fastcall {
 }
 
 void game_obj_clear() {
+
   for (tmp = 0; tmp < 160; tmp++) {
     // scr_map[tmp] = game_match_back(tmp); // TILE_EMPTY;
     scr_obj0[tmp] = 0;
     scr_obj1[tmp] = 0;
   }
+
   if (game_inmune) {
     tmp = 1;
   } else {
@@ -874,7 +889,7 @@ void game_attribs() {
   // ATTRIB NORMAL
   attrib[0] = map_paper | BRIGHT | INK_WHITE;
   attrib[1] = map_paper | BRIGHT | INK_CYAN;
-  attrib[2] = map_paper | BRIGHT | INK_CYAN;
+  attrib[2] = map_paper | INK_CYAN;
   attrib[3] = map_paper | BRIGHT | INK_BLUE;
 
   // ATTRIB HIGHLIGHT
@@ -889,20 +904,25 @@ void game_attribs() {
   attrib_osd[2] = map_paper | BRIGHT | INK_WHITE;
   attrib_osd[3] = map_paper | BRIGHT | INK_CYAN;
 }
+unsigned char game_match_back_strict(unsigned int f_index) __z88dk_fastcall {
+
+  unsigned char v0;
+  unsigned char v1;
+  if ((f_index > 1) && ((f_index & 15) != 0)) {
+    v0 = scr_map[f_index - 1];
+    v1 = scr_map[f_index + 1];
+    if (v0 == TILE_EMPTY_DARK && v1 == TILE_EMPTY_DARK)
+      return TILE_EMPTY_DARK;
+    if (v0 == TILE_EMPTY_DARK_A && v1 == TILE_EMPTY_DARK_A)
+      return TILE_EMPTY_DARK_A;
+    if (v0 == TILE_EMPTY_DARK_B && v1 == TILE_EMPTY_DARK_B)
+      return TILE_EMPTY_DARK_B;
+  }
+  return TILE_EMPTY;
+}
 
 unsigned char game_match_back(unsigned int f_index) __z88dk_fastcall {
-  /*
-    if ((f_index > 1) && ((f_index & 15) != 0) &&
-        (scr_map[f_index - 1] ==
-         TILE_EMPTY_DARK)) { // || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
-      return TILE_EMPTY_DARK;
-    }
-    if ((f_index > 1) && ((f_index & 15) != 0) &&
-        (scr_map[f_index - 1] ==
-         TILE_EMPTY_DARK_A)) { // || scr_map[f_index + 1] == TILE_EMPTY_DARK)) {
-      return TILE_EMPTY_DARK_A;
-    }
-  */
+
   unsigned char v0;
   unsigned char v1;
   if ((f_index > 1) && ((f_index & 15) != 0)) {
@@ -916,183 +936,4 @@ unsigned char game_match_back(unsigned int f_index) __z88dk_fastcall {
       return TILE_EMPTY_DARK_B;
   }
   return TILE_EMPTY;
-}
-
-void menu_main() {
-  unsigned char curr_sel;
-  unsigned char f_input;
-  unsigned char s_col;
-  unsigned char s_col_e;
-  unsigned char s_row;
-  unsigned char c;
-
-  f_input = 1;
-  s_col = 10;
-  s_col_e = 10 + 12;
-  s_row = 7;
-  c = 0;
-
-  map_paper = PAPER_BLACK;
-
-  curr_sel = 1;
-  menu_main_print(s_row, s_col, s_col_e);
-  while (f_input) {
-    z80_delay_ms(40);
-    // in_wait_key();
-    c = in_inkey();
-    // in_wait_nokey();
-
-    game_rotate_attrib();
-    s_row = 6 + curr_sel;
-    game_paint_attrib(&attrib_hl, s_col + 1, s_col_e, (s_row << 3) + 8);
-    // 48
-    c = c - 48;
-
-    switch (c) {
-    case 1: // SINCLAIR
-      joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_sinclair1);
-      //game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-      curr_sel = 1;
-      break;
-    case 2: // KEYBOARD
-      joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
-      //game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-      curr_sel = 2;
-      break;
-    case 3: // KEMPSTON
-      joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_kempston);
-      //game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-      curr_sel = 3;
-      break;
-    case 4: // CURSOR
-      joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_cursor);
-      //game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-      curr_sel = 4;
-      break;
-    case 5: // DEFINE
-      menu_redefine();
-      joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
-      //game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-      curr_sel = 2;
-      break;
-    case 6: // CONTROL
-      if (game_2buttons) {
-        game_2buttons = 0;
-      } else {
-        game_2buttons = 1;
-      }
-      menu_main_print(s_row, s_col, s_col_e);
-      z80_delay_ms(40);
-      break;
-    case 0:
-      NIRVANAP_halt();
-      zx_paper_fill(INK_BLACK | PAPER_BLACK);
-      //ay_reset();
-      ay_song_play(AY_SONG_ONCE, 6, ay_fx_06_explosion1);
-      f_input = 0; // Exit Loop
-      break;
-    }
-    if (c > 0 && c < 5) game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  }
-}
-
-void menu_main_print(unsigned char s_row, unsigned char s_col,
-                     unsigned char s_col_e) {
-  ay_song_play(AY_SONG_LOOP, 4, ay_song_04_lotr);
-
-  NIRVANAP_halt();
-  zx_paper_fill(INK_BLACK | PAPER_BLACK);
-  zx_print_ink(INK_WHITE);
-  // Gandalf Logo
-  NIRVANAP_spriteT(0, TILE_TITLE, 32, 11);
-  NIRVANAP_spriteT(1, TILE_TITLE + 1, 32, 13);
-  NIRVANAP_spriteT(2, TILE_TITLE + 2, 32, 15);
-  NIRVANAP_spriteT(3, TILE_TITLE + 3, 32, 17);
-  game_attribs();
-  zx_print_str(s_row, s_col, "1 SINCLAIR");
-  game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  ++s_row;
-  zx_print_str(s_row, s_col, "2 KEYBOARD");
-  game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  ++s_row;
-  zx_print_str(s_row, s_col, "3 KEMPSTON");
-  game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  ++s_row;
-  zx_print_str(s_row, s_col, "4 CURSOR");
-  game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  ++s_row;
-  zx_print_str(s_row, s_col, "5 DEFINE");
-  game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  ++s_row;
-  zx_print_str(s_row, s_col, "6 CONTROL");
-  if (game_2buttons) {
-    zx_print_str(s_row, s_col + 10, "2B");
-  } else
-     { zx_print_str(s_row, s_col + 10, "1B"); }
-  game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  ++s_row;
-  ++s_row;
-  zx_print_str(s_row, s_col, "0 START");
-  game_paint_attrib(&attrib, s_col, s_col_e, (s_row << 3) + 8);
-  ++s_row;
-  ++s_row;
-  ++s_row;
-  ++s_row;
-  ++s_row;
-  zx_print_ink(INK_BLUE);
-  zx_print_str(s_row, 2, "CODE C.GONZALEZ A.ALBRECHT");
-  ++s_row;
-  zx_print_str(s_row, 4, "MUSIC S9 FX BEIKERSOFT");
-  ++s_row;
-  zx_print_str(s_row, 0, "TEST ABU SIMBEL VER 1.00 BUGFIX");
-  ++s_row;
-  ++s_row;
-  zx_print_ink(INK_CYAN);
-  zx_print_str(s_row, 8, "2018 NOENTIENDO");
-  game_paint_attrib(&attrib, 0, 31, (s_row << 3) + 8);
-}
-
-void menu_redefine() {
-  NIRVANAP_halt();
-  zx_paper_fill(INK_BLACK | PAPER_BLACK);
-  for (tmp0 = 8; tmp0 < 14; ++tmp0)
-    game_paint_attrib(&attrib, 10, 16, (tmp0 << 3) + 8);
-
-  zx_print_str(8, 10, "UP");
-  k1.up = menu_define_key();
-  zx_print_str(9, 10, "DOWN");
-  k1.down = menu_define_key();
-  zx_print_str(10, 10, "LEFT");
-  k1.left = menu_define_key();
-  zx_print_str(11, 10, "RIGHT");
-  k1.right = menu_define_key();
-  if (game_2buttons) {
-    zx_print_str(12, 10, "FIRE");
-    k2.fire = menu_define_key();
-    zx_print_str(13, 10, "JUMP");
-    k1.fire = menu_define_key();
-  } else {
-    zx_print_str(12, 10, "FIRE");
-    k1.fire = menu_define_key();
-  }
-
-  game_fill_row(12, 32);
-  menu_main_print(7, 10, 20);
-}
-
-unsigned int menu_define_key() {
-
-  while (1) {
-    in_wait_key();
-    tmp1 = in_inkey();
-    in_wait_nokey();
-    tmp0 = 0;
-    while (tmp0 < 38) {
-      if (tmp1 == key_map[tmp0]) {
-        return scan_map[tmp0];
-      }
-      ++tmp0;
-    }
-  }
-  // return 0;
 }

@@ -28,9 +28,10 @@
 #define GAME_START_LIVES              3
 #define GAME_START_MAX_MANA           100
 #define GAME_START_MAX_VITA           100
-#define GAME_MAX_LEVEL                20
+#define GAME_MAX_LEVEL                10
 #define GAME_MAX_MANA                 200
 #define GAME_MAX_VITA                 200
+#define GAME_COLLISION_TIME           30 //TIME BETWN COLISION CHECKS
 
 /* Map foreground tiles */
 
@@ -121,8 +122,8 @@
 
 
 
-#define TILE_TITLE                     204
-
+#define TILE_TITLE                    204
+#define TILE_ANIM                     128
 
 
 
@@ -148,6 +149,8 @@
 #define TILE_ANIM_DEAD                141
 #define TILE_P1_KILL                  76
 #define TILE_P1_HITR                  76
+#define TILE_P1_FIRE_R                208
+#define TILE_P1_FIRE_L                209
 
 #define TILE_FIREBALL                 120
 #define TILE_ARROW                    124
@@ -327,6 +330,7 @@ extern unsigned char player_int;
 extern unsigned char player_lvl;
 extern unsigned char player_col_scr;
 extern unsigned char player_lin_scr;
+extern unsigned char player_jump_check;
 
 extern unsigned char game_checkpoint_col;
 extern unsigned char game_checkpoint_lin;
@@ -345,16 +349,21 @@ extern unsigned char game_boss_hit;
 extern unsigned char game_boss_fix;
 extern unsigned char game_mush_count;
 
-extern unsigned char game_worldup;
+extern unsigned char game_round_up;
 extern unsigned char game_respawn_curr_time;
-extern unsigned char game_2buttons;
+extern unsigned char game_control_mode;
+extern unsigned char game_control_fire_lock;
+extern unsigned char menu_curr_sel;
+
+
 extern unsigned int fps;
+
 
 
 extern unsigned char sprite;
 extern unsigned char sprite_on_air;
 extern unsigned char sprite_horizontal_check;
-extern unsigned char game_show_fps;
+extern unsigned char game_debug;
 
 extern unsigned char player_hit_count;
 extern unsigned int  player_brick_time;

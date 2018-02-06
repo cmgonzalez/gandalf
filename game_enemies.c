@@ -19,7 +19,7 @@
 #include "game_enemies.h"
 #include "game_engine.h"
 #include "game_player.h"
-//#include "game_sound.h"
+#include "game_audio.h"
 #include "game_sprite.h"
 #include "game_zx.h"
 #include "macros.h"
@@ -40,7 +40,7 @@ void enemy_turn(void) {
       // s_tile0 = tile[sprite] + colint[sprite];
       s_state = state[sprite];
       enemy_move();
-      if (spr_redraw()) {
+      if (spr_paint()) {
         // The sprite have moved...
         enemy_check_deadly();
       }
@@ -98,7 +98,7 @@ void boss_turn() {
       --boss_col;
       --boss_col;
       tmp0 = 0;
-      ay_song_play(AY_SONG_ONCE, 6, ay_fx_06_disparo2);
+      audio_disparo2();
       game_shoot_fire_boss(TILE_FIREBALL);
       if (game_world == 1) {
         tmp0 = 1;
@@ -266,7 +266,7 @@ void enemy_vertical() {
 
         if ((BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) ||
             (BIT_CHK(s_state, STAT_DIRL) && col[SPR_P1] < col[sprite])) {
-          ay_song_play(AY_SONG_ONCE, 6, ay_fx_06_disparo2);
+          audio_disparo2();
           game_shoot_fire(sprite, TILE_FIREBALL);
         }
       }
@@ -326,7 +326,7 @@ void enemy_walk(void) {
           if (abs(lin[SPR_P1] - lin[sprite]) < 32) { // TODO VARIABLE
             if ((BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) || (
                     BIT_CHK(s_state, STAT_DIRL) && col[SPR_P1] < col[sprite])) {
-              ay_song_play(AY_SONG_ONCE, 6, ay_fx_06_disparo2);
+              audio_disparo2();
               game_shoot_fire(sprite, TILE_ARROW);
             }
           }
@@ -340,7 +340,7 @@ void enemy_walk(void) {
           if (s_col1 < 6) {
             if ((BIT_CHK(s_state, STAT_DIRL) && (col[sprite] > col[SPR_P1])) ||
                 (BIT_CHK(s_state, STAT_DIRR) && (col[sprite] < col[SPR_P1]))) {
-              ay_song_play(AY_SONG_ONCE, 6, ay_fx_06_disparo2);
+              audio_disparo2();
               game_shoot_fire(sprite, TILE_AXE);
             }
           }

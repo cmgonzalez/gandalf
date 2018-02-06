@@ -24,7 +24,8 @@
 #include "game_ay.h"
 #include "game_engine.h"
 #include "game_player.h"
-//#include "game_sound.h"
+#include "game_audio.h"
+#include "game_menu.h"
 #include "game_sprite.h"
 #include "game_zx.h"
 #include "macros.h"
@@ -38,15 +39,14 @@ void main(void) {
   //DEBUG
   game_inmune = 0;    // GAME_INMUNE;
   game_inf_lives = 0; // GAME_INF_LIVES;
-  game_show_fps = 0;
+  game_debug = 0;
+  game_world = 0;
+  scr_curr = 0xff;//0xff;
 
   // INTERRUPTS ARE DISABLED
   // RESET AY CHIP
   ay_reset();
-  // GAME OPTIONS
-
   // ENABLE SOUND BASED ON DETECTED MODEL
-
   game_sound = spec128 ? (GAME_SOUND_AY_FX_ON | GAME_SOUND_AY_MUS_ON)
                        : (GAME_SOUND_48_FX_ON | GAME_SOUND_48_MUS_ON);
   game_gravity = GAME_GRAVITY; // 8;
@@ -69,40 +69,41 @@ void main(void) {
   k2.down = IN_KEY_SCANCODE_DISABLE;
   k2.fire = IN_KEY_SCANCODE_SPACE;
 
-  zx_print_paper(PAPER_BLACK);
-  zx_border(INK_BLACK);
 
   // Wait for Keypress and Randomize //
   /* Default Values for menu */
   joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_sinclair1);
   joyfunc2 = (uint16_t(*)(udk_t *))(in_stick_keyboard);
 
-  in_wait_nokey();
+  zx_border(INK_BLACK);
+  if (!game_debug) {
+    in_wait_nokey();
   for (counter = 31416; !in_test_key(); counter += 10061)
     ;
   srand(counter);
-  zx_print_paper(PAPER_BLACK);
-  zx_border(INK_BLACK);
-  zx_paper_fill(INK_BLACK | PAPER_BLACK);
-
+  }
+  //Clear Screen and init Nirvana
+  game_cls();
   // Init Game
   game_start_timer();
-  // Init Nirvana
+  // Load Tiles
   NIRVANAP_tiles(_btiles);
-  NIRVANAP_start();
-
   game_attribs();
   game_over = 1;
-  zx_print_str(12, 6, "FOR FELIPE AND EDDIE");
-  game_colour_message(12, 6, 6 + 20, 30, 0);
+  if (!game_debug) {
+    zx_print_str(12, 6, "FOR FELIPE AND EDDIE");
+    game_colour_message(12, 6, 6 + 20, 30, 0);
+  }
   // Init Screen
   frame_time = zx_clock();
 
+  menu_curr_sel = 1;
+  map_paper_last = PAPER_BLUE;
+  /*MAIN LOOP*/
   while (1) {
     /*Init Objects*/
     game_obj_clear();
-    game_world = 0;
-    scr_curr = 0xFF;//0xFF; // 0xFF equals read default screen from map on bank 6
+
 
     /*Player Init*/
     player_max_mana = GAME_START_MAX_MANA;
@@ -117,36 +118,32 @@ void main(void) {
     player_lin_scr = GAME_LIN_FLOOR - 16;
     player_col_scr = 2;
     game_set_checkpoint();
-    game_worldup = 0;
+    game_round_up = 0;
     game_respawn_curr_time = 255;
-    game_mush_count = 0;
     game_boss_alive = 1;
-    game_2buttons = 1; // Two button control - Space default 2 button
-    /* phase init */
+    game_control_mode = 0; // 0)2button - default 1) 1button: 1 Button UP+FIRE Shoots 3) 1 button: fire shoots, up jump , up+fire for ladders
     game_over = 0;
-
-    /* game loop start */
     dirs = 0x00;
-    // MENU
     ay_reset();
-    menu_main();
-    map_paper_last = PAPER_BLUE;
-    map_paper = PAPER_BLUE;
-    map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
+    map_paper = PAPER_BLACK;
     game_attribs();
-    // END MENU
+    spr_btile_paint_back();
+    // MENU
+    if (!game_debug) menu_main();
+    //GAME
     game_loop();
+    //GAME OVER
     spr_flatten();
+    game_update_stats();
     zx_print_str(12, 12, "GAME OVER");
     game_over = 0; // Hack game_colour_message to render background
     game_colour_message(12, 12, 12 + 9, 250, 0);
-    game_obj_clear();
+
     spr_clear_scr();
-    NIRVANAP_stop();
-    zx_print_paper(PAPER_BLACK);
-    zx_border(INK_BLACK);
-    zx_paper_fill(INK_BLACK | PAPER_BLACK);
-    NIRVANAP_start();
+    game_world = 0;
+    scr_curr = 0xFF;
+
+    game_cls();
   }
 }
 

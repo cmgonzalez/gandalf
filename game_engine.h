@@ -21,6 +21,7 @@
 extern void          game_draw_screen(void);
 extern void          game_respawn(void);
 extern void          game_fps(void);
+extern void          game_cls(void);
 extern void          game_fill_row(unsigned char f_row, unsigned char f_asc) __z88dk_callee;
 extern void          game_print_footer(void);
 extern void			     game_update_stats(void);
@@ -44,15 +45,8 @@ extern void          game_obj_set( unsigned int f_index ) __z88dk_fastcall;
 extern unsigned char game_obj_chk( unsigned int f_index ) __z88dk_fastcall;
 extern void          game_obj_clear( );
 extern void          game_boss_kill(void);
-
 extern void          game_boss_clear( );
 extern void          game_attribs( );
 unsigned char        game_match_back(unsigned int f_index ) __z88dk_fastcall;
-//Menues TODO MOVE TO bank X
-extern void          menu_main();
-extern void          menu_main_print(unsigned char s_row, unsigned char s_col, unsigned char s_col_e);
-extern void          menu_redefine();
-extern unsigned int  menu_define_key();
-
-
+unsigned char        game_match_back_strict(unsigned int f_index ) __z88dk_fastcall;
 #endif

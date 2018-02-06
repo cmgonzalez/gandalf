@@ -1,0 +1,38 @@
+/*
+	This file is part of Pietro Bros.
+
+	Pietro Bros is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	Pietro Bros is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with Pietro Bros.  If not, see <http://www.gnu.org/licenses/>.
+*/
+#ifndef GAME_AUDIO_H
+#define GAME_AUDIO_H
+
+#include "globals.h"
+
+extern void audio_explosion(void);
+extern void audio_explosion1(void);
+extern void audio_disparo1(void);
+extern void audio_disparo2(void);
+extern void audio_efecto(void);
+extern void audio_salto(void);
+extern void audio_golpe(void);
+extern void audio_coin(void);
+extern void audio_magia1(void);
+extern void audio_sin_mana(void);
+extern void audio_pierto_abierta(void);
+extern void audio_lotr_lose_a_life(void);
+extern void audio_level_start(void);
+extern void audio_level_complete(void);
+extern void audio_game_end(void);
+extern void audio_menu(void);
+#endif

@@ -1,6 +1,6 @@
 
 
-CSRC   = globals.c game.c game_enemies.c game_engine.c game_player.c game_sprite.c game_zx.c
+CSRC   = globals.c game.c game_enemies.c game_engine.c game_player.c game_sprite.c game_zx.c game_audio.c game_menu.c
 ASRC   = ay/ay_04.asm ay/ay_06.asm btiles.asm font.asm game_ay.asm game_engine.asm game_zx.asm
 
 OBJS = $(CSRC:.c=.o)
@@ -10,8 +10,8 @@ OUT = bin/game_release.tap
 OUTC = bin/game_release_zx7.tap
 ORG = 23552
 
-CFLAGS = -SO3 --max-allocs-per-node200000 --opt-code-size
-//CFLAGS = -SO3 --max-allocs-per-node10000 --opt-code-size
+//CFLAGS = -SO3 --max-allocs-per-node200000 --opt-code-size
+CFLAGS = -SO3 --max-allocs-per-node10000 --opt-code-size
 //CFLAGS = -SO3 --max-allocs-per-node5000 --opt-code-size
 
 .PHONY: depend clean
