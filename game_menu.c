@@ -158,7 +158,7 @@ void menu_main_print(void) {
   ++s_row;
   zx_print_str(s_row, 4, "MUSIC S9 FX BEYKERSOFT");
   ++s_row;
-  zx_print_str(s_row, 3, "TEST ABU SIMBEL VER 1.02");
+  zx_print_str(s_row, 3, "TEST ABU SIMBEL VER 1.03");
   s_row = s_row + 2;
   zx_print_ink(INK_CYAN);
   zx_print_str(s_row, 8, "2018 NOENTIENDO");

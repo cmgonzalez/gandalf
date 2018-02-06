@@ -148,6 +148,8 @@ void game_draw_screen(void) {
   s_col1 = 2;
   // intrinsic_ei();
   spr_count = 0;
+  game_mush_count = 0;
+
   intrinsic_di();
 
   while (index1 < GAME_SCR_MAX_INDEX) {

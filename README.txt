@@ -99,6 +99,9 @@ RUNTIME MEMORY MAP:
 
 What's NEW
 
+Version 1.03
+  -Fix on Mushroom's not showing after brick hit. 
+
 Version 1.02
   -Player Jump Fix, now it won't stop at platforms
 
