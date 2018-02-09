@@ -18,7 +18,7 @@
 #define GAME_AUDIO_H
 
 #include "globals.h"
-
+extern void audio_ingame(void);
 extern void audio_explosion(void);
 extern void audio_explosion1(void);
 extern void audio_disparo1(void);
@@ -27,12 +27,15 @@ extern void audio_efecto(void);
 extern void audio_salto(void);
 extern void audio_golpe(void);
 extern void audio_coin(void);
-extern void audio_magia1(void);
+extern void audio_magic1(void);
 extern void audio_sin_mana(void);
-extern void audio_pierto_abierta(void);
+extern void audio_puerta(void);
+extern void audio_mushroom(void);
 extern void audio_lotr_lose_a_life(void);
 extern void audio_level_start(void);
 extern void audio_level_complete(void);
 extern void audio_game_end(void);
 extern void audio_menu(void);
+extern void audio_checkpoint(void);
+extern void audio_levelup(void);
 #endif

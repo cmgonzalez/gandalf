@@ -124,7 +124,6 @@ void main(void) {
     game_control_mode = 0; // 0)2button - default 1) 1button: 1 Button UP+FIRE Shoots 3) 1 button: fire shoots, up jump , up+fire for ladders
     game_over = 0;
     dirs = 0x00;
-    ay_reset();
     map_paper = PAPER_BLACK;
     game_attribs();
     spr_btile_paint_back();

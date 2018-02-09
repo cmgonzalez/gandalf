@@ -96,7 +96,9 @@ void menu_main() {
     case 0:
       NIRVANAP_halt();
       game_cls();
-      audio_explosion1();
+      ay_reset();
+      audio_coin();
+      z80_delay_ms(300);
       f_input = 0; // Exit Loop
       break;
     }

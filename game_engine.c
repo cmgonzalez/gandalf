@@ -35,6 +35,7 @@
 
 void game_loop(void) {
 
+
   game_round_init();
 
   while (!game_over) {
@@ -69,8 +70,13 @@ void game_loop(void) {
         frame_time = zx_clock();
         if (game_debug)
           game_fps();
+
+
+
         game_respawn();
       }
+      //INGAME
+      audio_ingame();
 
       ++loop_count;
       ++fps;
@@ -438,6 +444,7 @@ void game_round_init(void) {
 
   /* screen init */
   /*PHASE INIT*/
+  game_song_play = 0;
   loop_count = 0;
   zx_set_clock(0);
   frame_time = 0;

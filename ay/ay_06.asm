@@ -45,25 +45,10 @@ INCLUDE "src/mfx.asm"
 ; SONGS & EFFECTS IN THIS BANK
 
 SECTION BANK_6_AUDIO
+PUBLIC _ay_song_06_lotr
+PUBLIC _ay_song_06_sunflower
 
-PUBLIC _ay_song_06_ciel
-
-_ay_song_06_ciel:
-   BINARY "songs/ciel.bin"
-
-PUBLIC _ay_fx_06_disparo1
-PUBLIC _ay_fx_06_disparo2
-PUBLIC _ay_fx_06_efecto
-PUBLIC _ay_fx_06_explosion1
-
-_ay_fx_06_disparo1:
-   BINARY "fx/disparo1.bin"
-
-_ay_fx_06_disparo2:
-   BINARY "fx/disparo2.bin"
-	
-_ay_fx_06_efecto:
-   BINARY "fx/efecto.bin"
-
-_ay_fx_06_explosion1:
-   BINARY "fx/explosion1.bin"
+_ay_song_06_lotr:
+   BINARY "songs/lotr.bin"
+_ay_song_06_sunflower:
+   BINARY "songs/sunflower.bin"

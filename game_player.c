@@ -322,7 +322,7 @@ unsigned char player_collision(void) {
     v0 = scr_map[sprite_curr_index];
     if (v0 == TILE_CHECKPOINT) {
       if (game_checkpoint_scr != scr_curr) {
-        audio_efecto();
+        audio_checkpoint();
         zx_border(INK_WHITE);
         player_col_scr = s_col1;
         player_lin_scr = s_lin1;
@@ -399,7 +399,7 @@ unsigned char player_collision(void) {
 
 void player_pick_mushroom() {
   // ay_fx_play(ay_effect_12);
-  audio_magia1();
+  audio_magic1();
   player_score_add(1);
   game_update_stats();
   spr_destroy(sprite);
@@ -525,8 +525,6 @@ void player_pick_item(void) {
 
   if (v0 >= TILE_ITEM_S && v0 <= TILE_ITEM_E) {
     // PICK ITEM
-    ay_reset();
-
     scr_map[sprite_curr_index] =
         game_match_back(sprite_curr_index); // TILE_EMPTY;
 
@@ -571,7 +569,7 @@ void player_pick_item(void) {
       game_update_stats();
       break;
     case TILE_CHEST:
-      audio_magia1();
+      audio_magic1();
       // ay_fx_play(ay_effect_10);
       player_score_add(10);
       break;
@@ -691,7 +689,6 @@ unsigned char player_hit_platform(void) {
             }
             ++j;
           }
-
           switch (mush_class[j]) {
           case INDEX_MUSH_VITA_L:
             zx_border(INK_RED);
@@ -718,6 +715,7 @@ unsigned char player_hit_platform(void) {
             enemy_init(s_lin1, s_col1, MUSHROOM_EXTRA, DIR_LEFT);
             break;
           }
+          audio_mushroom();
           ++game_mush_count;
           if (!game_boss) {
             // Only restore to no special brick if not boos on the map
@@ -736,8 +734,10 @@ unsigned char player_hit_platform(void) {
         }
         ++i;
       }
+    } else {
+      audio_golpe();
     }
-    audio_golpe();
+
 
     // ay_fx_play(ay_effect_02);
     spr_brick_anim(1);
@@ -769,7 +769,7 @@ void player_score_add(unsigned int f_score) __z88dk_fastcall {
       player_lvl++;
       game_update_stats();
       spr_flatten();
-      audio_efecto();
+      audio_levelup();
       zx_print_str(12, 12, "LEVEL UP!");
       game_colour_message(12, 12, 12 + 9, 60, 0);
       spr_unflattenP1();
@@ -999,7 +999,7 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
   }
 
   if (f_open || game_inmune) {
-    audio_pierto_abierta();
+    audio_puerta();
     scr_map[f_index] = TILE_EMPTY;
     game_obj_set(f_index);
     spr_draw_index(&f_index);
@@ -1020,6 +1020,7 @@ void player_lost_life() {
   for (i = 0; i <= SPR_P1; i++) {
     NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
   }
+  ay_reset();
   audio_explosion();
 
   // Player Explode
