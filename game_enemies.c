@@ -98,7 +98,7 @@ void boss_turn() {
       --boss_col;
       --boss_col;
       tmp0 = 0;
-      audio_disparo2();
+      audio_disparo_fire();
       game_shoot_fire_boss(TILE_FIREBALL);
       if (game_world == 1) {
         tmp0 = 1;
@@ -266,7 +266,7 @@ void enemy_vertical() {
 
         if ((BIT_CHK(s_state, STAT_DIRR) && col[SPR_P1] > col[sprite]) ||
             (BIT_CHK(s_state, STAT_DIRL) && col[SPR_P1] < col[sprite])) {
-          audio_disparo2();
+          audio_disparo_fire();
           game_shoot_fire(sprite, TILE_FIREBALL);
         }
       }
@@ -340,7 +340,7 @@ void enemy_walk(void) {
           if (s_col1 < 6) {
             if ((BIT_CHK(s_state, STAT_DIRL) && (col[sprite] > col[SPR_P1])) ||
                 (BIT_CHK(s_state, STAT_DIRR) && (col[sprite] < col[SPR_P1]))) {
-              audio_disparo2();
+              audio_disparo_axe();
               game_shoot_fire(sprite, TILE_AXE);
             }
           }

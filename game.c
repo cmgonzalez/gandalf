@@ -99,6 +99,8 @@ void main(void) {
 
   menu_curr_sel = 1;
   map_paper_last = PAPER_BLUE;
+  game_control_mode = 0; // 0)2button - default 1) 1button: 1 Button UP+FIRE Shoots 3) 1 button: fire shoots, up jump , up+fire for ladders
+
   /*MAIN LOOP*/
   while (1) {
     /*Init Objects*/
@@ -121,7 +123,6 @@ void main(void) {
     game_round_up = 0;
     game_respawn_curr_time = 255;
     game_boss_alive = 1;
-    game_control_mode = 0; // 0)2button - default 1) 1button: 1 Button UP+FIRE Shoots 3) 1 button: fire shoots, up jump , up+fire for ladders
     game_over = 0;
     dirs = 0x00;
     map_paper = PAPER_BLACK;

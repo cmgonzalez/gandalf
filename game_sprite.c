@@ -925,7 +925,7 @@ void spr_bullets_play(void) {
 }
 void spr_bullet_enemy_colision() {
   if (spr_colision_b(SPR_P1, bullet)) {
-    zx_border(INK_MAGENTA);
+    //zx_border(INK_MAGENTA);
     bullet_col[bullet] = s_col0;
     spr_bullet_explode();
     if (game_boss) {

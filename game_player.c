@@ -323,9 +323,9 @@ unsigned char player_collision(void) {
     if (v0 == TILE_CHECKPOINT) {
       if (game_checkpoint_scr != scr_curr) {
         audio_checkpoint();
-        zx_border(INK_WHITE);
-        player_col_scr = s_col1;
-        player_lin_scr = s_lin1;
+        //zx_border(INK_WHITE);
+        player_col_scr = (sprite_curr_index & 15) << 1;// % 16
+        player_lin_scr = (sprite_curr_index >> 4) << 4;// / 16
       }
 
       game_set_checkpoint();
@@ -347,7 +347,7 @@ unsigned char player_collision(void) {
           return 0;
         } else {
           BIT_SET(s_state, STAT_HIT);
-          zx_border(INK_YELLOW);
+          //zx_border(INK_YELLOW);
           player_damage(50);
           return 1;
         }
@@ -384,7 +384,7 @@ unsigned char player_collision(void) {
               return 0;
             }
             BIT_SET(s_state, STAT_HIT);
-            zx_border(INK_RED);
+            //zx_border(INK_RED);
             player_damage(20);
             return 1;
           }
@@ -691,27 +691,27 @@ unsigned char player_hit_platform(void) {
           }
           switch (mush_class[j]) {
           case INDEX_MUSH_VITA_L:
-            zx_border(INK_RED);
+            //zx_border(INK_RED);
             enemy_init(s_lin1, s_col1, MUSHROOM_VITA, DIR_LEFT);
             break;
           case INDEX_MUSH_VITA_R:
-            zx_border(INK_RED);
+            //zx_border(INK_RED);
             enemy_init(s_lin1, s_col1, MUSHROOM_VITA, DIR_RIGHT);
             break;
           case INDEX_MUSH_MANA_R:
-            zx_border(INK_BLUE);
+            //zx_border(INK_BLUE);
             enemy_init(s_lin1, s_col1, MUSHROOM_MANA, DIR_RIGHT);
             break;
           case INDEX_MUSH_MANA_L:
-            zx_border(INK_BLUE);
+            //zx_border(INK_BLUE);
             enemy_init(s_lin1, s_col1, MUSHROOM_MANA, DIR_LEFT);
             break;
           case INDEX_MUSH_EXTRA_R:
-            zx_border(INK_GREEN);
+            //zx_border(INK_GREEN);
             enemy_init(s_lin1, s_col1, MUSHROOM_EXTRA, DIR_RIGHT);
             break;
           case INDEX_MUSH_EXTRA_L:
-            zx_border(INK_GREEN);
+            //zx_border(INK_GREEN);
             enemy_init(s_lin1, s_col1, MUSHROOM_EXTRA, DIR_LEFT);
             break;
           }
@@ -974,25 +974,25 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
   switch (f_tile) {
   case TILE_DOOR_WHITE:
     if (player_keys[0]) {
-      zx_border(INK_WHITE);
+      //zx_border(INK_WHITE);
       f_open = 1;
     }
     break;
   case TILE_DOOR_RED:
     if (player_keys[1]) {
-      zx_border(INK_RED);
+      //zx_border(INK_RED);
       f_open = 1;
     }
     break;
   case TILE_DOOR_GREEN:
     if (player_keys[2]) {
-      zx_border(INK_GREEN);
+      //zx_border(INK_GREEN);
       f_open = 1;
     }
     break;
   case TILE_DOOR_CYAN:
     if (player_keys[3]) {
-      zx_border(INK_CYAN);
+      //zx_border(INK_CYAN);
       f_open = 1;
     }
     break;
@@ -1029,7 +1029,7 @@ void player_lost_life() {
   spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(s_lin0, s_col0 + 2, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(s_lin0 + 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
-  zx_border(INK_BLACK);
+  //zx_border(INK_BLACK);
 
   // Animate Explotion
   i = 1;

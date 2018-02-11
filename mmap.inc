@@ -1,4 +1,4 @@
-;; GAME BROS CUSTOM MEMORY MAP
+;; PIETRO ENGINE CUSTOM MEMORY MAP
 ;;
 ;; Nirvana+ has been assembled to use 18 rows instead of the
 ;; usual 23 and this leaves a hole of more than 1600 bytes

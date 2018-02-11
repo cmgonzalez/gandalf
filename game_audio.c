@@ -36,13 +36,13 @@ void audio_ingame(void) {
     game_song_play = 1;
     switch (game_world) {
     case 0:
-      ay_song_play(AY_SONG_LOOP, 4, ay_song_04_ciel);
-      break;
-    case 1:
       ay_song_play(AY_SONG_LOOP, 4, ay_song_04_luna);
       break;
+    case 1:
+     ay_song_play(AY_SONG_LOOP, 4, ay_song_04_luna);
+      break;
     case 2:
-      ay_song_play(AY_SONG_LOOP, 4, ay_song_04_ciel);
+      ay_song_play(AY_SONG_LOOP, 4, ay_song_04_luna);
       break;
     case 3:
       ay_song_play(AY_SONG_LOOP, 4, ay_song_04_luna);
@@ -50,46 +50,65 @@ void audio_ingame(void) {
     }
   }
 }
+
 void audio_explosion(void) {
   ay_fx_stop();
-  ay_fx_play(4, ay_fx_04_explosion);
+  ay_fx_play(6, ay_fx_06_explosion);
 }
+
 void audio_explosion1(void) {
-  ay_fx_play(4, ay_fx_04_explosion);
-  // ay_song_play(AY_SONG_ONCE, 4, 4, ay_fx_04_explosion1);
+  ay_fx_play(6, ay_fx_06_explosion);
+  // ay_song_play(AY_SONG_ONCE, 4, 4, ay_fx_06_explosion1);
 }
-void audio_disparo1(void) { ay_fx_play(4, ay_fx_04_disparo1); }
-void audio_disparo2(void) { ay_fx_play(4, ay_fx_04_disparo2); }
-void audio_efecto(void) { ay_fx_play(4, ay_fx_04_efecto); }
-void audio_salto(void) { ay_fx_play(4, ay_fx_04_salto); }
-void audio_golpe(void) { ay_fx_play(4, ay_fx_04_golpe); }
+
+void audio_disparo1(void) {
+  ay_fx_play(6, ay_fx_06_disparo1);
+}
+
+void audio_disparo2(void) {
+  ay_fx_play(6, ay_fx_06_disparo2);
+}
+
+void audio_disparo_axe(void) {
+  ay_fx_play(6, ay_fx_06_disparo_axe);
+}
+
+void audio_disparo_fire(void) {
+  ay_fx_play(6, ay_fx_06_disparo_fire);
+}
+
+void audio_efecto(void) { ay_fx_play(6, ay_fx_06_efecto); }
+void audio_salto(void) { ay_fx_play(6, ay_fx_06_salto); }
+void audio_golpe(void) { ay_fx_play(6, ay_fx_06_golpe); }
 void audio_coin(void) {
   // ay_fx_stop();
-  ay_fx_play(4, ay_fx_04_coin);
+  ay_fx_play(6, ay_fx_06_coin);
 }
-void audio_magic1(void) { ay_fx_play(4, ay_fx_04_magic1); }
-void audio_sin_mana(void) { ay_fx_play(4, ay_fx_04_sin_mana); }
-void audio_puerta(void) { ay_fx_play(4, ay_fx_04_puerta); }
-void audio_mushroom(void) { ay_fx_play(4, ay_fx_04_mushroom); }
+void audio_magic1(void) { ay_fx_play(6, ay_fx_06_magic1); }
+void audio_sin_mana(void) { ay_fx_play(6, ay_fx_06_sin_mana); }
+void audio_puerta(void) { ay_fx_play(6, ay_fx_06_puerta); }
+void audio_mushroom(void) { ay_fx_play(6, ay_fx_06_mushroom); }
+void audio_respawn(void) { ay_fx_play(6, ay_fx_06_respawn); }
+
 void audio_lotr_lose_a_life(void) {
   ay_reset();
-  ay_song_play(AY_SONG_ONCE, 4, ay_song_04_lotr_lose_a_life);
+  ay_song_play(AY_SONG_ONCE, 6, ay_song_06_lotr_lose_a_life);
 }
 void audio_level_start(void) {
   ay_reset();
-  ay_song_play(AY_SONG_ONCE, 4, ay_song_04_lotr_level_start);
+  ay_song_play(AY_SONG_ONCE, 6, ay_song_06_lotr_level_start);
 }
 void audio_level_complete(void) {
   ay_reset();
-  ay_song_play(AY_SONG_ONCE, 4, ay_song_04_lotr_level_complete);
+  ay_song_play(AY_SONG_ONCE, 6, ay_song_06_lotr_level_complete);
 }
 void audio_game_end(void) {
   ay_reset();
-  ay_song_play(AY_SONG_ONCE, 6, ay_song_06_sunflower);
+  //ay_song_play(AY_SONG_ONCE, 6, ay_song_06_sunflower);
 }
 void audio_menu(void) {
   ay_reset();
-  ay_song_play(AY_SONG_LOOP, 6, ay_song_06_lotr);
+  ay_song_play(AY_SONG_LOOP, 4, ay_song_04_lotr);
 }
-void audio_checkpoint(void) { ay_fx_play(4, ay_fx_04_checkpoint); }
-void audio_levelup(void) { ay_fx_play(4, ay_fx_04_levelup); }
+void audio_checkpoint(void) { ay_fx_play(6, ay_fx_06_checkpoint); }
+void audio_levelup(void) { ay_fx_play(6, ay_fx_06_levelup); }

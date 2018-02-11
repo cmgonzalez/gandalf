@@ -59,7 +59,7 @@ void game_loop(void) {
 
       /*Play animatios*/
       if (game_check_time(&anim_time, TIME_ANIM)) {
-        zx_border(INK_BLACK);
+        //zx_border(INK_BLACK);
         anim_time = zx_clock();
         if (anim_count)
           spr_play_anim();
@@ -117,7 +117,7 @@ void game_respawn(void) {
         s_lin1 = (s_lin1 >> 4) << 4;
         scr_map[index1] = TILE_ANIM + sprite; // 0xFF;
         game_respawn_time[sprite] = 0;
-
+        audio_respawn();
         spr_add_anim(s_lin1, s_col1, TILE_ANIM_RESPAWN, 3, 4,
                      game_respawn_tile[sprite]);
 
