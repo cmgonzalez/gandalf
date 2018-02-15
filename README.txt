@@ -49,7 +49,7 @@ chmod 777 config.sh
 Git clone if you will regularly update z88dk.
 Nightly build if you just want to unzip the current build.
 
-Pietro Bros uses zsdcc so linux users should make sure they also build zsdcc.
+Gandalf uses zsdcc so linux users should make sure they also build zsdcc.
 zsdcc is included among the pre-built Windows and OSX binaries already.
 
 * Configure the nirvana+ library
@@ -75,11 +75,11 @@ Run "Winmake zx" (windows) or "make TARGET=zx" (anything else)
 * Build
 
 Open a shell in the game home directory
-Run "make" or "make -j10" for 10 compiler threads
+Run "make" to build taps.
+Run "make zx7" (twice) to build zx7 compressed taps.
+Run "make sna" to build 128k snapshot.
 
-To build zx7 compresed run "make zx7" (twice)
-
-Windows users can build using the zcompile batch file instead.
+Windows users can build by running "zcompile" instead.
 
 ==============================================================================
 
@@ -90,6 +90,9 @@ RUNTIME MEMORY MAP:
 56323 - 65378     Nirvana+ Engine (nirvana hole contains program variables)
 
 128K ONLY:
+
+BANK 3
+49152 - ?
 
 BANK 4
 49152 - 65488     AY Music, Sound Effects and Players

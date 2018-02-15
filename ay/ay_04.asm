@@ -26,7 +26,7 @@ _ay_song_04_lotr:
    BINARY "songs/lotr.pt3"
 
 _ay_song_04_luna:
-  BINARY "songs/luna.pt3"
+  BINARY "songs/luna_2.pt3"
 
 _ay_song_04_sunflower:
    BINARY "songs/sunflower.pt3"

@@ -22,6 +22,11 @@ _zx_isr:
    or a
    ret z
 
+   ; avoid contention problems
+   
+   ld a,0x80
+   ld i,a
+   
    ; process song command
 
 song_command:
@@ -118,6 +123,11 @@ fx_exit:
    ld bc,$7ffd
    out (c),a
    
+   ; restore I
+   
+   ld a,0xfe
+   ld i,a
+
    ret
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

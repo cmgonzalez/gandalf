@@ -30,9 +30,17 @@ zcc +zx -v -c -clib=sdcc_iy %CFLAGS% --fsigned-char --codesegBANK_6_MISC --const
 echo Building Consolidated Object File
 zcc +zx -v -c -clib=sdcc_iy %CFLAGS% --fsigned-char -o game @zproject.lst globals_06.o
 
+@rem BUILD SNA
+echo Building SNA Snapshot
+del bin\game_release.sna 1>nul
+zcc +zx -v -m -startup=31 -clib=sdcc_iy game.o game_sna.asm -o game_sna -pragma-include:zpragma.inc
+appmake +inject -b game_sna_NIRVANAP.bin -o nirvanap_final.bin -i game_sna_NIRVANA_HOLE.bin --offset 6299
+copy /b /Y nirvanap_final.bin game_sna_NIRVANAP.bin 
+appmake +zx --sna -b game_sna -o bin/game_release.sna --exclude-sections NIRVANA_HOLE
+
 @rem MAKE NORMAL LOADING BINARY
 echo Making Normal Loading Binary
-del bin\game_release.tap
+del bin\game_release.tap 1>nul
 zcc +zx -v -m -startup=31 -clib=sdcc_iy game.o game_loader.asm -o game -pragma-include:zpragma.inc
 appmake +inject -b game_NIRVANAP.bin -o nirvanap_final.bin -i game_NIRVANA_HOLE.bin --offset 6299
 appmake +zx -b game_MCLOAD.bin -o mcload.tap --blockname mcload --org 16384 --noloader
@@ -40,27 +48,31 @@ appmake +zx -b game_LOADER.bin -o mcloader.tap --org 23296 --noloader --noheader
 appmake +zx -b game_scr.bin -o game_scr.tap --org 16384 --noloader --noheader
 appmake +zx -b nirvanap_final.bin -o nirvanap.tap --org 56323 --noloader --noheader
 appmake +zx -b game_CODE.bin -o game.tap --org 23584 --noloader --noheader
+appmake +zx -b game_BANK_3.bin -o game_ay_3.tap --org 49152 --noloader --noheader
 appmake +zx -b game_BANK_4.bin -o game_ay_4.tap --org 49152 --noloader --noheader
 appmake +zx -b game_BANK_6.bin -o game_ay_6.tap --org 49152 --noloader --noheader
-copy /b loader.tap + mcload.tap + mcloader.tap + game_scr.tap + nirvanap.tap + game.tap + game_ay_4.tap + game_ay_6.tap bin\game_release.tap 1>nul
+copy /b loader.tap + mcload.tap + mcloader.tap + game_scr.tap + nirvanap.tap + game.tap + game_ay_3.tap + game_ay_4.tap + game_ay_6.tap bin\game_release.tap 1>nul
 
 @rem MAKE ZX7 COMPRESSED LOADING BINARY
 echo Making ZX7-Compressed Loading Binary
-del bin\game_release_zx7.tap
+del bin\game_release_zx7.tap 1>nul
 zx7 -f game_scr.bin
 zx7 -f nirvanap_final.bin
 zx7 -f game_CODE.bin
+zx7 -f game_BANK_3.bin
 zx7 -f game_BANK_4.bin
 zx7 -f game_BANK_6.bin
 FOR %%A IN ("game_scr.bin.zx7") DO set LEN_SCREEN=%%~zA
 FOR %%A IN ("nirvanap_final.bin.zx7") DO set LEN_NIRVANAP=%%~zA
 FOR %%A IN ("game_CODE.bin.zx7") DO set LEN_GAME=%%~zA
+FOR %%A IN ("game_BANK_3.bin.zx7") DO set LEN_BANK_3=%%~zA
 FOR %%A IN ("game_BANK_4.bin.zx7") DO set LEN_BANK_4=%%~zA
 FOR %%A IN ("game_BANK_6.bin.zx7") DO set LEN_BANK_6=%%~zA
-echo PUBLIC LEN_SCREEN, LEN_NIRVANAP, LEN_GAME, LEN_BANK_4, LEN_BANK_6 > zx7_game_sizes.asm
+echo PUBLIC LEN_SCREEN, LEN_NIRVANAP, LEN_GAME, LEN_BANK_3, LEN_BANK_4, LEN_BANK_6 > zx7_game_sizes.asm
 echo defc LEN_SCREEN = %LEN_SCREEN% >> zx7_game_sizes.asm
 echo defc LEN_NIRVANAP = %LEN_NIRVANAP% >> zx7_game_sizes.asm
 echo defc LEN_GAME = %LEN_GAME% >> zx7_game_sizes.asm
+echo defc LEN_BANK_3 = %LEN_BANK_3% >> zx7_game_sizes.asm
 echo defc LEN_BANK_4 = %LEN_BANK_4% >> zx7_game_sizes.asm
 echo defc LEN_BANK_6 = %LEN_BANK_6% >> zx7_game_sizes.asm
 zcc +zx -v -startup=31 -clib=sdcc_iy -Ca-DPCOMPRESS game.o game_loader.asm zx7_game_sizes.asm -o game -pragma-include:zpragma.inc
@@ -69,9 +81,10 @@ appmake +zx -b game_LOADER.bin -o mcloader.tap --org 23296 --noloader --noheader
 appmake +zx -b game_scr.bin.zx7 -o game_scr.tap --org 16384 --noloader --noheader
 appmake +zx -b nirvanap_final.bin.zx7 -o nirvanap.tap --org 56323 --noloader --noheader
 appmake +zx -b game_CODE.bin.zx7 -o game.tap --org 23584 --noloader --noheader
+appmake +zx -b game_BANK_3.bin.zx7 -o game_ay_3.tap --org 49152 --noloader --noheader
 appmake +zx -b game_BANK_4.bin.zx7 -o game_ay_4.tap --org 49152 --noloader --noheader
 appmake +zx -b game_BANK_6.bin.zx7 -o game_ay_6.tap --org 49152 --noloader --noheader
-copy /b loader.tap + mcload.tap + mcloader.tap + game_scr.tap + nirvanap.tap + game.tap + game_ay_4.tap + game_ay_6.tap bin\game_release_zx7.tap 1>nul
+copy /b loader.tap + mcload.tap + mcloader.tap + game_scr.tap + nirvanap.tap + game.tap + game_ay_3.tap + game_ay_4.tap + game_ay_6.tap bin\game_release_zx7.tap 1>nul
 
 @rem REPORT BINARY SIZES
 dir *.bin

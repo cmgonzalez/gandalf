@@ -29,7 +29,7 @@
 INCLUDE "config_zx_private.inc"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; sections defined by pietro bros
+;; sections defined by gandalf
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 SECTION MCLOAD
@@ -47,12 +47,22 @@ section LOADER_CODE
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+SECTION BANK_3
+org 0xc000
+SECTION BANK_3_VTII
+SECTION BANK_3_MFX
+SECTION BANK_3_AUDIO
+SECTION BANK_3_MISC
+
 SECTION BANK_4
 org 0xc000
 SECTION BANK_4_VTII
 SECTION BANK_4_MFX
 SECTION BANK_4_AUDIO
 SECTION BANK_4_MISC
+
+SECTION BANK_5
+org 0xc000
 
 SECTION BANK_6
 org 0xc000
