@@ -348,6 +348,7 @@ extern unsigned char game_boss_alive;
 extern unsigned char game_boss_hit;
 extern unsigned char game_boss_fix;
 extern unsigned char game_song_play;
+extern unsigned char game_song_play_start;
 
 extern unsigned char game_mush_count;
 

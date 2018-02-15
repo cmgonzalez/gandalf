@@ -32,8 +32,9 @@
 
 void audio_ingame(void) {
 
-  if (!game_song_play && !ay_is_playing()) {
-    game_song_play = 1;
+
+  if (game_song_play && !game_song_play_start)  {
+    game_song_play_start = 1;
     switch (game_world) {
     case 0:
       ay_song_play(AY_SONG_LOOP, 4, ay_song_04_luna);

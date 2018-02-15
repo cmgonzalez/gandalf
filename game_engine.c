@@ -263,6 +263,7 @@ void game_end() {
   game_world = 0xFF;
   scr_curr = 0xFF;
   game_round_up = 1;
+
 }
 
 void game_add_enemy(unsigned char enemy_tile_index) __z88dk_fastcall {
@@ -444,7 +445,7 @@ void game_round_init(void) {
 
   /* screen init */
   /*PHASE INIT*/
-  game_song_play = 0;
+
   loop_count = 0;
   zx_set_clock(0);
   frame_time = 0;
@@ -459,6 +460,7 @@ void game_round_init(void) {
   spr_page_map();
   game_draw_screen();
   game_set_checkpoint();
+  game_song_play_start = 0;
 
   // ay_reset();
   // ay_fx_play(ay_effect_12);

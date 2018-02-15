@@ -72,13 +72,13 @@ PUBLIC _ay_fx_06_disparo_axe
 PUBLIC _ay_fx_06_disparo_fire
 
 _ay_song_06_lotr_lose_a_life:
-   BINARY "songs/lotr-losealife.bin"
+   BINARY "songs/lotr-losealife.pt3"
 
 _ay_song_06_lotr_level_complete:
-   BINARY "songs/lotr-lvlcomplete.bin"
+   BINARY "songs/lotr-lvlcomplete.pt3"
 
 _ay_song_06_lotr_level_start:
-   BINARY "songs/lotr-lvlstart.bin"
+   BINARY "songs/lotr-lvlstart.pt3"
 
 
 
@@ -101,7 +101,7 @@ _ay_fx_06_sin_mana:
 _ay_fx_06_magic:
   BINARY "fx/magic.afx"
 _ay_song_04_ciel:
-  BINARY "songs/ciel.bin"
+  BINARY "songs/ciel.pt3"
 _ay_fx_06_disparo1:
   BINARY "fx/disparo1.afx"
 _ay_fx_06_disparo2:

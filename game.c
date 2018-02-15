@@ -42,6 +42,7 @@ void main(void) {
   game_debug = 0;
   game_world = 0;
   scr_curr = 0xff;//0xff;
+  game_song_play = 1;
 
   // INTERRUPTS ARE DISABLED
   // RESET AY CHIP

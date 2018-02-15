@@ -119,6 +119,7 @@ unsigned char game_boss_hit;
 unsigned char game_boss_alive;
 unsigned char game_boss_fix;
 unsigned char game_song_play;
+unsigned char game_song_play_start;
 
 unsigned char game_mush_count;
 

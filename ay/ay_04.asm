@@ -23,16 +23,16 @@ PUBLIC _ay_song_04_sunflower
 PUBLIC _ay_song_04_lotr
 
 _ay_song_04_lotr:
-   BINARY "songs/lotr.bin"
+   BINARY "songs/lotr.pt3"
 
 _ay_song_04_luna:
-  BINARY "songs/luna.bin"
+  BINARY "songs/luna.pt3"
 
 _ay_song_04_sunflower:
-   BINARY "songs/sunflower.bin"
+   BINARY "songs/sunflower.pt3"
 
 ;_ay_song_04_regis:
-;   BINARY "songs/regis.bin"
+;   BINARY "songs/regis.pt3"
 
 ;_ay_song_04_ciel:
-;  BINARY "songs/ciel_2.bin"
+;  BINARY "songs/ciel_2.pt3"
