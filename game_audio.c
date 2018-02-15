@@ -23,7 +23,7 @@
 #include "game_sprite.h"
 #include "game_zx.h"
 #include "macros.h"
-#include "nirvana+.h"
+#include <nirvana+.h>
 #include <arch/zx.h>
 #include <intrinsic.h>
 #include <stdlib.h>

@@ -4,7 +4,7 @@
 
 // COMPILE TIME CRT CONFIGURATION
 
-#pragma output CRT_ORG_CODE          = 23552      // org of compile
+#pragma output CRT_ORG_CODE          = 23584      // org of compile
 #pragma output REGISTER_SP           = -1         // crt will not change stack location; loader sets sp
 
 #pragma output CRT_ENABLE_CLOSE      = 0          // don't bother closing files on exit

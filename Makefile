@@ -8,7 +8,7 @@ INCL = $(ZCCCFG)/../../include/_DEVELOPMENT/sdcc
 
 OUT = bin/game_release.tap
 OUTC = bin/game_release_zx7.tap
-ORG = 23552
+ORG = 23584
 
 CFLAGS = -SO3 --max-allocs-per-node200000 --opt-code-size
 //CFLAGS = -SO3 --max-allocs-per-node10000 --opt-code-size
@@ -38,8 +38,8 @@ game.font: src_font/game.font
 $(OUT): $(OBJS) $(ASRC) globals_06.o mmap.inc
 	-rm -f $(OUT)
 	zcc +zx -vn -m4 -clib=sdcc_iy ay/src/VTII10bG-mfx.asm.m4
-	zcc +zx -vn -m -zorg=$(ORG) -startup=31 -clib=sdcc_iy $(OBJS) $(ASRC) globals_06.o game_loader.asm -o game -pragma-include:zpragma.inc
-	appmake +inject -b game_NIRVANAP.bin -o nirvanap_final.bin -i game_NIRVANA_HOLE.bin --offset 6599
+	zcc +zx -vn -m -startup=31 -clib=sdcc_iy $(OBJS) $(ASRC) globals_06.o game_loader.asm -o game -pragma-include:zpragma.inc
+	appmake +inject -b game_NIRVANAP.bin -o nirvanap_final.bin -i game_NIRVANA_HOLE.bin --offset 6299
 	appmake +zx -b game_MCLOAD.bin -o mcload.tap --blockname mcload --org 16384 --noloader
 	appmake +zx -b game_LOADER.bin -o mcloader.tap --org 23296 --noloader --noheader
 	appmake +zx -b game_scr.bin -o game_scr.tap --org 16384 --noloader --noheader
@@ -53,8 +53,8 @@ $(OUT): $(OBJS) $(ASRC) globals_06.o mmap.inc
 $(OUTC): $(OBJS) $(ASRC) globals_06.o mmap.inc
 	-rm -f $(OUTC)
 	zcc +zx -vn -m4 -clib=sdcc_iy ay/src/VTII10bG-mfx.asm.m4
-	zcc +zx -vn -zorg=$(ORG) -startup=31 -clib=sdcc_iy $(OBJS) $(ASRC) globals_06.o game_loader.asm -o game -pragma-include:zpragma.inc
-	appmake +inject -b game_NIRVANAP.bin -o nirvanap_final.bin -i game_NIRVANA_HOLE.bin --offset 6599
+	zcc +zx -vn -startup=31 -clib=sdcc_iy $(OBJS) $(ASRC) globals_06.o game_loader.asm -o game -pragma-include:zpragma.inc
+	appmake +inject -b game_NIRVANAP.bin -o nirvanap_final.bin -i game_NIRVANA_HOLE.bin --offset 6299
 	zx7 -f game_scr.bin
 	zx7 -f nirvanap_final.bin
 	zx7 -f game_CODE.bin
@@ -66,7 +66,7 @@ $(OUTC): $(OBJS) $(ASRC) globals_06.o mmap.inc
 	echo defc LEN_GAME = $(shell wc -c < game_CODE.bin.zx7) >> zx7_game_sizes.asm
 	echo defc LEN_BANK_4 = $(shell wc -c < game_BANK_4.bin.zx7) >> zx7_game_sizes.asm
 	echo defc LEN_BANK_6 = $(shell wc -c < game_BANK_6.bin.zx7) >> zx7_game_sizes.asm
-	zcc +zx -vn -zorg=$(ORG) -startup=31 -clib=sdcc_iy -Ca-DPCOMPRESS $(OBJS) $(ASRC) globals_06.o zx7_game_sizes.asm game_loader.asm -o game -pragma-include:zpragma.inc
+	zcc +zx -vn -startup=31 -clib=sdcc_iy -Ca-DPCOMPRESS $(OBJS) $(ASRC) globals_06.o zx7_game_sizes.asm game_loader.asm -o game -pragma-include:zpragma.inc
 	appmake +zx -b game_MCLOAD.bin -o mcload.tap --blockname mcload --org 16384 --noloader
 	appmake +zx -b game_LOADER.bin -o mcloader.tap --org 23296 --noloader --noheader
 	appmake +zx -b game_scr.bin.zx7 -o game_scr.tap --org 16384 --noloader --noheader

@@ -18,11 +18,13 @@
 ;; This memory map is a simple modification of the default
 ;; memory map defined by z88dk in:
 ;;
-;; z88dk/libsrc/_DEVELOPMENT/target/crt_memory_model.inc
+;; z88dk/libsrc/_DEVELOPMENT/target/crt_memory_model_z80.inc
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; memory model ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; include zx spectrum target defines
 
 INCLUDE "config_zx_private.inc"
 
@@ -64,7 +66,7 @@ SECTION BANK_6_MISC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 SECTION NIRVANA_HOLE
-org __NIRVANAP_HOLE+300
+org __NIRVANAP_HOLE
 
 ;; ensure beeper code is not in contended memory
 

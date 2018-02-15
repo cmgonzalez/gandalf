@@ -45,9 +45,6 @@ cd z88dk
 chmod 777 build.sh
 chmod 777 config.sh
 ./build.sh
-cd libsrc
-cd _DEVELOPMENT
-make TARGET=zx
 
 Git clone if you will regularly update z88dk.
 Nightly build if you just want to unzip the current build.
@@ -76,22 +73,29 @@ Open a shell and go to directory "z88dk/libsrc/_DEVELOPMENT"
 Run "Winmake zx" (windows) or "make TARGET=zx" (anything else)
 
 * Build
+
 Open a shell in the game home directory
 Run "make" or "make -j10" for 10 compiler threads
 
 To build zx7 compresed run "make zx7" (twice)
 
+Windows users can build using the zcompile batch file instead.
+
 ==============================================================================
 
 RUNTIME MEMORY MAP:
 
-23296 - 23551     Stack (256 bytes)
-23552 - 55786ish  Game
+23296 - 23583     Stack (288 bytes)
+23584 - 56113ish  Game
 56323 - 65378     Nirvana+ Engine (nirvana hole contains program variables)
 
-128K ONLY BANK 6:
+128K ONLY:
 
-49152 - 55587     AY Music, Sound Effects and Players
+BANK 4
+49152 - 65488     AY Music, Sound Effects and Players
+
+BANK 6
+49152 - 61895     AY Music, Sound Effects and Players, Map Data
 
 ==============================================================================
 

@@ -56,7 +56,7 @@ IFNDEF PCOMPRESS
    
    PUBLIC game_loader
    
-   EXTERN __CODE_head, __CODE_END_tail
+   EXTERN __CODE_head, __CODE_END_tail, __NIRVANAP_head
    EXTERN __BANK_4_head, __BANK_4_MISC_tail
    EXTERN __BANK_6_head, __BANK_6_MISC_tail
    EXTERN _spec128
@@ -78,7 +78,7 @@ IFNDEF PCOMPRESS
    
       ; 2. Nirvana+
    
-      ld ix,56323
+      ld ix,__NIRVANAP_head
       ld de,9055
    
       ld a,$ff
@@ -207,7 +207,7 @@ IFDEF PCOMPRESS
    PUBLIC l_ret
 
    EXTERN asm_dzx7_standard
-   EXTERN __CODE_head, __CODE_END_tail, _spec128
+   EXTERN __CODE_head, __CODE_END_tail, __NIRVANAP_head, _spec128
    EXTERN LEN_SCREEN, LEN_NIRVANAP, LEN_GAME, LEN_BANK_4, LEN_BANK_6
 
    game_loader:
@@ -244,7 +244,7 @@ IFDEF PCOMPRESS
       jp nc, 0                    ; if tape loading error
    
       ld hl,32768
-      ld de,56323
+      ld de,__NIRVANAP_head
    
       call asm_dzx7_standard      ; decompress to 56323
    
