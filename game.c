@@ -56,7 +56,6 @@ void main(void) {
   player_vel_y1 = GAME_MIN_VELOCITY; //-72; // Min Velocity
 
   // Keyboard Handling
-
   k1.fire = IN_KEY_SCANCODE_m;
   // TODO k1.fire1 = IN_KEY_SCANCODE_SPACE;
   k1.left = IN_KEY_SCANCODE_o;
@@ -91,16 +90,18 @@ void main(void) {
   NIRVANAP_tiles(_btiles);
   game_attribs();
   game_over = 1;
+  /*
   if (!game_debug) {
     zx_print_str(12, 6, "FOR FELIPE AND EDDIE");
     game_colour_message(12, 6, 6 + 20, 30, 0);
   }
+  */
   // Init Screen
   frame_time = zx_clock();
 
   menu_curr_sel = 1;
   map_paper_last = PAPER_BLUE;
-  game_control_mode = 0; // 0)2button - default 1) 1button: 1 Button UP+FIRE Shoots 3) 1 button: fire shoots, up jump , up+fire for ladders
+  game_control_mode = 2; // 0)2button - default 1) 1button: 1 Button UP+FIRE Shoots 2) 1 button: fire shoots, up jump , up+fire for ladders
 
   /*MAIN LOOP*/
   while (1) {
@@ -148,6 +149,10 @@ void main(void) {
   }
 }
 
-void test_proc() {}
+void test_proc() {
+
+
+
+}
 
 unsigned char test_func() { return 0; }

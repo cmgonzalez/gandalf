@@ -111,6 +111,8 @@ unsigned char game_checkpoint_scr;
 
 
 unsigned int  player_hit_time;
+unsigned char player_hit;
+
 
 signed int    game_gravity;
 unsigned char game_world;
@@ -127,6 +129,7 @@ unsigned char game_round_up;
 unsigned char game_respawn_curr_time;
 unsigned char game_control_mode;
 unsigned char game_control_fire_lock;
+unsigned char game_control_jump_lock;
 unsigned char menu_curr_sel;
 
 unsigned int fps;
@@ -298,7 +301,8 @@ unsigned char sprite_kind[] = {
   E_STATIC,// FIRE_S
 };
 
-unsigned char sprite_speed[] = {
+unsigned char sprite_speed[8];
+unsigned char sprite_base_speed[] = {
     1,// PLAYER
     4,// GOTA
     6,// DRAGON
@@ -390,7 +394,6 @@ unsigned int player_lvl_table[] = {
 
 
 // TEMPORARY SPEED FOR SPEED UP
-unsigned char sprite_speed_alt[8];
 unsigned char draw_count;
 
 unsigned char key_map[] = {

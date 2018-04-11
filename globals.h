@@ -58,7 +58,7 @@
 #define TILE_STAIR_E                  71 //END OF STAIRS
 
 #define TILE_DIRT                     77 //CAN BE DESTROYED BY FIREBALLS
-#define TILE_SPECIAL                  90 //HAVE A MUSHROM VITA / MANA
+#define TILE_SPECIAL                  88 //HAVE A MUSHROM VITA / MANA
 #define TILE_HIDDEN_BRICK             93 //HIDDEN TREASURE (COINS LIKE MARIO?)
 #define TILE_NORMAL_BRICK             84
 #define TILE_NOSPECIAL                79 //AFTER HIT
@@ -261,6 +261,7 @@
 #define TIME_EVENT                    100
 #define TIME_ANIM                     8
 #define TIME_ANIM_PLAYER_EXPODE       12
+#define TILE_ANIM_FIRE_END            89
 #define TIME_BULLETS                  2
 #define GAME_RANDOM_TYPE              2
 
@@ -337,6 +338,8 @@ extern unsigned char game_checkpoint_lin;
 extern unsigned char game_checkpoint_scr;
 
 extern unsigned int player_hit_time;
+extern unsigned char player_hit;
+
 extern unsigned char player_anim_stair;
 extern unsigned char player_onfire;
 
@@ -356,6 +359,7 @@ extern unsigned char game_round_up;
 extern unsigned char game_respawn_curr_time;
 extern unsigned char game_control_mode;
 extern unsigned char game_control_fire_lock;
+extern unsigned char game_control_jump_lock;
 extern unsigned char menu_curr_sel;
 
 
@@ -418,12 +422,12 @@ extern unsigned char player_onstair;
 
 extern unsigned char screen_paper, screen_ink;
 extern unsigned char sprite_speed[];
+extern unsigned char sprite_base_speed[];
 extern unsigned char sprite_frames[];
 extern unsigned char spr_map_tile[];
 extern unsigned char spr_init[];
 
-extern unsigned char sprite_speed_alt[8];
-extern unsigned char scr_map[];
+∫extern unsigned char scr_map[];
 extern unsigned char scr_obj0[];
 extern unsigned char scr_obj1[];
 extern unsigned char sprite_kind[];

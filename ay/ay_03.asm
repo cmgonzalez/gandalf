@@ -15,3 +15,15 @@ INCLUDE "src/mfx.asm"
 ; SONGS & EFFECTS IN THIS BANK
 
 SECTION BANK_3_AUDIO
+
+PUBLIC _ay_song_03_lotr
+_ay_song_03_lotr:
+   BINARY "songs/lotr.pt3"
+
+PUBLIC _ay_song_03_sunflower
+_ay_song_03_sunflower:
+   BINARY "songs/sunflower.pt3"
+
+PUBLIC _ay_song_03_regis
+_ay_song_03_regis:
+  BINARY "songs/regis.pt3"

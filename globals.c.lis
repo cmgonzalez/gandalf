@@ -4,7 +4,7 @@
 0     0000              
 1     0000              ;--------------------------------------------------------
 2     0000              ; File Created by SDCC : free open source ANSI-C Compiler
-3     0000              ; Version 3.6.9 #9958 (MSVC)
+3     0000              ; Version 3.6.5 #9958 (Mac OS X i386)
 4     0000              ;--------------------------------------------------------
 5     0000              ; Processed by Z88DK
 6     0000              ;--------------------------------------------------------
@@ -209,11 +209,11 @@
 205   0000              	GLOBAL _player_lvl_table
 206   0000              	GLOBAL _sprite_frames
 207   0000              	GLOBAL _spr_map_tile
-208   0000              	GLOBAL _sprite_speed
+208   0000              	GLOBAL _sprite_base_speed
 209   0000              	GLOBAL _sprite_kind
 210   0000              	GLOBAL _spr_init
 211   0000              	GLOBAL _draw_count
-212   0000              	GLOBAL _sprite_speed_alt
+212   0000              	GLOBAL _sprite_speed
 213   0000              	GLOBAL _stp_row
 214   0000              	GLOBAL _stp_col
 215   0000              	GLOBAL _stp_tile
@@ -299,820 +299,826 @@
 295   0000              	GLOBAL _sprite
 296   0000              	GLOBAL _fps
 297   0000              	GLOBAL _menu_curr_sel
-298   0000              	GLOBAL _game_control_fire_lock
-299   0000              	GLOBAL _game_control_mode
-300   0000              	GLOBAL _game_respawn_curr_time
-301   0000              	GLOBAL _game_round_up
-302   0000              	GLOBAL _game_mush_count
-303   0000              	GLOBAL _game_song_play_start
-304   0000              	GLOBAL _game_song_play
-305   0000              	GLOBAL _game_boss_fix
-306   0000              	GLOBAL _game_boss_alive
-307   0000              	GLOBAL _game_boss_hit
-308   0000              	GLOBAL _game_boss
-309   0000              	GLOBAL _game_world
-310   0000              	GLOBAL _game_gravity
-311   0000              	GLOBAL _player_hit_time
-312   0000              	GLOBAL _game_checkpoint_scr
-313   0000              	GLOBAL _game_checkpoint_lin
-314   0000              	GLOBAL _game_checkpoint_col
-315   0000              	GLOBAL _player_jump_check
-316   0000              	GLOBAL _player_lin_scr
-317   0000              	GLOBAL _player_col_scr
-318   0000              	GLOBAL _player_lvl
-319   0000              	GLOBAL _player_int
-320   0000              	GLOBAL _player_str
-321   0000              	GLOBAL _player_max_vita
-322   0000              	GLOBAL _player_max_mana
-323   0000              	GLOBAL _player_vita
-324   0000              	GLOBAL _player_mana
-325   0000              	GLOBAL _player_onfire
-326   0000              	GLOBAL _player_anim_stair
-327   0000              	GLOBAL _player_brick_time
-328   0000              	GLOBAL _player_hit_count
-329   0000              	GLOBAL _player_keys
-330   0000              	GLOBAL _player_vel_inc
-331   0000              	GLOBAL _player_vel_y1
-332   0000              	GLOBAL _player_vel_y0
-333   0000              	GLOBAL _player_vel_y
-334   0000              	GLOBAL _player_vel_x
-335   0000              	GLOBAL _player_onstair
-336   0000              	GLOBAL _player_coins
-337   0000              	GLOBAL _player_lives
-338   0000              	GLOBAL _player_score
-339   0000              	GLOBAL _player_hit_col
-340   0000              	GLOBAL _player_hit_lin
-341   0000              	GLOBAL _jump_lin
-342   0000              	GLOBAL _last_time
-343   0000              	GLOBAL _spr_timer
-344   0000              	GLOBAL _colint
-345   0000              	GLOBAL _col
-346   0000              	GLOBAL _tbuffer
-347   0000              	GLOBAL _lin
-348   0000              	GLOBAL _tile
-349   0000              	GLOBAL _state_a
-350   0000              	GLOBAL _state
-351   0000              	GLOBAL _class
-352   0000              	GLOBAL _dirs_alt
-353   0000              	GLOBAL _dirs
-354   0000              	GLOBAL _k2
-355   0000              	GLOBAL _k1
-356   0000              	GLOBAL _joyfunc2
-357   0000              	GLOBAL _joyfunc1
-358   0000              	GLOBAL _map_heigth
-359   0000              	GLOBAL _map_width
-360   0000              	GLOBAL _scr_curr
-361   0000              	GLOBAL _scr_obj1
-362   0000              	GLOBAL _scr_obj0
-363   0000              	GLOBAL _scr_map
-364   0000              	GLOBAL _spec128
-365   0000              ;--------------------------------------------------------
-366   0000              ; Externals used
+298   0000              	GLOBAL _game_control_jump_lock
+299   0000              	GLOBAL _game_control_fire_lock
+300   0000              	GLOBAL _game_control_mode
+301   0000              	GLOBAL _game_respawn_curr_time
+302   0000              	GLOBAL _game_round_up
+303   0000              	GLOBAL _game_mush_count
+304   0000              	GLOBAL _game_song_play_start
+305   0000              	GLOBAL _game_song_play
+306   0000              	GLOBAL _game_boss_fix
+307   0000              	GLOBAL _game_boss_alive
+308   0000              	GLOBAL _game_boss_hit
+309   0000              	GLOBAL _game_boss
+310   0000              	GLOBAL _game_world
+311   0000              	GLOBAL _game_gravity
+312   0000              	GLOBAL _player_hit
+313   0000              	GLOBAL _player_hit_time
+314   0000              	GLOBAL _game_checkpoint_scr
+315   0000              	GLOBAL _game_checkpoint_lin
+316   0000              	GLOBAL _game_checkpoint_col
+317   0000              	GLOBAL _player_jump_check
+318   0000              	GLOBAL _player_lin_scr
+319   0000              	GLOBAL _player_col_scr
+320   0000              	GLOBAL _player_lvl
+321   0000              	GLOBAL _player_int
+322   0000              	GLOBAL _player_str
+323   0000              	GLOBAL _player_max_vita
+324   0000              	GLOBAL _player_max_mana
+325   0000              	GLOBAL _player_vita
+326   0000              	GLOBAL _player_mana
+327   0000              	GLOBAL _player_onfire
+328   0000              	GLOBAL _player_anim_stair
+329   0000              	GLOBAL _player_brick_time
+330   0000              	GLOBAL _player_hit_count
+331   0000              	GLOBAL _player_keys
+332   0000              	GLOBAL _player_vel_inc
+333   0000              	GLOBAL _player_vel_y1
+334   0000              	GLOBAL _player_vel_y0
+335   0000              	GLOBAL _player_vel_y
+336   0000              	GLOBAL _player_vel_x
+337   0000              	GLOBAL _player_onstair
+338   0000              	GLOBAL _player_coins
+339   0000              	GLOBAL _player_lives
+340   0000              	GLOBAL _player_score
+341   0000              	GLOBAL _player_hit_col
+342   0000              	GLOBAL _player_hit_lin
+343   0000              	GLOBAL _jump_lin
+344   0000              	GLOBAL _last_time
+345   0000              	GLOBAL _spr_timer
+346   0000              	GLOBAL _colint
+347   0000              	GLOBAL _col
+348   0000              	GLOBAL _tbuffer
+349   0000              	GLOBAL _lin
+350   0000              	GLOBAL _tile
+351   0000              	GLOBAL _state_a
+352   0000              	GLOBAL _state
+353   0000              	GLOBAL _class
+354   0000              	GLOBAL _dirs_alt
+355   0000              	GLOBAL _dirs
+356   0000              	GLOBAL _k2
+357   0000              	GLOBAL _k1
+358   0000              	GLOBAL _joyfunc2
+359   0000              	GLOBAL _joyfunc1
+360   0000              	GLOBAL _map_heigth
+361   0000              	GLOBAL _map_width
+362   0000              	GLOBAL _scr_curr
+363   0000              	GLOBAL _scr_obj1
+364   0000              	GLOBAL _scr_obj0
+365   0000              	GLOBAL _scr_map
+366   0000              	GLOBAL _spec128
 367   0000              ;--------------------------------------------------------
-368   0000              	GLOBAL _world0_h
-369   0000              	GLOBAL _world0_w
-370   0000              	GLOBAL _world0
-371   0000              	GLOBAL _paper0
-372   0000              	GLOBAL _lenght0
-373   0000              	GLOBAL _start_scr0
-374   0000              	GLOBAL _test_func
-375   0000              	GLOBAL _test_proc
-376   0000              	GLOBAL _in_mouse_kempston_wheel_delta
-377   0000              	GLOBAL _in_mouse_kempston_wheel
-378   0000              	GLOBAL _in_mouse_kempston_callee
-379   0000              	GLOBAL _in_mouse_kempston
-380   0000              	GLOBAL _in_mouse_kempston_setpos_callee
-381   0000              	GLOBAL _in_mouse_kempston_setpos
-382   0000              	GLOBAL _in_mouse_kempston_reset
-383   0000              	GLOBAL _in_mouse_kempston_init
-384   0000              	GLOBAL _in_mouse_amx_wheel_delta
-385   0000              	GLOBAL _in_mouse_amx_wheel
-386   0000              	GLOBAL _in_mouse_amx_callee
-387   0000              	GLOBAL _in_mouse_amx
-388   0000              	GLOBAL _in_mouse_amx_setpos_callee
-389   0000              	GLOBAL _in_mouse_amx_setpos
-390   0000              	GLOBAL _in_mouse_amx_reset
-391   0000              	GLOBAL _in_mouse_amx_init_callee
-392   0000              	GLOBAL _in_mouse_amx_init
-393   0000              	GLOBAL _in_stick_sinclair2
-394   0000              	GLOBAL _in_stick_sinclair1
-395   0000              	GLOBAL _in_stick_kempston
-396   0000              	GLOBAL _in_stick_fuller
-397   0000              	GLOBAL _in_stick_cursor
-398   0000              	GLOBAL _in_stick_keyboard_fastcall
-399   0000              	GLOBAL _in_stick_keyboard
-400   0000              	GLOBAL _in_wait_nokey
-401   0000              	GLOBAL _in_wait_key
-402   0000              	GLOBAL _in_test_key
-403   0000              	GLOBAL _in_pause_fastcall
-404   0000              	GLOBAL _in_pause
-405   0000              	GLOBAL _in_key_scancode_fastcall
-406   0000              	GLOBAL _in_key_scancode
-407   0000              	GLOBAL _in_key_pressed_fastcall
-408   0000              	GLOBAL _in_key_pressed
-409   0000              	GLOBAL _in_inkey
-410   0000              	GLOBAL _btiles
-411   0000              ;--------------------------------------------------------
-412   0000              ; special function registers
+368   0000              ; Externals used
+369   0000              ;--------------------------------------------------------
+370   0000              	GLOBAL _world0_h
+371   0000              	GLOBAL _world0_w
+372   0000              	GLOBAL _world0
+373   0000              	GLOBAL _paper0
+374   0000              	GLOBAL _lenght0
+375   0000              	GLOBAL _start_scr0
+376   0000              	GLOBAL _test_func
+377   0000              	GLOBAL _test_proc
+378   0000              	GLOBAL _in_mouse_kempston_wheel_delta
+379   0000              	GLOBAL _in_mouse_kempston_wheel
+380   0000              	GLOBAL _in_mouse_kempston_callee
+381   0000              	GLOBAL _in_mouse_kempston
+382   0000              	GLOBAL _in_mouse_kempston_setpos_callee
+383   0000              	GLOBAL _in_mouse_kempston_setpos
+384   0000              	GLOBAL _in_mouse_kempston_reset
+385   0000              	GLOBAL _in_mouse_kempston_init
+386   0000              	GLOBAL _in_mouse_amx_wheel_delta
+387   0000              	GLOBAL _in_mouse_amx_wheel
+388   0000              	GLOBAL _in_mouse_amx_callee
+389   0000              	GLOBAL _in_mouse_amx
+390   0000              	GLOBAL _in_mouse_amx_setpos_callee
+391   0000              	GLOBAL _in_mouse_amx_setpos
+392   0000              	GLOBAL _in_mouse_amx_reset
+393   0000              	GLOBAL _in_mouse_amx_init_callee
+394   0000              	GLOBAL _in_mouse_amx_init
+395   0000              	GLOBAL _in_stick_sinclair2
+396   0000              	GLOBAL _in_stick_sinclair1
+397   0000              	GLOBAL _in_stick_kempston
+398   0000              	GLOBAL _in_stick_fuller
+399   0000              	GLOBAL _in_stick_cursor
+400   0000              	GLOBAL _in_stick_keyboard_fastcall
+401   0000              	GLOBAL _in_stick_keyboard
+402   0000              	GLOBAL _in_wait_nokey
+403   0000              	GLOBAL _in_wait_key
+404   0000              	GLOBAL _in_test_key
+405   0000              	GLOBAL _in_pause_fastcall
+406   0000              	GLOBAL _in_pause
+407   0000              	GLOBAL _in_key_scancode_fastcall
+408   0000              	GLOBAL _in_key_scancode
+409   0000              	GLOBAL _in_key_pressed_fastcall
+410   0000              	GLOBAL _in_key_pressed
+411   0000              	GLOBAL _in_inkey
+412   0000              	GLOBAL _btiles
 413   0000              ;--------------------------------------------------------
-414   0000              ;--------------------------------------------------------
-415   0000              ; ram data
+414   0000              ; special function registers
+415   0000              ;--------------------------------------------------------
 416   0000              ;--------------------------------------------------------
-417   0000              	SECTION bss_compiler
-418   0000              _spec128:
-419   0000  00          	DEFS 1
-420   0001              _scr_map:
-421   0001  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+417   0000              ; ram data
+418   0000              ;--------------------------------------------------------
+419   0000              	SECTION bss_compiler
+420   0000              _spec128:
+421   0000  00          	DEFS 1
+422   0001              _scr_map:
+423   0001  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
       0021  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
       0041  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
       0061  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
       0081  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
                         	DEFS 160
-422   00A1              _scr_obj0:
-423   00A1  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+424   00A1              _scr_obj0:
+425   00A1  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
       00C1  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
       00E1  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
       0101  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
       0121  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
                         	DEFS 160
-424   0141              _scr_obj1:
-425   0141  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+426   0141              _scr_obj1:
+427   0141  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
       0161  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
       0181  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
       01A1  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
       01C1  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
                         	DEFS 160
-426   01E1              _scr_curr:
-427   01E1  00          	DEFS 1
-428   01E2              _map_width:
-429   01E2  00          	DEFS 1
-430   01E3              _map_heigth:
-431   01E3  00          	DEFS 1
-432   01E4              _joyfunc1:
-433   01E4  00 00       	DEFS 2
-434   01E6              _joyfunc2:
-435   01E6  00 00       	DEFS 2
-436   01E8              _k1:
-437   01E8  00 00 00 00 00 00 00 00 00 00 
+428   01E1              _scr_curr:
+429   01E1  00          	DEFS 1
+430   01E2              _map_width:
+431   01E2  00          	DEFS 1
+432   01E3              _map_heigth:
+433   01E3  00          	DEFS 1
+434   01E4              _joyfunc1:
+435   01E4  00 00       	DEFS 2
+436   01E6              _joyfunc2:
+437   01E6  00 00       	DEFS 2
+438   01E8              _k1:
+439   01E8  00 00 00 00 00 00 00 00 00 00 
                         	DEFS 10
-438   01F2              _k2:
-439   01F2  00 00 00 00 00 00 00 00 00 00 
+440   01F2              _k2:
+441   01F2  00 00 00 00 00 00 00 00 00 00 
                         	DEFS 10
-440   01FC              _dirs:
-441   01FC  00          	DEFS 1
-442   01FD              _dirs_alt:
-443   01FD  00          	DEFS 1
-444   01FE              _class:
-445   01FE  00 00 00 00 00 00 00 00 
+442   01FC              _dirs:
+443   01FC  00          	DEFS 1
+444   01FD              _dirs_alt:
+445   01FD  00          	DEFS 1
+446   01FE              _class:
+447   01FE  00 00 00 00 00 00 00 00 
                         	DEFS 8
-446   0206              _state:
-447   0206  00 00 00 00 00 00 00 00 
+448   0206              _state:
+449   0206  00 00 00 00 00 00 00 00 
                         	DEFS 8
-448   020E              _state_a:
-449   020E  00 00 00 00 00 00 00 00 
+450   020E              _state_a:
+451   020E  00 00 00 00 00 00 00 00 
                         	DEFS 8
-450   0216              _tile:
-451   0216  00 00 00 00 00 00 00 00 
+452   0216              _tile:
+453   0216  00 00 00 00 00 00 00 00 
                         	DEFS 8
-452   021E              _lin:
-453   021E  00 00 00 00 00 00 00 00 
+454   021E              _lin:
+455   021E  00 00 00 00 00 00 00 00 
                         	DEFS 8
-454   0226              _tbuffer:
-455   0226  00 00 00 00 00 00 00 
+456   0226              _tbuffer:
+457   0226  00 00 00 00 00 00 00 
                         	DEFS 7
-456   022D              _col:
-457   022D  00 00 00 00 00 00 00 00 
+458   022D              _col:
+459   022D  00 00 00 00 00 00 00 00 
                         	DEFS 8
-458   0235              _colint:
-459   0235  00 00 00 00 00 00 00 00 
+460   0235              _colint:
+461   0235  00 00 00 00 00 00 00 00 
                         	DEFS 8
-460   023D              _spr_timer:
-461   023D  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+462   023D              _spr_timer:
+463   023D  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
                         	DEFS 16
-462   024D              _last_time:
-463   024D  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+464   024D              _last_time:
+465   024D  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
                         	DEFS 16
-464   025D              _jump_lin:
-465   025D  00 00 00 00 00 00 00 00 
+466   025D              _jump_lin:
+467   025D  00 00 00 00 00 00 00 00 
                         	DEFS 8
-466   0265              _player_hit_lin:
-467   0265  00          	DEFS 1
-468   0266              _player_hit_col:
-469   0266  00          	DEFS 1
-470   0267              _player_score:
-471   0267  00 00       	DEFS 2
-472   0269              _player_lives:
-473   0269  00          	DEFS 1
-474   026A              _player_coins:
-475   026A  00          	DEFS 1
-476   026B              _player_onstair:
-477   026B  00          	DEFS 1
-478   026C              _player_vel_x:
-479   026C  00          	DEFS 1
-480   026D              _player_vel_y:
-481   026D  00          	DEFS 1
-482   026E              _player_vel_y0:
-483   026E  00          	DEFS 1
-484   026F              _player_vel_y1:
-485   026F  00          	DEFS 1
-486   0270              _player_vel_inc:
-487   0270  00          	DEFS 1
-488   0271              _player_keys:
-489   0271  00 00 00 00 	DEFS 4
-490   0275              _player_hit_count:
-491   0275  00          	DEFS 1
-492   0276              _player_brick_time:
-493   0276  00 00       	DEFS 2
-494   0278              _player_anim_stair:
-495   0278  00          	DEFS 1
-496   0279              _player_onfire:
-497   0279  00          	DEFS 1
-498   027A              _player_mana:
-499   027A  00          	DEFS 1
-500   027B              _player_vita:
-501   027B  00          	DEFS 1
-502   027C              _player_max_mana:
-503   027C  00          	DEFS 1
-504   027D              _player_max_vita:
-505   027D  00          	DEFS 1
-506   027E              _player_str:
-507   027E  00          	DEFS 1
-508   027F              _player_int:
-509   027F  00          	DEFS 1
-510   0280              _player_lvl:
-511   0280  00          	DEFS 1
-512   0281              _player_col_scr:
-513   0281  00          	DEFS 1
-514   0282              _player_lin_scr:
-515   0282  00          	DEFS 1
-516   0283              _player_jump_check:
-517   0283  00          	DEFS 1
-518   0284              _game_checkpoint_col:
-519   0284  00          	DEFS 1
-520   0285              _game_checkpoint_lin:
-521   0285  00          	DEFS 1
-522   0286              _game_checkpoint_scr:
-523   0286  00          	DEFS 1
-524   0287              _player_hit_time:
-525   0287  00 00       	DEFS 2
-526   0289              _game_gravity:
-527   0289  00 00       	DEFS 2
-528   028B              _game_world:
-529   028B  00          	DEFS 1
-530   028C              _game_boss:
-531   028C  00          	DEFS 1
-532   028D              _game_boss_hit:
-533   028D  00          	DEFS 1
-534   028E              _game_boss_alive:
-535   028E  00          	DEFS 1
-536   028F              _game_boss_fix:
-537   028F  00          	DEFS 1
-538   0290              _game_song_play:
-539   0290  00          	DEFS 1
-540   0291              _game_song_play_start:
-541   0291  00          	DEFS 1
-542   0292              _game_mush_count:
-543   0292  00          	DEFS 1
-544   0293              _game_round_up:
-545   0293  00          	DEFS 1
-546   0294              _game_respawn_curr_time:
-547   0294  00          	DEFS 1
-548   0295              _game_control_mode:
-549   0295  00          	DEFS 1
-550   0296              _game_control_fire_lock:
-551   0296  00          	DEFS 1
-552   0297              _menu_curr_sel:
-553   0297  00          	DEFS 1
-554   0298              _fps:
-555   0298  00 00       	DEFS 2
-556   029A              _sprite:
-557   029A  00          	DEFS 1
-558   029B              _sprite_on_air:
-559   029B  00          	DEFS 1
-560   029C              _sprite_horizontal_check:
-561   029C  00          	DEFS 1
-562   029D              _game_debug:
-563   029D  00          	DEFS 1
-564   029E              _s_tile0:
-565   029E  00          	DEFS 1
-566   029F              _s_tile1:
-567   029F  00          	DEFS 1
-568   02A0              _s_lin0:
-569   02A0  00          	DEFS 1
-570   02A1              _s_lin1:
-571   02A1  00          	DEFS 1
-572   02A2              _s_col0:
-573   02A2  00          	DEFS 1
-574   02A3              _s_col1:
-575   02A3  00          	DEFS 1
-576   02A4              _s_class:
-577   02A4  00          	DEFS 1
-578   02A5              _loop_count:
-579   02A5  00 00       	DEFS 2
-580   02A7              _index0:
-581   02A7  00 00       	DEFS 2
-582   02A9              _index1:
-583   02A9  00 00       	DEFS 2
-584   02AB              _tmp:
-585   02AB  00          	DEFS 1
-586   02AC              _tmp0:
-587   02AC  00          	DEFS 1
-588   02AD              _tmp1:
-589   02AD  00          	DEFS 1
-590   02AE              _tmp_uc:
-591   02AE  00          	DEFS 1
-592   02AF              _tmp_sc:
-593   02AF  00          	DEFS 1
-594   02B0              _tmp_ui:
-595   02B0  00 00       	DEFS 2
-596   02B2              _enemies:
-597   02B2  00          	DEFS 1
-598   02B3              _zx_val_asm:
-599   02B3  00          	DEFS 1
-600   02B4              _attrib:
-601   02B4  00 00 00 00 	DEFS 4
-602   02B8              _attrib_hl:
-603   02B8  00 00 00 00 	DEFS 4
-604   02BC              _attrib_osd:
-605   02BC  00 00 00 00 	DEFS 4
-606   02C0              _s_state:
-607   02C0  00          	DEFS 1
-608   02C1              _g_player_hit_left:
-609   02C1  00          	DEFS 1
-610   02C2              _g_player_hit_right:
-611   02C2  00          	DEFS 1
-612   02C3              _curr_time:
-613   02C3  00 00       	DEFS 2
-614   02C5              _frame_time:
-615   02C5  00 00       	DEFS 2
-616   02C7              _anim_time:
-617   02C7  00 00       	DEFS 2
-618   02C9              _bullet_time:
-619   02C9  00 00       	DEFS 2
-620   02CB              _anim_count:
-621   02CB  00          	DEFS 1
-622   02CC              _bullet_count:
-623   02CC  00          	DEFS 1
-624   02CD              _mush_index:
-625   02CD  00 00 00 00 00 00 00 00 
+468   0265              _player_hit_lin:
+469   0265  00          	DEFS 1
+470   0266              _player_hit_col:
+471   0266  00          	DEFS 1
+472   0267              _player_score:
+473   0267  00 00       	DEFS 2
+474   0269              _player_lives:
+475   0269  00          	DEFS 1
+476   026A              _player_coins:
+477   026A  00          	DEFS 1
+478   026B              _player_onstair:
+479   026B  00          	DEFS 1
+480   026C              _player_vel_x:
+481   026C  00          	DEFS 1
+482   026D              _player_vel_y:
+483   026D  00          	DEFS 1
+484   026E              _player_vel_y0:
+485   026E  00          	DEFS 1
+486   026F              _player_vel_y1:
+487   026F  00          	DEFS 1
+488   0270              _player_vel_inc:
+489   0270  00          	DEFS 1
+490   0271              _player_keys:
+491   0271  00 00 00 00 	DEFS 4
+492   0275              _player_hit_count:
+493   0275  00          	DEFS 1
+494   0276              _player_brick_time:
+495   0276  00 00       	DEFS 2
+496   0278              _player_anim_stair:
+497   0278  00          	DEFS 1
+498   0279              _player_onfire:
+499   0279  00          	DEFS 1
+500   027A              _player_mana:
+501   027A  00          	DEFS 1
+502   027B              _player_vita:
+503   027B  00          	DEFS 1
+504   027C              _player_max_mana:
+505   027C  00          	DEFS 1
+506   027D              _player_max_vita:
+507   027D  00          	DEFS 1
+508   027E              _player_str:
+509   027E  00          	DEFS 1
+510   027F              _player_int:
+511   027F  00          	DEFS 1
+512   0280              _player_lvl:
+513   0280  00          	DEFS 1
+514   0281              _player_col_scr:
+515   0281  00          	DEFS 1
+516   0282              _player_lin_scr:
+517   0282  00          	DEFS 1
+518   0283              _player_jump_check:
+519   0283  00          	DEFS 1
+520   0284              _game_checkpoint_col:
+521   0284  00          	DEFS 1
+522   0285              _game_checkpoint_lin:
+523   0285  00          	DEFS 1
+524   0286              _game_checkpoint_scr:
+525   0286  00          	DEFS 1
+526   0287              _player_hit_time:
+527   0287  00 00       	DEFS 2
+528   0289              _player_hit:
+529   0289  00          	DEFS 1
+530   028A              _game_gravity:
+531   028A  00 00       	DEFS 2
+532   028C              _game_world:
+533   028C  00          	DEFS 1
+534   028D              _game_boss:
+535   028D  00          	DEFS 1
+536   028E              _game_boss_hit:
+537   028E  00          	DEFS 1
+538   028F              _game_boss_alive:
+539   028F  00          	DEFS 1
+540   0290              _game_boss_fix:
+541   0290  00          	DEFS 1
+542   0291              _game_song_play:
+543   0291  00          	DEFS 1
+544   0292              _game_song_play_start:
+545   0292  00          	DEFS 1
+546   0293              _game_mush_count:
+547   0293  00          	DEFS 1
+548   0294              _game_round_up:
+549   0294  00          	DEFS 1
+550   0295              _game_respawn_curr_time:
+551   0295  00          	DEFS 1
+552   0296              _game_control_mode:
+553   0296  00          	DEFS 1
+554   0297              _game_control_fire_lock:
+555   0297  00          	DEFS 1
+556   0298              _game_control_jump_lock:
+557   0298  00          	DEFS 1
+558   0299              _menu_curr_sel:
+559   0299  00          	DEFS 1
+560   029A              _fps:
+561   029A  00 00       	DEFS 2
+562   029C              _sprite:
+563   029C  00          	DEFS 1
+564   029D              _sprite_on_air:
+565   029D  00          	DEFS 1
+566   029E              _sprite_horizontal_check:
+567   029E  00          	DEFS 1
+568   029F              _game_debug:
+569   029F  00          	DEFS 1
+570   02A0              _s_tile0:
+571   02A0  00          	DEFS 1
+572   02A1              _s_tile1:
+573   02A1  00          	DEFS 1
+574   02A2              _s_lin0:
+575   02A2  00          	DEFS 1
+576   02A3              _s_lin1:
+577   02A3  00          	DEFS 1
+578   02A4              _s_col0:
+579   02A4  00          	DEFS 1
+580   02A5              _s_col1:
+581   02A5  00          	DEFS 1
+582   02A6              _s_class:
+583   02A6  00          	DEFS 1
+584   02A7              _loop_count:
+585   02A7  00 00       	DEFS 2
+586   02A9              _index0:
+587   02A9  00 00       	DEFS 2
+588   02AB              _index1:
+589   02AB  00 00       	DEFS 2
+590   02AD              _tmp:
+591   02AD  00          	DEFS 1
+592   02AE              _tmp0:
+593   02AE  00          	DEFS 1
+594   02AF              _tmp1:
+595   02AF  00          	DEFS 1
+596   02B0              _tmp_uc:
+597   02B0  00          	DEFS 1
+598   02B1              _tmp_sc:
+599   02B1  00          	DEFS 1
+600   02B2              _tmp_ui:
+601   02B2  00 00       	DEFS 2
+602   02B4              _enemies:
+603   02B4  00          	DEFS 1
+604   02B5              _zx_val_asm:
+605   02B5  00          	DEFS 1
+606   02B6              _attrib:
+607   02B6  00 00 00 00 	DEFS 4
+608   02BA              _attrib_hl:
+609   02BA  00 00 00 00 	DEFS 4
+610   02BE              _attrib_osd:
+611   02BE  00 00 00 00 	DEFS 4
+612   02C2              _s_state:
+613   02C2  00          	DEFS 1
+614   02C3              _g_player_hit_left:
+615   02C3  00          	DEFS 1
+616   02C4              _g_player_hit_right:
+617   02C4  00          	DEFS 1
+618   02C5              _curr_time:
+619   02C5  00 00       	DEFS 2
+620   02C7              _frame_time:
+621   02C7  00 00       	DEFS 2
+622   02C9              _anim_time:
+623   02C9  00 00       	DEFS 2
+624   02CB              _bullet_time:
+625   02CB  00 00       	DEFS 2
+626   02CD              _anim_count:
+627   02CD  00          	DEFS 1
+628   02CE              _bullet_count:
+629   02CE  00          	DEFS 1
+630   02CF              _mush_index:
+631   02CF  00 00 00 00 00 00 00 00 
                         	DEFS 8
-626   02D5              _mush_class:
-627   02D5  00 00 00 00 00 00 00 00 
+632   02D7              _mush_class:
+633   02D7  00 00 00 00 00 00 00 00 
                         	DEFS 8
-628   02DD              _spr_count:
-629   02DD  00          	DEFS 1
-630   02DE              _sprite_curr_index:
-631   02DE  00          	DEFS 1
-632   02DF              _anim_lin:
-633   02DF  00 00 00 00 00 00 00 00 
+634   02DF              _spr_count:
+635   02DF  00          	DEFS 1
+636   02E0              _sprite_curr_index:
+637   02E0  00          	DEFS 1
+638   02E1              _anim_lin:
+639   02E1  00 00 00 00 00 00 00 00 
                         	DEFS 8
-634   02E7              _anim_col:
-635   02E7  00 00 00 00 00 00 00 00 
+640   02E9              _anim_col:
+641   02E9  00 00 00 00 00 00 00 00 
                         	DEFS 8
-636   02EF              _anim_tile:
-637   02EF  00 00 00 00 00 00 00 00 
+642   02F1              _anim_tile:
+643   02F1  00 00 00 00 00 00 00 00 
                         	DEFS 8
-638   02F7              _anim_int:
-639   02F7  00 00 00 00 00 00 00 00 
+644   02F9              _anim_int:
+645   02F9  00 00 00 00 00 00 00 00 
                         	DEFS 8
-640   02FF              _anim_end:
-641   02FF  00 00 00 00 00 00 00 00 
+646   0301              _anim_end:
+647   0301  00 00 00 00 00 00 00 00 
                         	DEFS 8
-642   0307              _anim_loop:
-643   0307  00 00 00 00 00 00 00 00 
+648   0309              _anim_loop:
+649   0309  00 00 00 00 00 00 00 00 
                         	DEFS 8
-644   030F              _anim_respanwn:
-645   030F  00 00 00 00 00 00 00 00 
+650   0311              _anim_respanwn:
+651   0311  00 00 00 00 00 00 00 00 
                         	DEFS 8
-646   0317              _bullet_class:
-647   0317  00 00 00 00 00 00 00 00 
+652   0319              _bullet_class:
+653   0319  00 00 00 00 00 00 00 00 
                         	DEFS 8
-648   031F              _bullet_max:
-649   031F  00 00 00 00 00 00 00 00 
+654   0321              _bullet_max:
+655   0321  00 00 00 00 00 00 00 00 
                         	DEFS 8
-650   0327              _bullet_lin0:
-651   0327  00 00 00 00 00 00 00 00 
+656   0329              _bullet_lin0:
+657   0329  00 00 00 00 00 00 00 00 
                         	DEFS 8
-652   032F              _bullet_col0:
-653   032F  00 00 00 00 00 00 00 00 
+658   0331              _bullet_col0:
+659   0331  00 00 00 00 00 00 00 00 
                         	DEFS 8
-654   0337              _bullet_lin:
-655   0337  00 00 00 00 00 00 00 00 
+660   0339              _bullet_lin:
+661   0339  00 00 00 00 00 00 00 00 
                         	DEFS 8
-656   033F              _bullet_col:
-657   033F  00 00 00 00 00 00 00 00 
+662   0341              _bullet_col:
+663   0341  00 00 00 00 00 00 00 00 
                         	DEFS 8
-658   0347              _bullet_tile:
-659   0347  00 00 00 00 00 00 00 00 
+664   0349              _bullet_tile:
+665   0349  00 00 00 00 00 00 00 00 
                         	DEFS 8
-660   034F              _bullet_dir:
-661   034F  00 00 00 00 00 00 00 00 
+666   0351              _bullet_dir:
+667   0351  00 00 00 00 00 00 00 00 
                         	DEFS 8
-662   0357              _bullet_colint:
-663   0357  00 00 00 00 00 00 00 00 
+668   0359              _bullet_colint:
+669   0359  00 00 00 00 00 00 00 00 
                         	DEFS 8
-664   035F              _bullet_frames:
-665   035F  00 00 00 00 00 00 00 00 
+670   0361              _bullet_frames:
+671   0361  00 00 00 00 00 00 00 00 
                         	DEFS 8
-666   0367              _bullet:
-667   0367  00          	DEFS 1
-668   0368              _bullet_vel:
-669   0368  00 00 00 00 00 00 00 00 
+672   0369              _bullet:
+673   0369  00          	DEFS 1
+674   036A              _bullet_vel:
+675   036A  00 00 00 00 00 00 00 00 
                         	DEFS 8
-670   0370              _boss_lin:
-671   0370  00          	DEFS 1
-672   0371              _boss_col:
-673   0371  00          	DEFS 1
-674   0372              _boss_inc:
-675   0372  00          	DEFS 1
-676   0373              _boss_tile:
-677   0373  00          	DEFS 1
-678   0374              _boss_time:
-679   0374  00 00       	DEFS 2
-680   0376              _boss_time_fire:
-681   0376  00 00       	DEFS 2
-682   0378              _boss_stat:
-683   0378  00          	DEFS 1
-684   0379              _spr_hack:
-685   0379  00          	DEFS 1
-686   037A              _game_inmune:
-687   037A  00          	DEFS 1
-688   037B              _game_inf_lives:
-689   037B  00          	DEFS 1
-690   037C              _game_sound:
-691   037C  00          	DEFS 1
-692   037D              _game_over:
-693   037D  00          	DEFS 1
-694   037E              _game_score_top:
-695   037E  00 00       	DEFS 2
-696   0380              _game_respawn_time:
-697   0380  00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+676   0372              _boss_lin:
+677   0372  00          	DEFS 1
+678   0373              _boss_col:
+679   0373  00          	DEFS 1
+680   0374              _boss_inc:
+681   0374  00          	DEFS 1
+682   0375              _boss_tile:
+683   0375  00          	DEFS 1
+684   0376              _boss_time:
+685   0376  00 00       	DEFS 2
+686   0378              _boss_time_fire:
+687   0378  00 00       	DEFS 2
+688   037A              _boss_stat:
+689   037A  00          	DEFS 1
+690   037B              _spr_hack:
+691   037B  00          	DEFS 1
+692   037C              _game_inmune:
+693   037C  00          	DEFS 1
+694   037D              _game_inf_lives:
+695   037D  00          	DEFS 1
+696   037E              _game_sound:
+697   037E  00          	DEFS 1
+698   037F              _game_over:
+699   037F  00          	DEFS 1
+700   0380              _game_score_top:
+701   0380  00 00       	DEFS 2
+702   0382              _game_respawn_time:
+703   0382  00 00 00 00 00 00 00 00 00 00 00 00 00 00 
                         	DEFS 14
-698   038E              _game_respawn_index:
-699   038E  00 00 00 00 00 00 00 
+704   0390              _game_respawn_index:
+705   0390  00 00 00 00 00 00 00 
                         	DEFS 7
-700   0395              _game_respawn_tile:
-701   0395  00 00 00 00 00 00 00 
+706   0397              _game_respawn_tile:
+707   0397  00 00 00 00 00 00 00 
                         	DEFS 7
-702   039C              _game_start_scr:
-703   039C  00          	DEFS 1
-704   039D              _screen_paper:
-705   039D  00          	DEFS 1
-706   039E              _screen_ink:
-707   039E  00          	DEFS 1
-708   039F              _map_paper:
-709   039F  00          	DEFS 1
-710   03A0              _map_paper_clr:
-711   03A0  00          	DEFS 1
-712   03A1              _map_paper_last:
-713   03A1  00          	DEFS 1
-714   03A2              _map_paper_last_a:
-715   03A2  00          	DEFS 1
-716   03A3              _stp_tile:
-717   03A3  00          	DEFS 1
-718   03A4              _stp_col:
-719   03A4  00          	DEFS 1
-720   03A5              _stp_row:
-721   03A5  00          	DEFS 1
-722   03A6              _sprite_speed_alt:
-723   03A6  00 00 00 00 00 00 00 00 
+708   039E              _game_start_scr:
+709   039E  00          	DEFS 1
+710   039F              _screen_paper:
+711   039F  00          	DEFS 1
+712   03A0              _screen_ink:
+713   03A0  00          	DEFS 1
+714   03A1              _map_paper:
+715   03A1  00          	DEFS 1
+716   03A2              _map_paper_clr:
+717   03A2  00          	DEFS 1
+718   03A3              _map_paper_last:
+719   03A3  00          	DEFS 1
+720   03A4              _map_paper_last_a:
+721   03A4  00          	DEFS 1
+722   03A5              _stp_tile:
+723   03A5  00          	DEFS 1
+724   03A6              _stp_col:
+725   03A6  00          	DEFS 1
+726   03A7              _stp_row:
+727   03A7  00          	DEFS 1
+728   03A8              _sprite_speed:
+729   03A8  00 00 00 00 00 00 00 00 
                         	DEFS 8
-724   03AE              _draw_count:
-725   03AE  00          	DEFS 1
-726   03AF              ;--------------------------------------------------------
-727   03AF              ; ram data
-728   03AF              ;--------------------------------------------------------
-729   03AF              
-730   03AF              IF 0
-731   03AF              
-732   03AF              ; .area _INITIALIZED removed by z88dk
-733   03AF              
-734   03AF              _spr_init:
-735   03AF              	DEFS 72
-736   03AF              _sprite_kind:
-737   03AF              	DEFS 22
-738   03AF              _sprite_speed:
-739   03AF              	DEFS 22
-740   03AF              _spr_map_tile:
-741   03AF              	DEFS 60
-742   03AF              _sprite_frames:
-743   03AF              	DEFS 22
-744   03AF              _player_lvl_table:
-745   03AF              	DEFS 20
-746   03AF              _key_map:
-747   03AF              	DEFS 38
-748   03AF              _scan_map:
-749   03AF              	DEFS 76
-750   03AF              
-751   03AF              ENDIF
-752   03AF              
-753   03AF              ;--------------------------------------------------------
-754   03AF              ; absolute external ram data
-755   03AF              ;--------------------------------------------------------
-756   03AF              	SECTION IGNORE
-757   0000              ;--------------------------------------------------------
-758   0000              ; global & static initialisations
-759   0000              ;--------------------------------------------------------
-760   0000              	SECTION code_crt_init
-761   0000              ;--------------------------------------------------------
-762   0000              ; Home
+730   03B0              _draw_count:
+731   03B0  00          	DEFS 1
+732   03B1              ;--------------------------------------------------------
+733   03B1              ; ram data
+734   03B1              ;--------------------------------------------------------
+735   03B1              
+736   03B1              IF 0
+737   03B1              
+738   03B1              ; .area _INITIALIZED removed by z88dk
+739   03B1              
+740   03B1              _spr_init:
+741   03B1              	DEFS 72
+742   03B1              _sprite_kind:
+743   03B1              	DEFS 22
+744   03B1              _sprite_base_speed:
+745   03B1              	DEFS 22
+746   03B1              _spr_map_tile:
+747   03B1              	DEFS 60
+748   03B1              _sprite_frames:
+749   03B1              	DEFS 22
+750   03B1              _player_lvl_table:
+751   03B1              	DEFS 20
+752   03B1              _key_map:
+753   03B1              	DEFS 38
+754   03B1              _scan_map:
+755   03B1              	DEFS 76
+756   03B1              
+757   03B1              ENDIF
+758   03B1              
+759   03B1              ;--------------------------------------------------------
+760   03B1              ; absolute external ram data
+761   03B1              ;--------------------------------------------------------
+762   03B1              	SECTION IGNORE
 763   0000              ;--------------------------------------------------------
-764   0000              	SECTION IGNORE
+764   0000              ; global & static initialisations
 765   0000              ;--------------------------------------------------------
-766   0000              ; code
+766   0000              	SECTION code_crt_init
 767   0000              ;--------------------------------------------------------
-768   0000              	SECTION data_compiler
-769   0000              _spr_init:
-770   0000  60          	DEFB +0x60	; 96
-771   0001  0B          	DEFB +0x0b	; 11
-772   0002  FF          	DEFB +0xff	; 255
-773   0003  61          	DEFB +0x61	; 97	'a'
-774   0004  0B          	DEFB +0x0b	; 11
-775   0005  01          	DEFB +0x01	; 1
-776   0006  62          	DEFB +0x62	; 98	'b'
-777   0007  0C          	DEFB +0x0c	; 12
-778   0008  FF          	DEFB +0xff	; 255
-779   0009  63          	DEFB +0x63	; 99	'c'
-780   000A  0C          	DEFB +0x0c	; 12
-781   000B  01          	DEFB +0x01	; 1
-782   000C  64          	DEFB +0x64	; 100	'd'
-783   000D  0D          	DEFB +0x0d	; 13
-784   000E  FF          	DEFB +0xff	; 255
-785   000F  65          	DEFB +0x65	; 101	'e'
-786   0010  0D          	DEFB +0x0d	; 13
-787   0011  01          	DEFB +0x01	; 1
-788   0012  66          	DEFB +0x66	; 102	'f'
-789   0013  0E          	DEFB +0x0e	; 14
-790   0014  FF          	DEFB +0xff	; 255
-791   0015  67          	DEFB +0x67	; 103	'g'
-792   0016  0E          	DEFB +0x0e	; 14
-793   0017  01          	DEFB +0x01	; 1
-794   0018  68          	DEFB +0x68	; 104	'h'
-795   0019  0F          	DEFB +0x0f	; 15
-796   001A  FF          	DEFB +0xff	; 255
-797   001B  69          	DEFB +0x69	; 105	'i'
-798   001C  0F          	DEFB +0x0f	; 15
-799   001D  01          	DEFB +0x01	; 1
-800   001E  6A          	DEFB +0x6a	; 106	'j'
-801   001F  02          	DEFB +0x02	; 2
-802   0020  01          	DEFB +0x01	; 1
-803   0021  6B          	DEFB +0x6b	; 107	'k'
-804   0022  02          	DEFB +0x02	; 2
-805   0023  FF          	DEFB +0xff	; 255
-806   0024  6C          	DEFB +0x6c	; 108	'l'
-807   0025  03          	DEFB +0x03	; 3
-808   0026  00          	DEFB +0x00	; 0
-809   0027  6D          	DEFB +0x6d	; 109	'm'
-810   0028  04          	DEFB +0x04	; 4
-811   0029  01          	DEFB +0x01	; 1
-812   002A  6E          	DEFB +0x6e	; 110	'n'
-813   002B  05          	DEFB +0x05	; 5
-814   002C  00          	DEFB +0x00	; 0
-815   002D  6F          	DEFB +0x6f	; 111	'o'
-816   002E  10          	DEFB +0x10	; 16
-817   002F  00          	DEFB +0x00	; 0
-818   0030  70          	DEFB +0x70	; 112	'p'
-819   0031  12          	DEFB +0x12	; 18
-820   0032  00          	DEFB +0x00	; 0
-821   0033  71          	DEFB +0x71	; 113	'q'
-822   0034  13          	DEFB +0x13	; 19
-823   0035  00          	DEFB +0x00	; 0
-824   0036  72          	DEFB +0x72	; 114	'r'
-825   0037  09          	DEFB +0x09	; 9
-826   0038  00          	DEFB +0x00	; 0
-827   0039  73          	DEFB +0x73	; 115	's'
-828   003A  0A          	DEFB +0x0a	; 10
-829   003B  00          	DEFB +0x00	; 0
-830   003C  74          	DEFB +0x74	; 116	't'
-831   003D  04          	DEFB +0x04	; 4
-832   003E  FF          	DEFB +0xff	; 255
-833   003F  75          	DEFB +0x75	; 117	'u'
-834   0040  14          	DEFB +0x14	; 20
-835   0041  00          	DEFB +0x00	; 0
-836   0042  76          	DEFB +0x76	; 118	'v'
-837   0043  01          	DEFB +0x01	; 1
-838   0044  00          	DEFB +0x00	; 0
-839   0045  77          	DEFB +0x77	; 119	'w'
-840   0046  15          	DEFB +0x15	; 21
-841   0047  00          	DEFB +0x00	; 0
-842   0048              _sprite_kind:
-843   0048  00          	DEFB +0x00	; 0
-844   0049  06          	DEFB +0x06	; 6
-845   004A  02          	DEFB +0x02	; 2
-846   004B  02          	DEFB +0x02	; 2
-847   004C  05          	DEFB +0x05	; 5
-848   004D  02          	DEFB +0x02	; 2
-849   004E  03          	DEFB +0x03	; 3
-850   004F  03          	DEFB +0x03	; 3
-851   0050  03          	DEFB +0x03	; 3
-852   0051  02          	DEFB +0x02	; 2
-853   0052  02          	DEFB +0x02	; 2
-854   0053  03          	DEFB +0x03	; 3
-855   0054  03          	DEFB +0x03	; 3
-856   0055  03          	DEFB +0x03	; 3
-857   0056  03          	DEFB +0x03	; 3
-858   0057  03          	DEFB +0x03	; 3
-859   0058  04          	DEFB +0x04	; 4
-860   0059  04          	DEFB +0x04	; 4
-861   005A  04          	DEFB +0x04	; 4
-862   005B  01          	DEFB +0x01	; 1
-863   005C  05          	DEFB +0x05	; 5
-864   005D  04          	DEFB +0x04	; 4
-865   005E              _sprite_speed:
-866   005E  01          	DEFB +0x01	; 1
-867   005F  04          	DEFB +0x04	; 4
-868   0060  06          	DEFB +0x06	; 6
-869   0061  02          	DEFB +0x02	; 2
-870   0062  08          	DEFB +0x08	; 8
-871   0063  02          	DEFB +0x02	; 2
-872   0064  02          	DEFB +0x02	; 2
-873   0065  02          	DEFB +0x02	; 2
-874   0066  02          	DEFB +0x02	; 2
-875   0067  02          	DEFB +0x02	; 2
-876   0068  01          	DEFB +0x01	; 1
-877   0069  04          	DEFB +0x04	; 4
-878   006A  03          	DEFB +0x03	; 3
-879   006B  01          	DEFB +0x01	; 1
-880   006C  04          	DEFB +0x04	; 4
-881   006D  06          	DEFB +0x06	; 6
-882   006E  08          	DEFB +0x08	; 8
-883   006F  00          	DEFB +0x00	; 0
-884   0070  08          	DEFB +0x08	; 8
-885   0071  01          	DEFB +0x01	; 1
-886   0072  08          	DEFB +0x08	; 8
-887   0073  02          	DEFB +0x02	; 2
-888   0074              _spr_map_tile:
-889   0074  01          	DEFB +0x01	; 1
-890   0075  5B          	DEFB +0x5b	; 91
-891   0076  00          	DEFB +0x00	; 0
-892   0077  0B          	DEFB +0x0b	; 11
-893   0078  90          	DEFB +0x90	; 144
-894   0079  00          	DEFB +0x00	; 0
-895   007A  0C          	DEFB +0x0c	; 12
-896   007B  94          	DEFB +0x94	; 148
-897   007C  00          	DEFB +0x00	; 0
-898   007D  0D          	DEFB +0x0d	; 13
-899   007E  98          	DEFB +0x98	; 152
-900   007F  02          	DEFB +0x02	; 2
-901   0080  0E          	DEFB +0x0e	; 14
-902   0081  9C          	DEFB +0x9c	; 156
-903   0082  00          	DEFB +0x00	; 0
-904   0083  0F          	DEFB +0x0f	; 15
-905   0084  A0          	DEFB +0xa0	; 160
-906   0085  04          	DEFB +0x04	; 4
-907   0086  02          	DEFB +0x02	; 2
-908   0087  A8          	DEFB +0xa8	; 168
-909   0088  02          	DEFB +0x02	; 2
-910   0089  03          	DEFB +0x03	; 3
-911   008A  AC          	DEFB +0xac	; 172
-912   008B  00          	DEFB +0x00	; 0
-913   008C  04          	DEFB +0x04	; 4
-914   008D  C0          	DEFB +0xc0	; 192
-915   008E  02          	DEFB +0x02	; 2
-916   008F  14          	DEFB +0x14	; 20
-917   0090  AE          	DEFB +0xae	; 174
-918   0091  00          	DEFB +0x00	; 0
-919   0092  05          	DEFB +0x05	; 5
-920   0093  B0          	DEFB +0xb0	; 176
-921   0094  00          	DEFB +0x00	; 0
-922   0095  10          	DEFB +0x10	; 16
-923   0096  B2          	DEFB +0xb2	; 178
-924   0097  00          	DEFB +0x00	; 0
-925   0098  12          	DEFB +0x12	; 18
-926   0099  B4          	DEFB +0xb4	; 180
-927   009A  00          	DEFB +0x00	; 0
-928   009B  09          	DEFB +0x09	; 9
-929   009C  C4          	DEFB +0xc4	; 196
-930   009D  00          	DEFB +0x00	; 0
-931   009E  0A          	DEFB +0x0a	; 10
-932   009F  C6          	DEFB +0xc6	; 198
-933   00A0  00          	DEFB +0x00	; 0
-934   00A1  13          	DEFB +0x13	; 19
-935   00A2  B6          	DEFB +0xb6	; 182
-936   00A3  00          	DEFB +0x00	; 0
-937   00A4  06          	DEFB +0x06	; 6
-938   00A5  B9          	DEFB +0xb9	; 185
-939   00A6  00          	DEFB +0x00	; 0
-940   00A7  07          	DEFB +0x07	; 7
-941   00A8  BB          	DEFB +0xbb	; 187
-942   00A9  00          	DEFB +0x00	; 0
-943   00AA  08          	DEFB +0x08	; 8
-944   00AB  BD          	DEFB +0xbd	; 189
-945   00AC  00          	DEFB +0x00	; 0
-946   00AD  15          	DEFB +0x15	; 21
-947   00AE  5E          	DEFB +0x5e	; 94
-948   00AF  00          	DEFB +0x00	; 0
-949   00B0              _sprite_frames:
-950   00B0  04          	DEFB +0x04	; 4
-951   00B1  03          	DEFB +0x03	; 3
-952   00B2  02          	DEFB +0x02	; 2
-953   00B3  02          	DEFB +0x02	; 2
-954   00B4  02          	DEFB +0x02	; 2
-955   00B5  02          	DEFB +0x02	; 2
-956   00B6  02          	DEFB +0x02	; 2
-957   00B7  02          	DEFB +0x02	; 2
-958   00B8  02          	DEFB +0x02	; 2
-959   00B9  01          	DEFB +0x01	; 1
-960   00BA  01          	DEFB +0x01	; 1
-961   00BB  04          	DEFB +0x04	; 4
-962   00BC  04          	DEFB +0x04	; 4
-963   00BD  02          	DEFB +0x02	; 2
-964   00BE  04          	DEFB +0x04	; 4
-965   00BF  04          	DEFB +0x04	; 4
-966   00C0  02          	DEFB +0x02	; 2
-967   00C1  00          	DEFB +0x00	; 0
-968   00C2  02          	DEFB +0x02	; 2
-969   00C3  03          	DEFB +0x03	; 3
-970   00C4  02          	DEFB +0x02	; 2
-971   00C5  02          	DEFB +0x02	; 2
-972   00C6              _player_lvl_table:
-973   00C6  32 00       	DEFW +0x0032
-974   00C8  64 00       	DEFW +0x0064
-975   00CA  96 00       	DEFW +0x0096
-976   00CC  C8 00       	DEFW +0x00c8
-977   00CE  2C 01       	DEFW +0x012c
-978   00D0  F4 01       	DEFW +0x01f4
-979   00D2  8A 02       	DEFW +0x028a
-980   00D4  20 03       	DEFW +0x0320
-981   00D6  B6 03       	DEFW +0x03b6
-982   00D8  E8 03       	DEFW +0x03e8
-983   00DA              _key_map:
-984   00DA  0D          	DEFB +0x0d	; 13
-985   00DB  20          	DEFB +0x20	; 32
-986   00DC  30          	DEFB +0x30	; 48	'0'
-987   00DD  31          	DEFB +0x31	; 49	'1'
-988   00DE  32          	DEFB +0x32	; 50	'2'
-989   00DF  33          	DEFB +0x33	; 51	'3'
-990   00E0  34          	DEFB +0x34	; 52	'4'
-991   00E1  35          	DEFB +0x35	; 53	'5'
-992   00E2  36          	DEFB +0x36	; 54	'6'
-993   00E3  37          	DEFB +0x37	; 55	'7'
-994   00E4  38          	DEFB +0x38	; 56	'8'
-995   00E5  39          	DEFB +0x39	; 57	'9'
-996   00E6  61          	DEFB +0x61	; 97	'a'
-997   00E7  62          	DEFB +0x62	; 98	'b'
-998   00E8  63          	DEFB +0x63	; 99	'c'
-999   00E9  64          	DEFB +0x64	; 100	'd'
-1000  00EA  65          	DEFB +0x65	; 101	'e'
-1001  00EB  66          	DEFB +0x66	; 102	'f'
-1002  00EC  67          	DEFB +0x67	; 103	'g'
-1003  00ED  68          	DEFB +0x68	; 104	'h'
-1004  00EE  69          	DEFB +0x69	; 105	'i'
-1005  00EF  6A          	DEFB +0x6a	; 106	'j'
-1006  00F0  6B          	DEFB +0x6b	; 107	'k'
-1007  00F1  6C          	DEFB +0x6c	; 108	'l'
-1008  00F2  6D          	DEFB +0x6d	; 109	'm'
-1009  00F3  6E          	DEFB +0x6e	; 110	'n'
-1010  00F4  6F          	DEFB +0x6f	; 111	'o'
-1011  00F5  70          	DEFB +0x70	; 112	'p'
-1012  00F6  71          	DEFB +0x71	; 113	'q'
-1013  00F7  72          	DEFB +0x72	; 114	'r'
-1014  00F8  73          	DEFB +0x73	; 115	's'
-1015  00F9  74          	DEFB +0x74	; 116	't'
-1016  00FA  75          	DEFB +0x75	; 117	'u'
-1017  00FB  76          	DEFB +0x76	; 118	'v'
-1018  00FC  77          	DEFB +0x77	; 119	'w'
-1019  00FD  78          	DEFB +0x78	; 120	'x'
-1020  00FE  79          	DEFB +0x79	; 121	'y'
-1021  00FF  7A          	DEFB +0x7a	; 122	'z'
-1022  0100              _scan_map:
-1023  0100  BF 01       	DEFW +0x01bf
-1024  0102  7F 01       	DEFW +0x017f
-1025  0104  EF 01       	DEFW +0x01ef
-1026  0106  F7 01       	DEFW +0x01f7
-1027  0108  F7 02       	DEFW +0x02f7
-1028  010A  F7 04       	DEFW +0x04f7
-1029  010C  F7 08       	DEFW +0x08f7
-1030  010E  F7 10       	DEFW +0x10f7
-1031  0110  EF 10       	DEFW +0x10ef
-1032  0112  EF 08       	DEFW +0x08ef
-1033  0114  EF 04       	DEFW +0x04ef
-1034  0116  EF 02       	DEFW +0x02ef
-1035  0118  FD 01       	DEFW +0x01fd
-1036  011A  7F 10       	DEFW +0x107f
-1037  011C  FE 08       	DEFW +0x08fe
-1038  011E  FD 04       	DEFW +0x04fd
-1039  0120  FB 04       	DEFW +0x04fb
-1040  0122  FD 08       	DEFW +0x08fd
-1041  0124  FD 10       	DEFW +0x10fd
-1042  0126  BF 10       	DEFW +0x10bf
-1043  0128  DF 04       	DEFW +0x04df
-1044  012A  BF 08       	DEFW +0x08bf
-1045  012C  BF 04       	DEFW +0x04bf
-1046  012E  BF 02       	DEFW +0x02bf
-1047  0130  7F 04       	DEFW +0x047f
-1048  0132  7F 08       	DEFW +0x087f
-1049  0134  DF 02       	DEFW +0x02df
-1050  0136  DF 01       	DEFW +0x01df
-1051  0138  FB 01       	DEFW +0x01fb
-1052  013A  FB 08       	DEFW +0x08fb
-1053  013C  FD 02       	DEFW +0x02fd
-1054  013E  FB 10       	DEFW +0x10fb
-1055  0140  DF 08       	DEFW +0x08df
-1056  0142  FE 10       	DEFW +0x10fe
-1057  0144  FB 02       	DEFW +0x02fb
-1058  0146  FE 04       	DEFW +0x04fe
-1059  0148  DF 10       	DEFW +0x10df
-1060  014A  FE 02       	DEFW +0x02fe
-1061  014C              	SECTION IGNORE
-1062  0000              
+768   0000              ; Home
+769   0000              ;--------------------------------------------------------
+770   0000              	SECTION IGNORE
+771   0000              ;--------------------------------------------------------
+772   0000              ; code
+773   0000              ;--------------------------------------------------------
+774   0000              	SECTION data_compiler
+775   0000              _spr_init:
+776   0000  60          	DEFB +0x60	; 96
+777   0001  0B          	DEFB +0x0b	; 11
+778   0002  FF          	DEFB +0xff	; 255
+779   0003  61          	DEFB +0x61	; 97	'a'
+780   0004  0B          	DEFB +0x0b	; 11
+781   0005  01          	DEFB +0x01	; 1
+782   0006  62          	DEFB +0x62	; 98	'b'
+783   0007  0C          	DEFB +0x0c	; 12
+784   0008  FF          	DEFB +0xff	; 255
+785   0009  63          	DEFB +0x63	; 99	'c'
+786   000A  0C          	DEFB +0x0c	; 12
+787   000B  01          	DEFB +0x01	; 1
+788   000C  64          	DEFB +0x64	; 100	'd'
+789   000D  0D          	DEFB +0x0d	; 13
+790   000E  FF          	DEFB +0xff	; 255
+791   000F  65          	DEFB +0x65	; 101	'e'
+792   0010  0D          	DEFB +0x0d	; 13
+793   0011  01          	DEFB +0x01	; 1
+794   0012  66          	DEFB +0x66	; 102	'f'
+795   0013  0E          	DEFB +0x0e	; 14
+796   0014  FF          	DEFB +0xff	; 255
+797   0015  67          	DEFB +0x67	; 103	'g'
+798   0016  0E          	DEFB +0x0e	; 14
+799   0017  01          	DEFB +0x01	; 1
+800   0018  68          	DEFB +0x68	; 104	'h'
+801   0019  0F          	DEFB +0x0f	; 15
+802   001A  FF          	DEFB +0xff	; 255
+803   001B  69          	DEFB +0x69	; 105	'i'
+804   001C  0F          	DEFB +0x0f	; 15
+805   001D  01          	DEFB +0x01	; 1
+806   001E  6A          	DEFB +0x6a	; 106	'j'
+807   001F  02          	DEFB +0x02	; 2
+808   0020  01          	DEFB +0x01	; 1
+809   0021  6B          	DEFB +0x6b	; 107	'k'
+810   0022  02          	DEFB +0x02	; 2
+811   0023  FF          	DEFB +0xff	; 255
+812   0024  6C          	DEFB +0x6c	; 108	'l'
+813   0025  03          	DEFB +0x03	; 3
+814   0026  00          	DEFB +0x00	; 0
+815   0027  6D          	DEFB +0x6d	; 109	'm'
+816   0028  04          	DEFB +0x04	; 4
+817   0029  01          	DEFB +0x01	; 1
+818   002A  6E          	DEFB +0x6e	; 110	'n'
+819   002B  05          	DEFB +0x05	; 5
+820   002C  00          	DEFB +0x00	; 0
+821   002D  6F          	DEFB +0x6f	; 111	'o'
+822   002E  10          	DEFB +0x10	; 16
+823   002F  00          	DEFB +0x00	; 0
+824   0030  70          	DEFB +0x70	; 112	'p'
+825   0031  12          	DEFB +0x12	; 18
+826   0032  00          	DEFB +0x00	; 0
+827   0033  71          	DEFB +0x71	; 113	'q'
+828   0034  13          	DEFB +0x13	; 19
+829   0035  00          	DEFB +0x00	; 0
+830   0036  72          	DEFB +0x72	; 114	'r'
+831   0037  09          	DEFB +0x09	; 9
+832   0038  00          	DEFB +0x00	; 0
+833   0039  73          	DEFB +0x73	; 115	's'
+834   003A  0A          	DEFB +0x0a	; 10
+835   003B  00          	DEFB +0x00	; 0
+836   003C  74          	DEFB +0x74	; 116	't'
+837   003D  04          	DEFB +0x04	; 4
+838   003E  FF          	DEFB +0xff	; 255
+839   003F  75          	DEFB +0x75	; 117	'u'
+840   0040  14          	DEFB +0x14	; 20
+841   0041  00          	DEFB +0x00	; 0
+842   0042  76          	DEFB +0x76	; 118	'v'
+843   0043  01          	DEFB +0x01	; 1
+844   0044  00          	DEFB +0x00	; 0
+845   0045  77          	DEFB +0x77	; 119	'w'
+846   0046  15          	DEFB +0x15	; 21
+847   0047  00          	DEFB +0x00	; 0
+848   0048              _sprite_kind:
+849   0048  00          	DEFB +0x00	; 0
+850   0049  06          	DEFB +0x06	; 6
+851   004A  02          	DEFB +0x02	; 2
+852   004B  02          	DEFB +0x02	; 2
+853   004C  05          	DEFB +0x05	; 5
+854   004D  02          	DEFB +0x02	; 2
+855   004E  03          	DEFB +0x03	; 3
+856   004F  03          	DEFB +0x03	; 3
+857   0050  03          	DEFB +0x03	; 3
+858   0051  02          	DEFB +0x02	; 2
+859   0052  02          	DEFB +0x02	; 2
+860   0053  03          	DEFB +0x03	; 3
+861   0054  03          	DEFB +0x03	; 3
+862   0055  03          	DEFB +0x03	; 3
+863   0056  03          	DEFB +0x03	; 3
+864   0057  03          	DEFB +0x03	; 3
+865   0058  04          	DEFB +0x04	; 4
+866   0059  04          	DEFB +0x04	; 4
+867   005A  04          	DEFB +0x04	; 4
+868   005B  01          	DEFB +0x01	; 1
+869   005C  05          	DEFB +0x05	; 5
+870   005D  04          	DEFB +0x04	; 4
+871   005E              _sprite_base_speed:
+872   005E  01          	DEFB +0x01	; 1
+873   005F  04          	DEFB +0x04	; 4
+874   0060  06          	DEFB +0x06	; 6
+875   0061  02          	DEFB +0x02	; 2
+876   0062  08          	DEFB +0x08	; 8
+877   0063  02          	DEFB +0x02	; 2
+878   0064  02          	DEFB +0x02	; 2
+879   0065  02          	DEFB +0x02	; 2
+880   0066  02          	DEFB +0x02	; 2
+881   0067  02          	DEFB +0x02	; 2
+882   0068  01          	DEFB +0x01	; 1
+883   0069  04          	DEFB +0x04	; 4
+884   006A  03          	DEFB +0x03	; 3
+885   006B  01          	DEFB +0x01	; 1
+886   006C  04          	DEFB +0x04	; 4
+887   006D  06          	DEFB +0x06	; 6
+888   006E  08          	DEFB +0x08	; 8
+889   006F  00          	DEFB +0x00	; 0
+890   0070  08          	DEFB +0x08	; 8
+891   0071  01          	DEFB +0x01	; 1
+892   0072  08          	DEFB +0x08	; 8
+893   0073  02          	DEFB +0x02	; 2
+894   0074              _spr_map_tile:
+895   0074  01          	DEFB +0x01	; 1
+896   0075  5B          	DEFB +0x5b	; 91
+897   0076  00          	DEFB +0x00	; 0
+898   0077  0B          	DEFB +0x0b	; 11
+899   0078  90          	DEFB +0x90	; 144
+900   0079  00          	DEFB +0x00	; 0
+901   007A  0C          	DEFB +0x0c	; 12
+902   007B  94          	DEFB +0x94	; 148
+903   007C  00          	DEFB +0x00	; 0
+904   007D  0D          	DEFB +0x0d	; 13
+905   007E  98          	DEFB +0x98	; 152
+906   007F  02          	DEFB +0x02	; 2
+907   0080  0E          	DEFB +0x0e	; 14
+908   0081  9C          	DEFB +0x9c	; 156
+909   0082  00          	DEFB +0x00	; 0
+910   0083  0F          	DEFB +0x0f	; 15
+911   0084  A0          	DEFB +0xa0	; 160
+912   0085  04          	DEFB +0x04	; 4
+913   0086  02          	DEFB +0x02	; 2
+914   0087  A8          	DEFB +0xa8	; 168
+915   0088  02          	DEFB +0x02	; 2
+916   0089  03          	DEFB +0x03	; 3
+917   008A  AC          	DEFB +0xac	; 172
+918   008B  00          	DEFB +0x00	; 0
+919   008C  04          	DEFB +0x04	; 4
+920   008D  C0          	DEFB +0xc0	; 192
+921   008E  02          	DEFB +0x02	; 2
+922   008F  14          	DEFB +0x14	; 20
+923   0090  AE          	DEFB +0xae	; 174
+924   0091  00          	DEFB +0x00	; 0
+925   0092  05          	DEFB +0x05	; 5
+926   0093  B0          	DEFB +0xb0	; 176
+927   0094  00          	DEFB +0x00	; 0
+928   0095  10          	DEFB +0x10	; 16
+929   0096  B2          	DEFB +0xb2	; 178
+930   0097  00          	DEFB +0x00	; 0
+931   0098  12          	DEFB +0x12	; 18
+932   0099  B4          	DEFB +0xb4	; 180
+933   009A  00          	DEFB +0x00	; 0
+934   009B  09          	DEFB +0x09	; 9
+935   009C  C4          	DEFB +0xc4	; 196
+936   009D  00          	DEFB +0x00	; 0
+937   009E  0A          	DEFB +0x0a	; 10
+938   009F  C6          	DEFB +0xc6	; 198
+939   00A0  00          	DEFB +0x00	; 0
+940   00A1  13          	DEFB +0x13	; 19
+941   00A2  B6          	DEFB +0xb6	; 182
+942   00A3  00          	DEFB +0x00	; 0
+943   00A4  06          	DEFB +0x06	; 6
+944   00A5  B9          	DEFB +0xb9	; 185
+945   00A6  00          	DEFB +0x00	; 0
+946   00A7  07          	DEFB +0x07	; 7
+947   00A8  BB          	DEFB +0xbb	; 187
+948   00A9  00          	DEFB +0x00	; 0
+949   00AA  08          	DEFB +0x08	; 8
+950   00AB  BD          	DEFB +0xbd	; 189
+951   00AC  00          	DEFB +0x00	; 0
+952   00AD  15          	DEFB +0x15	; 21
+953   00AE  5E          	DEFB +0x5e	; 94
+954   00AF  00          	DEFB +0x00	; 0
+955   00B0              _sprite_frames:
+956   00B0  04          	DEFB +0x04	; 4
+957   00B1  03          	DEFB +0x03	; 3
+958   00B2  02          	DEFB +0x02	; 2
+959   00B3  02          	DEFB +0x02	; 2
+960   00B4  02          	DEFB +0x02	; 2
+961   00B5  02          	DEFB +0x02	; 2
+962   00B6  02          	DEFB +0x02	; 2
+963   00B7  02          	DEFB +0x02	; 2
+964   00B8  02          	DEFB +0x02	; 2
+965   00B9  01          	DEFB +0x01	; 1
+966   00BA  01          	DEFB +0x01	; 1
+967   00BB  04          	DEFB +0x04	; 4
+968   00BC  04          	DEFB +0x04	; 4
+969   00BD  02          	DEFB +0x02	; 2
+970   00BE  04          	DEFB +0x04	; 4
+971   00BF  04          	DEFB +0x04	; 4
+972   00C0  02          	DEFB +0x02	; 2
+973   00C1  00          	DEFB +0x00	; 0
+974   00C2  02          	DEFB +0x02	; 2
+975   00C3  03          	DEFB +0x03	; 3
+976   00C4  02          	DEFB +0x02	; 2
+977   00C5  02          	DEFB +0x02	; 2
+978   00C6              _player_lvl_table:
+979   00C6  32 00       	DEFW +0x0032
+980   00C8  64 00       	DEFW +0x0064
+981   00CA  96 00       	DEFW +0x0096
+982   00CC  C8 00       	DEFW +0x00c8
+983   00CE  2C 01       	DEFW +0x012c
+984   00D0  F4 01       	DEFW +0x01f4
+985   00D2  8A 02       	DEFW +0x028a
+986   00D4  20 03       	DEFW +0x0320
+987   00D6  B6 03       	DEFW +0x03b6
+988   00D8  E8 03       	DEFW +0x03e8
+989   00DA              _key_map:
+990   00DA  0D          	DEFB +0x0d	; 13
+991   00DB  20          	DEFB +0x20	; 32
+992   00DC  30          	DEFB +0x30	; 48	'0'
+993   00DD  31          	DEFB +0x31	; 49	'1'
+994   00DE  32          	DEFB +0x32	; 50	'2'
+995   00DF  33          	DEFB +0x33	; 51	'3'
+996   00E0  34          	DEFB +0x34	; 52	'4'
+997   00E1  35          	DEFB +0x35	; 53	'5'
+998   00E2  36          	DEFB +0x36	; 54	'6'
+999   00E3  37          	DEFB +0x37	; 55	'7'
+1000  00E4  38          	DEFB +0x38	; 56	'8'
+1001  00E5  39          	DEFB +0x39	; 57	'9'
+1002  00E6  61          	DEFB +0x61	; 97	'a'
+1003  00E7  62          	DEFB +0x62	; 98	'b'
+1004  00E8  63          	DEFB +0x63	; 99	'c'
+1005  00E9  64          	DEFB +0x64	; 100	'd'
+1006  00EA  65          	DEFB +0x65	; 101	'e'
+1007  00EB  66          	DEFB +0x66	; 102	'f'
+1008  00EC  67          	DEFB +0x67	; 103	'g'
+1009  00ED  68          	DEFB +0x68	; 104	'h'
+1010  00EE  69          	DEFB +0x69	; 105	'i'
+1011  00EF  6A          	DEFB +0x6a	; 106	'j'
+1012  00F0  6B          	DEFB +0x6b	; 107	'k'
+1013  00F1  6C          	DEFB +0x6c	; 108	'l'
+1014  00F2  6D          	DEFB +0x6d	; 109	'm'
+1015  00F3  6E          	DEFB +0x6e	; 110	'n'
+1016  00F4  6F          	DEFB +0x6f	; 111	'o'
+1017  00F5  70          	DEFB +0x70	; 112	'p'
+1018  00F6  71          	DEFB +0x71	; 113	'q'
+1019  00F7  72          	DEFB +0x72	; 114	'r'
+1020  00F8  73          	DEFB +0x73	; 115	's'
+1021  00F9  74          	DEFB +0x74	; 116	't'
+1022  00FA  75          	DEFB +0x75	; 117	'u'
+1023  00FB  76          	DEFB +0x76	; 118	'v'
+1024  00FC  77          	DEFB +0x77	; 119	'w'
+1025  00FD  78          	DEFB +0x78	; 120	'x'
+1026  00FE  79          	DEFB +0x79	; 121	'y'
+1027  00FF  7A          	DEFB +0x7a	; 122	'z'
+1028  0100              _scan_map:
+1029  0100  BF 01       	DEFW +0x01bf
+1030  0102  7F 01       	DEFW +0x017f
+1031  0104  EF 01       	DEFW +0x01ef
+1032  0106  F7 01       	DEFW +0x01f7
+1033  0108  F7 02       	DEFW +0x02f7
+1034  010A  F7 04       	DEFW +0x04f7
+1035  010C  F7 08       	DEFW +0x08f7
+1036  010E  F7 10       	DEFW +0x10f7
+1037  0110  EF 10       	DEFW +0x10ef
+1038  0112  EF 08       	DEFW +0x08ef
+1039  0114  EF 04       	DEFW +0x04ef
+1040  0116  EF 02       	DEFW +0x02ef
+1041  0118  FD 01       	DEFW +0x01fd
+1042  011A  7F 10       	DEFW +0x107f
+1043  011C  FE 08       	DEFW +0x08fe
+1044  011E  FD 04       	DEFW +0x04fd
+1045  0120  FB 04       	DEFW +0x04fb
+1046  0122  FD 08       	DEFW +0x08fd
+1047  0124  FD 10       	DEFW +0x10fd
+1048  0126  BF 10       	DEFW +0x10bf
+1049  0128  DF 04       	DEFW +0x04df
+1050  012A  BF 08       	DEFW +0x08bf
+1051  012C  BF 04       	DEFW +0x04bf
+1052  012E  BF 02       	DEFW +0x02bf
+1053  0130  7F 04       	DEFW +0x047f
+1054  0132  7F 08       	DEFW +0x087f
+1055  0134  DF 02       	DEFW +0x02df
+1056  0136  DF 01       	DEFW +0x01df
+1057  0138  FB 01       	DEFW +0x01fb
+1058  013A  FB 08       	DEFW +0x08fb
+1059  013C  FD 02       	DEFW +0x02fd
+1060  013E  FB 10       	DEFW +0x10fb
+1061  0140  DF 08       	DEFW +0x08df
+1062  0142  FE 10       	DEFW +0x10fe
+1063  0144  FB 02       	DEFW +0x02fb
+1064  0146  FE 04       	DEFW +0x04fe
+1065  0148  DF 10       	DEFW +0x10df
+1066  014A  FE 02       	DEFW +0x02fe
+1067  014C              	SECTION IGNORE
+1068  0000              

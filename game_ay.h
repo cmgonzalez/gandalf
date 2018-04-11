@@ -42,18 +42,18 @@ extern void ay_song_stop(void) __preserves_regs(b,c,d,e,h,l);
 
 extern void ay_reset(void) __preserves_regs(b,c,d,e,h,l);
 
-
-
+//BANK_3
+// AY Songs
+extern unsigned char ay_song_03_lotr[];
+extern unsigned char ay_song_03_sunflower[];
+extern unsigned char ay_song_03_regis[];
 
 //BANK_4
 // AY Songs
-extern unsigned char ay_song_04_sunflower[];
+extern unsigned char ay_song_04_hope[];
 extern unsigned char ay_song_04_ciel[];
 extern unsigned char ay_song_04_luna[];
-extern unsigned char ay_song_04_lotr[];
-//extern unsigned char ay_song_04_regis[];
-
-extern unsigned char ay_song_04_ciel[];
+extern unsigned char ay_song_04_doom[];
 
 //BANK_6
 // AY Songs

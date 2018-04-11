@@ -127,7 +127,7 @@ void boss_turn() {
 
 void boss_draw() {
   spr_hack = 1;
-  NIRVANAP_halt();
+  intrinsic_halt();
   intrinsic_di();
   if (boss_inc) {
     boss_inc = 0;
@@ -438,6 +438,8 @@ void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,
   if (f_sprite < SPR_P1) {
 
     class[f_sprite] = f_class;
+    sprite_speed[f_sprite] = sprite_base_speed[f_class];
+
 
     lin[f_sprite] = f_lin;
     col[f_sprite] = f_col;
@@ -455,7 +457,6 @@ void enemy_init(unsigned char f_lin, unsigned char f_col, unsigned char f_class,
     tile[f_sprite] = spr_tile(&f_sprite);
     spr_timer[f_sprite] = zx_clock();
     last_time[f_sprite] = 0;
-    sprite_speed_alt[f_sprite] = 0;
     ++spr_count;
     if (!game_boss) {
       if (bullet_col[f_sprite] != 0xFF) {

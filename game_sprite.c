@@ -15,17 +15,17 @@
         along with Gandalf.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "game.h"
+#include "game_audio.h"
 #include "game_ay.h"
 #include "game_enemies.h"
 #include "game_engine.h"
 #include "game_player.h"
-#include "game_audio.h"
 //#include "game_sound.h"
 #include "game_sprite.h"
 #include "game_zx.h"
 #include "macros.h"
-#include <arch/zx/nirvana+.h>
 #include <arch/zx.h>
+#include <arch/zx/nirvana+.h>
 #include <input.h>
 #include <stdlib.h>
 
@@ -34,13 +34,7 @@ unsigned int spr_calc_index(unsigned char f_lin, unsigned char f_col) {
 }
 
 unsigned char spr_chktime(unsigned char *sprite) __z88dk_fastcall {
-  // if (FULL_SPEED) return 1;
-  if (sprite_speed_alt[*sprite] == 0) {
-    tmp = sprite_speed[class[*sprite]];
-  } else {
-    tmp = sprite_speed_alt[*sprite];
-  }
-  if (game_check_time(&last_time[*sprite], tmp)) {
+  if (zx_clock() - last_time[*sprite] > sprite_speed[*sprite]) {
     last_time[*sprite] = zx_clock();
     return 1;
   }
@@ -275,7 +269,7 @@ void spr_clear_scr() {
   for (i = 0; i < 8; ++i) {
     NIRVANAP_spriteT(i, TILE_EMPTY, 0, 0);
   }
-  NIRVANAP_halt();
+  intrinsic_halt();
 
   intrinsic_di();
   for (i = 0; i < 8; ++i) {
@@ -289,7 +283,7 @@ void spr_clear_scr() {
     }
 
     intrinsic_ei();
-    NIRVANAP_halt();
+    intrinsic_halt();
     intrinsic_di();
   }
   intrinsic_ei();
@@ -414,6 +408,14 @@ void spr_page_map(void) {
 }
 
 unsigned char spr_paint_player(void) {
+
+  if (player_hit) {
+    if ((loop_count & 1) == 0) {
+        spr_back_repaint();
+        NIRVANAP_spriteT(sprite, 0, 0, 0);
+        return 1;
+      }
+  }
 
   s_col1 = col[SPR_P1];
   s_lin1 = lin[SPR_P1];
@@ -563,18 +565,18 @@ void spr_draw_index(unsigned int *f_index) __z88dk_fastcall {
 }
 
 void spr_back_repaint(void) {
-  // unsigned char s_row;
-  // TODO VSYNC - BY DISABLING NIRVANAP_halt, YOU CAN GAIN PERFORMANCE AND
-  // FLICKERING ALSO, WHAT'S THE MAGIC FORMULA?
-  if (!spr_hack) {
-    NIRVANAP_halt();
-    intrinsic_di();
-  }
-  sprite_curr_index = spr_calc_index(s_lin0, s_col0);
-  if ((s_col0 & 1) == 0) { // Par
-    stp_tile = scr_map[sprite_curr_index];
-    stp_col = s_col0;
+  unsigned char *p;
 
+
+  sprite_curr_index = spr_calc_index(s_lin0, s_col0);
+
+  p = &scr_map[sprite_curr_index];
+  stp_tile = *p;
+
+
+  if ((s_col0 & 1) == 0) { // Par
+    stp_col = s_col0;
+    intrinsic_halt();
     if ((s_lin0 & 15) == 0) {
       // Paint single tile
       stp_row = s_lin0;
@@ -584,44 +586,51 @@ void spr_back_repaint(void) {
       stp_row = (s_lin0 >> 4) << 4;
       spr_tile_paint();
       stp_row = stp_row + 16;
-      stp_tile = scr_map[sprite_curr_index + 16];
+      // stp_tile = scr_map[sprite_curr_index + 16];
+      p = p + 16;
+      stp_tile = *p;
       spr_tile_paint();
     }
-  } else
-     { // Impar
-      stp_tile = scr_map[sprite_curr_index];
+  } else {
+    // Impar
+    stp_col = s_col0 - 1;
+    intrinsic_halt();
+    if ((s_lin0 & 15) == 0) {
+      // Paint single tile
+      stp_row = s_lin0;
+      spr_tile_paint();
+      //++sprite_curr_index;
+      // stp_tile = scr_map[sprite_curr_index];
+      p = p + 1;
+      stp_tile = *p;
+      stp_col = s_col0 + 1;
+      spr_tile_paint();
+
+    } else {
+      // Paint up n down tiles
+      stp_row = (s_lin0 >> 4) << 4;
+      spr_tile_paint();
+      stp_col = s_col0 + 1;
+      //++sprite_curr_index;
+      // stp_tile = scr_map[sprite_curr_index];
+      p = p + 1;
+      stp_tile = *p;
+      spr_tile_paint();
+
       stp_col = s_col0 - 1;
-      if ((s_lin0 & 15) == 0) {
-        // Paint single tile
-        stp_row = s_lin0;
-        spr_tile_paint();
-        ++sprite_curr_index;
-        stp_tile = scr_map[sprite_curr_index];
-        stp_col = s_col0 + 1;
-        spr_tile_paint();
-
-      } else {
-        // Paint up n down tiles
-        stp_row = (s_lin0 >> 4) << 4;
-        spr_tile_paint();
-        stp_col = s_col0 + 1;
-        ++sprite_curr_index;
-        stp_tile = scr_map[sprite_curr_index];
-        spr_tile_paint();
-
-        stp_col = s_col0 - 1;
-        stp_row = stp_row + 16;
-        sprite_curr_index = sprite_curr_index + 15;
-        stp_tile = scr_map[sprite_curr_index];
-        spr_tile_paint();
-        ++sprite_curr_index;
-        stp_tile = scr_map[sprite_curr_index];
-        stp_col = s_col0 + 1;
-        spr_tile_paint();
-      }
+      stp_row = stp_row + 16;
+      // sprite_curr_index = sprite_curr_index + 15;
+      // stp_tile = scr_map[sprite_curr_index];
+      p = p + 15;
+      stp_tile = *p;
+      spr_tile_paint();
+      //++sprite_curr_index;
+      // stp_tile = scr_map[sprite_curr_index];
+      p = p + 1;
+      stp_tile = *p;
+      stp_col = s_col0 + 1;
+      spr_tile_paint();
     }
-  if (!spr_hack) {
-    intrinsic_ei();
   }
 }
 
@@ -698,7 +707,7 @@ void spr_play_anim(void) {
   for (f_anim = 0; f_anim < 8; f_anim++) {
     if (anim_lin[f_anim] != 0xFF) {
       if (anim_int[f_anim] < anim_end[f_anim]) {
-        // NIRVANAP_halt();
+        // intrinsic_halt();
         intrinsic_di();
         NIRVANAP_drawT_raw(anim_tile[f_anim] + anim_int[f_anim],
                            anim_lin[f_anim], anim_col[f_anim]);
@@ -871,7 +880,10 @@ void spr_bullets_play(void) {
       tmp0 = abs(f_col0 - bullet_col0[bullet]);
       if (tmp0 > bullet_max[bullet]) {
         --bullet_count;
+        spr_add_anim(bullet_lin[bullet], bullet_col[bullet], TILE_ANIM_FIRE_END, 2, 0, 0);
+
         bullet_col[bullet] = 0xFF;
+
         continue;
       }
     }
@@ -925,7 +937,7 @@ void spr_bullets_play(void) {
 }
 void spr_bullet_enemy_colision() {
   if (spr_colision_b(SPR_P1, bullet)) {
-    //zx_border(INK_MAGENTA);
+    // zx_border(INK_MAGENTA);
     bullet_col[bullet] = s_col0;
     spr_bullet_explode();
     if (game_boss) {
@@ -991,7 +1003,7 @@ void spr_btile_paint_back() {
   map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
   while (tmp_ui < (32 + (48 * 12 * 20))) { // 12*20 btiles
     if ((f_tile < 73 && f_tile != 13 && f_tile != 14) ||
-        (f_tile > 90)) { // TODO AN ARRAY WILL BE A MORE ELEGANT SOLUTION
+        (f_tile > TILE_SPECIAL)) { // TODO AN ARRAY WILL BE A MORE ELEGANT SOLUTION
 
       // f_half = 0;
       tmp0 = 0;

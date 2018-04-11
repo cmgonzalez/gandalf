@@ -16,23 +16,18 @@ INCLUDE "src/mfx.asm"
 
 SECTION BANK_4_AUDIO
 
-;PUBLIC _ay_song_04_ciel
+PUBLIC _ay_song_04_hope
+_ay_song_04_hope:
+  BINARY "songs/hope.pt3"
+
+PUBLIC _ay_song_04_ciel
+_ay_song_04_ciel:
+  BINARY "songs/ciel_2.pt3"
+
 PUBLIC _ay_song_04_luna
-PUBLIC _ay_song_04_sunflower
-;PUBLIC _ay_song_04_regis
-PUBLIC _ay_song_04_lotr
-
-_ay_song_04_lotr:
-   BINARY "songs/lotr.pt3"
-
 _ay_song_04_luna:
-  BINARY "songs/luna_2.pt3"
+  BINARY "songs/luna.pt3"
 
-_ay_song_04_sunflower:
-   BINARY "songs/sunflower.pt3"
-
-;_ay_song_04_regis:
-;   BINARY "songs/regis.pt3"
-
-;_ay_song_04_ciel:
-;  BINARY "songs/ciel_2.pt3"
+PUBLIC _ay_song_04_doom
+_ay_song_04_doom:
+  BINARY "songs/doom.pt3"

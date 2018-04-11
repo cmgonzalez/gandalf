@@ -23,8 +23,8 @@
 #include "game_sprite.h"
 #include "game_zx.h"
 #include "macros.h"
-#include <arch/zx/nirvana+.h>
 #include <arch/zx.h>
+#include <arch/zx/nirvana+.h>
 #include <input.h>
 #include <stdlib.h>
 
@@ -32,6 +32,8 @@ void player_init(unsigned char f_lin, unsigned char f_col,
                  unsigned char f_tile) {
   // COMMON SPRITE VARIABLES
   class[SPR_P1] = PLAYER;
+  sprite_speed[SPR_P1] = sprite_base_speed[0];
+
   tile[SPR_P1] = f_tile;
   lin[SPR_P1] = f_lin; //*SPRITELIN(SPR_P1);
   col[SPR_P1] = f_col; //*SPRITECOL(SPR_P1);
@@ -40,7 +42,6 @@ void player_init(unsigned char f_lin, unsigned char f_col,
   state_a[SPR_P1] = 0;
   jump_lin[SPR_P1] = f_lin;
   last_time[SPR_P1] = zx_clock();
-  sprite_speed_alt[SPR_P1] = 0;
   BIT_SET(state_a[SPR_P1], STAT_LOCK);
   // PLAYER ONLY VARIABLES
   BIT_SET(state_a[SPR_P1], STAT_LDIRR);
@@ -122,15 +123,27 @@ unsigned char player_check_input(void) {
     dirs = 0;
   }
 
-  if (dirs & IN_STICK_FIRE || dirs & IN_STICK_LEFT || dirs & IN_STICK_RIGHT ||
-      dirs & IN_STICK_UP || dirs & IN_STICK_DOWN ||
-      (!game_control_mode && dirs_alt & IN_STICK_FIRE)) {
+  if (dirs & IN_STICK_FIRE) {
+    return 1;
+  }
+
+  if (dirs & IN_STICK_UP) {
 
     return 1;
-  } else {
-    game_control_fire_lock = 0;
-    return 0;
   }
+
+  if (dirs & IN_STICK_LEFT || dirs & IN_STICK_RIGHT || dirs & IN_STICK_DOWN) {
+    game_control_jump_lock = 0;
+    return 1;
+  }
+
+  if (!game_control_mode && (dirs_alt & IN_STICK_FIRE)) {
+    return 1;
+  }
+
+  game_control_fire_lock = 0;
+  game_control_jump_lock = 0;
+  return 0;
 }
 
 unsigned char player_action_fire() {
@@ -157,9 +170,12 @@ unsigned char player_action_fire() {
 
 unsigned char player_action_jump() {
   /* New jump */
+
   switch (game_control_mode) {
   case 0:
-    return dirs & IN_STICK_FIRE;
+    if (dirs & IN_STICK_FIRE) {
+      return 1;
+    }
     break;
   case 1:
     return (dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP);
@@ -167,14 +183,16 @@ unsigned char player_action_jump() {
   case 2:
     if (player_onstair) {
       if ((dirs & IN_STICK_FIRE) && (dirs & IN_STICK_UP)) {
-        game_control_fire_lock = 1;
         return 1;
       }
     } else {
-      return dirs & IN_STICK_UP;
+      if (dirs & IN_STICK_UP) {
+        return 1;
+      }
     }
     break;
   }
+
   return 0;
 }
 unsigned char player_move_input(void) {
@@ -183,8 +201,9 @@ unsigned char player_move_input(void) {
 
   if (player_check_input()) {
 
-    if (player_action_jump()) {
+    if (!game_control_jump_lock && player_action_jump()) {
       // NEW JUMP
+      game_control_jump_lock = 1;
       player_vel_inc = 1;
       audio_salto();
       player_onstair = 0;
@@ -192,8 +211,17 @@ unsigned char player_move_input(void) {
       jump_lin[SPR_P1] = lin[SPR_P1];
       state[SPR_P1] = s_state; /*TODO FIXME!*/
       player_tile(TILE_P1_JUMPR, TILE_P1_LEN);
-      sprite_speed_alt[SPR_P1] = PLAYER_JUMP_SPEED;
       player_vel_y = player_vel_y0; // -negative up / positive down
+      if (!(dirs & IN_STICK_LEFT) && !(dirs & IN_STICK_RIGHT)) {
+        //100% VERTICAL JUMP
+        if (BIT_CHK(state_a[SPR_P1], STAT_LDIRL)) {
+          colint[SPR_P1] = 2;
+        }
+        if (BIT_CHK(state_a[SPR_P1], STAT_LDIRR)) {
+          colint[SPR_P1] = 1;
+        }
+      }
+
       return 1;
     }
 
@@ -313,7 +341,7 @@ unsigned char player_collision(void) {
 
   if (game_check_time(&player_hit_time,
                       GAME_COLLISION_TIME)) { // HACK REPATED ON player_hit
-
+    player_hit = 0;
     sprite = 0;
     s_col1 = col[SPR_P1];
     s_lin1 = lin[SPR_P1];
@@ -323,9 +351,9 @@ unsigned char player_collision(void) {
     if (v0 == TILE_CHECKPOINT) {
       if (game_checkpoint_scr != scr_curr) {
         audio_checkpoint();
-        //zx_border(INK_WHITE);
-        player_col_scr = (sprite_curr_index & 15) << 1;// % 16
-        player_lin_scr = (sprite_curr_index >> 4) << 4;// / 16
+        // zx_border(INK_WHITE);
+        player_col_scr = (sprite_curr_index & 15) << 1; // % 16
+        player_lin_scr = (sprite_curr_index >> 4) << 4; // / 16
       }
 
       game_set_checkpoint();
@@ -347,7 +375,7 @@ unsigned char player_collision(void) {
           return 0;
         } else {
           BIT_SET(s_state, STAT_HIT);
-          //zx_border(INK_YELLOW);
+          // zx_border(INK_YELLOW);
           player_damage(50);
           return 1;
         }
@@ -384,7 +412,7 @@ unsigned char player_collision(void) {
               return 0;
             }
             BIT_SET(s_state, STAT_HIT);
-            //zx_border(INK_RED);
+            // zx_border(INK_RED);
             player_damage(20);
             return 1;
           }
@@ -691,27 +719,27 @@ unsigned char player_hit_platform(void) {
           }
           switch (mush_class[j]) {
           case INDEX_MUSH_VITA_L:
-            //zx_border(INK_RED);
+            // zx_border(INK_RED);
             enemy_init(s_lin1, s_col1, MUSHROOM_VITA, DIR_LEFT);
             break;
           case INDEX_MUSH_VITA_R:
-            //zx_border(INK_RED);
+            // zx_border(INK_RED);
             enemy_init(s_lin1, s_col1, MUSHROOM_VITA, DIR_RIGHT);
             break;
           case INDEX_MUSH_MANA_R:
-            //zx_border(INK_BLUE);
+            // zx_border(INK_BLUE);
             enemy_init(s_lin1, s_col1, MUSHROOM_MANA, DIR_RIGHT);
             break;
           case INDEX_MUSH_MANA_L:
-            //zx_border(INK_BLUE);
+            // zx_border(INK_BLUE);
             enemy_init(s_lin1, s_col1, MUSHROOM_MANA, DIR_LEFT);
             break;
           case INDEX_MUSH_EXTRA_R:
-            //zx_border(INK_GREEN);
+            // zx_border(INK_GREEN);
             enemy_init(s_lin1, s_col1, MUSHROOM_EXTRA, DIR_RIGHT);
             break;
           case INDEX_MUSH_EXTRA_L:
-            //zx_border(INK_GREEN);
+            // zx_border(INK_GREEN);
             enemy_init(s_lin1, s_col1, MUSHROOM_EXTRA, DIR_LEFT);
             break;
           }
@@ -737,7 +765,6 @@ unsigned char player_hit_platform(void) {
     } else {
       audio_golpe();
     }
-
 
     // ay_fx_play(ay_effect_02);
     spr_brick_anim(1);
@@ -808,7 +835,6 @@ void player_check_floor(void) {
 
   if ((v1 < TILE_FLOOR || v1 >= TILE_END) &&
       (v2 < TILE_FLOOR || v2 >= TILE_END)) {
-    sprite_speed_alt[SPR_P1] = PLAYER_FALL_SPEED;
     BIT_SET(s_state, STAT_FALL);
     player_check_stairs(0);
     if (!player_onstair && s_lin0 == GAME_LIN_FLOOR) {
@@ -974,25 +1000,25 @@ void player_open_door(unsigned int f_index, unsigned char f_tile) {
   switch (f_tile) {
   case TILE_DOOR_WHITE:
     if (player_keys[0]) {
-      //zx_border(INK_WHITE);
+      // zx_border(INK_WHITE);
       f_open = 1;
     }
     break;
   case TILE_DOOR_RED:
     if (player_keys[1]) {
-      //zx_border(INK_RED);
+      // zx_border(INK_RED);
       f_open = 1;
     }
     break;
   case TILE_DOOR_GREEN:
     if (player_keys[2]) {
-      //zx_border(INK_GREEN);
+      // zx_border(INK_GREEN);
       f_open = 1;
     }
     break;
   case TILE_DOOR_CYAN:
     if (player_keys[3]) {
-      //zx_border(INK_CYAN);
+      // zx_border(INK_CYAN);
       f_open = 1;
     }
     break;
@@ -1029,7 +1055,7 @@ void player_lost_life() {
   spr_add_anim(s_lin0, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(s_lin0, s_col0 + 2, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(s_lin0 + 16, s_col0, TILE_ANIM_FIRE, 3, 0, 0);
-  //zx_border(INK_BLACK);
+  // zx_border(INK_BLACK);
 
   // Animate Explotion
   i = 1;
@@ -1079,6 +1105,7 @@ void player_damage(unsigned char f_val) __z88dk_fastcall {
     if (!game_inmune)
       player_vita = player_vita - f_val;
     player_hit_time = curr_time;
+    player_hit = 1;
     audio_golpe();
     game_update_stats();
   } else {

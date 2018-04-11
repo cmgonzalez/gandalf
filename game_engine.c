@@ -131,7 +131,7 @@ void game_respawn(void) {
 void game_draw_screen(void) {
   unsigned char f_mush;
   unsigned char f_tile;
-  NIRVANAP_halt();
+  intrinsic_halt();
   game_boss = 0;
   game_boss_fix = 0;
   player_brick_time = zx_clock();
@@ -216,6 +216,8 @@ void game_boss_kill(void) {
   game_boss = 0;
   game_boss_alive = 0;
   audio_explosion();
+  game_song_play_start = 0;
+  ay_reset();
   spr_add_anim(boss_lin, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(boss_lin, boss_col + 2, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(boss_lin + 16, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
@@ -304,6 +306,8 @@ void game_add_enemy(unsigned char enemy_tile_index) __z88dk_fastcall {
       spr_set_up(&boss_stat);
       game_boss = 1;
       game_boss_hit = 6;
+      game_song_play_start = 0;
+      ay_reset();
     } else {
       if (!game_boss)
         game_boss_fix = 1;
@@ -479,12 +483,12 @@ void game_round_init(void) {
       tmp0 = 17;
       break;
     case 1:
-      zx_print_str(12, 8, "ROUND 2 MORIA");
-      tmp0 = 15;
+      zx_print_str(12, 6, "ROUND 2 MORIA");
+      tmp0 = 13;
       break;
     case 2:
-      zx_print_str(12, 8, "ROUND 3 MORDOR");
-      tmp0 = 15;
+      zx_print_str(12, 6, "ROUND 3 MORDOR");
+      tmp0 = 14;
       break;
     case 3:
       zx_print_str(12, 6, "ROUND 4 BARAD DUR");

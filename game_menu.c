@@ -94,7 +94,7 @@ void menu_main() {
       menu_main_print();
       break;
     case 0:
-      NIRVANAP_halt();
+      intrinsic_halt();
       game_cls();
       ay_reset();
       audio_coin();
@@ -115,7 +115,7 @@ void menu_main_print(void) {
   s_row = 7;
   s_col = 10;
   s_col_e = 20;
-  // NIRVANAP_halt();
+  // intrinsic_halt();
   game_cls();
   // Gandalf Logo
   NIRVANAP_spriteT(0, TILE_TITLE, 32, 11);
@@ -158,9 +158,9 @@ void menu_main_print(void) {
   zx_print_ink(INK_BLUE);
   zx_print_str(s_row, 2, "CODE C.GONZALEZ A.ALBRECHT");
   ++s_row;
-  zx_print_str(s_row, 4, "MUSIC S9 FX BEYKERSOFT");
+  zx_print_str(s_row, 4, "MUSIC S9 / BEYKERSOFT");
   ++s_row;
-  zx_print_str(s_row, 3, "TEST ABU SIMBEL VER 1.03");
+  zx_print_str(s_row, 1, "TEST ABU SIMBEL  VER 1.04DLX");
   s_row = s_row + 2;
   zx_print_ink(INK_CYAN);
   zx_print_str(s_row, 8, "2018 NOENTIENDO");
@@ -168,7 +168,7 @@ void menu_main_print(void) {
 }
 
 void menu_redefine() {
-  NIRVANAP_halt();
+  intrinsic_halt();
   zx_paper_fill(INK_BLACK | PAPER_BLACK);
   for (tmp0 = 8; tmp0 < 14; ++tmp0)
     game_paint_attrib(&attrib, 10, 16, (tmp0 << 3) + 8);
