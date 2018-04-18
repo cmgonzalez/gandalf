@@ -126,9 +126,7 @@ void boss_turn() {
 }
 
 void boss_draw() {
-  spr_hack = 1;
   intrinsic_halt();
-  intrinsic_di();
   if (boss_inc) {
     boss_inc = 0;
     boss_draw_frame(0);
@@ -136,8 +134,6 @@ void boss_draw() {
     boss_inc = 1;
     boss_draw_frame(2);
   }
-  intrinsic_ei();
-  spr_hack = 0;
 }
 
 void boss_draw_frame(unsigned char f_inc) __z88dk_fastcall {

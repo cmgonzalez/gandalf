@@ -72,7 +72,7 @@
 #define TILE_BRICK3                   64
 
 /* Enemies Class indexes */
-#define PLAYER                        0
+#define PLAYER                        0xFF
 #define GOTA                          1 //
 #define DRAGON                        2 //
 #define BAT                           3 //
@@ -480,7 +480,6 @@ extern unsigned char boss_tile;
 extern unsigned int  boss_time;
 extern unsigned int  boss_time_fire;
 extern unsigned char boss_stat;
-extern unsigned char spr_hack;
 
 
 extern unsigned char bullet_count;

@@ -47,6 +47,7 @@ void game_loop(void) {
       /*Player 1 turn*/
       // sprite = SPR_P1;
       player_turn();
+
       if (game_boss) {
         boss_turn();
       }
@@ -68,15 +69,13 @@ void game_loop(void) {
       /*Each second aprox - update fps/score/phase left/phase advance*/
       if (game_check_time(&frame_time, TIME_EVENT)) {
         frame_time = zx_clock();
+        intrinsic_halt();
         if (game_debug)
           game_fps();
-
-
-
         game_respawn();
       }
       //INGAME
-      audio_ingame();
+
 
       ++loop_count;
       ++fps;
@@ -218,6 +217,8 @@ void game_boss_kill(void) {
   audio_explosion();
   game_song_play_start = 0;
   ay_reset();
+
+
   spr_add_anim(boss_lin, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(boss_lin, boss_col + 2, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(boss_lin + 16, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
@@ -236,6 +237,8 @@ void game_boss_kill(void) {
   game_print_footer();
   if (game_world == 3) {
     game_end();
+  } else {
+    audio_ingame();
   }
 }
 
@@ -308,6 +311,7 @@ void game_add_enemy(unsigned char enemy_tile_index) __z88dk_fastcall {
       game_boss_hit = 6;
       game_song_play_start = 0;
       ay_reset();
+      audio_ingame();
     } else {
       if (!game_boss)
         game_boss_fix = 1;
@@ -462,6 +466,8 @@ void game_round_init(void) {
   game_print_header();
   game_print_footer();
   spr_page_map();
+  ay_reset();
+  audio_level_start();
   game_draw_screen();
   game_set_checkpoint();
   game_song_play_start = 0;
@@ -474,9 +480,9 @@ void game_round_init(void) {
   }
   game_update_stats();
   // z80_delay_ms(50);
-  ay_reset();
+
   if (!game_debug) {
-    audio_level_start();
+
     switch (game_world) {
     case 0:
       zx_print_str(12, 6, "ROUND 1 THE SHIRE");
@@ -498,6 +504,7 @@ void game_round_init(void) {
     game_paint_attrib(&attrib_osd, 6, (6 + tmp0), (12 << 3) + 8);
     game_colour_message(12, 6, 6 + tmp0, 200, 0);
   }
+  audio_ingame();
 }
 
 void game_print_header(void) {
@@ -622,7 +629,7 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
 
       }
     } else {
-      if (f_tile < TILE_STAIR_E ) {
+      if (f_tile <= TILE_STAIR_E ) {
         return 0;
       }
     }

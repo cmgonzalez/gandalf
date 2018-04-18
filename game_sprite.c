@@ -411,10 +411,10 @@ unsigned char spr_paint_player(void) {
 
   if (player_hit) {
     if ((loop_count & 1) == 0) {
-        spr_back_repaint();
-        NIRVANAP_spriteT(sprite, 0, 0, 0);
-        return 1;
-      }
+      spr_back_repaint();
+      NIRVANAP_spriteT(sprite, 0, 0, 0);
+      return 1;
+    }
   }
 
   s_col1 = col[SPR_P1];
@@ -542,7 +542,7 @@ void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
   }
 
   /* Draw Brick */
-  intrinsic_di();
+  intrinsic_halt();
   if (f_hit) {
     NIRVANAP_fillT_raw(map_paper_clr, f_lin, f_col);
     NIRVANAP_drawT_raw(v1, l_tmp, f_col);
@@ -552,27 +552,23 @@ void spr_brick_anim(unsigned char f_hit) __z88dk_fastcall {
     }
     NIRVANAP_drawT_raw(v1, l_tmp, f_col);
   }
-  intrinsic_ei();
 }
 
 void spr_draw_index(unsigned int *f_index) __z88dk_fastcall {
+  intrinsic_halt();
   s_col1 = (*f_index & 15) << 1;
   s_lin1 = *f_index;
   s_lin1 = (s_lin1 >> 4) << 4;
-  intrinsic_di();
   NIRVANAP_drawT_raw(scr_map[*f_index], s_lin1, s_col1);
-  intrinsic_ei();
 }
 
 void spr_back_repaint(void) {
   unsigned char *p;
 
-
   sprite_curr_index = spr_calc_index(s_lin0, s_col0);
 
   p = &scr_map[sprite_curr_index];
   stp_tile = *p;
-
 
   if ((s_col0 & 1) == 0) { // Par
     stp_col = s_col0;
@@ -679,6 +675,7 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
   if (f_col < 31 && f_lin < SCR_LINS) {
     for (f_anim = 0; f_anim < 8; f_anim++) {
       if (anim_lin[f_anim] == 0xFF) {
+        intrinsic_halt();
         ++anim_count;
         anim_lin[f_anim] = f_lin;
         anim_col[f_anim] = f_col;
@@ -687,10 +684,10 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
         anim_int[f_anim] = 0;
         anim_end[f_anim] = f_end;
         anim_respanwn[f_anim] = f_respawn;
-        intrinsic_di();
+
         NIRVANAP_drawT_raw(anim_tile[f_anim], anim_lin[f_anim],
                            anim_col[f_anim]);
-        intrinsic_ei();
+
         index0 = spr_calc_index(f_lin, f_col);
 
         if (scr_map[index0] == TILE_EMPTY)
@@ -703,15 +700,19 @@ void spr_add_anim(unsigned char f_lin, unsigned char f_col,
 
 void spr_play_anim(void) {
   unsigned char f_anim;
+  unsigned char f_cnt;
 
+  f_cnt = 0;
   for (f_anim = 0; f_anim < 8; f_anim++) {
     if (anim_lin[f_anim] != 0xFF) {
+
       if (anim_int[f_anim] < anim_end[f_anim]) {
-        // intrinsic_halt();
-        intrinsic_di();
+        if ((f_cnt & 1) == 0) {
+          intrinsic_halt();
+        }
         NIRVANAP_drawT_raw(anim_tile[f_anim] + anim_int[f_anim],
                            anim_lin[f_anim], anim_col[f_anim]);
-        intrinsic_ei();
+        ++f_cnt;
         ++anim_int[f_anim];
 
       } else {
@@ -880,7 +881,8 @@ void spr_bullets_play(void) {
       tmp0 = abs(f_col0 - bullet_col0[bullet]);
       if (tmp0 > bullet_max[bullet]) {
         --bullet_count;
-        spr_add_anim(bullet_lin[bullet], bullet_col[bullet], TILE_ANIM_FIRE_END, 2, 0, 0);
+        spr_add_anim(bullet_lin[bullet], bullet_col[bullet], TILE_ANIM_FIRE_END,
+                     2, 0, 0);
 
         bullet_col[bullet] = 0xFF;
 
@@ -928,6 +930,7 @@ void spr_bullets_play(void) {
 
     if (bullet_col[bullet] != 0xFF && f_col0 < 32) {
       // Draw Bullet
+      // intrinsic_di();
       intrinsic_di();
       NIRVANAP_drawT_raw(bullet_tile[bullet] + bullet_colint[bullet], s_lin0,
                          f_col0);
@@ -1003,7 +1006,8 @@ void spr_btile_paint_back() {
   map_paper_clr = map_paper | (map_paper >> 3) | BRIGHT;
   while (tmp_ui < (32 + (48 * 12 * 20))) { // 12*20 btiles
     if ((f_tile < 73 && f_tile != 13 && f_tile != 14) ||
-        (f_tile > TILE_SPECIAL)) { // TODO AN ARRAY WILL BE A MORE ELEGANT SOLUTION
+        (f_tile >
+         TILE_SPECIAL)) { // TODO AN ARRAY WILL BE A MORE ELEGANT SOLUTION
 
       // f_half = 0;
       tmp0 = 0;

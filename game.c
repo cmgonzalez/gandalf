@@ -41,7 +41,7 @@ void main(void) {
   game_inf_lives = 0; // GAME_INF_LIVES;
   game_debug = 0;
   game_world = 0;
-  scr_curr = 0xff;//0xff;
+  scr_curr = 0xFF;
   game_song_play = 1;
 
   // INTERRUPTS ARE DISABLED

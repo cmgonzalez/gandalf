@@ -208,7 +208,7 @@ unsigned int  boss_time;
 unsigned int  boss_time_fire;
 unsigned char boss_stat;
 
-unsigned char spr_hack;
+
 
 //###############################################################################################
 //# # # GAME VARIABLES
@@ -322,7 +322,7 @@ unsigned char sprite_base_speed[] = {
     8,// PLANT
     0,// TRAP
     8,// SNAKE
-    1,// BAT_H
+    2,// BAT_H
     8,// DEVIL
     2,// FIRE_S
 };
