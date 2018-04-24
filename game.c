@@ -19,24 +19,23 @@
 */
 
 #include "game.h"
+#include "game_audio.h"
 #include "game_ay.h"
 #include "game_enemies.h"
-#include "game_ay.h"
 #include "game_engine.h"
-#include "game_player.h"
-#include "game_audio.h"
 #include "game_menu.h"
+#include "game_player.h"
 #include "game_sprite.h"
 #include "game_zx.h"
 #include "macros.h"
-#include <arch/zx/nirvana+.h>
 #include <arch/zx.h>
+#include <arch/zx/nirvana+.h>
 #include <input.h>
 #include <stdlib.h>
 
 void main(void) {
   unsigned int counter;
-  //DEBUG
+  // DEBUG
   game_inmune = 0;    // GAME_INMUNE;
   game_inf_lives = 0; // GAME_INF_LIVES;
   game_debug = 0;
@@ -69,7 +68,6 @@ void main(void) {
   k2.down = IN_KEY_SCANCODE_DISABLE;
   k2.fire = IN_KEY_SCANCODE_SPACE;
 
-
   // Wait for Keypress and Randomize //
   /* Default Values for menu */
   joyfunc1 = (uint16_t(*)(udk_t *))(in_stick_sinclair1);
@@ -78,11 +76,11 @@ void main(void) {
   zx_border(INK_BLACK);
   if (!game_debug) {
     in_wait_nokey();
-  for (counter = 31416; !in_test_key(); counter += 10061)
-    ;
-  srand(counter);
+    for (counter = 31416; !in_test_key(); counter += 10061)
+      ;
+    srand(counter);
   }
-  //Clear Screen and init Nirvana
+  // Clear Screen and init Nirvana
   game_cls();
   // Init Game
   game_start_timer();
@@ -101,13 +99,14 @@ void main(void) {
 
   menu_curr_sel = 1;
   map_paper_last = PAPER_BLUE;
-  game_control_mode = 2; // 0)2button - default 1) 1button: 1 Button UP+FIRE Shoots 2) 1 button: fire shoots, up jump , up+fire for ladders
+  game_control_mode = 2; // 0)2button - default 1) 1button: 1 Button UP+FIRE
+                         // Shoots 2) 1 button: fire shoots, up jump , up+fire
+                         // for ladders
 
   /*MAIN LOOP*/
   while (1) {
     /*Init Objects*/
     game_obj_clear();
-
 
     /*Player Init*/
     player_max_mana = GAME_START_MAX_MANA;
@@ -131,10 +130,11 @@ void main(void) {
     game_attribs();
     spr_btile_paint_back();
     // MENU
-    if (!game_debug) menu_main();
-    //GAME
+    if (!game_debug)
+      menu_main();
+    // GAME
     game_loop();
-    //GAME OVER
+    // GAME OVER
     spr_flatten();
     game_update_stats();
     zx_print_str(12, 12, "GAME OVER");
@@ -150,8 +150,6 @@ void main(void) {
 }
 
 void test_proc() {
-
-
 
 }
 

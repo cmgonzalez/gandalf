@@ -320,13 +320,17 @@ void game_add_enemy(unsigned char enemy_tile_index) __z88dk_fastcall {
 }
 
 void game_print_footer(void) {
-
-  zx_print_ink(INK_CYAN);
+  zx_print_paper(PAPER_YELLOW | BRIGHT);
+  zx_print_ink(INK_BLACK);
   game_fill_row(19, 98);
-  game_fill_row(23, 98);
-
   zx_print_str(19, 0, "a");
   zx_print_str(19, 31, "c");
+  zx_print_paper(PAPER_YELLOW);
+  game_fill_row(20, 32);
+  game_fill_row(21, 32);
+  game_fill_row(22, 32);
+  game_fill_row(23, 104);
+
   zx_print_str(20, 0, "d");
   zx_print_str(20, 31, "e");
   zx_print_str(21, 0, "d");
@@ -335,32 +339,38 @@ void game_print_footer(void) {
   zx_print_str(22, 31, "e");
   zx_print_str(23, 0, "f");
   zx_print_str(23, 31, "g");
-  zx_print_str(21, 15, "_"); // live p1 face
-  zx_print_str(20, 1, "<");  // live p1 hut
 
-  zx_print_ink(INK_YELLOW);
-  zx_print_str(21, 1, "\\"); // live p1 face
-  zx_print_str(22, 7, "l");  // COIN
-  zx_print_str(22, 13, "m"); // STR
-  zx_print_str(22, 19, "n"); // INT
-  zx_print_str(22, 25, "o"); // LEVEL
+  zx_print_str(20, 1, "GANDALF");
 
-  zx_print_ink(INK_RED | BRIGHT);
-  zx_print_str(20, 8, ">"); // live p1 hut
+  zx_print_ink(INK_RED);
+
+  zx_print_str(22, 8, "l");  // COIN
+  zx_print_str(22, 14, "m"); // STR
+  zx_print_str(22, 20, "n"); // INT
+  zx_print_str(22, 26, "o"); // LEVEL
+
+  zx_print_str(20, 9, "VITA");
+
   zx_print_ink(INK_MAGENTA);
-  zx_print_str(21, 8, "^"); // live p1 face
-  // MANA
-  zx_print_ink(INK_WHITE | BRIGHT);
-  zx_print_str(20, 15, "?"); // live p1 hut
-  // zx_print_ink(INK_CYAN);
-  // XP
-  zx_print_ink(INK_CYAN | BRIGHT);
-  zx_print_str(20, 21, "x"); // live p1 hut
-  zx_print_ink(INK_WHITE);
-  zx_print_str(21, 21, "y"); // live p1 face
+  zx_print_str(20, 22, "EXP");
+  zx_print_str(21, 23, "000000");
+
+  zx_print_ink(INK_BLUE);
+  zx_print_str(20, 16, "MANA");
+
+  // zx_print_str(20, 2, "i"); // live p1 face
+  // zx_print_str(20, 2, "<");  // live p1 hut
+
+  // zx_print_str(20, 9, ">");  // heart top
+  // zx_print_str(21, 9, "^");  // heart bottom
+  // zx_print_str(20, 22, "x"); // xp top
+  // zx_print_str(21, 22, "y"); // xp bottom
+
+  // zx_print_str(20, 16, "?"); // star top
+  // zx_print_str(21, 16, "_"); // star bottom
 
   if (game_debug) {
-    /* phase osd bottom*/
+    // phase osd bottom ///
     zx_print_str(23, 20, "LPS:");
   }
 
@@ -378,9 +388,11 @@ void game_print_footer(void) {
 }
 
 void game_print_score(void) {
-  zx_print_ink(INK_WHITE);
+  zx_print_paper(PAPER_YELLOW);
+  zx_print_ink(INK_MAGENTA);
+  zx_print_int(21, 23, player_score);
   zx_print_paper(PAPER_BLACK);
-  zx_print_int(20, 23, player_score);
+  zx_print_ink(INK_WHITE);
   zx_print_int(0, 14, game_score_top); // SCORE TOP
 }
 
@@ -392,16 +404,17 @@ void game_cls() {
 }
 
 void game_update_stats(void) {
-  zx_print_ink(INK_WHITE);
-  zx_print_chr(20, 3, player_lives);
+  zx_print_paper(PAPER_YELLOW);
+  zx_print_ink(INK_BLACK);
+  zx_print_chr(21, 3, player_lives);
   zx_print_chr(22, 9, player_coins);
   zx_print_chr(22, 15, player_str);
   zx_print_chr(22, 21, player_int);
   zx_print_chr(22, 27, player_lvl);
   zx_print_ink(INK_RED);
-  zx_print_chr(20, 10, player_vita);
+  zx_print_chr(21, 10, player_vita);
   zx_print_ink(INK_BLUE);
-  zx_print_chr(20, 17, player_mana);
+  zx_print_chr(21, 17, player_mana);
   if (game_boss) {
     zx_print_ink(INK_MAGENTA);
     for (tmp0 = 0; tmp0 < 6; ++tmp0) {
@@ -508,10 +521,12 @@ void game_round_init(void) {
 }
 
 void game_print_header(void) {
-
+  zx_print_paper(PAPER_BLACK);
   zx_print_ink(INK_RED);
   zx_print_str(0, 11, "$%|");
   zx_print_ink(INK_WHITE);
+  zx_print_str(0, 19, "0");
+  //zx_print_ink(INK_WHITE);
   /* Print score */
   game_print_score();
 }
@@ -607,7 +622,7 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
       if (f_tile < TILE_FLOOR) {
         return 0;
       }
-
+/*
       // TILE_FLOOR -> TILE_STAIR_S
       if (f_tile < TILE_STAIR_S) {
         if (BIT_CHK(s_state, STAT_FALL)) {
@@ -616,7 +631,7 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
           return 0;
         }
       }
-
+*/
       // TILE_STAIR_S -> TILE_CEIL
 
       if (f_tile < TILE_CEIL) {

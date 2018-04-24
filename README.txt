@@ -11,26 +11,63 @@ HISTORY
 
 Long after the destruction of the Ring, Gandalf comebacks for a revenge with the four last demons of Middle earth. Help him to free the world of the remaining evil of Melkor.
 
-An arcade / rpg mix with four rounds of 16 screens each. Each Round have a an unique boss that have to be defeated to move to the next Round. Control can be by either 1 button or 2 button control. For the ZX Spectrum models with 128 Kb only.
+Game
 
-Gandalf can gain experience, this will increase your fire range, levels are upgraded based your points: Also you can pick items that will increase your maximum health and mana. You can have a maximum of 200 health and mana.
+An arcade / rpg mix with four rounds of 16 screens each.
+
+Each Round have a an unique boss that have to be defeated to move to the next Round.
+
+Control can be by either 1 button (two modes) or 2 button control.
+
+Mode 1BA: Joystick Fire + Up Shoot, Up Jumps.
+
+Mode 1BB (Default) Joystick Fire Shoot, Up  Jump, Jump + Up Jumps over stairs.
+
+Mode 2B: Joystick Fire Jumps, Space Shoot (Default).
+
+Gandalf can gain experience, this will increase your fire range, levels are upgraded based your points.
+
+You can also pick items that will increase your maximum health and mana. You can have a maximum of 200 of health or mana.
 
 Damage Table:
-Deadly damage 50 points
-Enemy damage 20 points
-Bullet damage 10 points
-Boss Bullet damage 10 points
-Boss damage instant dead.
+Deadly damage -50 STR
+Enemy damage  -20 STR
+Bullet damage -10 STR
+Boss Bullet   -10 points
+Boss Hit      Instant dead.
 
-Coded on C using the powerfull z88dk compiler , the fabulous Nirvana Plus, and the genial Vortex II Player for AY music. The code is GPL’ed https://bitbucket.org/CmGonzalez/gandalf/
+Score Table:
+Enemy 0-50
+Money 10
+Mushroms 10
+Chests 100
 
-Code: Cristián González, Alvin Albrecht
-Music: s9
-FX: BeykerSoft
+Level table:
+LVL 1     500
+LVL 2    1000
+LVL 3    1500
+LVL 4    2000
+LVL 5    3000
+LVL 6    5000
+LVL 7    6500
+LVL 8    8000
+LVL 9    9500
+LVL MAX 10000
+
+
+Compatible with the ZX Spectrum  models with a minimum of 128 Kb.
+
+This games was build using the Pietro Engine.
+
+
+Coded on C using the powerfull z88dk compiler , the fabulous Nirvana Plus, and the genial Vortex II Player for AY music.
+
+Source code:
+https://bitbucket.org/CmGonzalez/gandalf/
+
+Code: Cristián González / Alvin Albrecht
+Music: BeykerSoft / S9
 Testing:Abu Simbel
-
-
-Good luck wizard!
 
 
 
@@ -107,7 +144,7 @@ BANK 6
 What's NEW
 
 Version 1.03
-  -Fix on Mushroom's not showing after brick hit. 
+  -Fix on Mushroom's not showing after brick hit.
 
 Version 1.02
   -Player Jump Fix, now it won't stop at platforms
