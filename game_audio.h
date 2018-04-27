@@ -26,6 +26,8 @@ extern void audio_disparo1(void);
 extern void audio_disparo2(void);
 extern void audio_disparo_axe(void);
 extern void audio_disparo_fire(void);
+extern void audio_boss_explode(void);
+
 extern void audio_efecto(void);
 extern void audio_salto(void);
 extern void audio_golpe(void);

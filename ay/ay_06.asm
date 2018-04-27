@@ -70,6 +70,7 @@ PUBLIC _ay_fx_06_levelup
 PUBLIC _ay_fx_06_respawn
 PUBLIC _ay_fx_06_disparo_axe
 PUBLIC _ay_fx_06_disparo_fire
+PUBLIC _ay_fx_06_boss_explode
 
 _ay_song_06_lotr_lose_a_life:
    BINARY "songs/lotr-losealife.pt3"
@@ -122,3 +123,5 @@ _ay_fx_06_disparo_axe:
    BINARY "fx/disparo_axe.afx"
 _ay_fx_06_disparo_fire:
    BINARY "fx/disparo_fire.afx"
+_ay_fx_06_boss_explode:
+   BINARY "fx/boss_explode.afx"

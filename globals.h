@@ -318,6 +318,8 @@ extern signed char  player_vel_y0;
 extern signed char  player_vel_y1;
 extern signed char  player_vel_inc;
 extern unsigned char player_keys[4];
+
+extern unsigned char player_stand;
 //PLAYER ATTRIBUTES
 extern unsigned char player_mana;
 extern unsigned char player_vita;
@@ -336,6 +338,7 @@ extern unsigned char player_jump_check;
 extern unsigned char game_checkpoint_col;
 extern unsigned char game_checkpoint_lin;
 extern unsigned char game_checkpoint_scr;
+extern unsigned char game_level_up;
 
 extern unsigned int player_hit_time;
 extern unsigned char player_hit;

@@ -80,6 +80,7 @@ extern unsigned char ay_fx_06_explosion1[];
 extern unsigned char ay_fx_06_respawn[];
 extern unsigned char ay_fx_06_disparo_axe[];
 extern unsigned char ay_fx_06_disparo_fire[];
+extern unsigned char ay_fx_06_boss_explode[];
 
 
 #endif

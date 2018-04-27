@@ -108,10 +108,12 @@ unsigned char player_jump_check;
 unsigned char game_checkpoint_col;
 unsigned char game_checkpoint_lin;
 unsigned char game_checkpoint_scr;
+unsigned char game_level_up;
 
 
 unsigned int  player_hit_time;
 unsigned char player_hit;
+unsigned char player_stand;
 
 
 signed int    game_gravity;

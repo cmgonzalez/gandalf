@@ -73,6 +73,8 @@ void audio_disparo_axe(void) { ay_fx_play(6, ay_fx_06_disparo_axe); }
 
 void audio_disparo_fire(void) { ay_fx_play(6, ay_fx_06_disparo_fire); }
 
+void audio_boss_explode(void) { ay_fx_play(6, ay_fx_06_boss_explode); }
+
 void audio_efecto(void) { ay_fx_play(6, ay_fx_06_efecto); }
 void audio_salto(void) { ay_fx_play(6, ay_fx_06_salto); }
 void audio_golpe(void) { ay_fx_play(6, ay_fx_06_golpe); }

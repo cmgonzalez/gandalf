@@ -227,6 +227,10 @@ unsigned char player_move_input(void) {
 
     /* Move Right */
     if (dirs & IN_STICK_RIGHT) {
+      if (player_stand) {
+        player_stand = 0;
+        colint[SPR_P1] = 3;
+      }
       player_fix_walk_lin();
       spr_set_right(&s_state);
       BIT_SET(state_a[SPR_P1], STAT_LDIRR);
@@ -239,6 +243,10 @@ unsigned char player_move_input(void) {
 
     /* Move Left */
     if (dirs & IN_STICK_LEFT) {
+      if (player_stand) {
+        player_stand = 0;
+        colint[SPR_P1] = 0;
+      }
       player_fix_walk_lin();
       spr_set_left(&s_state);
       BIT_SET(state_a[SPR_P1], STAT_LDIRL);
@@ -291,6 +299,7 @@ unsigned char player_move_input(void) {
     return 1;
   } else {
     colint[SPR_P1] = 0;
+    player_stand = 1;
     if (player_onstair) {
       player_tile(TILE_P1_STAIR, 0);
     } else {
@@ -793,13 +802,7 @@ void player_score_add(unsigned int f_score) __z88dk_fastcall {
 
   if (player_lvl < GAME_MAX_LEVEL) {
     if (player_score >= player_lvl_table[player_lvl]) {
-      player_lvl++;
-      game_update_stats();
-      spr_flatten();
-      audio_levelup();
-      zx_print_str(12, 12, "LEVEL UP!");
-      game_colour_message(12, 12, 12 + 9, 60, 0);
-      spr_unflattenP1();
+      game_level_up = 1;
     }
   }
 

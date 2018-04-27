@@ -24,8 +24,8 @@
 #include "game_sprite.h"
 #include "game_zx.h"
 #include "macros.h"
-#include <arch/zx/nirvana+.h>
 #include <arch/zx.h>
+#include <arch/zx/nirvana+.h>
 #include <intrinsic.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,7 +34,6 @@
 /* Main Game Loop  */
 
 void game_loop(void) {
-
 
   game_round_init();
 
@@ -60,7 +59,7 @@ void game_loop(void) {
 
       /*Play animatios*/
       if (game_check_time(&anim_time, TIME_ANIM)) {
-        //zx_border(INK_BLACK);
+        // zx_border(INK_BLACK);
         anim_time = zx_clock();
         if (anim_count)
           spr_play_anim();
@@ -70,16 +69,28 @@ void game_loop(void) {
       if (game_check_time(&frame_time, TIME_EVENT)) {
         frame_time = zx_clock();
         intrinsic_halt();
-        if (game_debug)
-          game_fps();
+        audio_ingame();
         game_respawn();
+        if (game_debug) {
+          game_fps();
+        }
       }
-      //INGAME
-
+      // INGAME
 
       ++loop_count;
       ++fps;
     }
+    if (game_level_up) {
+      game_level_up = 0;
+      player_lvl++;
+      game_update_stats();
+      spr_flatten();
+      audio_levelup();
+      zx_print_str(12, 12, "LEVEL UP!");
+      game_colour_message(12, 12, 12 + 9, 60, 0);
+      spr_unflattenP1();
+    }
+
     if (game_round_up) {
       game_round_up = 0;
       game_respawn_curr_time = game_respawn_curr_time - 32;
@@ -217,7 +228,7 @@ void game_boss_kill(void) {
   audio_explosion();
   game_song_play_start = 0;
   ay_reset();
-
+  audio_boss_explode();
 
   spr_add_anim(boss_lin, boss_col, TILE_ANIM_FIRE, 3, 0, 0);
   spr_add_anim(boss_lin, boss_col + 2, TILE_ANIM_FIRE, 3, 0, 0);
@@ -237,9 +248,9 @@ void game_boss_kill(void) {
   game_print_footer();
   if (game_world == 3) {
     game_end();
-  } else {
-    audio_ingame();
-  }
+  } // else {
+    // audio_ingame();
+  //}
 }
 
 void game_end() {
@@ -268,7 +279,6 @@ void game_end() {
   game_world = 0xFF;
   scr_curr = 0xFF;
   game_round_up = 1;
-
 }
 
 void game_add_enemy(unsigned char enemy_tile_index) __z88dk_fastcall {
@@ -310,8 +320,8 @@ void game_add_enemy(unsigned char enemy_tile_index) __z88dk_fastcall {
       game_boss = 1;
       game_boss_hit = 6;
       game_song_play_start = 0;
-      ay_reset();
-      audio_ingame();
+      // ay_reset();
+      // audio_ingame();
     } else {
       if (!game_boss)
         game_boss_fix = 1;
@@ -368,7 +378,8 @@ void game_print_footer(void) {
 
   // zx_print_str(20, 16, "?"); // star top
   // zx_print_str(21, 16, "_"); // star bottom
-
+  zx_print_str(22, 2, "    ");
+  zx_print_paper(PAPER_BLACK);
   if (game_debug) {
     // phase osd bottom ///
     zx_print_str(23, 20, "LPS:");
@@ -383,7 +394,7 @@ void game_print_footer(void) {
   // zx_print_ink(INK_YELLOW);
 
   // Clear KEYS
-  zx_print_str(22, 2, "    ");
+
   game_update_stats();
 }
 
@@ -444,6 +455,7 @@ void game_update_stats(void) {
     zx_print_ink(INK_CYAN);
     zx_print_str(22, 5, "]");
   }
+  zx_print_paper(PAPER_BLACK);
 }
 
 void game_tick(void) {
@@ -470,6 +482,7 @@ void game_round_init(void) {
   loop_count = 0;
   zx_set_clock(0);
   frame_time = 0;
+  game_level_up = 0;
 
   /* Phase Draw Start */
   // spr_draw_clear();
@@ -498,35 +511,39 @@ void game_round_init(void) {
 
     switch (game_world) {
     case 0:
-      zx_print_str(12, 6, "ROUND 1 THE SHIRE");
-      tmp0 = 17;
+      zx_print_str(12, 8, "ROUND 1 THE SHIRE");
+      tmp0 = 8;
+      tmp1 = 8 + 17;
       break;
     case 1:
-      zx_print_str(12, 6, "ROUND 2 MORIA");
-      tmp0 = 13;
+      zx_print_str(12, 10, "ROUND 2 MORIA");
+      tmp0 = 10;
+      tmp1 = 10 + 13;
       break;
     case 2:
-      zx_print_str(12, 6, "ROUND 3 MORDOR");
-      tmp0 = 14;
+      zx_print_str(12, 9, "ROUND 3 MORDOR");
+      tmp0 = 9;
+      tmp1 = 9 + 14;
       break;
     case 3:
-      zx_print_str(12, 6, "ROUND 4 BARAD DUR");
-      tmp0 = 17;
+      zx_print_str(12, 8, "ROUND 4 BARAD DUR");
+      tmp0 = 8;
+      tmp1 = 8 + 17;
       break;
     }
-    game_paint_attrib(&attrib_osd, 6, (6 + tmp0), (12 << 3) + 8);
-    game_colour_message(12, 6, 6 + tmp0, 200, 0);
+    game_paint_attrib(&attrib_osd, tmp0, tmp1, (12 << 3) + 8);
+    game_colour_message(12, tmp0, tmp1, 200, 0);
   }
   audio_ingame();
 }
 
 void game_print_header(void) {
-  zx_print_paper(PAPER_BLACK);
+
   zx_print_ink(INK_RED);
   zx_print_str(0, 11, "$%|");
   zx_print_ink(INK_WHITE);
   zx_print_str(0, 19, "0");
-  //zx_print_ink(INK_WHITE);
+  // zx_print_ink(INK_WHITE);
   /* Print score */
   game_print_score();
 }
@@ -622,29 +639,28 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
       if (f_tile < TILE_FLOOR) {
         return 0;
       }
-/*
-      // TILE_FLOOR -> TILE_STAIR_S
-      if (f_tile < TILE_STAIR_S) {
+      /*
+            // TILE_FLOOR -> TILE_STAIR_S
+            if (f_tile < TILE_STAIR_S) {
+              if (BIT_CHK(s_state, STAT_FALL)) {
+                return 1;
+              } else {
+                return 0;
+              }
+            }
+      */
+      // TILE_STAIR_S -> TILE_CEIL
+
+      if (f_tile < TILE_CEIL) {
+
         if (BIT_CHK(s_state, STAT_FALL)) {
           return 1;
         } else {
           return 0;
         }
       }
-*/
-      // TILE_STAIR_S -> TILE_CEIL
-
-      if (f_tile < TILE_CEIL) {
-
-          if (BIT_CHK(s_state, STAT_FALL)) {
-            return 1;
-          } else {
-            return 0;
-          }
-
-      }
     } else {
-      if (f_tile <= TILE_STAIR_E ) {
+      if (f_tile <= TILE_STAIR_E) {
         return 0;
       }
     }
@@ -657,7 +673,6 @@ unsigned char game_check_cell(unsigned int *f_index) __z88dk_fastcall {
     if (f_tile < TILE_END) {
       return 1;
     }
-
   }
 
   // NOT A TILE f_tile > TILE_END
