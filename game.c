@@ -51,8 +51,8 @@ void main(void) {
                        : (GAME_SOUND_48_FX_ON | GAME_SOUND_48_MUS_ON);
   game_gravity = GAME_GRAVITY; // 8;
   // vel_y0 + vel_y1 = -84
-  player_vel_y0 = GAME_VELOCITY;     //-88; // Velocity
-  player_vel_y1 = GAME_MIN_VELOCITY; //-72; // Min Velocity
+  player_vel_y0 = GAME_VELOCITY;     //-8; // Velocity
+  player_vel_y1 = GAME_MIN_VELOCITY; //-7; // Min Velocity
 
   // Keyboard Handling
   k1.fire = IN_KEY_SCANCODE_m;
@@ -120,6 +120,7 @@ void main(void) {
     player_score = 0;
     player_lin_scr = GAME_LIN_FLOOR - 16;
     player_col_scr = 2;
+    player_coins = 0;
     game_set_checkpoint();
     game_round_up = 0;
     game_respawn_curr_time = 255;

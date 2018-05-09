@@ -245,9 +245,6 @@
 #define PLAYER_INERT_TIME             8  /* Time for Player Inertia */
 #define PLAYER_ANIM_HIT_TIME          40 /* Time for Player Hit Sprite display after kill */
 
-#define PLAYER_JUMP_MAX               5  /* Max Jump Time 10 frames */
-#define PLAYER_JUMP_SUSPEND           6
-
 
 /* Enemies */
 #define ENEMIES_MAX                   6   //MAX QUANTITY OF ENEMIES ON SCREEN (0->6)
@@ -340,6 +337,7 @@ extern unsigned char game_checkpoint_lin;
 extern unsigned char game_checkpoint_scr;
 extern unsigned char game_level_up;
 
+extern unsigned int player_inm_time;
 extern unsigned int player_hit_time;
 extern unsigned char player_hit;
 

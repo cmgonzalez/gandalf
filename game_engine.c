@@ -34,8 +34,9 @@
 /* Main Game Loop  */
 
 void game_loop(void) {
-
+  game_print_footer();
   game_round_init();
+
 
   while (!game_over) {
 
@@ -75,21 +76,28 @@ void game_loop(void) {
           game_fps();
         }
       }
+
+      if (game_check_time(&player_inm_time,
+                          90)) {
+        player_inm_time = zx_clock();
+        player_hit = 0;
+      }
       // INGAME
+      if (game_level_up) {
+        game_level_up = 0;
+        player_lvl++;
+        game_update_stats();
+        spr_flatten();
+        audio_levelup();
+        zx_print_str(12, 12, "LEVEL UP!");
+        game_colour_message(12, 12, 12 + 9, 60, 0);
+        spr_unflattenP1();
+      }
 
       ++loop_count;
       ++fps;
     }
-    if (game_level_up) {
-      game_level_up = 0;
-      player_lvl++;
-      game_update_stats();
-      spr_flatten();
-      audio_levelup();
-      zx_print_str(12, 12, "LEVEL UP!");
-      game_colour_message(12, 12, 12 + 9, 60, 0);
-      spr_unflattenP1();
-    }
+
 
     if (game_round_up) {
       game_round_up = 0;
@@ -368,34 +376,15 @@ void game_print_footer(void) {
   zx_print_ink(INK_BLUE);
   zx_print_str(20, 16, "MANA");
 
-  // zx_print_str(20, 2, "i"); // live p1 face
-  // zx_print_str(20, 2, "<");  // live p1 hut
-
-  // zx_print_str(20, 9, ">");  // heart top
-  // zx_print_str(21, 9, "^");  // heart bottom
-  // zx_print_str(20, 22, "x"); // xp top
-  // zx_print_str(21, 22, "y"); // xp bottom
-
-  // zx_print_str(20, 16, "?"); // star top
-  // zx_print_str(21, 16, "_"); // star bottom
   zx_print_str(22, 2, "    ");
   zx_print_paper(PAPER_BLACK);
+  game_update_stats();
+  game_print_score();
+
   if (game_debug) {
-    // phase osd bottom ///
     zx_print_str(23, 20, "LPS:");
   }
 
-  // zx_print_ink(INK_RED);
-  // zx_print_str(20, 7, "j");
-  // zx_print_ink(INK_BLUE);
-  // zx_print_str(20, 13, "k");
-
-  // zx_print_str(20, 22, "x"); //XP
-  // zx_print_ink(INK_YELLOW);
-
-  // Clear KEYS
-
-  game_update_stats();
 }
 
 void game_print_score(void) {
@@ -490,7 +479,7 @@ void game_round_init(void) {
 
   spr_init_effects();
   game_print_header();
-  game_print_footer();
+  //game_print_footer();
   spr_page_map();
   ay_reset();
   audio_level_start();
@@ -511,22 +500,22 @@ void game_round_init(void) {
 
     switch (game_world) {
     case 0:
-      zx_print_str(12, 8, "ROUND 1 THE SHIRE");
+      zx_print_str(12, 8, "WORLD 1 THE SHIRE");
       tmp0 = 8;
       tmp1 = 8 + 17;
       break;
     case 1:
-      zx_print_str(12, 10, "ROUND 2 MORIA");
+      zx_print_str(12, 10, "WORLD 2 MORIA");
       tmp0 = 10;
       tmp1 = 10 + 13;
       break;
     case 2:
-      zx_print_str(12, 9, "ROUND 3 MORDOR");
+      zx_print_str(12, 9, "WORLD 3 MORDOR");
       tmp0 = 9;
       tmp1 = 9 + 14;
       break;
     case 3:
-      zx_print_str(12, 8, "ROUND 4 BARAD DUR");
+      zx_print_str(12, 8, "WORLD 4 BARAD DUR");
       tmp0 = 8;
       tmp1 = 8 + 17;
       break;

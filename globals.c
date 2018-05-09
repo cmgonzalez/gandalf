@@ -111,6 +111,7 @@ unsigned char game_checkpoint_scr;
 unsigned char game_level_up;
 
 
+unsigned int  player_inm_time;
 unsigned int  player_hit_time;
 unsigned char player_hit;
 unsigned char player_stand;
