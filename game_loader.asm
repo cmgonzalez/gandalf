@@ -288,8 +288,8 @@ IFDEF PCOMPRESS
    
       cp (hl)                       ; did the byte change?
       ld (hl),a                     ; restore byte at 0xc000
-   
-      jp nz, __CODE_head            ; if the byte changed this is a 48k machine
+
+      jp nz, 0                      ; reset if ths is a 48k machine
    
       ; load extra banks for 128k machines
 
@@ -297,7 +297,7 @@ IFDEF PCOMPRESS
       ld hl,LEN_BANK_3
    
       call load_bank
-      jr nc, set_mode               ; if tape loading error stay in 48k mode
+      jp nc, 0                      ; if tape loading error
 
       inc e                         ; BANK_4
 
@@ -305,7 +305,7 @@ IFDEF PCOMPRESS
       ld hl,LEN_BANK_4
    
       call load_bank
-      jr nc, set_mode               ; if tape loading error stay in 48k mode
+      jp nc, 0                      ; if tape loading error
 
       inc e
       inc e                         ; BANK_6
@@ -314,7 +314,7 @@ IFDEF PCOMPRESS
       ld hl,LEN_BANK_6
    
       call load_bank
-      jr nc, set_mode               ; if tape loading error stay in 48k mode
+      jp nc, 0                      ; if tape loading error
 
       ld a,$ff
       
