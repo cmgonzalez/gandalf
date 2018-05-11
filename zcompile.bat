@@ -7,31 +7,45 @@ echo Start     %STARTTIME%
 set "CFLAGS=-SO3 --max-allocs-per-node200000 --opt-code-size --list"
 
 @rem MAKE BASIC LOADER
+echo.
 echo Creating Basic Loader.
+echo.
 src_tap\bas2tap -sGandalf -a10 src_tap\loader.bas loader.tap 1>nul
 
 @rem COPY SCREEN$
+echo.
 echo Copying Loading Screen.
+echo.
 copy /b src_tap\game_scr.bin game_scr.bin 1>nul
 
 @rem COPY FONT
+echo.
 echo Copying Fonts.
+echo.
 copy /b src_font\game.font game.font 1>nul
 
 @rem EXPAND MACROS
+echo.
 echo Expanding Macros
+echo.
 zcc +zx -v -m4 -clib=sdcc_iy ay/src/VTII10bG-mfx.asm.m4
 
 @rem COMPILE C CODE FOR BANK_6_MISC
+echo.
 echo Compiling C Code for BANK_6_MISC
+echo.
 zcc +zx -v -c -clib=sdcc_iy %CFLAGS% --fsigned-char --codesegBANK_6_MISC --constsegBANK_6_MISC globals_06.c
 
 @rem BUILD CONSOLIDATED OBJECT FILE
+echo.
 echo Building Consolidated Object File
+echo.
 zcc +zx -v -c -clib=sdcc_iy %CFLAGS% --fsigned-char -o game @zproject.lst globals_06.o
 
 @rem BUILD SNA
+echo.
 echo Building SNA Snapshot
+echo.
 del bin\game_release.sna 1>nul
 zcc +zx -v -m -startup=31 -clib=sdcc_iy game.o game_sna.asm -o game_sna -pragma-include:zpragma.inc
 appmake +inject -b game_sna_NIRVANAP.bin -o nirvanap_final.bin -i game_sna_NIRVANA_HOLE.bin --offset 6299
@@ -39,7 +53,9 @@ copy /b /Y nirvanap_final.bin game_sna_NIRVANAP.bin
 appmake +zx --sna -b game_sna -o bin/game_release.sna --exclude-sections NIRVANA_HOLE
 
 @rem MAKE NORMAL LOADING BINARY
+echo.
 echo Making Normal Loading Binary
+echo.
 del bin\game_release.tap 1>nul
 zcc +zx -v -m -startup=31 -clib=sdcc_iy game.o game_loader.asm -o game -pragma-include:zpragma.inc
 appmake +inject -b game_NIRVANAP.bin -o nirvanap_final.bin -i game_NIRVANA_HOLE.bin --offset 6299
@@ -54,7 +70,9 @@ appmake +zx -b game_BANK_6.bin -o game_ay_6.tap --org 49152 --noloader --noheade
 copy /b loader.tap + mcload.tap + mcloader.tap + game_scr.tap + nirvanap.tap + game.tap + game_ay_3.tap + game_ay_4.tap + game_ay_6.tap bin\game_release.tap 1>nul
 
 @rem MAKE ZX7 COMPRESSED LOADING BINARY
+echo.
 echo Making ZX7-Compressed Loading Binary
+echo.
 del bin\game_release_zx7.tap 1>nul
 zx7 -f game_scr.bin
 zx7 -f nirvanap_final.bin
@@ -90,7 +108,9 @@ copy /b loader.tap + mcload.tap + mcloader.tap + game_scr.tap + nirvanap.tap + g
 dir *.bin
 
 @rem CLEANUP
+echo.
 echo Cleanup
+echo.
 @rem del *.o *.lis *.bin *.tap *.font *.zx7 game zcc_opt.def > nul 2>&1
 del *.bin *.tap *.font *.zx7 game zcc_opt.def > nul 2>&1
 

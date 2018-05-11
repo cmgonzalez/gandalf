@@ -127,27 +127,27 @@ IFNDEF PCOMPRESS
       cp (hl)                     ; did the byte change?
       ld (hl),a                   ; restore byte at 0xc000
    
-      jp nz, __CODE_head          ; if the byte changed this is a 48k machine
+      jp nz, 0                    ; reset if this is a 48k machine
    
       ; load extra banks for 128k machines
 
       ld hl,__BANK_3_MISC_tail - __BANK_3_head
       
       call load_bank
-      jp nc, __CODE_head          ; if tape loading error forget about sound effects
+      jp nc, 0                    ; if tape loading error
       
       inc e                       ; BANK_4
       ld hl,__BANK_4_MISC_tail - __BANK_4_head
       
       call load_bank
-      jp nc, __CODE_head          ; if tape loading error forget about sound effects
+      jp nc, 0                    ; if tape loading error
       
       inc e
       inc e                       ; BANK_6
       ld hl,__BANK_6_MISC_tail - __BANK_6_head
       
       call load_bank
-      jp nc, __CODE_head          ; if tape loading error forget about sound effects
+      jp nc, 0                    ; if tape loading error
 
       ld a,$ff
       ld (_spec128),a             ; indicate 128k spectrum
@@ -341,7 +341,9 @@ IFDEF PCOMPRESS
       
       pop hl
       
-      ld a,0
+      ld a,0                        ; indicate 48k spectrum
+      out (0xfe),a                  ; rom sometimes leaves border magenta
+      
       jr nc, lb_exit                ; if tape loading error
 
       ld de,0xc000
