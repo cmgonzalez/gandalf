@@ -134,6 +134,7 @@ void main(void) {
     if (!game_debug)
       menu_main();
     // GAME
+
     game_loop();
     // GAME OVER
     spr_flatten();

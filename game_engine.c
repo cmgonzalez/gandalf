@@ -405,6 +405,7 @@ void game_cls() {
 
 void game_update_stats(void) {
   zx_print_paper(PAPER_YELLOW);
+
   zx_print_ink(INK_BLACK);
   zx_print_chr(21, 3, player_lives);
   zx_print_chr(22, 9, player_coins);
@@ -427,6 +428,7 @@ void game_update_stats(void) {
 
     // zx_print_chr(1, 16, game_boss_hit);
   }
+
 
   if (player_keys[0]) {
     zx_print_ink(INK_WHITE);
@@ -493,6 +495,9 @@ void game_round_init(void) {
   if (!game_over) {
     player_init(player_lin_scr, player_col_scr, TILE_P1_STANR);
   }
+  zx_print_paper(PAPER_YELLOW);
+  zx_print_str(22, 2, "    ");
+  zx_print_paper(PAPER_BLACK);
   game_update_stats();
   // z80_delay_ms(50);
 
